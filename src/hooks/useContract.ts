@@ -80,6 +80,9 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
       case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
         break
+      case ChainId.FUJI:
+        address = '0x59F49F35495854023983C877A7781eAb3A63A0f2'
+        break
     }
   }
   return useContract(address, ENS_ABI, withSignerIfPossible)
