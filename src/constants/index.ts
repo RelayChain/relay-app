@@ -20,7 +20,7 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const MOCK1 = new Token(ChainId.FUJI, '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351', 18, 'MOCK1', 'MOCK1 in Avalanche')
-export const MOCK2 = new Token(ChainId.FUJI, '0xcF63B18Ca85a4A04298202206B5554A8b0EA4177', 18, 'MOCK2', 'MOCK2 in Avalanche')
+export const MOCK2 = new Token(ChainId.FUJI, '0x5300A4834F1995828B99bE23bcD99C80002DE9c8', 18, 'MOCK2', 'MOCK2 in Avalanche')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
