@@ -35,7 +35,29 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.RINKEBY]: {},
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
-  [ChainId.MAINNET]: {}
+  [ChainId.MAINNET]: {},
+  [ChainId.FUJI]: {
+    '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351': new WrappedTokenInfo(
+      {
+        chainId: ChainId.FUJI,
+        address: '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351',
+        name: 'Mock 1',
+        decimals: 18,
+        symbol: 'MCK1'
+      },
+      []
+    ),
+    '0x5300A4834F1995828B99bE23bcD99C80002DE9c8': new WrappedTokenInfo(
+      {
+        chainId: ChainId.FUJI,
+        address: '0x5300A4834F1995828B99bE23bcD99C80002DE9c8',
+        name: 'Mock 2',
+        decimals: 18,
+        symbol: 'MCK2'
+      },
+      []
+    )
+  }
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
