@@ -119,6 +119,6 @@
   "prepare": "npm run build",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@zeroexchange/sdk": "^3.0.6"
+    "@zeroexchange/sdk": "^3.0.8"
   }
 }
