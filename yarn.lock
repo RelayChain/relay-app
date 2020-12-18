@@ -2713,17 +2713,6 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/sdk@../uniswap-sdk/":
-  version "3.0.3"
-  dependencies:
-    "@uniswap/v2-core" "^1.0.0"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.1"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-    toformat "^2.0.0"
-
 "@uniswap/token-lists@^1.0.0-beta.19":
   version "1.0.0-beta.19"
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.19.tgz#5256db144fba721a6233f43b92ffb388cbd58327"
@@ -3066,6 +3055,19 @@
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
+
+"@zeroexchange/sdk@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.0.5.tgz#168e64a6bdea6ee3b92d38f85472de6aa717b80d"
+  integrity sha512-5yHLbjEmvpzQGK+rWHjScqHG9AkfnVZjYkZe0q89QJVMIqWme08s5XIEOIGp3oeabJcf4N2CMM6QlIj+99ljKw==
+  dependencies:
+    "@uniswap/v2-core" "^1.0.0"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
 
 abab@^2.0.0:
   version "2.0.3"

@@ -30,7 +30,6 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/sdk": "../uniswap-sdk/",
     "@uniswap/token-lists": "^1.0.0-beta.19",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -117,5 +116,9 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later"
+  "prepare": "npm run build",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@zeroexchange/sdk": "^3.0.5"
+  }
 }
