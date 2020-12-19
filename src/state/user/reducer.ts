@@ -1,20 +1,21 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
-import { createReducer } from '@reduxjs/toolkit'
-import { updateVersion } from '../global/actions'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import {
+  SerializedPair,
+  SerializedToken,
   addSerializedPair,
   addSerializedToken,
   removeSerializedPair,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
+  toggleURLWarning,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  updateUserExpertMode,
+  updateUserSlippageTolerance
 } from './actions'
+
+import { createReducer } from '@reduxjs/toolkit'
+import { updateVersion } from '../global/actions'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -55,7 +56,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  userDarkMode: null,
+  userDarkMode: true,
   matchesDarkMode: false,
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,

@@ -1,42 +1,46 @@
+import './snow.scss';
+
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
-import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
-import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
-import URLWarning from '../components/Header/URLWarning'
-import Popups from '../components/Popups'
-import Web3ReactManager from '../components/Web3ReactManager'
-import { ApplicationModal } from '../state/application/actions'
-import { useModalOpen, useToggleModal } from '../state/application/hooks'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
 import {
   RedirectDuplicateTokenIds,
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
+import { Route, Switch } from 'react-router-dom'
+import { useModalOpen, useToggleModal } from '../state/application/hooks'
+
+import AddLiquidity from './AddLiquidity'
+import AddressClaimModal from '../components/claim/AddressClaimModal'
+import { ApplicationModal } from '../state/application/actions'
+import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Earn from './Earn'
+import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import Header from '../components/Header'
 import Manage from './Earn/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
+import Mountains from '../components/Mountains';
+import Polling from '../components/Header/Polling'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
-import RemoveLiquidity from './RemoveLiquidity'
+import Popups from '../components/Popups'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
+import RemoveLiquidity from './RemoveLiquidity'
+import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-
+import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+import Web3ReactManager from '../components/Web3ReactManager'
+import styled from 'styled-components'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  overflow-y: hidden;
 `
 
 const HeaderWrapper = styled.div`
@@ -80,6 +84,8 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <div className="snow-bg snow"></div>
+        <Mountains />
         <URLWarning />
         <HeaderWrapper>
           <Header />

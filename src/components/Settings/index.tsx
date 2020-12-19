@@ -1,24 +1,24 @@
 import React, { useContext, useRef, useState } from 'react'
+import { RowBetween, RowFixed } from '../Row'
 import { Settings, X } from 'react-feather'
-import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
-  useDarkModeManager,
   useExpertModeManager,
-  useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useUserTransactionTTL
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
+import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+
+import { ApplicationModal } from '../../state/application/actions'
 import { AutoColumn } from '../Column'
+import { ButtonError } from '../Button'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
+import { TYPE } from '../../theme'
+import { Text } from 'rebass'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -135,8 +135,6 @@ export default function SettingsTab() {
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
@@ -229,14 +227,6 @@ export default function SettingsTab() {
                       }
                 }
               />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Dark Mode
-                </TYPE.black>
-              </RowFixed>
-              <Toggle isActive={darkMode} toggle={toggleDarkMode} />
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>
