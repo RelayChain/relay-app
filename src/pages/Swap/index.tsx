@@ -1,36 +1,16 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { AutoRow, RowBetween } from '../../components/Row'
+import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import { AutoRow, RowBetween } from '../../components/Row'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
-import TradePrice from '../../components/swap/TradePrice'
-import TokenWarningModal from '../../components/TokenWarningModal'
-import ProgressSteps from '../../components/ProgressSteps'
-
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { LinkStyledButton, TYPE } from '../../theme'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import useENSAddress from '../../hooks/useENSAddress'
-import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -38,12 +18,32 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
+import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+
+import AddressInputPanel from '../../components/AddressInputPanel'
+import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import AppBody from '../AppBody'
+import { ArrowDown } from 'react-feather'
 import { ClickableText } from '../Pool/styleds'
+import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { Field } from '../../state/swap/actions'
 import Loader from '../../components/Loader'
+import ProgressSteps from '../../components/ProgressSteps'
+import ReactGA from 'react-ga'
+import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
+import TokenWarningModal from '../../components/TokenWarningModal'
+import TradePrice from '../../components/swap/TradePrice'
+import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import useENSAddress from '../../hooks/useENSAddress'
+import { useSwapCallback } from '../../hooks/useSwapCallback'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -266,6 +266,7 @@ export default function Swap() {
 
   return (
     <>
+      <h1>AVAX Swaps Coming Soon:</h1>
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
@@ -273,6 +274,7 @@ export default function Swap() {
       />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
+        <div style={{ pointerEvents: 'none', opacity: '.75' }}>
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -473,6 +475,7 @@ export default function Swap() {
             ) : null}
           </BottomGrouping>
         </Wrapper>
+        </div>
       </AppBody>
       <AdvancedSwapDetailsDropdown trade={trade} />
     </>

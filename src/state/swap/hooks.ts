@@ -1,23 +1,29 @@
-import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
-import { parseUnits } from '@ethersproject/units'
+/*
+ Did a find replace of 'ETH' for 'AVAX' to hide the ETH symbol temporarily
+ Need to switch out ETH for AVAX properly in the SDK
+*/
+
+import { AppDispatch, AppState } from '../index'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
-import { ParsedQs } from 'qs'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
+import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+
+import { ParsedQs } from 'qs'
+import { SwapState } from './reducer'
+import { Version } from '../../hooks/useToggledVersion'
+import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { isAddress } from '../../utils'
+import { parseUnits } from '@ethersproject/units'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import useParsedQueryString from '../../hooks/useParsedQueryString'
-import { isAddress } from '../../utils'
-import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
-import { SwapState } from './reducer'
+import useENS from '../../hooks/useENS'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
-import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { useV1Trade } from '../../data/V1'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -35,7 +41,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'AVAX' : ''
         })
       )
     },
@@ -199,8 +205,8 @@ export function useDerivedSwapInfo(): {
         ? slippageAdjustedAmountsV1[Field.INPUT]
         : null
       : slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+        ? slippageAdjustedAmounts[Field.INPUT]
+        : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -221,10 +227,10 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
-    if (valid === false) return 'ETH'
+    if (urlParam.toUpperCase() === 'AVAX') return 'AVAX'
+    if (valid === false) return 'AVAX'
   }
-  return 'ETH' ?? ''
+  return 'AVAX' ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -281,7 +287,7 @@ export function useDefaultsFromURLSearch():
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<
     { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
-  >()
+    >()
 
   useEffect(() => {
     if (!chainId) return
