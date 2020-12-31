@@ -199,7 +199,7 @@ export default function Manage({
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`ZERO LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  {`ZERO LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your LP tokens on this page to earn ZERO.`}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
