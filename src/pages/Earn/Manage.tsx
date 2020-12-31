@@ -195,7 +195,7 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get ZERO Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>Step 1. Get ZERO Liquidity Provider Tokens</TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
