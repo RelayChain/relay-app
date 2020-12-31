@@ -1,15 +1,15 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { DAI, MOCK1, UNI, USDC, USDT, WBTC } from '../../constants'
+import { ZERO, MOCK1, UNI } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
-export const STAKING_GENESIS = 1600387200
+export const STAKING_GENESIS = 1609399998
 
-export const REWARDS_DURATION_DAYS = 60
+export const REWARDS_DURATION_DAYS = 30
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -20,20 +20,14 @@ export const STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MAINNET]: [
     {
-      tokens: [WETH[ChainId.MAINNET], DAI],
-      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-    },
+      tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x6e64aa009e7e61ccd0c11517dcbe475af7ef5237'
+    }
+  ],
+  [ChainId.KOVAN]: [
     {
-      tokens: [WETH[ChainId.MAINNET], USDC],
-      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b'
-    },
-    {
-      tokens: [WETH[ChainId.MAINNET], USDT],
-      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a'
-    },
-    {
-      tokens: [WETH[ChainId.MAINNET], WBTC],
-      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e'
+      tokens: [WETH[ChainId.FUJI], ZERO],
+      stakingRewardAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
     }
   ],
   [ChainId.FUJI]: [

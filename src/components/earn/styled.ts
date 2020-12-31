@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 
-import uImage from '../../assets/images/big_unicorn.png'
-import xlUnicorn from '../../assets/images/xl_uni.png'
+import uImage from '../../assets/images/mountain_wide.png'
+import xlUnicorn from '../../assets/images/mountain.png'
 import noise from '../../assets/images/noise.png'
 
 export const TextBox = styled.div`
@@ -17,7 +17,7 @@ export const TextBox = styled.div`
 `
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #C6D2E6 0%, #07327B 100%);
   border-radius: 12px;
   width: 100%;
   position: relative;
@@ -31,8 +31,8 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   position: absolute;
   border-radius: 12px;
   opacity: 0.4;
-  top: -100px;
-  left: -100px;
+  top: -150px;
+  left: -300px;
   transform: rotate(-15deg);
   user-select: none;
 
@@ -45,8 +45,8 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
   height: 1200px;
   position: absolute;
   border-radius: 12px;
-  top: -300px;
-  left: -300px;
+  top: -350px;
+  left: -400px;
   opacity: 0.4;
   user-select: none;
 

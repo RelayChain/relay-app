@@ -3,9 +3,9 @@ import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
-import { BIG_INT_ZERO } from '../../constants'
+//import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
-import { JSBI } from '@zeroexchange/sdk'
+//import { JSBI } from '@zeroexchange/sdk'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
@@ -49,7 +49,7 @@ export default function Earn() {
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
    */
-  const stakingInfosWithBalance = stakingInfos?.filter(s => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO))
+  const stakingInfosWithBalance = stakingInfos
 
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
@@ -63,19 +63,19 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Uniswap liquidity mining</TYPE.white>
+                <TYPE.white fontWeight={600}>Zero liquidity mining</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive ZERO, the Uniswap protocol governance token.
+                  Deposit your Liquidity Provider tokens to receive ZERO, the Zero.Exchange protocol governance token.
                 </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://zero.exchange"
+                href="https://zero.exchange/learn-more"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>Read more about ZERO</TYPE.white>
+                <TYPE.white fontSize={14}>Learn more about ZERO</TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
