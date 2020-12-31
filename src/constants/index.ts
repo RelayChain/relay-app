@@ -12,7 +12,7 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
-export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero.Exchange')
+export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -43,7 +43,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
-  [UNI_ADDRESS]: 'UNI',
+  [UNI_ADDRESS]: 'ZERO',
   [GOVERNANCE_ADDRESS]: 'Governance',
   [TIMELOCK_ADDRESS]: 'Timelock'
 }
@@ -195,8 +195,8 @@ export const NetworkContextName = 'NETWORK'
 
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
-// 20 minutes, denominated in seconds
-export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+// 300 minutes, denominated in seconds
+export const DEFAULT_DEADLINE_FROM_NOW = 60 * 300
 
 // used for rewards deadlines
 export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
