@@ -21,7 +21,7 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
-      stakingRewardAddress: '0x605e9a8eD9AC8E78acE0368e314Ae2d60C54CEc8'
+      stakingRewardAddress: '0xdc945cb021e53e15ce59466ac588a590d2a624f0'
     }
   ],
   [ChainId.KOVAN]: [
