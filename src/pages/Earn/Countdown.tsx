@@ -32,7 +32,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   let timeRemaining: number
   let message: string
   if (timeUntilGenesis >= 0) {
-    message = 'Rewards begin in'
+    message = 'Ethereum lifts open in'
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
@@ -40,7 +40,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
       message = 'Ethereum lifts close in'
       timeRemaining = timeUntilEnd
     } else {
-      message = 'Rewards have ended!'
+      message = 'Ethereum lifts are closed!'
       timeRemaining = Infinity
     }
   }
