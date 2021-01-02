@@ -1,25 +1,26 @@
-import React, { useState, useCallback } from 'react'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ButtonConfirmed, ButtonError } from '../Button'
-import ProgressCircles from '../ProgressSteps'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Pair } from '@zeroexchange/sdk'
-import { useActiveWeb3React } from '../../hooks'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { usePairContract, useStakingContract } from '../../hooks/useContract'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { splitSignature } from 'ethers/lib/utils'
-import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
-import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import { Pair, TokenAmount } from '@zeroexchange/sdk'
+import React, { useCallback, useState } from 'react'
+import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
+import { usePairContract, useStakingContract } from '../../hooks/useContract'
+
+import { AutoColumn } from '../Column'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import Modal from '../Modal'
+import ProgressCircles from '../ProgressSteps'
+import { RowBetween } from '../Row'
+import { TransactionResponse } from '@ethersproject/providers'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { splitSignature } from 'ethers/lib/utils'
+import styled from 'styled-components'
+import { useActiveWeb3React } from '../../hooks'
+import useIsArgentWallet from '../../hooks/useIsArgentWallet'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -220,7 +221,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
             <TYPE.black>
               {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              UNI / week
+              ZERO / week
             </TYPE.black>
           </HypotheticalRewardRate>
 
