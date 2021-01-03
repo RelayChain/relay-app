@@ -1,6 +1,6 @@
 import './snow.scss';
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToEarnOnly, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { Suspense } from 'react'
 import {
   RedirectDuplicateTokenIds,
@@ -79,6 +79,7 @@ function TopLevelModals() {
 }
 
 export default function App() {
+
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
@@ -118,7 +119,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route component={RedirectPathToEarnOnly} />
+              <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
           <Marginer />

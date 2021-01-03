@@ -1,8 +1,3 @@
-/*
- Did a find replace of 'ETH' for 'AVAX' to hide the ETH symbol temporarily
- Need to switch out ETH for AVAX properly in the SDK
-*/
-
 import { AppDispatch, AppState } from '../index'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
@@ -41,7 +36,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'AVAX' : ''
+          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
         })
       )
     },
@@ -132,6 +127,9 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
   } = useSwapState()
+
+  const sw = useSwapState();
+  console.log("SWAP STATE ===== ", sw);
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
@@ -227,10 +225,10 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'AVAX') return 'AVAX'
-    if (valid === false) return 'AVAX'
+    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
+    if (valid === false) return 'ETH'
   }
-  return 'AVAX' ?? ''
+  return 'ETH' ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -298,7 +296,7 @@ export function useDefaultsFromURLSearch():
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId || '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
         recipient: parsed.recipient
       })
     )

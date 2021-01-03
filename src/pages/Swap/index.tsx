@@ -266,7 +266,6 @@ export default function Swap() {
 
   return (
     <>
-      <h1>AVAX Swaps Coming Soon:</h1>
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
@@ -274,7 +273,6 @@ export default function Swap() {
       />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
-        <div style={{ pointerEvents: 'none', opacity: '.75' }}>
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -475,7 +473,6 @@ export default function Swap() {
             ) : null}
           </BottomGrouping>
         </Wrapper>
-        </div>
       </AppBody>
       <AdvancedSwapDetailsDropdown trade={trade} />
     </>

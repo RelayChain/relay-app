@@ -1,24 +1,24 @@
-import { ChainId, Pair, Token } from '@zeroexchange/sdk'
-import flatMap from 'lodash.flatmap'
-import { useCallback, useMemo } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
-
-import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { ChainId, Pair, Token } from '@zeroexchange/sdk'
 import {
+  SerializedPair,
+  SerializedToken,
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
+  toggleURLWarning,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  toggleURLWarning
+  updateUserSlippageTolerance
 } from './actions'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useCallback, useMemo } from 'react'
+
+import flatMap from 'lodash.flatmap'
+import { useActiveWeb3React } from '../../hooks'
+import { useAllTokens } from '../../hooks/Tokens'
 
 function serializeToken(token: Token): SerializedToken {
   return {
