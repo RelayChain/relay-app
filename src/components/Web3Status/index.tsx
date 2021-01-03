@@ -1,29 +1,28 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import React, { useMemo } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
-import React, { useMemo } from 'react'
-import { Activity } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components'
+
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { Activity } from 'react-feather'
+import { ButtonSecondary } from '../Button'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { NetworkContextName } from '../../constants'
-import useENSName from '../../hooks/useENSName'
-import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/reducer'
-import { shortenAddress } from '../../utils'
-import { ButtonSecondary } from '../Button'
-
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-
+import { NetworkContextName } from '../../constants'
+import PortisIcon from '../../assets/images/portisIcon.png'
 import { RowBetween } from '../Row'
+import { TransactionDetails } from '../../state/transactions/reducer'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import WalletModal from '../WalletModal'
+import { shortenAddress } from '../../utils'
+import useENSName from '../../hooks/useENSName'
+import { useHasSocks } from '../../hooks/useSocksBalance'
+import { useTranslation } from 'react-i18next'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -164,7 +163,6 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 function Web3StatusInner() {
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
-
   const { ENSName } = useENSName(account ?? undefined)
 
   const allTransactions = useAllTransactions()
@@ -215,7 +213,6 @@ function Web3StatusInner() {
 export default function Web3Status() {
   const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
-
   const { ENSName } = useENSName(account ?? undefined)
 
   const allTransactions = useAllTransactions()
