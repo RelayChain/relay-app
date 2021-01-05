@@ -1,30 +1,28 @@
-import { JSBI, Pair, Percent, TokenAmount } from '@zeroexchange/sdk'
-import { darken } from 'polished'
-import React, { useState } from 'react'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary, ButtonUNIGradient } from '../Button'
+import Card, { GreyCard, LightCard } from '../Card'
 import { ChevronDown, ChevronUp } from 'react-feather'
+import { ExternalLink, ExtraSmallOnly, HideExtraSmall, TYPE } from '../../theme'
+import { JSBI, Pair, Percent, TokenAmount } from '@zeroexchange/sdk'
+import React, { useState } from 'react'
+
+import { AutoColumn } from '../Column'
+import { BIG_INT_ZERO } from '../../constants'
+import { CardNoise } from '../earn/styled'
+import CurrencyLogo from '../CurrencyLogo'
+import { Dots } from '../swap/styleds'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
-import { useTotalSupply } from '../../data/TotalSupply'
-
-import { useActiveWeb3React } from '../../hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, HideExtraSmall, ExtraSmallOnly } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient } from '../Button'
+import { darken } from 'polished'
+import styled from 'styled-components'
 import { transparentize } from 'polished'
-import { CardNoise } from '../earn/styled'
-
+import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
-
-import Card, { GreyCard, LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween, RowFixed, AutoRow } from '../Row'
-import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO } from '../../constants'
+import { useTokenBalance } from '../../state/wallet/hooks'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -204,7 +202,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </Text>
             {!!stakedBalance && (
               <ButtonUNIGradient as={Link} to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                <HideExtraSmall>Earning UNI</HideExtraSmall>
+                <HideExtraSmall>Earning ZERO</HideExtraSmall>
                 <ExtraSmallOnly>
                   <span role="img" aria-label="bolt">
                     ⚡
