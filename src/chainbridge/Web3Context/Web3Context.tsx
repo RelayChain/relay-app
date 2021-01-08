@@ -81,15 +81,12 @@ const Web3Provider = ({
   const refreshInfo = async () => {
     if (account) {
       setAddress(account)
-      setNetwork(chainId)
-      // if (connector?.getProvider) {
+      setNetwork(Number(chainId))
       if (library) {
         setProvider(library)
-        connector?.activate()
-        // setProvider(new ethers.providers.Web3Provider(await connector.getProvider(), 'any'))
       }
       let networkName = ''
-      switch (String(chainId)) {
+      switch (String(Number(chainId))) {
         case '1':
           networkName = 'Main'
           break
