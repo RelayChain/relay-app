@@ -111,20 +111,19 @@ const Web3Provider = ({
         default:
           networkName = 'Unknown'
       }
-      if (library) {
-        setWallet({
-          name: networkName,
-          provider: library,
-          type: 'injected'
-        })
-      }
+      setWallet({
+        name: networkName,
+        provider: library,
+        type: 'injected'
+      })
       setEthBalance(1445451)
+      setIsReady(!!account)
     }
   }
 
   useEffect(() => {
     refreshInfo().catch()
-  }, [])
+  }, [chainId, account, library, connector])
 
   // Gas Price poller
   useEffect(() => {
