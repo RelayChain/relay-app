@@ -1,15 +1,14 @@
 import React from 'react'
 import { init, ErrorBoundary, showReportDialog } from '@sentry/react'
 import { ThemeSwitcher } from '@chainsafe/common-theme'
-import { CssBaseline, Router, ToasterProvider } from '@chainsafe/common-components'
+import { CssBaseline, ToasterProvider } from '@chainsafe/common-components'
 
-import Routes from './Components/Routes'
 import { lightTheme } from './Themes/LightTheme'
 import { ChainbridgeProvider } from './Contexts/ChainbridgeContext'
-import AppWrapper from './Layouts/AppWrapper'
 import { Web3Provider } from '@chainsafe/web3-context'
 import { chainbridgeConfig } from './chainbridgeConfig'
 import { utils } from 'ethers'
+import TransferPage from './Components/Pages/TransferPage'
 
 if (
   process.env.NODE_ENV === 'production' &&
@@ -69,11 +68,7 @@ const ChainBridge = () => {
             gasPriceSetting="fast"
           >
             <ChainbridgeProvider>
-              <Router>
-                <AppWrapper>
-                  <Routes/>
-                </AppWrapper>
-              </Router>
+              <TransferPage></TransferPage>
             </ChainbridgeProvider>
           </Web3Provider>
         </ToasterProvider>
