@@ -4,7 +4,7 @@ import {
   IFormikSelectInputProps,
   FormikSelectInput,
 } from "@chainsafe/common-components";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { Tokens } from "chainbridge/Web3Context/tokensReducer";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;

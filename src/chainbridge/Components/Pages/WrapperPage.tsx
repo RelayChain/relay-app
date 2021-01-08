@@ -11,7 +11,7 @@ import {
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import clsx from "clsx";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "chainbridge/Web3Context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import { object, string } from "yup";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";

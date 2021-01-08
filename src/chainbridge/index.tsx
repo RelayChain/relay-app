@@ -5,7 +5,7 @@ import { CssBaseline, ToasterProvider } from '@chainsafe/common-components'
 
 import { lightTheme } from './Themes/LightTheme'
 import { ChainbridgeProvider } from './Contexts/ChainbridgeContext'
-import { Web3Provider } from '@chainsafe/web3-context'
+import { Web3Provider } from 'chainbridge/Web3Context'
 import { chainbridgeConfig } from './chainbridgeConfig'
 import { utils } from 'ethers'
 import TransferPage from './Components/Pages/TransferPage'

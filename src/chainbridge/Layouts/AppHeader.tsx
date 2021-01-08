@@ -3,7 +3,7 @@ import React from "react";
 import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "chainbridge/Web3Context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {

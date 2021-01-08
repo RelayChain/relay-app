@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "chainbridge/Web3Context";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({

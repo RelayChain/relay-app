@@ -1,4 +1,4 @@
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "chainbridge/Web3Context";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import {

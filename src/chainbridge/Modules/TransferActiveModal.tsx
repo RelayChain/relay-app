@@ -9,7 +9,7 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useWeb3 } from "chainbridge/Web3Context";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
