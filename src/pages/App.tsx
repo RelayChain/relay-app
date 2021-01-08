@@ -34,6 +34,7 @@ import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
+import ChainBridge from '../chainbridge'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -119,6 +120,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/chainbridge/" component={ChainBridge} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
