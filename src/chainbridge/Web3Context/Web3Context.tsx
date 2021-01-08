@@ -68,9 +68,7 @@ const Web3Provider = ({
                         checkNetwork = (networkIds && networkIds.length > 0) || false
                       }: Web3ContextProps) => {
   const [address, setAddress] = useState<string | undefined>(undefined)
-  const [provider, setProvider] = useState<providers.Web3Provider | undefined>(
-    undefined
-  )
+  const [provider, setProvider] = useState<providers.Web3Provider | undefined>(undefined)
   const { chainId, account, library, connector } = useActiveWeb3React()
 
   const [network, setNetwork] = useState<number | undefined>(undefined)
@@ -84,14 +82,42 @@ const Web3Provider = ({
     if (account) {
       setAddress(account)
       setNetwork(chainId)
-      if (connector?.getProvider) {
-        setProvider(new ethers.providers.Web3Provider(await connector.getProvider(), 'any'))
+      // if (connector?.getProvider) {
+      if (library) {
+        setProvider(library)
+        connector?.activate()
+        // setProvider(new ethers.providers.Web3Provider(await connector.getProvider(), 'any'))
       }
-      setWallet({
-        name: '',
-        provider: library,
-        type: 'injected'
-      })
+      let networkName = ''
+      switch (String(chainId)) {
+        case '1':
+          networkName = 'Main'
+          break
+        case '2':
+          networkName = 'Morden'
+          break
+        case '3':
+          networkName = 'Ropsten'
+          break
+        case '4':
+          networkName = 'Rinkeby'
+          break
+        case '42':
+          networkName = 'Kovan'
+          break
+        case '43113':
+          networkName = 'FUJI'
+          break
+        default:
+          networkName = 'Unknown'
+      }
+      if (library) {
+        setWallet({
+          name: networkName,
+          provider: library,
+          type: 'injected'
+        })
+      }
       setEthBalance(1445451)
     }
   }
