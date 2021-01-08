@@ -16,11 +16,13 @@ const useStyles = makeStyles(
     createStyles({
       root: {
         width: "100%",
+        color: "#050",
       },
       inner: {
         width: "100% !important",
         maxWidth: "unset !important",
         display: "flex",
+        color: "#050",
         flexDirection: "row",
         padding: `${constants.generalUnit * 5}px ${
           constants.generalUnit * 3.5
@@ -41,13 +43,13 @@ const useStyles = makeStyles(
         ...typography.h4,
         height: 40,
         width: 40,
+        color: "#050",
         marginRight: constants.generalUnit * 2,
         borderRadius: "50%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         border: `1px solid ${palette.additional["transactionModal"][2]}`,
-        color: palette.additional["transactionModal"][3],
         "& svg": {
           height: 20,
           width: 20,
@@ -60,6 +62,7 @@ const useStyles = makeStyles(
       },
       buttons: {
         display: "flex",
+        color: "#050",
         flexDirection: "row",
         marginTop: constants.generalUnit * 5,
         "& > *": {
@@ -69,7 +72,7 @@ const useStyles = makeStyles(
       },
       button: {
         borderColor: `${palette.additional["gray"][8]} !important`,
-        color: `${palette.additional["gray"][8]} !important`,
+        color: "#050",
         textDecoration: "none",
         "&:hover": {
           borderColor: `${palette.additional["gray"][8]} !important`,
@@ -80,6 +83,7 @@ const useStyles = makeStyles(
       },
       initCopy: {
         display: "flex",
+        color: "#050",
         flexDirection: "column",
         justifyContent: "space-between",
         "& > *:first-child": {
@@ -90,12 +94,14 @@ const useStyles = makeStyles(
       sendingCopy: {},
       vote: {
         display: "flex",
+        color: "#050",
         flexDirection: "row",
         marginTop: constants.generalUnit,
         "& > *": {
           "&:first-child": {
             whiteSpace: "nowrap",
             overflow: "hidden",
+            color: "#050",
             textOverflow: "ellipsis",
             maxWidth: 240,
           },
@@ -108,11 +114,13 @@ const useStyles = makeStyles(
       warning: {
         marginTop: constants.generalUnit * 3.5,
         display: "block",
+        color: "#050",
         fontWeight: 600,
       },
       receipt: {
         marginTop: constants.generalUnit * 3.5,
         marginBottom: constants.generalUnit * 8,
+        color: "#050",
       },
       weighted: {
         fontWeight: 600,
@@ -121,6 +129,7 @@ const useStyles = makeStyles(
         position: "absolute",
         top: 0,
         left: 0,
+        color: "#050",
         width: "100%",
         "& > *": {
           borderRadius: "0 !important",
