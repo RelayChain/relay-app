@@ -1,16 +1,11 @@
 import * as React from 'react'
 import { useState, useEffect, useReducer } from 'react'
-import Onboard from 'bnc-onboard'
-import {
-  API as OnboardApi,
-  Wallet,
-  Initialization
-} from 'bnc-onboard/dist/src/interfaces'
+import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { providers, ethers, BigNumber, utils } from 'ethers'
-import { formatEther } from '@ethersproject/units'
 import { Erc20DetailedFactory } from './interfaces/Erc20DetailedFactory'
 import { Erc20Detailed } from './interfaces/Erc20Detailed'
 import { TokenInfo, Tokens, tokensReducer } from './tokensReducer'
+import { useActiveWeb3React } from '../../hooks'
 
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
@@ -76,90 +71,33 @@ const Web3Provider = ({
   const [provider, setProvider] = useState<providers.Web3Provider | undefined>(
     undefined
   )
+  const { chainId, account, library, connector } = useActiveWeb3React()
+
   const [network, setNetwork] = useState<number | undefined>(undefined)
   const [ethBalance, setEthBalance] = useState<number | undefined>(undefined)
   const [wallet, setWallet] = useState<Wallet | undefined>(undefined)
-  const [onboard, setOnboard] = useState<OnboardApi | undefined>(undefined)
   const [isReady, setIsReady] = useState<boolean>(false)
   const [tokens, tokensDispatch] = useReducer(tokensReducer, {})
   const [gasPrice, setGasPrice] = useState(0)
 
-  // Initialize OnboardJS
-  useEffect(() => {
-    const initializeOnboard = async () => {
-      const checks = [{ checkName: 'accounts' }, { checkName: 'connect' }]
-      if (networkIds && checkNetwork) {
-        checks.push({ checkName: 'network' })
+  const refreshInfo = async () => {
+    if (account) {
+      setAddress(account)
+      setNetwork(chainId)
+      if (connector?.getProvider) {
+        setProvider(new ethers.providers.Web3Provider(await connector.getProvider(), 'any'))
       }
-
-      try {
-        const onboard = Onboard({
-          ...onboardConfig,
-          networkId: networkIds ? networkIds[0] : 1, //Default to mainnet
-          walletCheck: checks,
-          subscriptions: {
-            address: (address) => {
-              setAddress(address)
-              checkIsReady()
-              if (onboardConfig?.subscriptions?.address) {
-                onboardConfig?.subscriptions?.address(address)
-              }
-            },
-            wallet: (wallet) => {
-              if (wallet.provider) {
-                wallet.name &&
-                cacheWalletSelection &&
-                localStorage.setItem('onboard.selectedWallet', wallet.name)
-                setWallet(wallet)
-                setProvider(
-                  new ethers.providers.Web3Provider(wallet.provider, 'any')
-                )
-              } else {
-                setWallet(undefined)
-              }
-              onboardConfig?.subscriptions?.wallet &&
-              onboardConfig.subscriptions.wallet(wallet)
-            },
-            network: (network) => {
-              if (!networkIds || networkIds.includes(network)) {
-                onboard.config({ networkId: network })
-              }
-              wallet &&
-              wallet.provider &&
-              setProvider(
-                new ethers.providers.Web3Provider(wallet.provider, 'any')
-              )
-              setNetwork(network)
-              checkIsReady()
-              onboardConfig?.subscriptions?.network &&
-              onboardConfig.subscriptions.network(network)
-            },
-            balance: (balance) => {
-              try {
-                const bal = Number(formatEther(balance))
-                !isNaN(bal) ? setEthBalance(bal) : setEthBalance(0)
-              } catch (error) {
-                setEthBalance(0)
-              }
-              onboardConfig?.subscriptions?.balance &&
-              onboardConfig.subscriptions.balance(balance)
-            }
-          }
-        })
-
-        const savedWallet = localStorage.getItem('onboard.selectedWallet')
-        cacheWalletSelection &&
-        savedWallet &&
-        onboard.walletSelect(savedWallet)
-
-        setOnboard(onboard)
-      } catch (error) {
-        console.log('Error initializing onboard')
-        console.log(error)
-      }
+      setWallet({
+        name: '',
+        provider: library,
+        type: 'injected'
+      })
+      setEthBalance(1445451)
     }
+  }
 
-    initializeOnboard()
+  useEffect(() => {
+    refreshInfo().catch()
   }, [])
 
   // Gas Price poller
@@ -315,12 +253,7 @@ const Web3Provider = ({
   }, [network, provider, address])
 
   const checkIsReady = async () => {
-    const isReady = await onboard?.walletCheck()
-    setIsReady(!!isReady)
-    if (!isReady) {
-      setEthBalance(0)
-    }
-    return !!isReady
+    return !!address
   }
 
   const signMessage = async (message: string) => {
@@ -337,9 +270,8 @@ const Web3Provider = ({
   }
 
   const resetOnboard = () => {
-    localStorage.setItem('onboard.selectedWallet', '')
     setIsReady(false)
-    onboard?.walletReset()
+    refreshInfo().catch(console.error)
   }
 
   const refreshGasPrice = async () => {
@@ -368,8 +300,6 @@ const Web3Provider = ({
     }
   }
 
-  const onboardState = onboard?.getState()
-
   return (
     <Web3Context.Provider
       value={{
@@ -378,13 +308,13 @@ const Web3Provider = ({
         network: network,
         ethBalance: ethBalance,
         wallet: wallet,
-        onboard: onboard,
+        onboard: undefined,
         isReady: isReady,
         checkIsReady,
         resetOnboard,
         gasPrice,
         refreshGasPrice,
-        isMobile: !!onboardState?.mobileDevice,
+        isMobile: false,
         tokens: tokens,
         signMessage
       }}
