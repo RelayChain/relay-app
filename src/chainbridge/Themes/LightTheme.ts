@@ -3,7 +3,7 @@ import { createTheme } from "@chainsafe/common-theme";
 export const lightTheme = createTheme({
   globalStyling: {
     body: {
-      backgroundColor: "#F5F5F5",
+      backgroundColor: "#121212",
     },
   },
   themeConfig: {
@@ -16,11 +16,11 @@ export const lightTheme = createTheme({
           1: "#85A5FF", // Accents //geekblue4
         },
         transferUi: {
-          1: "#595959", // FAQ button // gray8
+          1: "#aaaaaa", // FAQ button // gray8
         },
         header: {
           1: "#F5F5F5", // Background
-          2: "#595959", // Text color //gray8
+          2: "#aaaaaa", // Text color //gray8
           3: "#BFBFBF", // border // gray6
         },
         preflight: {
