@@ -1,15 +1,15 @@
-import React from "react";
-
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Button,
   ExclamationCircleSvg,
   ProgressBar,
   Typography,
 } from "@chainsafe/common-components";
+import { ITheme, createStyles, makeStyles } from "@chainsafe/common-theme";
+
 import CustomModal from "../Components/Custom/CustomModal";
+import React from "react";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "chainbridge/Web3Context";
+import { useWeb3 } from "../Web3Context";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>

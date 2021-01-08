@@ -13,6 +13,7 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import AddLiquidity from './AddLiquidity'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import { ApplicationModal } from '../state/application/actions'
+import ChainBridge from './Chainbridge'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Earn from './Earn'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -34,7 +35,6 @@ import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
-import ChainBridge from '../chainbridge'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -99,6 +99,7 @@ export default function App() {
           <Web3ReactManager>
             <Switch>
               <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/chainbridge" component={ChainBridge} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -118,9 +119,8 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
+              <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route exact strict path="/chainbridge" component={ChainBridge} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

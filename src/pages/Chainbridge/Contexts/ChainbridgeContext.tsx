@@ -1,24 +1,25 @@
-import { useWeb3 } from "chainbridge/Web3Context";
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import {
   BigNumber,
   BigNumberish,
   ContractTransaction,
-  ethers,
   Overrides,
   PayableOverrides,
+  ethers,
   utils,
 } from "ethers";
-import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
+import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import {
   BridgeConfig,
-  chainbridgeConfig,
   TokenConfig,
+  chainbridgeConfig,
 } from "../chainbridgeConfig";
-import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+
+import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
+import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
+import { useWeb3 } from "../Web3Context";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];

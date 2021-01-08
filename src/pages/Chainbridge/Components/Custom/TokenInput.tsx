@@ -1,8 +1,8 @@
-import React from "react";
-
-import { useField, useFormikContext } from "formik";
 import { Button, FormikTextInput } from "@chainsafe/common-components";
-import { Tokens } from "chainbridge/Web3Context/tokensReducer";
+import { useField, useFormikContext } from "formik";
+
+import React from "react";
+import { Tokens } from "../../Web3Context/tokensReducer";
 
 interface ITokenInput {
   disabled?: boolean;

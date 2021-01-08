@@ -8,8 +8,9 @@
 }
 
 .mountain, .mountain-two, .mountain-three {
-    position: absolute;
+    position: fixed;
     bottom: 0;
+    left: 0;
     border-left: 150px solid transparent;
     border-right: 150px solid transparent;
     border-bottom: 180px solid lighten(#2662ff, 20%);

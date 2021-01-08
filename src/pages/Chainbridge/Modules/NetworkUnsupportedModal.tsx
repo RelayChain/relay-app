@@ -1,12 +1,12 @@
-import React from "react";
-
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomModal from "../Components/Custom/CustomModal";
 import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
 } from "@chainsafe/common-components";
+import { ITheme, createStyles, makeStyles } from "@chainsafe/common-theme";
+
+import CustomModal from "../Components/Custom/CustomModal";
+import React from "react";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -23,6 +23,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     heading: {
       marginBottom: constants.generalUnit,
+      color: '#0E1130',
+    },
+    bodytext: {
+      color: '#0E1130',
     },
     icon: {
       height: 20,
@@ -101,13 +105,13 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
         <Typography className={classes.heading} variant="h3" component="h3">
           Network Unsupported
         </Typography>
-        <Typography component="p" variant="body1">
+        <Typography component="p" variant="body1" className={classes.bodytext}>
           This app does not currently support transfers on{" "}
           {networkName(network)}. Please change networks from within your
           browser wallet.
         </Typography>
         <br />
-        <Typography component="p" variant="body1">
+        <Typography component="p" variant="body1" className={classes.bodytext}>
           This app is configured to work on{" "}
           {supportedNetworks.map(
             (n, i) =>

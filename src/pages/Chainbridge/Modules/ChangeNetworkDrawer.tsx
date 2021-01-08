@@ -1,9 +1,9 @@
-import React from "react";
-
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { useWeb3 } from "chainbridge/Web3Context";
+import { ITheme, createStyles, makeStyles } from "@chainsafe/common-theme";
+
+import CustomDrawer from "../Components/Custom/CustomDrawer";
+import React from "react";
+import { useWeb3 } from "../Web3Context";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({

@@ -177,12 +177,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
-  font-display: fallback;
+  font-family: 'Inter', sans-serif !important;
+  font-display: fallback !important;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'Inter var', sans-serif !important;
   }
 }
 

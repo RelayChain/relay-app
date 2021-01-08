@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useField } from "formik";
 import {
-  IFormikSelectInputProps,
   FormikSelectInput,
+  IFormikSelectInputProps,
 } from "@chainsafe/common-components";
-import { Tokens } from "chainbridge/Web3Context/tokensReducer";
+import React, { useEffect, useState } from "react";
+
+import { Tokens } from "../../Web3Context/tokensReducer";
+import { useField } from "formik";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;

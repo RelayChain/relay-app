@@ -1,10 +1,11 @@
-import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
+import { ITheme, createStyles, makeStyles } from "@chainsafe/common-theme";
+
 import React from "react";
-import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
+import clsx from "clsx";
 import { shortenAddress } from "../Utils/Helpers";
-import { useWeb3 } from "chainbridge/Web3Context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import { useWeb3 } from "../Web3Context";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -67,7 +68,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
       <div className={classes.left}>
         {/* ADD LOGO HERE */}
         {/* <div className={classes.logo}>
-        
+
         </div> */}
         <Typography variant="h4">ChainBridge Token Swap</Typography>
       </div>

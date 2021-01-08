@@ -1,14 +1,16 @@
-import React from 'react'
-import { init, ErrorBoundary, showReportDialog } from '@sentry/react'
-import { ThemeSwitcher } from '@chainsafe/common-theme'
-import { CssBaseline, ToasterProvider } from '@chainsafe/common-components'
+import './styles.scss';
 
-import { lightTheme } from './Themes/LightTheme'
+import { CssBaseline, ToasterProvider } from '@chainsafe/common-components'
+import { ErrorBoundary, init, showReportDialog } from '@sentry/react'
+
 import { ChainbridgeProvider } from './Contexts/ChainbridgeContext'
-import { Web3Provider } from 'chainbridge/Web3Context'
-import { chainbridgeConfig } from './chainbridgeConfig'
-import { utils } from 'ethers'
+import React from 'react'
+import { ThemeSwitcher } from '@chainsafe/common-theme'
 import TransferPage from './Components/Pages/TransferPage'
+import { Web3Provider } from './Web3Context'
+import { chainbridgeConfig } from './chainbridgeConfig'
+import { lightTheme } from './Themes/LightTheme'
+import { utils } from 'ethers'
 
 if (
   process.env.NODE_ENV === 'production' &&

@@ -1,28 +1,29 @@
-import React, { useState } from "react";
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import AboutDrawer from "../../Modules/AboutDrawer";
-import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
+import { BigNumber, utils } from "ethers";
 import {
   Button,
-  Typography,
   QuestionCircleSvg,
   SelectInput,
+  Typography,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
-import clsx from "clsx";
-import { useWeb3 } from "chainbridge/Web3Context";
-import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import { ITheme, createStyles, makeStyles } from "@chainsafe/common-theme";
+import React, { useState } from "react";
+import { TokenConfig, chainbridgeConfig } from "../../chainbridgeConfig";
 import { object, string } from "yup";
+
+import AboutDrawer from "../../Modules/AboutDrawer";
+import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
-import { chainbridgeConfig, TokenConfig } from "../../chainbridgeConfig";
+import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
-import WrapActiveModal from "../../Modules/WrapActiveModal";
-import { parseUnits } from "ethers/lib/utils";
-import { forwardTo } from "../../Utils/History";
 import { ROUTE_LINKS } from "../Routes";
-import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
+import WrapActiveModal from "../../Modules/WrapActiveModal";
+import clsx from "clsx";
+import { forwardTo } from "../../Utils/History";
+import { parseUnits } from "ethers/lib/utils";
+import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import { useWeb3 } from "../../Web3Context";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({

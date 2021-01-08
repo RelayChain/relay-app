@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { useState, useEffect, useReducer } from 'react'
-import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/interfaces'
-import { providers, ethers, BigNumber, utils } from 'ethers'
-import { Erc20DetailedFactory } from './interfaces/Erc20DetailedFactory'
-import { Erc20Detailed } from './interfaces/Erc20Detailed'
+
+import { BigNumber, ethers, providers, utils } from 'ethers'
+import { Initialization, API as OnboardApi, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { TokenInfo, Tokens, tokensReducer } from './tokensReducer'
-import { useActiveWeb3React } from '../../hooks'
+import { useEffect, useReducer, useState } from 'react'
+
+import { Erc20Detailed } from './interfaces/Erc20Detailed'
+import { Erc20DetailedFactory } from './interfaces/Erc20DetailedFactory'
+import { useActiveWeb3React } from '../../../hooks'
 
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
