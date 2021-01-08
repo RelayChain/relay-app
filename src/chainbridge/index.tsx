@@ -1,38 +1,34 @@
-import React from "react";
-import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
-import { ThemeSwitcher } from "@chainsafe/common-theme";
-import {
-  CssBaseline,
-  Router,
-  ToasterProvider,
-} from "@chainsafe/common-components";
+import React from 'react'
+import { init, ErrorBoundary, showReportDialog } from '@sentry/react'
+import { ThemeSwitcher } from '@chainsafe/common-theme'
+import { CssBaseline, Router, ToasterProvider } from '@chainsafe/common-components'
 
-import Routes from "./Components/Routes";
-import { lightTheme } from "./Themes/LightTheme";
-import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
-import AppWrapper from "./Layouts/AppWrapper";
-import { Web3Provider } from "@chainsafe/web3-context";
-import { chainbridgeConfig } from "./chainbridgeConfig";
-import { utils } from "ethers";
+import Routes from './Components/Routes'
+import { lightTheme } from './Themes/LightTheme'
+import { ChainbridgeProvider } from './Contexts/ChainbridgeContext'
+import AppWrapper from './Layouts/AppWrapper'
+import { Web3Provider } from '@chainsafe/web3-context'
+import { chainbridgeConfig } from './chainbridgeConfig'
+import { utils } from 'ethers'
 
 if (
-  process.env.NODE_ENV === "production" &&
+  process.env.NODE_ENV === 'production' &&
   process.env.REACT_APP_SENTRY_DSN_URL &&
   process.env.REACT_APP_SENTRY_RELEASE
 ) {
   init({
     dsn: process.env.REACT_APP_SENTRY_DSN_URL,
-    release: process.env.REACT_APP_SENTRY_RELEASE,
-  });
+    release: process.env.REACT_APP_SENTRY_RELEASE
+  })
 }
 
-const ChainBridge: React.FC<{}> = () => {
+const ChainBridge = () => {
   const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
     return {
       ...tca,
-      [bc.networkId]: bc.tokens,
-    };
-  }, {});
+      [bc.networkId]: bc.tokens
+    }
+  }, {})
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -45,7 +41,7 @@ const ChainBridge: React.FC<{}> = () => {
           <p>{error?.message.toString()}</p>
           <p>{componentStack}</p>
           <p>{eventId}</p>
-          <button onClick={() => showReportDialog({ eventId: eventId || "" })}>
+          <button onClick={() => showReportDialog({ eventId: eventId || '' })}>
             Provide Additional Details
           </button>
           <button onClick={resetError}>Reset error</button>
@@ -54,19 +50,19 @@ const ChainBridge: React.FC<{}> = () => {
       onReset={() => window.location.reload()}
     >
       <ThemeSwitcher themes={{ light: lightTheme }}>
-        <CssBaseline />
+        <CssBaseline/>
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
             onboardConfig={{
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
+                wallets: [{ walletName: 'metamask', preferred: true }]
               },
               subscriptions: {
-                network: (network) => console.log("chainId: ", network),
+                network: (network) => console.log('chainId: ', network),
                 balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
-              },
+                  console.log('balance: ', utils.formatEther(amount))
+              }
             }}
             checkNetwork={false}
             gasPricePollingInterval={120}
@@ -75,7 +71,7 @@ const ChainBridge: React.FC<{}> = () => {
             <ChainbridgeProvider>
               <Router>
                 <AppWrapper>
-                  <Routes />
+                  <Routes/>
                 </AppWrapper>
               </Router>
             </ChainbridgeProvider>
@@ -83,7 +79,7 @@ const ChainBridge: React.FC<{}> = () => {
         </ToasterProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
-  );
-};
+  )
+}
 
-export default ChainBridge;
+export default ChainBridge
