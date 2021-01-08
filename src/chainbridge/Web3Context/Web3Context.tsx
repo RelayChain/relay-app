@@ -113,8 +113,8 @@ const Web3Provider = ({
         provider: library,
         type: 'injected'
       })
-      setEthBalance(1445451)
       setIsReady(!!account)
+      setEthBalance(0)
     }
   }
 
