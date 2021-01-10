@@ -1,3 +1,5 @@
+import '../styles.scss';
+
 import {
   Button,
   ExclamationCircleInverseSvg,
@@ -16,7 +18,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     inner: {
       width: "100% !important",
       maxWidth: "unset !important",
-      borderRadius: "4px",
+      borderRadius: "24px",
       display: "flex",
       flexDirection: "row",
       padding: `${constants.generalUnit * 6}px ${constants.generalUnit * 7}px`,
@@ -33,7 +35,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: 20,
       marginTop: constants.generalUnit * 0.8,
       marginRight: constants.generalUnit * 2,
-      fill: palette.additional["gray"][7],
+      fill: '#2662FF',
     },
     buttons: {
       display: "flex",
@@ -45,11 +47,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     button: {
-      borderColor: palette.additional["gray"][8],
-      color: palette.additional["gray"][8],
+      backgroundColor: '#2662FF',
+      color: '#fff',
+      paddingLeft: '1rem',
+      paddingRight: '1rem',
+      borderRadius: '100px',
+      height: '50px',
       "&:hover": {
         borderColor: palette.additional["gray"][8],
-        backgroundColor: palette.additional["gray"][8],
+        backgroundColor: '#2662FF',
         color: palette.common.white.main,
       },
     },
@@ -125,7 +131,7 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
             href="https://discord.com/invite/n2U6x9c"
             target="_blank"
           >
-            <Button size="small" className={classes.button} variant="outline">
+            <Button className={classes.button} variant="outline">
               Ask a question on Discord
             </Button>
           </a>
