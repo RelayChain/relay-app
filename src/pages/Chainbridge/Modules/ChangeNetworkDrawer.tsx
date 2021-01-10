@@ -7,7 +7,11 @@ import { useWeb3 } from "../Web3Context";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
     buttons: {
       display: "flex",
       flexDirection: "row",
