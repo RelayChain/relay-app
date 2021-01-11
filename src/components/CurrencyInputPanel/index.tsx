@@ -4,7 +4,9 @@ import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
 import CurrencyLogo from '../CurrencyLogo'
+import BlockchainLogo from '../BlockchainLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
@@ -18,6 +20,17 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+`
+
+const BlockchainSelect = styled.button<{ selected: boolean }>`
+  align-items: center;
+  outline: none;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg1};
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  padding: 0 0.5rem;
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
@@ -119,10 +132,13 @@ interface CurrencyInputPanelProps {
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
+  blockchain?: string
   label?: string
   onCurrencySelect?: (currency: Currency) => void
+  onBlockchainSelect?: (blockchain: Currency) => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
+  disableBlockchainSelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
@@ -139,8 +155,11 @@ export default function CurrencyInputPanel({
   showMaxButton,
   label = 'Input',
   onCurrencySelect,
+  onBlockchainSelect,
   currency,
+  blockchain,
   disableCurrencySelect = false,
+  disableBlockchainSelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -152,6 +171,7 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [modal2Open, setModal2Open] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
@@ -166,9 +186,26 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
+              <BlockchainSelect
+                selected={!!blockchain}
+                className="open-blockchain-select-button"
+                onClick={() => {
+                  if (!disableBlockchainSelect) {
+                    setModal2Open(true)
+                  }
+                }}
+              >
+                <Aligner>
+                  {label}
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={14} margin={true} />
+                  ) : blockchain ? (
+                    <BlockchainLogo blockchain={blockchain} size={'14px'} />
+                  ) : null}
+                  {' '+blockchain}
+                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                </Aligner>
+              </BlockchainSelect>
               {account && (
                 <TYPE.body
                   onClick={onMax}
@@ -228,7 +265,7 @@ export default function CurrencyInputPanel({
                     : currency?.symbol) || t('selectToken')}
                 </StyledTokenName>
               )}
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+              {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
         </InputRow>
@@ -238,6 +275,16 @@ export default function CurrencyInputPanel({
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}
+          selectedCurrency={currency}
+          otherSelectedCurrency={otherCurrency}
+          showCommonBases={showCommonBases}
+        />
+      )}
+      {!disableBlockchainSelect && onBlockchainSelect && (
+        <BlockchainSearchModal
+          isOpen={modal2Open}
+          onDismiss={handleDismissSearch}
+          onCurrencySelect={onBlockchainSelect}
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
