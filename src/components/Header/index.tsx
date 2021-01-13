@@ -215,15 +215,14 @@ export default function Header() {
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink id={`chain-nav-link`} to={'/chainbridge'}>
+          {/*<StyledNavLink id={`chain-nav-link`} to={'/chainbridge'}>
             {t('Chain Bridge')}
-          </StyledNavLink>
+          </StyledNavLink>*/}
           <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
             {t('Earn')}
           </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
-
       <HeaderControls>
         <HeaderElement>
           <HideSmall>

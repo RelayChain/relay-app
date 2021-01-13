@@ -1,19 +1,19 @@
 import { Currency, Pair } from '@zeroexchange/sdk'
-import React, { useState, useContext, useCallback } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken } from 'polished'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+
+// import BlockchainLogo from '../BlockchainLogo'
 import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
 import CurrencyLogo from '../CurrencyLogo'
-import BlockchainLogo from '../BlockchainLogo'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
-import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-
+import { darken } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -146,6 +146,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  isCrossChain?: boolean;
 }
 
 export default function CurrencyInputPanel({
@@ -166,7 +167,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  isCrossChain,
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -197,13 +199,13 @@ export default function CurrencyInputPanel({
               >
                 <Aligner>
                   {label}
-                  {pair ? (
+                  {/*pair ? (
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={14} margin={true} />
                   ) : blockchain ? (
                     <BlockchainLogo blockchain={blockchain} size={'14px'} />
                   ) : null}
                   {' '+blockchain}
-                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />*/}
                 </Aligner>
               </BlockchainSelect>
               {account && (
