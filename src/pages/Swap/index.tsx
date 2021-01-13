@@ -327,7 +327,6 @@ export default function Swap() {
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
               blockchain={'Ethereum'}
-              disableCurrencySelect={true}
               label={'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
@@ -370,6 +369,7 @@ export default function Swap() {
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               isCrossChain={isCrossChain}
+              disableCurrencySelect={ isCrossChain ? true : false }
               id="swap-currency-output"
             />
 
@@ -419,7 +419,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            { isCrossChain && typedValue.length > 0 ? (
+            { isCrossChain && typedValue?.length > 0 ? (
               <>
                 <p style={{ display: 'block', textAlign: 'center', color: '#F3841E', marginBottom: '1rem'}}>
                   Transferring tokens from {currencies[Field.INPUT]?.symbol} to {transferTo}
