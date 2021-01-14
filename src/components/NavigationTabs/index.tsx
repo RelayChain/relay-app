@@ -1,12 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { Link as HistoryLink, NavLink } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
-import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
+import React from 'react'
+import { RowBetween } from '../Row'
+import { darken } from 'polished'
+import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -84,7 +84,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink to="/earn">
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>

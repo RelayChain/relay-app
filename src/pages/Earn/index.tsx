@@ -3,14 +3,17 @@ import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
+import { ButtonUNIGradient } from '../../components/Button'
 //import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
+import { Link } from 'react-router-dom'
 //import { JSBI } from '@zeroexchange/sdk'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -38,6 +41,17 @@ const DataRow = styled(RowBetween)`
 flex-direction: column;
 `};
 `
+const VoteCard = styled(DataCard)`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  overflow: hidden;
+`
+
+// const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+//   width: fit-content;
+//   ${({ theme }) => theme.mediaWidth.upToSmall`
+//     width: 48%;
+//   `};
+// `
 
 export default function Earn() {
   const { chainId } = useActiveWeb3React()
@@ -56,6 +70,36 @@ export default function Earn() {
 
   return (
     <PageWrapper gap="lg" justify="center">
+      <VoteCard>
+        <CardBGImage />
+        <CardNoise />
+        <CardSection>
+          <AutoColumn gap="md">
+            <RowBetween>
+              <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
+            </RowBetween>
+            <RowBetween>
+              <TYPE.white fontSize={14}>
+                {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
+              </TYPE.white>
+            </RowBetween>
+          </AutoColumn>
+          <ButtonUNIGradient
+            id="join-pool-button"
+            as={Link}
+            padding="6px 8px"
+            to="/add/ETH/0xF0939011a9bb95c3B791f0cb546377Ed2693a574"
+            style={{ margin: '20px 0px 0px auto' }}
+          >
+            <Text fontWeight={500} fontSize={16}>
+              Add ETH/ZERO Liquidity
+            </Text>
+          </ButtonUNIGradient>
+        </CardSection>
+        <CardBGImage />
+        <CardNoise />
+      </VoteCard>
+
       <TopSection gap="md">
         <DataCard>
           <CardBGImage />

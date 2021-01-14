@@ -1,9 +1,9 @@
 import Row, { RowFixed } from '../Row'
 
-import AvaxLogo from '../../assets/images/avax-logo.png'
+// import AvaxLogo from '../../assets/images/avax-logo.png'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+// import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/images/logo-zero-512.png'
 import Menu from '../Menu'
@@ -153,36 +153,36 @@ const Title = styled.a`
   }
 `
 
-const CurrentChain = styled.div`
-  position: fixed;
-  left: 0; right: 0; top: 0;
-  margin: auto;
-  width: 300px;
-  background: #212429;
-  border-bottom-right-radius: 24px;
-  border-bottom-left-radius: 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  transition: all .2s ease-in-out;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: 100px;
-    top: auto;
-    border-radius: 24px;
-  `};
-  :hover {
-    cursor: pointer;
-    filter: brightness(1.1);
-  }
-  p {
-    margin-right: auto;
-  }
-`
+// const CurrentChain = styled.div`
+//   position: fixed;
+//   left: 0; right: 0; top: 0;
+//   margin: auto;
+//   width: 300px;
+//   background: #212429;
+//   border-bottom-right-radius: 24px;
+//   border-bottom-left-radius: 24px;
+//   text-align: center;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   align-items: center;
+//   height: 50px;
+//   padding-left: 1.5rem;
+//   padding-right: 1.5rem;
+//   transition: all .2s ease-in-out;
+//   ${({ theme }) => theme.mediaWidth.upToMedium`
+//     bottom: 100px;
+//     top: auto;
+//     border-radius: 24px;
+//   `};
+//   :hover {
+//     cursor: pointer;
+//     filter: brightness(1.1);
+//   }
+//   p {
+//     margin-right: auto;
+//   }
+// `
 
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
@@ -256,7 +256,7 @@ export default function Header() {
           </StyledNavLink>*/}
         </HeaderLinks>
       </HeaderRow>
-      <CurrentChain>
+      {/*<CurrentChain>
         <p>Current Blockchain: </p>
         { chainId === 1 &&
           <img width={'28px'} src={EthereumLogo} alt="logo" />
@@ -264,7 +264,7 @@ export default function Header() {
         { chainId === 43113 &&
           <img width={'28px'} src={AvaxLogo} alt="logo" />
         }
-      </CurrentChain>
+      </CurrentChain>*/}
 
       <HeaderControls>
         <HeaderElement>
