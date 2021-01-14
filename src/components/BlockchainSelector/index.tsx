@@ -20,6 +20,7 @@ const Container = styled.div`
     border-radius: 12px;
     background: rgba(38, 98, 255, .25);
     transition: all .2s ease-in-out;
+    font-size: .85rem;
     span {
       margin-left: 4px;
       margin-right: 4px;
@@ -49,20 +50,24 @@ const BlockchainSelector = ({
   blockchain,
   transferTo,
   supportedChains,
-  isCrossChain
+  isCrossChain,
+  onShowCrossChainModal,
+  onShowTransferChainModal
 }: {
   blockchain?: string
   transferTo?: string;
   isCrossChain?: boolean
   supportedChains: string[]
+  onShowCrossChainModal: () => void
+  onShowTransferChainModal: () => void
 }) => {
 
   const openChangeChainInfo = () => {
-    alert('change chain info modal');
+    onShowCrossChainModal();
   }
 
   const openTransferModal = () => {
-    alert('to do: open transfer modal');
+    onShowTransferChainModal();
   }
 
   return (

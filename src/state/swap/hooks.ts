@@ -33,8 +33,6 @@ export function useSwapActionHandlers(): {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
-      console.log("FIELD ========= ", field);
-      console.log("CURRENCY ======= ", currency);
       dispatch(
         selectCurrency({
           field,

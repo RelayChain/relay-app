@@ -1,7 +1,7 @@
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import PolkadotLogo from '../../assets/images/polkadot-logo.png'
 import React from 'react'
-import ZeroLogo from '../../assets/images/logo-zero-124.png'
 import styled from 'styled-components'
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
@@ -31,7 +31,7 @@ export default function BlockchainLogo({
   }
 
   if (blockchain === 'Polkadot' || blockchain === 'DOT') {
-    return <StyledEthereumLogo src={ZeroLogo} size={size} style={style} />
+    return <StyledEthereumLogo src={PolkadotLogo} size={size} style={style} />
   }
 
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />

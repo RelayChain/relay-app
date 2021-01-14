@@ -30,6 +30,7 @@ import BlockchainSelector from '../../components/BlockchainSelector'
 import { ChainId } from '@zeroexchange/sdk'
 import { ClickableText } from '../Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+import CrossChainModal from '../../components/CrossChainModal';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Field } from '../../state/swap/actions'
 import Loader from '../../components/Loader'
@@ -49,13 +50,14 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: 'ETH',
-  [ChainId.FUJI]: 'AVAX',
+  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.FUJI]: 'Avalanche',
 }
 
 const SUPPORTED_CHAINS = [
-  'ETH',
-  'AVAX',
+  'Ethereum',
+  'Avalanche',
+  'Polkadot'
 ]
 
 export default function Swap() {
@@ -285,14 +287,40 @@ export default function Swap() {
   const handleSetIsCrossChain = (bool: boolean) => {
     setIsCrossChain(bool);
   }
-  const [ transferTo ] = useState( SUPPORTED_CHAINS.find((x) => {
-    let ch = chainId ? CHAIN_LABELS[chainId] : 'ETH';
-    return x !== ch;
-  }));
+
+  const [ transferTo, setTransferTo ] = useState('');
+  useEffect(() => {
+    let x = SUPPORTED_CHAINS.find((x) => {
+      let ch = chainId ? CHAIN_LABELS[chainId] : 'Ethereum';
+      return x !== ch;
+    });
+    if (x) {
+      setTransferTo(x);
+    }
+  }, [chainId])
 
   // token transfer
   const handleTokenTransfer = () => {
     alert('handle token transfer');
+  }
+
+  const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
+  const hideCrossChainModal = () => {
+    setShowCrossChainModal(false)
+  }
+  const showCrossChainModal = () => {
+    setShowCrossChainModal(true)
+  }
+
+  const [transferChainModalOpen, setShowTransferChainModal] = useState(false);
+  const hideTransferChainModal = () => {
+    setShowTransferChainModal(false)
+  }
+  const showTransferChainModal = () => {
+    setShowTransferChainModal(true)
+  }
+  const onSelectTransferChain = (chain: string) => {
+    setTransferTo(chain);
   }
 
   return (
@@ -301,6 +329,21 @@ export default function Swap() {
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
+      />
+      <CrossChainModal
+        isOpen={crossChainModalOpen}
+        onDismiss={hideCrossChainModal}
+        supportedChains={SUPPORTED_CHAINS}
+        selectTransferChain={() => ''}
+        activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+      />
+      <CrossChainModal
+        isOpen={transferChainModalOpen}
+        onDismiss={hideTransferChainModal}
+        supportedChains={SUPPORTED_CHAINS}
+        isTransfer={true}
+        selectTransferChain={onSelectTransferChain}
+        activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
       />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
@@ -323,8 +366,10 @@ export default function Swap() {
           <BlockchainSelector
             isCrossChain={isCrossChain}
             supportedChains={SUPPORTED_CHAINS}
-            blockchain={ chainId ? CHAIN_LABELS[chainId] : 'ETH'}
+            blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
             transferTo={transferTo}
+            onShowCrossChainModal={showCrossChainModal}
+            onShowTransferChainModal={showTransferChainModal}
           />
 
           <AutoColumn gap={'md'}>
@@ -424,11 +469,8 @@ export default function Swap() {
           <BottomGrouping>
             { isCrossChain && typedValue?.length > 0 ? (
               <>
-                <p style={{ display: 'block', textAlign: 'center', color: '#F3841E', marginBottom: '1rem'}}>
-                  Transferring tokens from {currencies[Field.INPUT]?.symbol} to {transferTo}
-                </p>
                 <ButtonPrimary onClick={handleTokenTransfer}>
-                  Transfer Tokens
+                  Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
                 </ButtonPrimary>
               </>
             ) : !account ? (
