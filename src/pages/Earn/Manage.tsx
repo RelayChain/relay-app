@@ -1,34 +1,37 @@
-import React, { useCallback, useState } from 'react'
+import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ETHER, JSBI, Pair, TokenAmount } from '@zeroexchange/sdk'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
+
 import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-
-import { JSBI, TokenAmount, ETHER } from '@zeroexchange/sdk'
-import { RouteComponentProps } from 'react-router-dom'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { useCurrency } from '../../hooks/Tokens'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { TYPE } from '../../theme'
-
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
-import StakingModal from '../../components/earn/StakingModal'
-import { useStakingInfo } from '../../state/stake/hooks'
-import UnstakingModal from '../../components/earn/UnstakingModal'
+import { ButtonPrimary } from '../../components/Button'
+import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { CountUp } from 'use-count-up'
+import { Dots } from '../../components/swap/styleds'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import FullPositionCard from '../../components/PositionCard'
+import { Link } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
+import { RowBetween } from '../../components/Row'
+import StakingModal from '../../components/earn/StakingModal'
+import { TYPE } from '../../theme'
+import UnstakingModal from '../../components/earn/UnstakingModal'
+import { currencyId } from '../../utils/currencyId'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
-import { CountUp } from 'use-count-up'
-
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import { currencyId } from '../../utils/currencyId'
-import { useTotalSupply } from '../../data/TotalSupply'
+import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
+import { usePairs } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
+import { useStakingInfo } from '../../state/stake/hooks'
+import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
-import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -72,6 +75,16 @@ const PoolData = styled(DataCard)`
   z-index: 1;
 `
 
+const EmptyProposals = styled.div`
+  border: 1px solid ${({ theme }) => theme.text4};
+  padding: 16px 12px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
 const VoteCard = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
@@ -93,6 +106,8 @@ export default function Manage({
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
+
+  const theme = useContext(ThemeContext)
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -152,6 +167,51 @@ export default function Manage({
       toggleWalletModal()
     }
   }, [account, toggleWalletModal])
+
+  // pool functionality ============================
+
+  // fetch the user's balances of all tracked V2 LP tokens
+  const trackedTokenPairs = useTrackedTokenPairs()
+  const tokenPairsWithLiquidityTokens = useMemo(
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokens
+  ])
+  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    liquidityTokens
+  )
+
+  // fetch the reserves for all V2 pools in which the user has a balance
+  const liquidityTokensWithBalances = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
+        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      ),
+    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  )
+
+  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2IsLoading =
+    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+
+  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+
+  // show liquidity even if its deposited in rewards contract
+  const allStakingInfo = useStakingInfo()
+  const stakingInfosWithBalance = allStakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
+
+  // remove any pairs that also are included in pairs with stake in mining pool
+  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
+    return (
+      stakingPairs
+        ?.map(stakingPair => stakingPair[1])
+        .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
+    )
+  })
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -269,14 +329,14 @@ export default function Manage({
                   <TYPE.black>Your unclaimed ZERO</TYPE.black>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
-                  <ButtonEmpty
+                  <ButtonPrimary
                     padding="8px"
                     borderRadius="8px"
                     width="fit-content"
                     onClick={() => setShowClaimRewardModal(true)}
                   >
                     Claim
-                  </ButtonEmpty>
+                  </ButtonPrimary>
                 )}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
@@ -306,6 +366,43 @@ export default function Manage({
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>
+
+        {!account ? (
+          <Card padding="40px">
+            <TYPE.body color={theme.text3} textAlign="center">
+              Connect to a wallet to view your liquidity.
+            </TYPE.body>
+          </Card>
+        ) : v2IsLoading ? (
+          <EmptyProposals>
+            <TYPE.body color={theme.text3} textAlign="center">
+              <Dots>Loading</Dots>
+            </TYPE.body>
+          </EmptyProposals>
+        ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
+          <>
+            {v2PairsWithoutStakedAmount.map(v2Pair => (
+              <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+            ))}
+            {stakingPairs.map(
+              (stakingPair, i) =>
+                stakingPair[1] && ( // skip pairs that arent loaded
+                  <FullPositionCard
+                    key={stakingInfosWithBalance[i].stakingRewardAddress}
+                    pair={stakingPair[1]}
+                    stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                  />
+                )
+            )}
+          </>
+        ) : (
+          <EmptyProposals>
+            <TYPE.body color={theme.text3} textAlign="center">
+              No liquidity found.
+            </TYPE.body>
+          </EmptyProposals>
+        )}
+
         <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
@@ -316,7 +413,7 @@ export default function Manage({
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
-              <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+              <ButtonPrimary padding="8px" borderRadius="8px" width="160px" margin="10px" onClick={handleDepositClick}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit ZERO LP Tokens'}
               </ButtonPrimary>
             )}
@@ -326,6 +423,7 @@ export default function Manage({
                 <ButtonPrimary
                   padding="8px"
                   borderRadius="8px"
+                  margin="10px"
                   width="160px"
                   onClick={() => setShowUnstakingModal(true)}
                 >

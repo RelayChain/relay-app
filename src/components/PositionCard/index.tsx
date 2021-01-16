@@ -1,20 +1,17 @@
 import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary, ButtonUNIGradient } from '../Button'
 import Card, { GreyCard, LightCard } from '../Card'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { ExternalLink, ExtraSmallOnly, HideExtraSmall, TYPE } from '../../theme'
 import { JSBI, Pair, Percent, TokenAmount } from '@zeroexchange/sdk'
 import React, { useState } from 'react'
 
 import { AutoColumn } from '../Column'
-import { BIG_INT_ZERO } from '../../constants'
+import { ButtonEmpty } from '../Button'
 import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../CurrencyLogo'
 import { Dots } from '../swap/styleds'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { Link } from 'react-router-dom'
+import { TYPE } from '../../theme'
 import { Text } from 'rebass'
-import { currencyId } from '../../utils/currencyId'
 import { darken } from 'polished'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -200,33 +197,23 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
-            {!!stakedBalance && (
-              <ButtonUNIGradient as={Link} to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                <HideExtraSmall>Earning ZERO</HideExtraSmall>
-                <ExtraSmallOnly>
-                  <span role="img" aria-label="bolt">
-                    ⚡
-                  </span>
-                </ExtraSmallOnly>
-              </ButtonUNIGradient>
-            )}
           </AutoRow>
 
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="6px 8px"
               borderRadius="12px"
-              width="fit-content"
+              width="170px"
               onClick={() => setShowMore(!showMore)}
             >
               {showMore ? (
                 <>
-                  Manage
+                  Hide Stats
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  Manage
+                  View Stats
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -300,48 +287,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   : '-'}
               </Text>
             </FixedHeightRow>
-
-            <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
-              >
-                View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
-              </ExternalLink>
-            </ButtonSecondary>
-            {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="48%"
-                >
-                  Add
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  width="48%"
-                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-                >
-                  Remove
-                </ButtonPrimary>
-              </RowBetween>
-            )}
-            {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="100%"
-              >
-                Manage Liquidity in Rewards Pool
-              </ButtonPrimary>
-            )}
           </AutoColumn>
         )}
       </AutoColumn>

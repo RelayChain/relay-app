@@ -1,20 +1,21 @@
-import React from 'react'
-import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
-import styled from 'styled-components'
-import { TYPE, StyledInternalLink } from '../../theme'
-import DoubleCurrencyLogo from '../DoubleLogo'
+import { Break, CardBGImage, CardNoise } from './styled'
+import { ButtonEmpty, ButtonPrimary } from '../Button'
 import { ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
-import { ButtonPrimary } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
-import { useColor } from '../../hooks/useColor'
-import { currencyId } from '../../utils/currencyId'
-import { Break, CardNoise, CardBGImage } from './styled'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { useTotalSupply } from '../../data/TotalSupply'
-import { usePair } from '../../data/Reserves'
-import useUSDCPrice from '../../utils/useUSDCPrice'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+
+import { AutoColumn } from '../Column'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import DoubleCurrencyLogo from '../DoubleLogo'
+import React from 'react'
+import { RowBetween } from '../Row'
+import { StakingInfo } from '../../state/stake/hooks'
+import { currencyId } from '../../utils/currencyId'
+import styled from 'styled-components'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { useColor } from '../../hooks/useColor'
+import { usePair } from '../../data/Reserves'
+import { useTotalSupply } from '../../data/TotalSupply'
+import useUSDCPrice from '../../utils/useUSDCPrice'
 
 const StatContainer = styled.div`
   display: flex;
@@ -47,7 +48,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
 
 const TopSection = styled.div`
   display: grid;
-  grid-template-columns: 48px 1fr 120px;
+  grid-template-columns: 48px 1fr 126px 126px;
   grid-gap: 0px;
   align-items: center;
   padding: 1rem;
@@ -117,11 +118,19 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
+        <ExternalLink href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
+          target="_blank" style={{ width: '100%' }}>
+          <ButtonEmpty padding="8px" borderRadius="8px">
+            View Charts
+          </ButtonEmpty>
+        </ExternalLink>
+
         <StyledInternalLink to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
           <ButtonPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
           </ButtonPrimary>
         </StyledInternalLink>
+
       </TopSection>
 
       <StatContainer>
