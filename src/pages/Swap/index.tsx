@@ -30,6 +30,7 @@ import BlockchainSelector from '../../components/BlockchainSelector'
 import { ChainId } from '@zeroexchange/sdk'
 import { ClickableText } from '../Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+import ConfirmTransferModal from '../../components/ConfirmTransferModal';
 import CrossChainModal from '../../components/CrossChainModal';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Field } from '../../state/swap/actions'
@@ -299,11 +300,6 @@ export default function Swap() {
     }
   }, [chainId])
 
-  // token transfer
-  const handleTokenTransfer = () => {
-    alert('handle token transfer');
-  }
-
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
@@ -323,6 +319,23 @@ export default function Swap() {
     setTransferTo(chain);
   }
 
+  const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
+  const hideConfirmTransferModal = () => {
+    setConfirmTransferModalOpen(false)
+  }
+  const showConfirmTransferModal = () => {
+    setConfirmTransferModalOpen(true)
+  }
+  const onConfirmTransfer = () => {
+    handleTokenTransfer();
+  }
+
+  // token transfer modals & handlers
+  const handleTokenTransfer = () => {
+    hideConfirmTransferModal();
+    alert('handle token transfer');
+  }
+
   return (
     <>
       <TokenWarningModal
@@ -330,24 +343,34 @@ export default function Swap() {
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      <CrossChainModal
-        isOpen={crossChainModalOpen}
-        onDismiss={hideCrossChainModal}
-        supportedChains={SUPPORTED_CHAINS}
-        selectTransferChain={() => ''}
-        activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-      />
-      <CrossChainModal
-        isOpen={transferChainModalOpen}
-        onDismiss={hideTransferChainModal}
-        supportedChains={SUPPORTED_CHAINS}
-        isTransfer={true}
-        selectTransferChain={onSelectTransferChain}
-        activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-      />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
+          <CrossChainModal
+            isOpen={crossChainModalOpen}
+            onDismiss={hideCrossChainModal}
+            supportedChains={SUPPORTED_CHAINS}
+            selectTransferChain={() => ''}
+            activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          />
+          <CrossChainModal
+            isOpen={transferChainModalOpen}
+            onDismiss={hideTransferChainModal}
+            supportedChains={SUPPORTED_CHAINS}
+            isTransfer={true}
+            selectTransferChain={onSelectTransferChain}
+            activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          />
+          <ConfirmTransferModal
+            isOpen={confirmTransferModalOpen}
+            onDismiss={hideConfirmTransferModal}
+            transferTo={transferTo}
+            activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+            confirmTransfer={onConfirmTransfer}
+            value={formattedAmounts[Field.INPUT]}
+            currency={currencies[Field.INPUT]}
+            trade={trade}
+          />
           <ConfirmSwapModal
             isOpen={showConfirm}
             trade={trade}
@@ -469,7 +492,7 @@ export default function Swap() {
           <BottomGrouping>
             { isCrossChain && typedValue?.length > 0 ? (
               <>
-                <ButtonPrimary onClick={handleTokenTransfer}>
+                <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
                 </ButtonPrimary>
               </>

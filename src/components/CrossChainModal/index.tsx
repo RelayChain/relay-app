@@ -25,7 +25,7 @@ const ModalContainer = styled.div`
     color: #CED0D9;
     a {
       font-weight: bold;
-      color: #2662FF;
+      color: ${({ theme }) => theme.primary1};
       cursor: pointer;
       outline: none;
       text-decoration: none;
@@ -52,7 +52,7 @@ const ModalContainer = styled.div`
           width: 8px;
           height: 8px;
           border-radius: 100%;
-          background: #2662FF;
+          background: ${({ theme }) => theme.primary1};
           top: 8px; right: 8px;
         }
       }
