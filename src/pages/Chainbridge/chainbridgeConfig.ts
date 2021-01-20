@@ -6,6 +6,7 @@ export type TokenConfig = {
   name?: string;
   symbol?: string;
   imageUri?: string;
+  decimals?: number;
   resourceId: string;
   isNativeWrappedToken?: boolean;
 };
@@ -48,6 +49,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           name: 'An ERC20',
           symbol: 'wETC',
           imageUri: WETHIcon,
+          decimals: 18,
           resourceId:
             '0x000000000000000000000080F62f18bf8C48580EC4f3769afC89FEF9ca45e001'
         }

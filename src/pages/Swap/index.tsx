@@ -49,6 +49,11 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { ChainbridgeProvider, useChainbridge } from '../Chainbridge/Contexts/ChainbridgeContext'
+import { Web3Provider } from '../Chainbridge/Web3Context'
+import { utils } from 'ethers'
+import { chainbridgeConfig } from '../Chainbridge/chainbridgeConfig'
+import { useWeb3 } from '../Chainbridge/Web3Context'
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -62,7 +67,43 @@ const SUPPORTED_CHAINS = [
 ]
 
 export default function Swap() {
+  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
+    return {
+      ...tca,
+      [bc.networkId]: bc.tokens
+    }
+  }, {})
+  return (
+    <>
+      <Web3Provider
+        tokensToWatch={tokens}
+        onboardConfig={{
+          walletSelect: {
+            wallets: [{ walletName: 'metamask', preferred: true }]
+          },
+          subscriptions: {
+            network: (network) => console.log('chainId: ', network),
+            balance: (amount) =>
+              console.log('balance: ', utils.formatEther(amount))
+          }
+        }}
+        checkNetwork={false}
+        gasPricePollingInterval={120}
+        gasPriceSetting="fast"
+      >
+        <ChainbridgeProvider>
+          <ChainBrideSwap />
+        </ChainbridgeProvider>
+      </Web3Provider>
+    </>
+  )
+
+}
+
+function ChainBrideSwap() {
+  const { address } = useWeb3();
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const { deposit } = useChainbridge();
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -120,18 +161,18 @@ export default function Swap() {
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
       ? Version.v1
       : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-      ? Version.v2
-      : undefined
+        ? Version.v2
+        : undefined
 
   const parsedAmounts = showWrap
     ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
-      }
+      [Field.INPUT]: parsedAmount,
+      [Field.OUTPUT]: parsedAmount
+    }
     : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-      }
+      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+    }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -217,8 +258,8 @@ export default function Swap() {
             recipient === null
               ? 'Swap w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
+                ? 'Swap w/o Send + recipient'
+                : 'Swap w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -289,7 +330,7 @@ export default function Swap() {
     setIsCrossChain(bool);
   }
 
-  const [ transferTo, setTransferTo ] = useState('');
+  const [transferTo, setTransferTo] = useState('');
   useEffect(() => {
     let x = SUPPORTED_CHAINS.find((x) => {
       let ch = chainId ? CHAIN_LABELS[chainId] : 'Ethereum';
@@ -332,17 +373,25 @@ export default function Swap() {
 
   // token transfer modals & handlers
   const handleTokenTransfer = () => {
-    hideConfirmTransferModal();
-    alert('handle token transfer');
+    const netInfo = chainbridgeConfig.chains.find( item => item.networkId === chainId);
+    if(address && netInfo) {
+      deposit( +formattedAmounts[Field.INPUT], address, netInfo.tokens[0]['address']);
+      hideConfirmTransferModal();
+    } else {
+      alert(`User address is not valid: ${address} `);
+    }
   }
+
 
   return (
     <>
+
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
+
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
@@ -432,15 +481,15 @@ export default function Swap() {
             </AutoColumn>
             <CurrencyInputPanel
               blockchain={'Avalanche'}
-              value={ isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
+              value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
               label={'To'}
               showMaxButton={false}
-              currency={ isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
+              currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               isCrossChain={isCrossChain}
-              disableCurrencySelect={ isCrossChain ? true : false }
+              disableCurrencySelect={isCrossChain ? true : false}
               id="swap-currency-output"
             />
 
@@ -461,36 +510,36 @@ export default function Swap() {
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 { !isCrossChain &&
-                <AutoColumn gap="4px">
-                  {Boolean(trade) && (
-                    <RowBetween align="center">
-                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                        Price
+                  <AutoColumn gap="4px">
+                    {Boolean(trade) && (
+                      <RowBetween align="center">
+                        <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                          Price
                       </Text>
-                      <TradePrice
-                        price={trade?.executionPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                      />
-                    </RowBetween>
-                  )}
-                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                    <RowBetween align="center">
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        Slippage Tolerance
+                        <TradePrice
+                          price={trade?.executionPrice}
+                          showInverted={showInverted}
+                          setShowInverted={setShowInverted}
+                        />
+                      </RowBetween>
+                    )}
+                    {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                      <RowBetween align="center">
+                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          Slippage Tolerance
                       </ClickableText>
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        {allowedSlippage / 100}%
+                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          {allowedSlippage / 100}%
                       </ClickableText>
-                    </RowBetween>
-                  )}
-                </AutoColumn>
-              }
+                      </RowBetween>
+                    )}
+                  </AutoColumn>
+                }
               </Card>
             )}
           </AutoColumn>
           <BottomGrouping>
-            { isCrossChain && typedValue?.length > 0 ? (
+            {isCrossChain && typedValue?.length > 0 ? (
               <>
                 <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
@@ -523,8 +572,8 @@ export default function Swap() {
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                     'Approved'
                   ) : (
-                    'Approve ' + currencies[Field.INPUT]?.symbol
-                  )}
+                        'Approve ' + currencies[Field.INPUT]?.symbol
+                      )}
                 </ButtonConfirmed>
                 <ButtonError
                   onClick={() => {
@@ -555,33 +604,33 @@ export default function Swap() {
                 </ButtonError>
               </RowBetween>
             ) : (
-              <ButtonError
-                onClick={() => {
-                  if (isExpertMode) {
-                    handleSwap()
-                  } else {
-                    setSwapState({
-                      tradeToConfirm: trade,
-                      attemptingTxn: false,
-                      swapErrorMessage: undefined,
-                      showConfirm: true,
-                      txHash: undefined
-                    })
-                  }
-                }}
-                id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-              >
-                <Text fontSize={20} fontWeight={500}>
-                  {swapInputError
-                    ? swapInputError
-                    : priceImpactSeverity > 3 && !isExpertMode
-                    ? `Price Impact Too High`
-                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                </Text>
-              </ButtonError>
-            )}
+                        <ButtonError
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleSwap()
+                            } else {
+                              setSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                swapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
+                          }}
+                          id="swap-button"
+                          disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                          error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                        >
+                          <Text fontSize={20} fontWeight={500}>
+                            {swapInputError
+                              ? swapInputError
+                              : priceImpactSeverity > 3 && !isExpertMode
+                                ? `Price Impact Too High`
+                                : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                          </Text>
+                        </ButtonError>
+                      )}
             {showApproveFlow && (
               <Column style={{ marginTop: '1rem' }}>
                 <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
@@ -596,7 +645,11 @@ export default function Swap() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
+
+
       { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} />}
+
     </>
   )
 }
+
