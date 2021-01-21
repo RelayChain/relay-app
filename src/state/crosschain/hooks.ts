@@ -20,7 +20,10 @@ import {
 import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
+import { ethers } from 'ethers'
 
+const BridgeABI = require("../../constants/abis/Bridge.json").abi;
+const TokenABI = require("../../constants/abis/ERC20PresetMinterPauser.json").abi;
 
 var dispatch: AppDispatch
 var web3React: any
@@ -227,13 +230,25 @@ export function useCrossChain() {
 }
 
 export async function MakeApprove() {
-  window.alert('approve')
-  console.log('current chain', )
   const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+  const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+  //
+  // const web3CurrentChain = new Web3(currentChain.rpcUrl)
+  // const tokenContract = new web3CurrentChain.eth.Contract(TokenABI, currentToken.address, {
+  //   from: web3React.account,
+  //   gasPrice: '20000000000'
+  // })
+  // console.log('tokenContract', tokenContract)
+  // const rawTX = tokenContract.methods.approve(currentChain.bridgeAddress, crosschainState.transferAmount).encodeABI();
+  // var decodedTx = txDecoder.decodeTx(rawTX);
 
   const web3CurrentChain = new Web3(currentChain.rpcUrl)
-  console.log('account', (web3React.account))
-  console.log('>>>>>>>>>>>>>>>>>>>>balance', await web3CurrentChain.eth.getBalance(web3React.account))
+  const signer = web3React.library.getSigner()
+  const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+  await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
+    gasLimit: 300000
+  })
+
 }
 
 export async function MakeDeposit() {
