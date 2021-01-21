@@ -1,18 +1,28 @@
 import { createAction } from '@reduxjs/toolkit'
 
-export enum Field {
-  INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT'
+export enum ProposalStatus {
+  NONE = 'None',
+  INACTIVE = 'Inactive',
+  ACTIVE = 'Active',
+  PASSED = 'Passed',
+  EXECUTED = 'Executed',
+  CANCELLED = 'Cancelled',
 }
 
-export const selectCurrency = createAction<{ field: Field; currencyId: string }>('crosschain/selectCurrency')
-export const switchCurrencies = createAction<void>('crosschain/switchCurrencies')
-export const typeInput = createAction<{ field: Field; typedValue: string }>('crosschain/typeInput')
-export const replaceCrosschainState = createAction<{
-  field: Field
-  typedValue: string
-  inputCurrencyId?: string
-  outputCurrencyId?: string
-  recipient: string | null
-}>('crosschain/replaceCrosschainState')
-export const setRecipient = createAction<{ recipient: string | null }>('crosschain/setRecipient')
+export interface CrosschainToken {
+  name: string,
+  address: string,
+}
+
+export interface CrosschainChain {
+  name: string,
+  chainID: string,
+}
+
+export const setCrosschainSwapStatus = createAction<{ txID: string, status: ProposalStatus }>('crosschain/set-swaps-tatus')
+export const setCrosschainRecipient = createAction<{ address: string }>('crosschain/set-recipient')
+export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-currentTxID')
+export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
+export const setAvailableTokens = createAction<{ tokens: Array<CrosschainToken> }>('crosschain/set-availableTokens')
+export const setCurrentChain = createAction<{ chain: CrosschainChain }>('crosschain/set-currentChain')
+export const setCurrentToken = createAction<{ token: CrosschainToken }>('crosschain/set-currentToken')

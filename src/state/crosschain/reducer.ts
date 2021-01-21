@@ -1,89 +1,96 @@
-import { Field, replaceCrosschainState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  CrosschainChain,
+  CrosschainToken,
+  ProposalStatus,
+  setCrosschainSwapStatus,
+  setCrosschainRecipient,
+  setCurrentTxID,
+  setAvailableChains,
+  setAvailableTokens,
+  setCurrentChain,
+  setCurrentToken,
+} from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
-  readonly independentField: Field
-  readonly typedValue: string
-  readonly [Field.INPUT]: {
-    readonly currencyId: string | undefined
-  }
-  readonly [Field.OUTPUT]: {
-    readonly currencyId: string | undefined
-  }
-  // the typed recipient address or ENS name, or null if crosschain should go to sender
-  readonly recipient: string | null
+  readonly status: Map<string, ProposalStatus>
+  readonly currentRecipient: string
+  readonly currentTxID: string
+  readonly availableChains: Array<CrosschainChain>
+  readonly availableTokens: Array<CrosschainToken>
+  readonly currentChain: CrosschainChain
+  readonly currentToken: CrosschainToken
 }
 
 const initialState: CrosschainState = {
-  independentField: Field.INPUT,
-  typedValue: '',
-  [Field.INPUT]: {
-    currencyId: ''
+  status: new Map<string, ProposalStatus>(),
+  currentRecipient: '',
+  currentTxID: '',
+  availableChains: new Array<CrosschainChain>(),
+  availableTokens: new Array<CrosschainToken>(),
+  currentChain: {
+    name: '',
+    chainID: '',
   },
-  [Field.OUTPUT]: {
-    currencyId: ''
+  currentToken: {
+    name: '',
+    address: ''
   },
-  recipient: null
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
   builder
-    .addCase(
-      replaceCrosschainState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
-        return {
-          [Field.INPUT]: {
-            currencyId: inputCurrencyId
-          },
-          [Field.OUTPUT]: {
-            currencyId: outputCurrencyId
-          },
-          independentField: field,
-          typedValue: typedValue,
-          recipient
-        }
-      }
-    )
-    .addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
+    .addCase(setCrosschainSwapStatus, (state, { payload: { txID, status } }) => {
       const currentState = { ...initialState, ...state };
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
-      if (currencyId === currentState[otherField].currencyId) {
-        // the case where we have to crosschain the order
-        return {
-          ...currentState,
-          independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currencyId: currencyId },
-          [otherField]: { currencyId: state[field].currencyId }
-        }
-      } else {
-        // the normal case
-        return {
-          ...currentState,
-          [field]: { currencyId: currencyId }
+      return {
+        ...currentState,
+        status: {
+          ...state.status,
+          txID: status
         }
       }
     })
-    .addCase(switchCurrencies, state => {
+    .addCase(setCrosschainRecipient, (state, { payload: { address } }) => {
+      const currentState = { ...initialState, ...state };
       return {
-        ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-        [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
-        recipient: state.recipient || null,
+        ...currentState,
+        currentRecipient: address
       }
     })
-    .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
+    .addCase(setCurrentTxID, (state, { payload: { txID } }) => {
+      const currentState = { ...initialState, ...state };
       return {
-        ...state,
-        independentField: field,
-        [Field.INPUT]: { currencyId: state[Field.INPUT].currencyId },
-        [Field.OUTPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-        typedValue,
-        recipient: state.recipient || null,
+        ...currentState,
+        currentTxID: txID
       }
     })
-    .addCase(setRecipient, (state, { payload: { recipient } }) => {
-      state.recipient = recipient
+    .addCase(setAvailableChains, (state, { payload: { chains } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        availableChains: chains
+      }
+    })
+    .addCase(setAvailableTokens, (state, { payload: { tokens } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        availableTokens: tokens
+      }
+    })
+    .addCase(setCurrentChain, (state, { payload: { chain } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        currentChain: chain
+      }
+    })
+    .addCase(setCurrentToken, (state, { payload: { token } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        currentToken: token
+      }
     })
 )
