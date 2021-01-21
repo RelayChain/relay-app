@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import {
   CrosschainChain, CrosschainToken,
-  ProposalStatus,
+  ProposalStatus, setApproveStatus,
   setAvailableChains,
   setAvailableTokens,
   setCrosschainFee,
@@ -22,8 +22,8 @@ import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
 import { ethers } from 'ethers'
 
-const BridgeABI = require("../../constants/abis/Bridge.json").abi;
-const TokenABI = require("../../constants/abis/ERC20PresetMinterPauser.json").abi;
+const BridgeABI = require('../../constants/abis/Bridge.json').abi
+const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
 var dispatch: AppDispatch
 var web3React: any
@@ -242,11 +242,28 @@ export async function MakeApprove() {
   // const rawTX = tokenContract.methods.approve(currentChain.bridgeAddress, crosschainState.transferAmount).encodeABI();
   // var decodedTx = txDecoder.decodeTx(rawTX);
 
+  dispatch(setCurrentTxID({
+    txID: ''
+  }))
+
   const web3CurrentChain = new Web3(currentChain.rpcUrl)
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-  await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
+  const result = await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
     gasLimit: 300000
+  })
+
+  dispatch(setApproveStatus({
+    confirmed: false
+  }))
+  dispatch(setCurrentTxID({
+    txID: result.hash
+  }))
+
+  result.wait(2).then(() => {
+    dispatch(setApproveStatus({
+      confirmed: true
+    }))
   })
 
 }
