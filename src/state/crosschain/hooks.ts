@@ -147,6 +147,30 @@ function GetChainNameById(chainID: number): string {
   return ''
 }
 
+async function UpdateOwnTokenBalance() {
+  const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+  const signer = web3React.library.getSigner()
+  const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+
+  const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+  dispatch(setCurrentTokenBalance({
+    balance: balance
+  }))
+}
+
+async function UpdateFee() {
+  const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+
+  const signer = web3React.library.getSigner()
+  const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
+
+  const fee = (await bridgeContract._fee()).toString()
+
+  dispatch(setCrosschainFee({
+    value: fee
+  }))
+}
+
 export function useCrossChain() {
   dispatch = useDispatch<AppDispatch>()
 
@@ -215,7 +239,8 @@ export function useCrossChain() {
   // to address
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
-  }, [account, chainId])
+    UpdateOwnTokenBalance().catch(console.error)
+  }, [account])
 
 
   useEffect(() => {
@@ -248,9 +273,9 @@ export function useCrossChain() {
         address: ''
       }
     }))
-    dispatch(setCurrentTokenBalance({ balance: '' }))
     dispatch(setTransferAmount({ amount: '' }))
-    dispatch(setCrosschainFee({ value: '' }))
+    UpdateOwnTokenBalance().catch(console.error)
+    UpdateFee().catch(console.error)
   }, [chainId])
 }
 
@@ -328,7 +353,7 @@ export async function MakeDeposit() {
   console.log("_totalRelayersm", await bridgeContract._totalRelayers().catch(console.error))
   const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
     gasLimit: '300000',
-    value: '514545152'
+    value: crosschainState.crosschainFee
   }).catch(console.error)
 
   dispatch(setDeposiStatus({
