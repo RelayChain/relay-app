@@ -18,12 +18,14 @@ import {
   setTransferAmount
 } from './actions'
 
+var dispatch: AppDispatch;
+
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
 
 export function useCrossChain() {
-  const dispatch = useDispatch<AppDispatch>()
+  dispatch = useDispatch<AppDispatch>()
 
   const {
     swapStatus,
@@ -129,4 +131,12 @@ export function useCrossChain() {
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
   }, [account])
+}
+
+export async function MakeApprove() {
+  window.alert("approve")
+}
+
+export async function MakeDeposit() {
+  window.alert("deposit")
 }

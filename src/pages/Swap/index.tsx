@@ -49,7 +49,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useCrosschainState, useCrossChain } from '../../state/crosschain/hooks'
+import { useCrosschainState, useCrossChain, MakeDeposit } from '../../state/crosschain/hooks'
 import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
@@ -233,6 +233,10 @@ export default function Swap() {
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
   const handleSwap = useCallback(() => {
+    if (isCrossChain) {
+      MakeDeposit().catch(console.error)
+      return
+    }
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
     }
@@ -549,7 +553,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {isCrossChain && typedValue?.length > 0 ? (
+            {isCrossChain && transferAmount.length && currentBalance.length ? (
               <>
                 <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
