@@ -454,9 +454,13 @@ export default function Swap() {
             onShowTransferChainModal={showTransferChainModal}
           />
 
-          <span>Bridge fee {crosschainFee}</span>
-          <br/>
-          <span>Available balance {currentBalance}</span>
+          {
+            isCrossChain && <>
+              <span>Bridge fee {crosschainFee}</span>
+              <br/>
+              <span>Available balance {currentBalance}</span>
+            </>
+          }
 
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
