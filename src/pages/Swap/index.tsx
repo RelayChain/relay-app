@@ -33,7 +33,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal';
 import CrossChainModal from '../../components/CrossChainModal';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Field } from '../../state/swap/actions'
+import { Field, setRecipient } from '../../state/swap/actions'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import ReactGA from 'react-ga'
@@ -50,9 +50,16 @@ import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useCrosschainState, useCrossChain } from '../../state/crosschain/hooks'
-import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import {
+  CrosschainChain,
+  CrosschainToken,
+  setCrosschainRecipient,
+  setTargetChain,
+  setTransferAmount
+} from '../../state/crosschain/actions'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
+import Input from '../../components/NumericalInput'
 
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
@@ -387,6 +394,12 @@ export default function Swap() {
     return ''
   }
 
+  const onChangeRecipientCrosschain = (e: any) => {
+      dispatch(setCrosschainRecipient({
+        address: e.target.value
+      }))
+    }
+
   return (
     <>
 
@@ -450,11 +463,10 @@ export default function Swap() {
             onShowTransferChainModal={showTransferChainModal}
           />
 
-          <span>Bridge fee {crosschainFee}</span>
-          <br/>
-          <span>Available balance {currentBalance}</span>
 
           <AutoColumn gap={'md'}>
+            <span>Bridge fee {crosschainFee}</span>
+            <span>Available balance {currentBalance}</span>
             <CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={'Amount:'}
@@ -489,19 +501,31 @@ export default function Swap() {
                 ) : null}
               </AutoRow>
             </AutoColumn>
-            <CurrencyInputPanel
-              blockchain={'Avalanche'}
-              value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
-              label={'To'}
-              showMaxButton={false}
-              currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
-              onCurrencySelect={handleOutputSelect}
-              otherCurrency={currencies[Field.INPUT]}
-              isCrossChain={isCrossChain}
-              disableCurrencySelect={isCrossChain ? true : false}
-              id="swap-currency-output"
-            />
+            {
+              !isCrossChain && <CurrencyInputPanel
+                blockchain={'Avalanche'}
+                value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
+                onUserInput={handleTypeOutput}
+                label={'To'}
+                showMaxButton={false}
+                currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
+                onCurrencySelect={handleOutputSelect}
+                otherCurrency={currencies[Field.INPUT]}
+                isCrossChain={isCrossChain}
+                disableCurrencySelect={isCrossChain ? true : false}
+                id="swap-currency-output"
+              />
+            }
+
+            {
+              currentRecipient !== null && isCrossChain &&
+              <input
+                className="recipient-address-input"
+                type="text"
+                onChange={onChangeRecipientCrosschain}
+                value={currentRecipient}
+              />
+            }
 
             {recipient !== null && !showWrap ? (
               <>
