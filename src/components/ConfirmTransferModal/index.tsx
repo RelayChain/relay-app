@@ -95,6 +95,7 @@ export default function ConfirmTransferModal({
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
+      <span>approveStatus : {approveStatus?"1":"0"}</span>
       <ModalContainer>
       <RowBetween>
         <div />

@@ -20,7 +20,15 @@ import {
 import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
-import { ethers } from 'ethers'
+import {
+  BigNumber,
+  BigNumberish,
+  ContractTransaction,
+  ethers,
+  Overrides,
+  PayableOverrides,
+  utils
+} from 'ethers'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -65,6 +73,21 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   return result
 }
 
+function GetChainbridgeConfigByTokenAddress(address: string): BridgeConfig {
+  let result: BridgeConfig | undefined
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    chain.tokens.map((token: TokenConfig) => {
+      if (token.address === address) {
+        result = chain
+      }
+    })
+  }))
+  if (!result) {
+    throw Error(`unknown id ${address}`)
+  }
+  return result
+}
+
 function GetTokenByAddress(address: string): TokenConfig {
   let result: TokenConfig | undefined
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
@@ -93,10 +116,10 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   return result
 }
 
-function GetAvailableTokens(currentChainName: string): Array<CrosschainToken> {
+function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   const result: Array<CrosschainToken> = []
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
-    if (chain.name !== currentChainName) {
+    if (chain.name === chainName) {
       chain.tokens.map((token: TokenConfig) => {
         const t = {
           address: token.address,
@@ -246,7 +269,6 @@ export async function MakeApprove() {
     txID: ''
   }))
 
-  const web3CurrentChain = new Web3(currentChain.rpcUrl)
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
   const result = await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
@@ -268,36 +290,45 @@ export async function MakeApprove() {
 }
 
 export async function MakeDeposit() {
-  // const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-  // const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
-  //
-  // dispatch(setCurrentTxID({
-  //   txID: ''
-  // }))
-  //
-  // const signer = web3React.library.getSigner()
-  // const tokenContract = new ethers.Contract(currentChain.bridgeAddress, TokenABI, signer)
-  // const result = await tokenContract.deposit(currentChain.bridgeAddress, crosschainState.transferAmount, {
-  //   gasLimit: 300000
-  // })
-  //
-  // dispatch(setApproveStatus({
-  //   confirmed: false
-  // }))
-  // dispatch(setCurrentTxID({
-  //   txID: result.hash
-  // }))
-  //
-  // result.wait(2).then(() => {
-  //   dispatch(setApproveStatus({
-  //     confirmed: true
-  //   }))
-  // })
+  const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+  const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+  const targetChain = GetChainbridgeConfigByTokenAddress(crosschainState.currentToken.address)
 
-  setTimeout(()=>{
+  dispatch(setCurrentTxID({
+    txID: ''
+  }))
 
+  const signer = web3React.library.getSigner()
+  const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
+
+  const data =
+    '0x' +
+    utils
+      .hexZeroPad(
+        // TODO Wire up dynamic token decimals
+        BigNumber.from(utils.parseUnits(crosschainState.transferAmount, 18)).toHexString(),
+        32
+      )
+      .substr(2) + // Deposit Amount (32 bytes)
+    utils
+      .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
+      .substr(2) + // len(recipientAddress) (32 bytes)
+    crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+  const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
+    gasLimit: 300000,
+    value: 514545152
+  })
+
+  dispatch(setDeposiStatus({
+    confirmed: false
+  }))
+  dispatch(setCurrentTxID({
+    txID: result.hash
+  }))
+
+  result.wait(2).then(() => {
     dispatch(setDeposiStatus({
       confirmed: true
     }))
-  }, 5000)
+  })
 }
