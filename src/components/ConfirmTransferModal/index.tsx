@@ -12,6 +12,7 @@ import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
+import { useCrosschainState } from '../../state/crosschain/hooks'
 
 // export enum ChainTransferState {
 //   NotStarted = 'NOT_STARTED',
@@ -63,9 +64,13 @@ export default function ConfirmTransferModal({
   test,
 }: ConfirmTransferProps) {
 
-  console.log("1", currency);
-  console.log("2", value);
-  console.log('3', trade);
+  const {approveStatus} = useCrosschainState()
+  useEffect(()=>{
+    if(approveStatus){
+      changeTransferState(ChainTransferState.ApprovalComplete)
+    }
+  }, [approveStatus])
+
   const [ title, setTitle ] = useState('');
   useEffect(() => {
     switch (tokenTransferState) {

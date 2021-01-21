@@ -90,7 +90,8 @@ export default function Swap() {
     currentBalance,
     transferAmount,
     crosschainFee,
-    targetChain
+    targetChain,
+    approveStatus
   } = useCrosschainState()
   const dispatch = useDispatch<AppDispatch>()
 
@@ -401,6 +402,7 @@ export default function Swap() {
       />
 
       <AppBody>
+        <span>approveStatus {approveStatus ? "1" : "0"}</span>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <CrossChainModal
