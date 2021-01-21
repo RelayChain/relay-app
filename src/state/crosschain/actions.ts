@@ -25,6 +25,7 @@ export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-cur
 export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
 export const setAvailableTokens = createAction<{ tokens: Array<CrosschainToken> }>('crosschain/set-availableTokens')
 export const setCurrentChain = createAction<{ chain: CrosschainChain }>('crosschain/set-currentChain')
+export const setTargetChain = createAction<{ chain: CrosschainChain }>('crosschain/set-target-Chain')
 export const setCurrentToken = createAction<{ token: CrosschainToken }>('crosschain/set-currentToken')
 export const setCurrentTokenBalance = createAction<{ balance: string }>('crosschain/set-balance')
 export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')

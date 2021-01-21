@@ -50,6 +50,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useCrosschainState, useMockCrossChain } from '../../state/crosschain/hooks'
+import { CrosschainChain, CrosschainToken } from '../../state/crosschain/actions'
 
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
@@ -73,7 +74,22 @@ export enum ChainTransferState {
 
 export default function Swap() {
   useMockCrossChain()
+
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const {
+    swapStatus,
+    currentRecipient,
+    currentTxID,
+    availableChains,
+    availableTokens,
+    currentChain,
+    currentToken,
+    currentBalance,
+    transferAmount,
+    crosschainFee,
+    targetChain
+  } = useCrosschainState()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -352,13 +368,8 @@ export default function Swap() {
     hideConfirmTransferModal();
   }
 
-  const { crosschainFee, currentRecipient } = useCrosschainState()
-
   return (
     <>
-
-      <span>{crosschainFee}</span>
-      <span> {currentRecipient}</span>
 
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
@@ -414,8 +425,8 @@ export default function Swap() {
           <BlockchainSelector
             isCrossChain={isCrossChain}
             supportedChains={SUPPORTED_CHAINS}
-            blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-            transferTo={transferTo}
+            blockchain={isCrossChain ? currentChain : (!!chainId && !!CHAIN_LABELS[chainId] ?  CHAIN_LABELS[chainId] : 'Ethereum')}
+            transferTo={isCrossChain? targetChain : transferTo}
             onShowCrossChainModal={showCrossChainModal}
             onShowTransferChainModal={showTransferChainModal}
           />

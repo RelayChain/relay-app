@@ -13,7 +13,7 @@ import {
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
-  setCurrentTxID,
+  setCurrentTxID, setTargetChain,
   setTransferAmount
 } from './actions'
 
@@ -73,9 +73,15 @@ export function useMockCrossChain(): any | undefined {
         }
       ]
     }))
+    dispatch(setTargetChain({
+      chain: {
+        name: 'Ethereum',
+        chainID: '45'
+      }
+    }))
     dispatch(setCurrentChain({
       chain: {
-        name: 'adfsfsd',
+        name: 'Avalanche',
         chainID: '5'
       }
     }))

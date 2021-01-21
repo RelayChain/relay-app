@@ -3,6 +3,7 @@ import { ChevronDown, ChevronsRight, Link } from 'react-feather'
 import BlockchainLogo from '../BlockchainLogo';
 import React from 'react'
 import styled from 'styled-components'
+import { CrosschainChain } from '../../state/crosschain/actions'
 
 const Container = styled.div`
   border: 1px dashed rgba(38, 98, 255, .5);
@@ -54,8 +55,8 @@ const BlockchainSelector = ({
   onShowCrossChainModal,
   onShowTransferChainModal
 }: {
-  blockchain?: string
-  transferTo?: string;
+  blockchain: string | CrosschainChain | undefined
+  transferTo: string | CrosschainChain;
   isCrossChain?: boolean
   supportedChains: string[]
   onShowCrossChainModal: () => void
@@ -70,6 +71,14 @@ const BlockchainSelector = ({
     onShowTransferChainModal();
   }
 
+  console.log("blockchain", blockchain)
+  console.log("transferTo", transferTo)
+
+  if (!blockchain) {
+    return <div />
+  }
+
+  // @ts-ignore
   return (
     <Container>
       { !isCrossChain &&
@@ -79,7 +88,7 @@ const BlockchainSelector = ({
             Blockchain:
           </h5>
           <p onClick={openChangeChainInfo}>
-            <BlockchainLogo size="18px" blockchain={blockchain} style={{ marginBottom: '-3px' }} />
+            <BlockchainLogo size="18px" blockchain={typeof(blockchain) === "string"? blockchain : ""} style={{ marginBottom: '-3px' }} />
             <span>{blockchain}</span>
             <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
           </p>
@@ -88,13 +97,13 @@ const BlockchainSelector = ({
       { isCrossChain &&
         <Row borderBottom={false}>
           <p className="crosschain currentchain">
-            <BlockchainLogo size="18px" blockchain={blockchain} style={{ marginBottom: '-3px' }} />
-            <span>{blockchain}</span>
+            <BlockchainLogo size="18px" blockchain={typeof(blockchain) !== "string"? blockchain.name : ""} style={{ marginBottom: '-3px' }} />
+            <span>{typeof(blockchain) !== "string"? blockchain.name : ""}</span>
           </p>
           <ChevronsRight />
           <p className="crosschain" onClick={openTransferModal}>
-            <BlockchainLogo size="18px" blockchain={transferTo} style={{ marginBottom: '-3px' }} />
-            <span>{transferTo}</span>
+            <BlockchainLogo size="18px" blockchain={typeof(transferTo) !== "string"? transferTo.name : ""} style={{ marginBottom: '-3px' }} />
+            <span>{typeof(transferTo) !== "string"? transferTo.name : ""}</span>
             <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
           </p>
         </Row>
