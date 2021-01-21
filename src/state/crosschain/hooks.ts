@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import {
-  CrosschainChain,
+  CrosschainChain, CrosschainToken,
   ProposalStatus,
   setAvailableChains,
   setAvailableTokens,
@@ -17,11 +17,102 @@ import {
   setCurrentTxID, setTargetChain,
   setTransferAmount
 } from './actions'
+import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
+import { ChainId } from '@zeroexchange/sdk'
 
-var dispatch: AppDispatch;
+
+var dispatch: AppDispatch
 
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
+}
+
+function GetCurrentChain(currentChainName: string): CrosschainChain {
+  let result: CrosschainChain = {
+    name: '',
+    chainID: ''
+  }
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    if (chain.name === currentChainName) {
+      result = {
+        name: chain.name,
+        chainID: String(chain.chainId)
+      }
+    }
+  }))
+  return result
+}
+
+function GetChainbridgeConfigByID(chainID: number): BridgeConfig {
+  let result: BridgeConfig | undefined
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    if (chain.chainId === chainID) {
+      result = chain
+    }
+  }))
+  if (!result) {
+    throw Error(`unknown id ${chainID}`)
+  }
+  return result
+}
+
+function GetTokenByAddress(address: string): TokenConfig {
+  let result: TokenConfig | undefined
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    chain.tokens.map((token: TokenConfig) => {
+      if (token.address === address) {
+        result = token
+      }
+    })
+  }))
+  if (!result) {
+    throw Error(`unknown id ${address}`)
+  }
+  return result
+}
+
+function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
+  const result: Array<CrosschainChain> = []
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    if (chain.name !== currentChainName) {
+      result.push({
+        name: chain.name,
+        chainID: String(chain.chainId)
+      })
+    }
+  }))
+  return result
+}
+
+function GetAvailableTokens(currentChainName: string): Array<CrosschainToken> {
+  const result: Array<CrosschainToken> = []
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    if (chain.name !== currentChainName) {
+      chain.tokens.map((token: TokenConfig) => {
+        const t = {
+          address: token.address,
+          name: token.name || '',
+          symbol: token.symbol || '',
+          imageUri: token.imageUri,
+          resourceId: token.resourceId,
+          isNativeWrappedToken: token.isNativeWrappedToken
+        }
+        result.push(t)
+      })
+    }
+  }))
+  return result
+}
+
+function GetChainNameById(chainID: number): string {
+  if (chainID === ChainId.MAINNET) {
+    return 'Ethereum'
+  } else if (chainID === ChainId.RINKEBY) {
+    return 'Ethereum'
+  } else if (chainID === ChainId.FUJI) {
+    return 'Avalanche'
+  }
+  return ''
 }
 
 export function useCrossChain() {
@@ -45,41 +136,14 @@ export function useCrossChain() {
 
   // init mock
   useEffect(() => {
-    dispatch(setCrosschainSwapStatus({ txID: '0xdfgdfgdfgdfgjkdfgjdfjgkdfgkdfg', status: ProposalStatus.ACTIVE }))
-    dispatch(setCrosschainRecipient({ address: '0xE323c3087c75Fb7EeBf41d20190dc9886b45F303' }))
-    dispatch(setCurrentTxID({ txID: '0xE323c3087c75Fb7EeBf41d20190dc9886b45F303' }))
+    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCurrentTxID({ txID: '' }))
     dispatch(setAvailableChains({
-      chains: [
-        {
-          name: 'Ethereum',
-          chainID: '5'
-        },
-        {
-          name: 'Avalanche',
-          chainID: '4'
-        },
-        {
-          name: 'Polkadot',
-          chainID: '45'
-        }
-      ]
+      chains: GetAvailableChains(GetChainNameById(chainId || -1))
     }))
 
     dispatch(setAvailableTokens({
-      tokens: [
-        {
-          name: 'GHJ',
-          address: '0xE323c3089999999999999999999999999b45F303'
-        },
-        {
-          name: 'fghfgh',
-          address: '0xE323c3089999999999955555555555599b45F303'
-        },
-        {
-          name: 'ghjghjgh',
-          address: '0xE32399999999444444444444444999999b45F303'
-        }
-      ]
+      tokens: []
     }))
     dispatch(setTargetChain({
       chain: {
@@ -110,20 +174,7 @@ export function useCrossChain() {
     dispatch(setCurrentTxID({ txID: '' }))
 
     dispatch(setAvailableTokens({
-      tokens: [
-        {
-          name: String(Math.random()),
-          address: '0xE323c3089999999999999999999999999b45F303'
-        },
-        {
-          name: 'fghfgh',
-          address: '0xE323c3089999999999955555555555599b45F303'
-        },
-        {
-          name: 'ghjghjgh',
-          address: '0xE32399999999444444444444444999999b45F303'
-        }
-      ]
+      tokens: GetAvailableTokens(currentChain.name)
     }))
   }, [targetChain])
 
@@ -131,12 +182,46 @@ export function useCrossChain() {
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
   }, [account])
+
+
+  useEffect(() => {
+    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCurrentTxID({ txID: '' }))
+    const chains = GetAvailableChains(GetChainNameById(chainId || -1))
+    dispatch(setAvailableChains({
+      chains: chains
+    }))
+
+    const tokens = GetAvailableTokens(currentChain.name)
+    dispatch(setAvailableTokens({
+      tokens: tokens.length ? tokens : []
+    }))
+    dispatch(setTargetChain({
+      chain: chains.length ? chains[0] : {
+        name: '',
+        chainID: ''
+      }
+    }))
+    dispatch(setCurrentChain({
+      chain: GetCurrentChain(GetChainNameById(chainId || -1))
+    }))
+
+    dispatch(setCurrentToken({
+      token: tokens.length ? tokens[0] : {
+        name: '',
+        address: ''
+      }
+    }))
+    dispatch(setCurrentTokenBalance({ balance: '' }))
+    dispatch(setTransferAmount({ amount: '' }))
+    dispatch(setCrosschainFee({ value: '' }))
+  }, [chainId])
 }
 
 export async function MakeApprove() {
-  window.alert("approve")
+  window.alert('approve')
 }
 
 export async function MakeDeposit() {
-  window.alert("deposit")
+  window.alert('deposit')
 }
