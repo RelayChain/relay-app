@@ -12,6 +12,7 @@ import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
 import { TruncatedText } from './styleds'
 import styled from 'styled-components'
+import { MakeApprove } from '../../state/crosschain/hooks'
 
 interface NotStartedProps {
   activeChain?: string;
@@ -112,7 +113,10 @@ export default function NotStarted ({
       </RowFixed>
       <RowBetween></RowBetween>
       <RowFixed style={{ width: '100%'}}>
-        <ButtonPrimary onClick={() => changeTransferState(ChainTransferState.ApprovalPending)}>
+        <ButtonPrimary onClick={() => {
+          MakeApprove().catch(console.error)
+          changeTransferState(ChainTransferState.ApprovalPending)
+        }}>
           Approve Transfer
         </ButtonPrimary>
       </RowFixed>

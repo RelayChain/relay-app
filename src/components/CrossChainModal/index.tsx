@@ -2,14 +2,15 @@ import BlockchainLogo from '../BlockchainLogo';
 import Modal from '../Modal'
 import React from 'react'
 import styled from 'styled-components'
+import { CrosschainChain } from '../../state/crosschain/actions'
 
 interface CrossChainModalProps {
   isOpen: boolean;
   onDismiss: () => void;
-  supportedChains: string[];
+  supportedChains: Array<CrosschainChain>;
   activeChain?: string;
   isTransfer?: boolean;
-  selectTransferChain: (str: string) => void;
+  selectTransferChain: (str: CrosschainChain) => void;
 }
 
 const ModalContainer = styled.div`
@@ -95,7 +96,7 @@ export default function CrossChainModal({
         { !isTransfer && <h5>Supported Blockchains:</h5>}
         { isTransfer && <h5>Transfer tokens to:</h5>}
         <ul>
-          {supportedChains.map(chain =>
+          {supportedChains.map((chain: CrosschainChain) =>
             <li onClick={() => {
                 if (isTransfer) {
                   selectTransferChain(chain)
@@ -103,12 +104,12 @@ export default function CrossChainModal({
                 }
               }}
               className={`
-              ${activeChain === chain && !isTransfer ? 'active' : ''}
-              ${(activeChain === chain && isTransfer) || chain === 'Polkadot' ? 'disabled' : ''}
-              ${isTransfer && activeChain !== chain ? 'selectable' : ''}
+              ${activeChain === chain.name && !isTransfer ? 'active' : ''}
+              ${(activeChain === chain.name && isTransfer) || chain.name === 'Polkadot' ? 'disabled' : ''}
+              ${isTransfer && activeChain !== chain.name ? 'selectable' : ''}
             `}>
-              <BlockchainLogo size="28px" blockchain={chain} />
-              <span>{chain}</span>
+              <BlockchainLogo size="28px" blockchain={chain.name} />
+              <span>{chain.name}</span>
             </li>
           )}
         </ul>

@@ -5,7 +5,6 @@ import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../con
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
-import { ChainbridgeProvider, useChainbridge } from '../Chainbridge/Contexts/ChainbridgeContext'
 import Column, { AutoColumn } from '../../components/Column'
 import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -44,16 +43,17 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
-import { Web3Provider } from '../Chainbridge/Web3Context'
-import { chainbridgeConfig } from '../Chainbridge/chainbridgeConfig'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useWeb3 } from '../Chainbridge/Web3Context'
-import { utils } from 'ethers'
+import { useCrosschainState, useCrossChain, MakeDeposit } from '../../state/crosschain/hooks'
+import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../state'
+
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -75,43 +75,25 @@ export enum ChainTransferState {
 }
 
 export default function Swap() {
-  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
-    return {
-      ...tca,
-      [bc.networkId]: bc.tokens
-    }
-  }, {})
-  return (
-    <>
-      <Web3Provider
-        tokensToWatch={tokens}
-        onboardConfig={{
-          walletSelect: {
-            wallets: [{ walletName: 'metamask', preferred: true }]
-          },
-          subscriptions: {
-            network: (network) => console.log('chainId: ', network),
-            balance: (amount) =>
-              console.log('balance: ', utils.formatEther(amount))
-          }
-        }}
-        checkNetwork={false}
-        gasPricePollingInterval={120}
-        gasPriceSetting="fast"
-      >
-        <ChainbridgeProvider>
-          <ChainBrideSwap />
-        </ChainbridgeProvider>
-      </Web3Provider>
-    </>
-  )
+  useCrossChain()
 
-}
-
-function ChainBrideSwap() {
-  const { address } = useWeb3();
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const { deposit } = useChainbridge();
+
+  const {
+    swapStatus,
+    currentRecipient,
+    currentTxID,
+    availableChains,
+    availableTokens,
+    currentChain,
+    currentToken,
+    currentBalance,
+    transferAmount,
+    crosschainFee,
+    targetChain,
+    approveStatus
+  } = useCrosschainState()
+  const dispatch = useDispatch<AppDispatch>()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -189,6 +171,9 @@ function ChainBrideSwap() {
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
+      dispatch(setTransferAmount({
+        amount: value
+      }))
     },
     [onUserInput]
   )
@@ -325,6 +310,10 @@ function ChainBrideSwap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
+  const handleMaxInputCrosschain = useCallback(() => {
+    return currentBalance
+  }, [currentBalance, onUserInput])
+
   const handleOutputSelect = useCallback(
     outputCurrency => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
@@ -364,8 +353,10 @@ function ChainBrideSwap() {
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
   }
-  const onSelectTransferChain = (chain: string) => {
-    setTransferTo(chain);
+  const onSelectTransferChain = (chain: CrosschainChain) => {
+    dispatch(setTargetChain({
+      chain
+    }))
   }
 
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
@@ -387,15 +378,15 @@ function ChainBrideSwap() {
   }
   // token transfer modals & handlers
   const handleTokenTransfer = () => {
-    const netInfo = chainbridgeConfig.chains.find( item => item.networkId === chainId);
-    if(address && netInfo) {
-      deposit( +formattedAmounts[Field.INPUT], address, netInfo.tokens[0]['address']);
-      hideConfirmTransferModal();
-    } else {
-      alert(`User address is not valid: ${address} `);
-    }
+    hideConfirmTransferModal();
   }
 
+  const getChainName = (): string => {
+    if (!!chainId && chainId in CHAIN_LABELS) {
+      return CHAIN_LABELS[chainId] || ''
+    }
+    return ''
+  }
 
   return (
     <>
@@ -407,19 +398,20 @@ function ChainBrideSwap() {
       />
 
       <AppBody>
+        <span>approveStatus {approveStatus ? "1" : "0"}</span>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <CrossChainModal
             isOpen={crossChainModalOpen}
             onDismiss={hideCrossChainModal}
-            supportedChains={SUPPORTED_CHAINS}
+            supportedChains={availableChains}
             selectTransferChain={() => ''}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
           />
           <CrossChainModal
             isOpen={transferChainModalOpen}
             onDismiss={hideTransferChainModal}
-            supportedChains={SUPPORTED_CHAINS}
+            supportedChains={availableChains}
             isTransfer={true}
             selectTransferChain={onSelectTransferChain}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
@@ -454,21 +446,29 @@ function ChainBrideSwap() {
           <BlockchainSelector
             isCrossChain={isCrossChain}
             supportedChains={SUPPORTED_CHAINS}
-            blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-            transferTo={transferTo}
+            blockchain={isCrossChain ? currentChain : (!!chainId && !!CHAIN_LABELS[chainId] ?  CHAIN_LABELS[chainId] : 'Ethereum')}
+            transferTo={isCrossChain? targetChain : transferTo}
             onShowCrossChainModal={showCrossChainModal}
             onShowTransferChainModal={showTransferChainModal}
           />
 
+          {
+            isCrossChain && <>
+              <span>Bridge fee {crosschainFee}</span>
+              <br/>
+              <span>Available balance {currentBalance}</span>
+            </>
+          }
+
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              blockchain={'Ethereum'}
-              label={'From'}
-              value={formattedAmounts[Field.INPUT]}
+              blockchain={isCrossChain ? currentChain.name : getChainName()}
+              label={'Amount:'}
+              value={transferAmount}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
-              onMax={handleMaxInput}
+              onMax={isCrossChain ? handleMaxInput : handleMaxInputCrosschain}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               isCrossChain={isCrossChain}
@@ -555,7 +555,7 @@ function ChainBrideSwap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {isCrossChain && typedValue?.length > 0 ? (
+            {isCrossChain && transferAmount.length ? (
               <>
                 <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
