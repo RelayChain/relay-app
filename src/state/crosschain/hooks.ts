@@ -298,6 +298,7 @@ export async function MakeApprove() {
 
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+  console.log("currentChain.bridgeAddress, crosschainState.transferAmount", currentChain.bridgeAddress, crosschainState.transferAmount)
   const result = await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
     gasLimit: '300000'
   })
@@ -315,9 +316,9 @@ export async function MakeApprove() {
     }))
   })
 
-  dispatch(setApproveStatus({
-    confirmed: true
-  }))
+  // dispatch(setApproveStatus({
+  //   confirmed: true
+  // }))
 }
 
 export async function MakeDeposit() {
@@ -360,7 +361,7 @@ export async function MakeDeposit() {
   console.log(">>>>>>>>>>>>>>>",targetChain.chainId, currentToken.resourceId, data)
   console.log("_totalRelayersm", await bridgeContract._totalRelayers().catch(console.error))
   const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
-    gasLimit: '300000',
+    // gasLimit: '300000',
     value: crosschainState.crosschainFee
   }).catch(console.error)
 
