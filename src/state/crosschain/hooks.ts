@@ -39,6 +39,8 @@ export function useCrossChain() {
     targetChain
   } = useCrosschainState()
 
+  const { account, chainId } = useActiveWeb3React()
+
   // init mock
   useEffect(() => {
     dispatch(setCrosschainSwapStatus({ txID: '0xdfgdfgdfgdfgjkdfgjdfjgkdfgkdfg', status: ProposalStatus.ACTIVE }))
@@ -122,4 +124,9 @@ export function useCrossChain() {
       ]
     }))
   }, [targetChain])
+
+  // to address
+  useEffect(() => {
+    dispatch(setCrosschainRecipient({ address: account || '' }))
+  }, [account])
 }
