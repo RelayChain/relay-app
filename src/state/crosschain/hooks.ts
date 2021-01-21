@@ -19,9 +19,12 @@ import {
 } from './actions'
 import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
 import { ChainId } from '@zeroexchange/sdk'
+import Web3 from 'web3'
 
 
 var dispatch: AppDispatch
+var web3React: any
+var crosschainState: AppState['crosschain']
 
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
@@ -43,7 +46,10 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
   return result
 }
 
-function GetChainbridgeConfigByID(chainID: number): BridgeConfig {
+function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
+  if (typeof (chainID) === 'string') {
+    chainID = Number(chainID)
+  }
   let result: BridgeConfig | undefined
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     if (chain.chainId === chainID) {
@@ -131,8 +137,10 @@ export function useCrossChain() {
     crosschainFee,
     targetChain
   } = useCrosschainState()
+  crosschainState = useCrosschainState()
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
+  web3React = useActiveWeb3React()
 
   // init mock
   useEffect(() => {
@@ -220,6 +228,12 @@ export function useCrossChain() {
 
 export async function MakeApprove() {
   window.alert('approve')
+  console.log('current chain', )
+  const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+
+  const web3CurrentChain = new Web3(currentChain.rpcUrl)
+  console.log('account', (web3React.account))
+  console.log('>>>>>>>>>>>>>>>>>>>>balance', await web3CurrentChain.eth.getBalance(web3React.account))
 }
 
 export async function MakeDeposit() {

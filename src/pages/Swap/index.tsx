@@ -557,7 +557,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {isCrossChain && transferAmount.length && currentBalance.length ? (
+            {isCrossChain && transferAmount.length ? (
               <>
                 <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}

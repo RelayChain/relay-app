@@ -35,7 +35,7 @@ export const crosschainConfig: ChainbridgeConfig = {
             name: "Ethereum",
             bridgeAddress: "0x06E4d0FCd55eacb617dFCd0C5e75D8b005894bD2",
             erc20HandlerAddress: "0x754977d76601b473474Ba8FBac0Fa2A20Aa84694",
-            rpcUrl: "https://rinkeby.infura.io/v3/b1923d2921b84d32bf392c656c4b6169",
+            rpcUrl: "https://rinkeby.infura.io/v3/45174a29359d4b07ade01676259bc47a",
             type: "Ethereum",
             blockExplorer: "https://ropsten.etherscan.io/tx",
             nativeTokenSymbol: "Mock",
