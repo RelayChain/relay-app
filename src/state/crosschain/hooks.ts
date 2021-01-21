@@ -170,7 +170,7 @@ export function useCrossChain() {
 
   // init mock
   useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     dispatch(setAvailableChains({
       chains: GetAvailableChains(GetChainNameById(chainId || -1))
@@ -204,7 +204,7 @@ export function useCrossChain() {
 
   // change target chain
   useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
 
     dispatch(setAvailableTokens({
@@ -215,11 +215,11 @@ export function useCrossChain() {
   // to address
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
-  }, [account])
+  }, [account, chainId])
 
 
   useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     const chains = GetAvailableChains(GetChainNameById(chainId || -1))
     dispatch(setAvailableChains({
@@ -274,7 +274,7 @@ export async function MakeApprove() {
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
   const result = await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
-    gasLimit: 300000
+    gasLimit: '300000'
   })
 
   dispatch(setApproveStatus({
@@ -289,6 +289,10 @@ export async function MakeApprove() {
       confirmed: true
     }))
   })
+
+  dispatch(setApproveStatus({
+    confirmed: true
+  }))
 }
 
 export async function MakeDeposit() {
@@ -303,6 +307,10 @@ export async function MakeDeposit() {
   const signer = web3React.library.getSigner()
   const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
 
+  console.log("_fee", (await bridgeContract._fee()).toString())
+
+  console.log("crosschainState.transferAmount", crosschainState.transferAmount)
+  console.log("crosschainState.currentRecipient", crosschainState.currentRecipient)
   const data =
     '0x' +
     utils
@@ -316,10 +324,12 @@ export async function MakeDeposit() {
       .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
       .substr(2) + // len(recipientAddress) (32 bytes)
     crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+  console.log(">>>>>>>>>>>>>>>",targetChain.chainId, currentToken.resourceId, data)
+  console.log("_totalRelayersm", await bridgeContract._totalRelayers().catch(console.error))
   const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
-    gasLimit: 300000,
-    value: 514545152
-  })
+    gasLimit: '300000',
+    value: '514545152'
+  }).catch(console.error)
 
   dispatch(setDeposiStatus({
     confirmed: false
