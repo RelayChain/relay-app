@@ -27,3 +27,5 @@ export const setAvailableTokens = createAction<{ tokens: Array<CrosschainToken> 
 export const setCurrentChain = createAction<{ chain: CrosschainChain }>('crosschain/set-currentChain')
 export const setCurrentToken = createAction<{ token: CrosschainToken }>('crosschain/set-currentToken')
 export const setCurrentTokenBalance = createAction<{ balance: string }>('crosschain/set-balance')
+export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')
+export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-fee')

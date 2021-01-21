@@ -10,23 +10,27 @@ import {
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
+  setTransferAmount,
+  setCrosschainFee,
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
-  readonly status: Map<string, ProposalStatus>
+  readonly swapStatus: Map<string, ProposalStatus>
   readonly currentRecipient: string
   readonly currentTxID: string
   readonly availableChains: Array<CrosschainChain>
   readonly availableTokens: Array<CrosschainToken>
   readonly currentChain: CrosschainChain
   readonly currentToken: CrosschainToken
-  readonly balance: string
+  readonly currentBalance: string
+  readonly transferAmount: string
+  readonly crosschainFee: string
 }
 
 const initialState: CrosschainState = {
-  status: new Map<string, ProposalStatus>(),
+  swapStatus: new Map<string, ProposalStatus>(),
   currentRecipient: '',
   currentTxID: '',
   availableChains: new Array<CrosschainChain>(),
@@ -39,7 +43,9 @@ const initialState: CrosschainState = {
     name: '',
     address: ''
   },
-  balance: '',
+  currentBalance: '',
+  transferAmount: '',
+  crosschainFee: '',
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -48,8 +54,8 @@ export default createReducer<CrosschainState>(initialState, builder =>
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
-        status: {
-          ...state.status,
+        swapStatus: {
+          ...state.swapStatus,
           txID: status
         }
       }
@@ -100,7 +106,21 @@ export default createReducer<CrosschainState>(initialState, builder =>
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
-        balance: balance
+        currentBalance: balance
+      }
+    })
+    .addCase(setTransferAmount, (state, { payload: { amount } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        transferAmount: amount
+      }
+    })
+    .addCase(setCrosschainFee, (state, { payload: { value } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        crosschainFee: value
       }
     })
 )
