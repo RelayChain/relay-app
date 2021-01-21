@@ -17,6 +17,10 @@ export interface CrosschainToken {
 export interface CrosschainChain {
   name: string,
   chainID: string,
+  symbol?: string;
+  imageUri?: string;
+  resourceId?: string;
+  isNativeWrappedToken?: boolean;
 }
 
 export const setCrosschainSwapStatus = createAction<{ txID: string, status: ProposalStatus }>('crosschain/set-swaps-tatus')
