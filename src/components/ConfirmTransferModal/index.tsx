@@ -1,17 +1,25 @@
-import { RowBetween, RowFixed } from '../Row'
+import React, { useEffect, useState } from 'react'
 
-import { AutoColumn } from '../Column'
-import BlockchainLogo from '../BlockchainLogo';
-import { ButtonPrimary } from '../Button'
-import { ChevronsRight } from 'react-feather'
+import ApprovalComplete from './ApprovalComplete'
+import ApprovalPending from './ApprovalPending'
+import { ChainTransferState } from '../../pages/Swap';
+import { CloseIcon } from '../../theme/components'
 import { Currency } from '@zeroexchange/sdk'
-import CurrencyLogo from '../CurrencyLogo'
 import Modal from '../Modal'
-import React from 'react'
-import { Text } from 'rebass'
+import NotStarted from './NotStarted';
+import { RowBetween } from '../Row'
 import { Trade } from '@zeroexchange/sdk'
-import { TruncatedText } from './styleds'
+import TransferComplete from './TransferComplete'
+import TransferPending from './TransferPending'
 import styled from 'styled-components'
+
+// export enum ChainTransferState {
+//   NotStarted = 'NOT_STARTED',
+//   ApprovalPending = 'APPROVE_PENDING',
+//   ApprovalComplete = 'APPROVE_COMPLETE',
+//   TransferPending = 'TRANSFER_PENDING',
+//   TransferComplete = 'TRANSFER_COMPLETE'
+// }
 
 interface ConfirmTransferProps {
   isOpen: boolean;
@@ -21,7 +29,9 @@ interface ConfirmTransferProps {
   currency?: Currency | null;
   value?: string;
   trade?: Trade
-  confirmTransfer: () => void;
+  changeTransferState: (state: ChainTransferState) => void;
+  tokenTransferState: ChainTransferState;
+  test: any;
 }
 
 const ModalContainer = styled.div`
@@ -33,42 +43,10 @@ const ModalContainer = styled.div`
   h5 {
     font-weight: bold;
     margin-bottom: 1rem;
-  }
-`
-
-const ChainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed ${({ theme }) => theme.primary1};
-  border-radius: 12px;
-`
-
-const ChainItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-  position: relative;
-  padding: 12px;
-  transition: all .2s ease-in-out;
-  border-radius: 12px;
-  img {
-    margin: auto;
-    margin-bottom: .5rem;
-  }
-`
-const ChainMessage = styled.p`
-  font-size: .85rem;
-  line-height: 1.25rem;
-  a {
-    font-weight: bold;
-    color: ${({ theme }) => theme.primary1};
-    cursor: pointer;
-    outline: none;
-    text-decoration: none;
-    margin-left: 4px; margin-right: 4px;
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.25rem;
   }
 `
 
@@ -80,61 +58,76 @@ export default function ConfirmTransferModal({
   currency,
   value,
   trade,
-  confirmTransfer,
+  changeTransferState,
+  tokenTransferState,
+  test,
 }: ConfirmTransferProps) {
+
+  console.log("1", currency);
+  console.log("2", value);
+  console.log('3', trade);
+  const [ title, setTitle ] = useState('');
+  useEffect(() => {
+    switch (tokenTransferState) {
+      case ChainTransferState.NotStarted:
+      setTitle('Approve Your Transfer');
+      break;
+      case ChainTransferState.ApprovalPending:
+      setTitle('Approval Pending');
+      break;
+      case ChainTransferState.ApprovalComplete:
+      setTitle('Approved! Now Start Transfer');
+      break;
+      case ChainTransferState.TransferPending:
+      setTitle('Transfer Pending');
+      break;
+      case ChainTransferState.TransferComplete:
+      setTitle('Transfer Complete');
+      break;
+      default:
+    }
+  }, [tokenTransferState]);
+
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
-        <h5>Confirm Token Transfer:</h5>
-        <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
-          <RowBetween align="flex-end">
-            <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade?.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
-              <TruncatedText
-                fontSize={24}
-                fontWeight={500}
-                color={''}
-              >
-                {trade?.inputAmount.toSignificant(6)}
-              </TruncatedText>
-            </RowFixed>
-            <RowFixed gap={'0px'}>
-              <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-                {trade?.inputAmount.currency.symbol}
-              </Text>
-            </RowFixed>
-          </RowBetween>
-          <RowFixed gap={'0px'} style={{ margin: '1.5rem auto' }}>
-            <ChainContainer>
-              <ChainItem>
-                <BlockchainLogo size="28px" blockchain={activeChain} />
-                <span>{activeChain}</span>
-              </ChainItem>
-              <ChevronsRight />
-              <ChainItem>
-                <BlockchainLogo size="28px" blockchain={transferTo} />
-                <span>{transferTo}</span>
-              </ChainItem>
-            </ChainContainer>
-          </RowFixed>
-          <RowFixed gap={'0px'}>
-            <ChainMessage>
-              You will be transfering your {activeChain} tokens to the {transferTo} Blockchain. You must
-              <a href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
-                rel="noopener noreferrer"
-                target="_blank">switch your RPC Network
-              </a>
-              to the appropriate settings once this is complete to view your tokens.
-            </ChainMessage>
-          </RowFixed>
-          <RowBetween></RowBetween>
-          <RowFixed style={{ width: '100%'}}>
-            <ButtonPrimary onClick={confirmTransfer}>
-              Confirm Transfer
-            </ButtonPrimary>
-          </RowFixed>
-        </AutoColumn>
+      <RowBetween>
+        <div />
+        <CloseIcon onClick={onDismiss} />
+      </RowBetween>
+      <h5>{title}</h5>
 
+      {tokenTransferState === ChainTransferState.NotStarted &&
+        <NotStarted
+          activeChain={activeChain}
+          transferTo={transferTo}
+          currency={currency}
+          value={value}
+          trade={trade}
+          changeTransferState={changeTransferState}
+          tokenTransferState={tokenTransferState}
+        />}
+
+      { tokenTransferState === ChainTransferState.ApprovalPending &&
+        <ApprovalPending />
+      }
+
+      { tokenTransferState === ChainTransferState.ApprovalComplete &&
+        <ApprovalComplete />
+      }
+
+      { tokenTransferState === ChainTransferState.TransferPending &&
+        <TransferPending />
+      }
+
+      { tokenTransferState === ChainTransferState.TransferComplete &&
+        <TransferComplete
+          activeChain={activeChain}
+          transferTo={transferTo}
+          onDismiss={onDismiss}
+          trade={trade}
+        />
+      }
       </ModalContainer>
     </Modal>
   )

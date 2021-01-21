@@ -5,6 +5,7 @@ import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../con
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
+import { ChainbridgeProvider, useChainbridge } from '../Chainbridge/Contexts/ChainbridgeContext'
 import Column, { AutoColumn } from '../../components/Column'
 import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -43,17 +44,16 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
+import { Web3Provider } from '../Chainbridge/Web3Context'
+import { chainbridgeConfig } from '../Chainbridge/chainbridgeConfig'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { ChainbridgeProvider, useChainbridge } from '../Chainbridge/Contexts/ChainbridgeContext'
-import { Web3Provider } from '../Chainbridge/Web3Context'
-import { utils } from 'ethers'
-import { chainbridgeConfig } from '../Chainbridge/chainbridgeConfig'
 import { useWeb3 } from '../Chainbridge/Web3Context'
+import { utils } from 'ethers'
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -65,6 +65,14 @@ const SUPPORTED_CHAINS = [
   'Avalanche',
   'Polkadot'
 ]
+
+export enum ChainTransferState {
+  NotStarted = 'NOT_STARTED',
+  ApprovalPending = 'APPROVE_PENDING',
+  ApprovalComplete = 'APPROVE_COMPLETE',
+  TransferPending = 'TRANSFER_PENDING',
+  TransferComplete = 'TRANSFER_COMPLETE'
+}
 
 export default function Swap() {
   const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
@@ -367,10 +375,16 @@ function ChainBrideSwap() {
   const showConfirmTransferModal = () => {
     setConfirmTransferModalOpen(true)
   }
-  const onConfirmTransfer = () => {
-    handleTokenTransfer();
-  }
 
+  // token transfer state
+  const [ tokenTransferState, setTokenTransferState ] = useState(ChainTransferState.NotStarted);
+
+  const onChangeTransferState = (state: ChainTransferState) => {
+    // put logic here for various Chainbridge functions
+    // if they succeed, set the transfer state to the next state
+    // when complete, switch back to NotStarted
+    setTokenTransferState(state);
+  }
   // token transfer modals & handlers
   const handleTokenTransfer = () => {
     const netInfo = chainbridgeConfig.chains.find( item => item.networkId === chainId);
@@ -415,10 +429,12 @@ function ChainBrideSwap() {
             onDismiss={hideConfirmTransferModal}
             transferTo={transferTo}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-            confirmTransfer={onConfirmTransfer}
+            changeTransferState={onChangeTransferState}
+            tokenTransferState={tokenTransferState}
             value={formattedAmounts[Field.INPUT]}
             currency={currencies[Field.INPUT]}
             trade={trade}
+            test={handleTokenTransfer}
           />
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -652,4 +668,3 @@ function ChainBrideSwap() {
     </>
   )
 }
-
