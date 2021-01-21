@@ -251,17 +251,17 @@ export function useCrossChain() {
       chains: chains
     }))
 
-    const newTargetCgain = chains.length ? chains[0] : {
+    const newTargetCain = chains.length ? chains[0] : {
       name: '',
       chainID: ''
     }
 
-    const tokens = GetAvailableTokens(newTargetCgain.name)
+    const tokens = GetAvailableTokens(GetChainNameById(chainId || -1))
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
     dispatch(setTargetChain({
-      chain: newTargetCgain
+      chain: newTargetCain
     }))
     dispatch(setCurrentChain({
       chain: GetCurrentChain(GetChainNameById(chainId || -1))
@@ -323,7 +323,15 @@ export async function MakeApprove() {
 export async function MakeDeposit() {
   const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
   const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
-  const targetChain = GetChainbridgeConfigByTokenAddress(crosschainState.currentToken.address)
+  const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
+  const targetToken = targetChain.tokens[0]
+
+  console.log("currentChain", currentChain)
+  console.log("targetChain", targetChain)
+  console.log("targetToken", targetToken)
+  console.log("currentToken", currentToken)
+  console.log("crosschainState.currentToken", crosschainState.currentToken)
+  console.log("currentChain.bridgeAddress", currentChain.bridgeAddress)
 
   dispatch(setCurrentTxID({
     txID: ''
