@@ -5,7 +5,6 @@ import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../con
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
-import { ChainbridgeProvider, useChainbridge } from '../Chainbridge/Contexts/ChainbridgeContext'
 import Column, { AutoColumn } from '../../components/Column'
 import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -44,16 +43,12 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
-import { Web3Provider } from '../Chainbridge/Web3Context'
-import { chainbridgeConfig } from '../Chainbridge/chainbridgeConfig'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useWeb3 } from '../Chainbridge/Web3Context'
-import { utils } from 'ethers'
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -75,43 +70,16 @@ export enum ChainTransferState {
 }
 
 export default function Swap() {
-  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
-    return {
-      ...tca,
-      [bc.networkId]: bc.tokens
-    }
-  }, {})
   return (
     <>
-      <Web3Provider
-        tokensToWatch={tokens}
-        onboardConfig={{
-          walletSelect: {
-            wallets: [{ walletName: 'metamask', preferred: true }]
-          },
-          subscriptions: {
-            network: (network) => console.log('chainId: ', network),
-            balance: (amount) =>
-              console.log('balance: ', utils.formatEther(amount))
-          }
-        }}
-        checkNetwork={false}
-        gasPricePollingInterval={120}
-        gasPriceSetting="fast"
-      >
-        <ChainbridgeProvider>
-          <ChainBrideSwap />
-        </ChainbridgeProvider>
-      </Web3Provider>
+      <ChainBrideSwap />
     </>
   )
 
 }
 
 function ChainBrideSwap() {
-  const { address } = useWeb3();
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const { deposit } = useChainbridge();
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -387,13 +355,7 @@ function ChainBrideSwap() {
   }
   // token transfer modals & handlers
   const handleTokenTransfer = () => {
-    const netInfo = chainbridgeConfig.chains.find( item => item.networkId === chainId);
-    if(address && netInfo) {
-      deposit( +formattedAmounts[Field.INPUT], address, netInfo.tokens[0]['address']);
-      hideConfirmTransferModal();
-    } else {
-      alert(`User address is not valid: ${address} `);
-    }
+    hideConfirmTransferModal();
   }
 
 
