@@ -226,15 +226,17 @@ export function useCrossChain() {
       chains: chains
     }))
 
-    const tokens = GetAvailableTokens(currentChain.name)
+    const newTargetCgain = chains.length ? chains[0] : {
+      name: '',
+      chainID: ''
+    }
+
+    const tokens = GetAvailableTokens(newTargetCgain.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
     dispatch(setTargetChain({
-      chain: chains.length ? chains[0] : {
-        name: '',
-        chainID: ''
-      }
+      chain: newTargetCgain
     }))
     dispatch(setCurrentChain({
       chain: GetCurrentChain(GetChainNameById(chainId || -1))
