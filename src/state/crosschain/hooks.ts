@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import {
+  CrosschainChain,
   ProposalStatus,
   setAvailableChains,
   setAvailableTokens,
@@ -36,7 +37,7 @@ export function useDefaultsFromURLSearch():
 
 export function useMockCrossChain(): any | undefined {
   const dispatch = useDispatch<AppDispatch>()
-  useEffect(()=>{
+  useEffect(() => {
 
     dispatch(setCrosschainSwapStatus({ txID: '0xdfgdfgdfgdfgjkdfgjdfjgkdfgkdfg', status: ProposalStatus.ACTIVE }))
     dispatch(setCrosschainRecipient({ address: '0xE323c3087c75Fb7EeBf41d20190dc9886b45F303' }))
@@ -44,19 +45,20 @@ export function useMockCrossChain(): any | undefined {
     dispatch(setAvailableChains({
       chains: [
         {
-          name: 'adfsfsd',
+          name: 'Ethereum',
           chainID: '5'
         },
         {
-          name: 'fghfg',
+          name: 'Avalanche',
           chainID: '4'
         },
         {
-          name: 'hkhjkhj',
+          name: 'Polkadot',
           chainID: '45'
         }
       ]
     }))
+
     dispatch(setAvailableTokens({
       tokens: [
         {
@@ -95,5 +97,5 @@ export function useMockCrossChain(): any | undefined {
     dispatch(setTransferAmount({ amount: '3455' }))
     dispatch(setCrosschainFee({ value: '456547' }))
   }, [])
-  return undefined;
+  return undefined
 }

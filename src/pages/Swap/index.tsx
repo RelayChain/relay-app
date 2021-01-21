@@ -50,7 +50,9 @@ import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useCrosschainState, useMockCrossChain } from '../../state/crosschain/hooks'
-import { CrosschainChain, CrosschainToken } from '../../state/crosschain/actions'
+import { CrosschainChain, CrosschainToken, setTargetChain } from '../../state/crosschain/actions'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../state'
 
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
@@ -90,6 +92,7 @@ export default function Swap() {
     crosschainFee,
     targetChain
   } = useCrosschainState()
+  const dispatch = useDispatch<AppDispatch>()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -342,8 +345,10 @@ export default function Swap() {
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
   }
-  const onSelectTransferChain = (chain: string) => {
-    setTransferTo(chain);
+  const onSelectTransferChain = (chain: CrosschainChain) => {
+    dispatch(setTargetChain({
+      chain
+    }))
   }
 
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
@@ -383,14 +388,14 @@ export default function Swap() {
           <CrossChainModal
             isOpen={crossChainModalOpen}
             onDismiss={hideCrossChainModal}
-            supportedChains={SUPPORTED_CHAINS}
+            supportedChains={availableChains}
             selectTransferChain={() => ''}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
           />
           <CrossChainModal
             isOpen={transferChainModalOpen}
             onDismiss={hideTransferChainModal}
-            supportedChains={SUPPORTED_CHAINS}
+            supportedChains={availableChains}
             isTransfer={true}
             selectTransferChain={onSelectTransferChain}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
