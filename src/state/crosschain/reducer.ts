@@ -9,6 +9,7 @@ import {
   setAvailableTokens,
   setCurrentChain,
   setCurrentToken,
+  setCurrentTokenBalance,
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
@@ -21,6 +22,7 @@ export interface CrosschainState {
   readonly availableTokens: Array<CrosschainToken>
   readonly currentChain: CrosschainChain
   readonly currentToken: CrosschainToken
+  readonly balance: string
 }
 
 const initialState: CrosschainState = {
@@ -37,6 +39,7 @@ const initialState: CrosschainState = {
     name: '',
     address: ''
   },
+  balance: '',
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -91,6 +94,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
       return {
         ...currentState,
         currentToken: token
+      }
+    })
+    .addCase(setCurrentTokenBalance, (state, { payload: { balance } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        balance: balance
       }
     })
 )
