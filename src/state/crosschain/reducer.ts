@@ -1,7 +1,6 @@
 import {
   CrosschainChain,
   CrosschainToken,
-  ProposalStatus,
   setCrosschainSwapStatus,
   setCrosschainRecipient,
   setCurrentTxID,
@@ -17,7 +16,7 @@ import {
 import { createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
-  readonly swapStatus: Map<string, ProposalStatus>
+  readonly swapStatus: {}
   readonly currentRecipient: string
   readonly currentTxID: string
   readonly availableChains: Array<CrosschainChain>
@@ -30,7 +29,7 @@ export interface CrosschainState {
 }
 
 const initialState: CrosschainState = {
-  swapStatus: new Map<string, ProposalStatus>(),
+  swapStatus: {},
   currentRecipient: '',
   currentTxID: '',
   availableChains: new Array<CrosschainChain>(),
@@ -56,7 +55,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
         ...currentState,
         swapStatus: {
           ...state.swapStatus,
-          txID: status
+          [txID]: status
         }
       }
     })

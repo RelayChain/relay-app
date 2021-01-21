@@ -49,6 +49,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { useCrosschainState, useMockCrossChain } from '../../state/crosschain/hooks'
+
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -70,6 +72,7 @@ export enum ChainTransferState {
 }
 
 export default function Swap() {
+  useMockCrossChain()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -349,9 +352,13 @@ export default function Swap() {
     hideConfirmTransferModal();
   }
 
+  const { crosschainFee, currentRecipient } = useCrosschainState()
 
   return (
     <>
+
+      <span>{crosschainFee}</span>
+      <span> {currentRecipient}</span>
 
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
