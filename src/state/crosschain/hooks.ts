@@ -22,23 +22,25 @@ export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
 
-export function useDefaultsFromURLSearch():
-  | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
-  | undefined {
-  const { chainId } = useActiveWeb3React()
+export function useCrossChain() {
   const dispatch = useDispatch<AppDispatch>()
 
+  const {
+    swapStatus,
+    currentRecipient,
+    currentTxID,
+    availableChains,
+    availableTokens,
+    currentChain,
+    currentToken,
+    currentBalance,
+    transferAmount,
+    crosschainFee,
+    targetChain
+  } = useCrosschainState()
+
+  // init mock
   useEffect(() => {
-    dispatch(setCurrentTokenBalance({ balance: '3543' }))
-  }, [dispatch, chainId])
-
-  return undefined
-}
-
-export function useMockCrossChain(): any | undefined {
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-
     dispatch(setCrosschainSwapStatus({ txID: '0xdfgdfgdfgdfgjkdfgjdfjgkdfgkdfg', status: ProposalStatus.ACTIVE }))
     dispatch(setCrosschainRecipient({ address: '0xE323c3087c75Fb7EeBf41d20190dc9886b45F303' }))
     dispatch(setCurrentTxID({ txID: '0xE323c3087c75Fb7EeBf41d20190dc9886b45F303' }))
@@ -93,9 +95,31 @@ export function useMockCrossChain(): any | undefined {
         address: '0xE323c3089999999999999999999999999b45F303'
       }
     }))
-    dispatch(setCurrentTokenBalance({ balance: '3543' }))
+    dispatch(setCurrentTokenBalance({ balance: '67867867' }))
     dispatch(setTransferAmount({ amount: '3455' }))
-    dispatch(setCrosschainFee({ value: '456547' }))
+    dispatch(setCrosschainFee({ value: '5677' }))
   }, [])
-  return undefined
+
+  // change target chain
+  useEffect(() => {
+    dispatch(setCrosschainRecipient({ address: '' }))
+    dispatch(setCurrentTxID({ txID: '' }))
+
+    dispatch(setAvailableTokens({
+      tokens: [
+        {
+          name: String(Math.random()),
+          address: '0xE323c3089999999999999999999999999b45F303'
+        },
+        {
+          name: 'fghfgh',
+          address: '0xE323c3089999999999955555555555599b45F303'
+        },
+        {
+          name: 'ghjghjgh',
+          address: '0xE32399999999444444444444444999999b45F303'
+        }
+      ]
+    }))
+  }, [targetChain])
 }

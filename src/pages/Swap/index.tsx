@@ -49,8 +49,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useCrosschainState, useMockCrossChain } from '../../state/crosschain/hooks'
-import { CrosschainChain, CrosschainToken, setTargetChain } from '../../state/crosschain/actions'
+import { useCrosschainState, useCrossChain } from '../../state/crosschain/hooks'
+import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
 
@@ -75,7 +75,7 @@ export enum ChainTransferState {
 }
 
 export default function Swap() {
-  useMockCrossChain()
+  useCrossChain()
 
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -170,6 +170,9 @@ export default function Swap() {
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
+      dispatch(setTransferAmount({
+        amount: value
+      }))
     },
     [onUserInput]
   )
@@ -306,6 +309,10 @@ export default function Swap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
+  const handleMaxInputCrosschain = useCallback(() => {
+    return currentBalance
+  }, [currentBalance, onUserInput])
+
   const handleOutputSelect = useCallback(
     outputCurrency => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
@@ -373,6 +380,13 @@ export default function Swap() {
     hideConfirmTransferModal();
   }
 
+  const getChainName = (): string => {
+    if (!!chainId && chainId in CHAIN_LABELS) {
+      return CHAIN_LABELS[chainId] || ''
+    }
+    return ''
+  }
+
   return (
     <>
 
@@ -436,15 +450,19 @@ export default function Swap() {
             onShowTransferChainModal={showTransferChainModal}
           />
 
+          <span>Bridge fee {crosschainFee}</span>
+          <br/>
+          <span>Available balance {currentBalance}</span>
+
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              blockchain={'Ethereum'}
-              label={'From'}
-              value={formattedAmounts[Field.INPUT]}
+              blockchain={isCrossChain ? currentChain.name : getChainName()}
+              label={'Amount:'}
+              value={transferAmount}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
-              onMax={handleMaxInput}
+              onMax={isCrossChain ? handleMaxInput : handleMaxInputCrosschain}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               isCrossChain={isCrossChain}
