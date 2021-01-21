@@ -70,15 +70,6 @@ export enum ChainTransferState {
 }
 
 export default function Swap() {
-  return (
-    <>
-      <ChainBrideSwap />
-    </>
-  )
-
-}
-
-function ChainBrideSwap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
