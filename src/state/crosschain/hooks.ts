@@ -14,7 +14,7 @@ import {
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
-  setCurrentTxID, setTargetChain,
+  setCurrentTxID, setDeposiStatus, setTargetChain,
   setTransferAmount
 } from './actions'
 import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
@@ -265,9 +265,39 @@ export async function MakeApprove() {
       confirmed: true
     }))
   })
-
 }
 
 export async function MakeDeposit() {
-  window.alert('deposit')
+  // const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+  // const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+  //
+  // dispatch(setCurrentTxID({
+  //   txID: ''
+  // }))
+  //
+  // const signer = web3React.library.getSigner()
+  // const tokenContract = new ethers.Contract(currentChain.bridgeAddress, TokenABI, signer)
+  // const result = await tokenContract.deposit(currentChain.bridgeAddress, crosschainState.transferAmount, {
+  //   gasLimit: 300000
+  // })
+  //
+  // dispatch(setApproveStatus({
+  //   confirmed: false
+  // }))
+  // dispatch(setCurrentTxID({
+  //   txID: result.hash
+  // }))
+  //
+  // result.wait(2).then(() => {
+  //   dispatch(setApproveStatus({
+  //     confirmed: true
+  //   }))
+  // })
+
+  setTimeout(()=>{
+
+    dispatch(setDeposiStatus({
+      confirmed: true
+    }))
+  }, 5000)
 }

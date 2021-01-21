@@ -118,11 +118,15 @@ export default function ConfirmTransferModal({
       }
 
       { tokenTransferState === ChainTransferState.ApprovalComplete &&
-        <ApprovalComplete />
+        <ApprovalComplete
+          changeTransferState={changeTransferState}
+        />
       }
 
       { tokenTransferState === ChainTransferState.TransferPending &&
-        <TransferPending />
+        <TransferPending
+          changeTransferState={changeTransferState}
+        />
       }
 
       { tokenTransferState === ChainTransferState.TransferComplete &&

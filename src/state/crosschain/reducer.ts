@@ -11,7 +11,7 @@ import {
   setCurrentTokenBalance,
   setTransferAmount,
   setCrosschainFee,
-  setTargetChain, setApproveStatus
+  setTargetChain, setApproveStatus, setDeposiStatus
 } from './actions'
 
 import { createAction, createReducer } from '@reduxjs/toolkit'
@@ -28,6 +28,7 @@ export interface CrosschainState {
   readonly currentBalance: string
   readonly transferAmount: string
   readonly crosschainFee: string
+  readonly depositStatus: boolean
   readonly approveStatus: boolean
 }
 
@@ -52,7 +53,8 @@ const initialState: CrosschainState = {
   currentBalance: '',
   transferAmount: '',
   crosschainFee: '',
-  approveStatus: false
+  depositStatus: false,
+  approveStatus: false,
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -135,6 +137,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
       return {
         ...currentState,
         crosschainFee: value
+      }
+    })
+    .addCase(setDeposiStatus, (state, { payload: { confirmed } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        depositStatus: confirmed
       }
     })
     .addCase(setApproveStatus, (state, { payload: { confirmed } }) => {

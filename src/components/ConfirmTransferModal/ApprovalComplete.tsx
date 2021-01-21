@@ -5,8 +5,13 @@ import { ButtonPrimary } from '../Button'
 import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
+import { ChainTransferState } from '../../pages/Swap'
+import { MakeDeposit } from '../../state/crosschain/hooks'
 
-export default function ApprovalComplete () {
+export default function ApprovalComplete ({
+// @ts-ignore
+    changeTransferState
+  }) {
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -14,7 +19,10 @@ export default function ApprovalComplete () {
         <ChevronsRight size={'66'} style={{ margin: '2rem 1rem 2rem 1rem', opacity: '.5'}} />
       </RowFixed>
       <RowFixed style={{ width: '100%'}}>
-        <ButtonPrimary>
+        <ButtonPrimary onClick={()=>{
+          MakeDeposit().catch(console.error)
+          changeTransferState(ChainTransferState.TransferPending)
+        }}>
           Start Transfer
         </ButtonPrimary>
       </RowFixed>
