@@ -41,6 +41,18 @@ export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
 
+function WithDecimals(value: string | number): string {
+  if (typeof (value) !== 'string') {
+    value = String(value)
+  }
+  return utils.formatUnits(value,18)
+}
+
+function WithoutDecimalsHexString(value: string): string {
+  console.log('BigNumber.from(utils.parseUnits(value, 18)).toHexString()', BigNumber.from(utils.parseUnits(value, 18)).toHexString())
+  return BigNumber.from(utils.parseUnits(value, 18)).toHexString()
+}
+
 function GetCurrentChain(currentChainName: string): CrosschainChain {
   let result: CrosschainChain = {
     name: '',
@@ -154,7 +166,7 @@ async function UpdateOwnTokenBalance() {
 
   const balance = (await tokenContract.balanceOf(web3React.account)).toString()
   dispatch(setCurrentTokenBalance({
-    balance: balance
+    balance: WithDecimals(balance)
   }))
 }
 
@@ -167,7 +179,7 @@ async function UpdateFee() {
   const fee = (await bridgeContract._fee()).toString()
 
   dispatch(setCrosschainFee({
-    value: fee
+    value: WithDecimals(fee)
   }))
 }
 
@@ -205,25 +217,23 @@ export function useCrossChain() {
     }))
     dispatch(setTargetChain({
       chain: {
-        name: 'Ethereum',
-        chainID: '45'
+        name: '',
+        chainID: ''
       }
     }))
     dispatch(setCurrentChain({
       chain: {
-        name: 'Avalanche',
-        chainID: '5'
+        name: '',
+        chainID: ''
       }
     }))
     dispatch(setCurrentToken({
       token: {
-        name: 'GHJ',
-        address: '0xE323c3089999999999999999999999999b45F303'
+        name: '',
+        address: ''
       }
     }))
-    dispatch(setCurrentTokenBalance({ balance: '67867867' }))
-    dispatch(setTransferAmount({ amount: '3455' }))
-    dispatch(setCrosschainFee({ value: '5677' }))
+    dispatch(setTransferAmount({ amount: '' }))
   }, [])
 
   // change target chain
@@ -240,13 +250,14 @@ export function useCrossChain() {
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
-  }, [account])
+  }, [account, currentToken])
 
 
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
-    const chains = GetAvailableChains(GetChainNameById(chainId || -1))
+    const currentChainName = GetChainNameById(chainId || -1)
+    const chains = GetAvailableChains(currentChainName)
     dispatch(setAvailableChains({
       chains: chains
     }))
@@ -256,7 +267,7 @@ export function useCrossChain() {
       chainID: ''
     }
 
-    const tokens = GetAvailableTokens(GetChainNameById(chainId || -1))
+    const tokens = GetAvailableTokens(currentChainName)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
@@ -264,7 +275,7 @@ export function useCrossChain() {
       chain: newTargetCain
     }))
     dispatch(setCurrentChain({
-      chain: GetCurrentChain(GetChainNameById(chainId || -1))
+      chain: GetCurrentChain(currentChainName)
     }))
 
     dispatch(setCurrentToken({
@@ -299,7 +310,7 @@ export async function MakeApprove() {
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
   console.log("currentChain.bridgeAddress, crosschainState.transferAmount", currentChain.bridgeAddress, crosschainState.transferAmount)
-  const result = await tokenContract.approve(currentChain.bridgeAddress, crosschainState.transferAmount, {
+  const result = await tokenContract.approve(currentChain.bridgeAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
     gasLimit: '300000'
   })
 
@@ -316,9 +327,9 @@ export async function MakeApprove() {
     }))
   })
 
-  // dispatch(setApproveStatus({
-  //   confirmed: true
-  // }))
+  dispatch(setApproveStatus({
+    confirmed: true
+  }))
 }
 
 export async function MakeDeposit() {
@@ -350,7 +361,7 @@ export async function MakeDeposit() {
     utils
       .hexZeroPad(
         // TODO Wire up dynamic token decimals
-        BigNumber.from(utils.parseUnits(crosschainState.transferAmount, 18)).toHexString(),
+        WithoutDecimalsHexString(crosschainState.transferAmount),
         32
       )
       .substr(2) + // Deposit Amount (32 bytes)
@@ -361,8 +372,8 @@ export async function MakeDeposit() {
   console.log(">>>>>>>>>>>>>>>",targetChain.chainId, currentToken.resourceId, data)
   console.log("_totalRelayersm", await bridgeContract._totalRelayers().catch(console.error))
   const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
-    // gasLimit: '300000',
-    value: crosschainState.crosschainFee
+    gasLimit: '800000',
+    value: WithoutDecimalsHexString(crosschainState.crosschainFee),
   }).catch(console.error)
 
   dispatch(setDeposiStatus({
