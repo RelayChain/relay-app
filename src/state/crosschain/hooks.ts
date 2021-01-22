@@ -45,7 +45,7 @@ function WithDecimals(value: string | number): string {
   if (typeof (value) !== 'string') {
     value = String(value)
   }
-  return utils.formatUnits(value,18)
+  return utils.formatUnits(value, 18)
 }
 
 function WithoutDecimalsHexString(value: string): string {
@@ -279,7 +279,7 @@ export async function MakeApprove() {
 
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-  console.log("currentChain.bridgeAddress, crosschainState.transferAmount", currentChain.erc20HandlerAddress, crosschainState.transferAmount)
+  console.log('currentChain.bridgeAddress, crosschainState.transferAmount', currentChain.erc20HandlerAddress, crosschainState.transferAmount)
   const result = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
     gasLimit: '300000'
   })
@@ -308,12 +308,12 @@ export async function MakeDeposit() {
   const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
   const targetToken = targetChain.tokens[0]
 
-  console.log("currentChain", currentChain)
-  console.log("targetChain", targetChain)
-  console.log("targetToken", targetToken)
-  console.log("currentToken", currentToken)
-  console.log("crosschainState.currentToken", crosschainState.currentToken)
-  console.log("currentChain.bridgeAddress", currentChain.bridgeAddress)
+  console.log('currentChain', currentChain)
+  console.log('targetChain', targetChain)
+  console.log('targetToken', targetToken)
+  console.log('currentToken', currentToken)
+  console.log('crosschainState.currentToken', crosschainState.currentToken)
+  console.log('currentChain.bridgeAddress', currentChain.bridgeAddress)
 
   dispatch(setCurrentTxID({
     txID: ''
@@ -322,10 +322,24 @@ export async function MakeDeposit() {
   const signer = web3React.library.getSigner()
   const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
 
-  console.log("_fee", (await bridgeContract._fee()).toString())
+  console.log('_fee', (await bridgeContract._fee()).toString())
 
-  console.log("crosschainState.transferAmount", crosschainState.transferAmount)
-  console.log("crosschainState.currentRecipient", crosschainState.currentRecipient)
+  console.log('crosschainState.transferAmount', crosschainState.transferAmount)
+  console.log('crosschainState.currentRecipient', crosschainState.currentRecipient)
+
+  let nonce = '-1'
+  bridgeContract.once(
+    bridgeContract.filters.Deposit(
+      targetChain.chainId,
+      currentToken.resourceId,
+      null
+    ),
+    (_, __, depositNonce) => {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>get nonce', depositNonce)
+      nonce = `${depositNonce.toString()}`
+    }
+  )
+
   const data =
     '0x' +
     utils
@@ -339,23 +353,49 @@ export async function MakeDeposit() {
       .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
       .substr(2) + // len(recipientAddress) (32 bytes)
     crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-  console.log(">>>>>>>>>>>>>>>",targetChain.chainId, currentToken.resourceId, data)
-  console.log("_totalRelayersm", await bridgeContract._totalRelayers().catch(console.error))
-  const result = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
+  console.log('>>>>>>>>>>>>>>>', targetChain.chainId, currentToken.resourceId, data)
+  console.log('_totalRelayersm', await bridgeContract._totalRelayers().catch(console.error))
+  const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
     gasLimit: '800000',
-    value: WithoutDecimalsHexString(crosschainState.crosschainFee),
+    value: WithoutDecimalsHexString(crosschainState.crosschainFee)
   }).catch(console.error)
+
+  if (!resultDepositTx) {
+    return
+  }
+
+  console.log('deposit result', resultDepositTx)
+
+  await resultDepositTx.wait(2) // need more than one because we catch event on first confirmation
+
+  console.log('resultDepositTx.wait done')
 
   dispatch(setDeposiStatus({
     confirmed: false
   }))
   dispatch(setCurrentTxID({
-    txID: result.hash
+    txID: resultDepositTx.hash
   }))
 
-  result.wait(2).then(() => {
-    dispatch(setDeposiStatus({
-      confirmed: true
-    }))
-  })
+  {
+    const destinationBridge = new ethers.Contract(targetChain.bridgeAddress, BridgeABI, new ethers.providers.JsonRpcProvider(targetChain.rpcUrl))
+    destinationBridge.on(
+      destinationBridge.filters.ProposalEvent(
+        currentChain.chainId,
+        BigNumber.from(nonce),
+        null,
+        null,
+        null
+      ),
+      (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+        console.log('originChainId, depositNonce, status, resourceId, dataHash, tx', originChainId, depositNonce, status, resourceId, dataHash, tx)
+
+        if (status == ProposalStatus.EXECUTED) {
+          dispatch(setDeposiStatus({
+            confirmed: true
+          }))
+        }
+      }
+    )
+  }
 }
