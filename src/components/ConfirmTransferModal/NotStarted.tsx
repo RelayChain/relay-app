@@ -12,7 +12,7 @@ import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
 import { TruncatedText } from './styleds'
 import styled from 'styled-components'
-import { MakeApprove } from '../../state/crosschain/hooks'
+import { useCrosschainHooks } from '../../state/crosschain/hooks'
 
 interface NotStartedProps {
   activeChain?: string;
@@ -69,6 +69,7 @@ export default function NotStarted ({
   changeTransferState,
   tokenTransferState,
 }: NotStartedProps) {
+  const {MakeApprove} = useCrosschainHooks()
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">

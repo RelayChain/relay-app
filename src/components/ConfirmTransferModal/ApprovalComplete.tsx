@@ -6,12 +6,13 @@ import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { ChainTransferState } from '../../pages/Swap'
-import { MakeDeposit } from '../../state/crosschain/hooks'
+import { useCrosschainHooks } from '../../state/crosschain/hooks'
 
 export default function ApprovalComplete ({
 // @ts-ignore
     changeTransferState
   }) {
+  const {MakeDeposit} = useCrosschainHooks()
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
