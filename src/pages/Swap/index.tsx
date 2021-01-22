@@ -109,6 +109,7 @@ export default function Swap() {
     targetChain,
     approveStatus
   } = useCrosschainState()
+
   const dispatch = useDispatch<AppDispatch>()
 
   // token warning stuff
@@ -184,12 +185,19 @@ export default function Swap() {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
+  // track the input amount, on change, if crosschain, dispatch
+  const [ inputAmountToTrack, setInputAmountToTrack ] = useState('');
+  const handleInputAmountChange = (amount: string) => {
+    setInputAmountToTrack(amount)
+    dispatch(setTransferAmount({
+      amount: amount
+    }))
+  }
+
   const handleTypeInput = useCallback(
     (value: string) => {
+      handleInputAmountChange(value)
       onUserInput(Field.INPUT, value)
-      dispatch(setTransferAmount({
-        amount: value
-      }))
     },
     [onUserInput]
   )
@@ -323,12 +331,16 @@ export default function Swap() {
   )
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+    if (maxAmountInput) {
+      handleInputAmountChange(maxAmountInput.toExact())
+      onUserInput(Field.INPUT, maxAmountInput.toExact())
+    }
   }, [maxAmountInput, onUserInput])
 
-  const handleMaxInputCrosschain = useCallback(() => {
-    return currentBalance
-  }, [currentBalance, onUserInput])
+  // not sure we need this
+  // const handleMaxInputCrosschain = useCallback(() => {
+  //   return currentBalance
+  // }, [currentBalance, onUserInput])
 
   const handleOutputSelect = useCallback(
     outputCurrency => {
@@ -341,6 +353,9 @@ export default function Swap() {
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
   const handleSetIsCrossChain = (bool: boolean) => {
     setIsCrossChain(bool);
+    dispatch(setTransferAmount({
+      amount: inputAmountToTrack
+    }))
   }
 
   const [transferTo, setTransferTo] = useState('');
@@ -387,9 +402,6 @@ export default function Swap() {
   const [ tokenTransferState, setTokenTransferState ] = useState(ChainTransferState.NotStarted);
 
   const onChangeTransferState = (state: ChainTransferState) => {
-    // put logic here for various Chainbridge functions
-    // if they succeed, set the transfer state to the next state
-    // when complete, switch back to NotStarted
     setTokenTransferState(state);
   }
   // token transfer modals & handlers
@@ -471,12 +483,12 @@ export default function Swap() {
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}
-              label={'Amount:'}
-              value={transferAmount}
+              label={'From'}
+              value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
-              onMax={isCrossChain ? handleMaxInput : handleMaxInputCrosschain}
+              onMax={handleMaxInput}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               isCrossChain={isCrossChain}

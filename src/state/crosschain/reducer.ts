@@ -1,19 +1,20 @@
 import {
   CrosschainChain,
   CrosschainToken,
-  setCrosschainSwapStatus,
-  setCrosschainRecipient,
-  setCurrentTxID,
+  setApproveStatus,
   setAvailableChains,
   setAvailableTokens,
+  setCrosschainFee,
+  setCrosschainRecipient,
+  setCrosschainSwapStatus,
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
-  setTransferAmount,
-  setCrosschainFee,
-  setTargetChain, setApproveStatus, setDeposiStatus
+  setCurrentTxID,
+  setDeposiStatus,
+  setTargetChain,
+  setTransferAmount
 } from './actions'
-
 import { createAction, createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
@@ -127,6 +128,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
     })
     .addCase(setTransferAmount, (state, { payload: { amount } }) => {
       const currentState = { ...initialState, ...state };
+      console.log(`For cross chain, transfer amount will be ${amount}`);
       return {
         ...currentState,
         transferAmount: amount
