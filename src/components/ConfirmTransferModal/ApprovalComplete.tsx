@@ -5,8 +5,8 @@ import { ButtonPrimary } from '../Button'
 import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
-import { ChainTransferState } from '../../pages/Swap'
 import { useCrosschainHooks } from '../../state/crosschain/hooks'
+import { ChainTransferState } from '../../state/crosschain/actions'
 
 export default function ApprovalComplete ({
 // @ts-ignore

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import ApprovalComplete from './ApprovalComplete'
 import ApprovalPending from './ApprovalPending'
-import { ChainTransferState } from '../../pages/Swap';
 import { CloseIcon } from '../../theme/components'
 import { Currency } from '@zeroexchange/sdk'
 import Modal from '../Modal'
@@ -13,6 +12,7 @@ import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
+import { ChainTransferState } from '../../state/crosschain/actions'
 
 interface ConfirmTransferProps {
   isOpen: boolean;

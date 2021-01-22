@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ChainTransferState } from '../../pages/Swap'
 
 export enum ProposalStatus {
   INACTIVE = 0,
@@ -21,6 +20,14 @@ export interface CrosschainChain {
   imageUri?: string;
   resourceId?: string;
   isNativeWrappedToken?: boolean;
+}
+
+export enum ChainTransferState {
+  NotStarted = 'NOT_STARTED',
+  ApprovalPending = 'APPROVE_PENDING',
+  ApprovalComplete = 'APPROVE_COMPLETE',
+  TransferPending = 'TRANSFER_PENDING',
+  TransferComplete = 'TRANSFER_COMPLETE'
 }
 
 export const setCrosschainRecipient = createAction<{ address: string }>('crosschain/set-recipient')

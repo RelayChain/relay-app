@@ -1,4 +1,5 @@
 import {
+  ChainTransferState,
   CrosschainChain,
   CrosschainToken,
   setAvailableChains,
@@ -14,7 +15,6 @@ import {
   setTransferAmount
 } from './actions'
 import { createAction, createReducer } from '@reduxjs/toolkit'
-import { ChainTransferState } from '../../pages/Swap'
 
 export interface CrosschainState {
   readonly currentRecipient: string
@@ -30,7 +30,7 @@ export interface CrosschainState {
   readonly crosschainTransferStatus: ChainTransferState
 }
 
-const initialState: CrosschainState = {
+export const initialState: CrosschainState = {
   currentRecipient: '',
   currentTxID: '',
   availableChains: new Array<CrosschainChain>(),

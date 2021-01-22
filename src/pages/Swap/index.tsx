@@ -6,10 +6,16 @@ import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/Bette
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
-import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import {
+  ChainTransferState,
+  CrosschainChain,
+  CrosschainToken,
+  setTargetChain,
+  setTransferAmount
+} from '../../state/crosschain/actions'
 import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
-import { useCrossChain, useCrosschainState } from '../../state/crosschain/hooks'
+import { useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -66,14 +72,6 @@ const SUPPORTED_CHAINS = [
   'Polkadot'
 ]
 
-export enum ChainTransferState {
-  NotStarted = 'NOT_STARTED',
-  ApprovalPending = 'APPROVE_PENDING',
-  ApprovalComplete = 'APPROVE_COMPLETE',
-  TransferPending = 'TRANSFER_PENDING',
-  TransferComplete = 'TRANSFER_COMPLETE'
-}
-
 const CrossChainLabels = styled.div`
   p {
     display: flex;
@@ -108,6 +106,8 @@ export default function Swap() {
     targetChain,
     crosschainTransferStatus,
   } = useCrosschainState()
+
+  const {BreakCrosschainSwap} = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -402,6 +402,9 @@ export default function Swap() {
 
   const onChangeTransferState = (state: ChainTransferState) => {
     setTokenTransferState(state);
+    if (state === ChainTransferState.NotStarted && currentTxID.length) {
+      BreakCrosschainSwap()
+    }
   }
   // token transfer modals & handlers
   const handleTokenTransfer = () => {
@@ -425,6 +428,12 @@ export default function Swap() {
       />
 
       <AppBody>
+        <ButtonPrimary onClick={()=>{
+          console.log('currentTxID', currentTxID)
+          console.log('currentToken', currentToken)
+        }}>
+          sadfdsf
+        </ButtonPrimary>
         <span>crosschainTransferStatus {crosschainTransferStatus}</span>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">

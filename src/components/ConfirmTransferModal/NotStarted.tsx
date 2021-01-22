@@ -3,7 +3,6 @@ import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import BlockchainLogo from '../BlockchainLogo';
 import { ButtonPrimary } from '../Button'
-import { ChainTransferState } from '../../pages/Swap';
 import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo'
@@ -13,6 +12,7 @@ import { Trade } from '@zeroexchange/sdk'
 import { TruncatedText } from './styleds'
 import styled from 'styled-components'
 import { useCrosschainHooks } from '../../state/crosschain/hooks'
+import { ChainTransferState } from '../../state/crosschain/actions'
 
 interface NotStartedProps {
   activeChain?: string;

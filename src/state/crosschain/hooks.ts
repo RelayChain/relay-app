@@ -1,9 +1,10 @@
-import { AppDispatch, AppState } from '../index'
+import store, { AppDispatch, AppState } from '../index'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import {
+  ChainTransferState,
   CrosschainChain,
   CrosschainToken,
   ProposalStatus,
@@ -22,17 +23,19 @@ import {
 import { BridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
 import { ChainId } from '@zeroexchange/sdk'
 import { BigNumber, ethers, utils } from 'ethers'
-import { ChainTransferState } from '../../pages/Swap'
+import { initialState } from './reducer'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
 var dispatch: AppDispatch
 var web3React: any
-var crosschainState: AppState['crosschain']
 
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
+}
+function getCrosschainState(): AppState['crosschain'] {
+  return store.getState().crosschain || initialState
 }
 
 function WithDecimals(value: string | number): string {
@@ -154,6 +157,8 @@ function GetChainNameById(chainID: number): string {
 }
 
 export function useCrosschainHooks() {
+  dispatch = useDispatch()
+  web3React = useActiveWeb3React()
 
   const BreakCrosschainSwap = () => {
     dispatch(setCurrentTxID({
@@ -165,6 +170,7 @@ export function useCrosschainHooks() {
   }
 
   const MakeDeposit = async () => {
+    const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
     const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
@@ -253,6 +259,7 @@ export function useCrosschainHooks() {
           null
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+          let crosschainState = getCrosschainState()
           if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
             dispatch(setCrosschainTransferStatus({
               status: ChainTransferState.TransferComplete
@@ -264,6 +271,7 @@ export function useCrosschainHooks() {
   }
 
   const MakeApprove = async () => {
+    const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
 
@@ -290,6 +298,7 @@ export function useCrosschainHooks() {
     }))
 
     resultApproveTx.wait(2).then(() => {
+      let crosschainState = getCrosschainState()
       if (crosschainState.currentTxID === resultApproveTx.hash) {
         dispatch(setCurrentTxID({
           txID: ''
@@ -302,6 +311,7 @@ export function useCrosschainHooks() {
   }
 
   const UpdateOwnTokenBalance = async () => {
+    const crosschainState = getCrosschainState()
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -314,6 +324,7 @@ export function useCrosschainHooks() {
   }
 
   const UpdateFee = async () => {
+    const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
 
     // @ts-ignore
@@ -339,7 +350,6 @@ export function useCrosschainHooks() {
 export function useCrossChain() {
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
-  crosschainState = useCrosschainState()
   const {
     currentRecipient,
     currentTxID,
@@ -353,11 +363,23 @@ export function useCrossChain() {
     targetChain
   } = useCrosschainState()
 
-  const {UpdateOwnTokenBalance, UpdateFee} = useCrosschainHooks()
+  const { UpdateOwnTokenBalance, UpdateFee } = useCrosschainHooks()
 
   const { account, chainId, library } = useActiveWeb3React()
 
   const initAll = () => {
+    const {
+      currentRecipient,
+      currentTxID,
+      availableChains,
+      availableTokens,
+      currentChain,
+      currentToken,
+      currentBalance,
+      transferAmount,
+      crosschainFee,
+      targetChain
+    } = getCrosschainState()
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     const currentChainName = GetChainNameById(chainId || -1)
