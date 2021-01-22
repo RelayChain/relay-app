@@ -2,18 +2,11 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
-import {
-  ChainTransferState,
-  CrosschainChain,
-  CrosschainToken,
-  setTargetChain,
-  setTransferAmount
-} from '../../state/crosschain/actions'
-import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { ChainTransferState, CrosschainChain, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -36,11 +29,10 @@ import AppBody from '../AppBody'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
-import { ChainId } from '@zeroexchange/sdk'
 import { ClickableText } from '../Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import ConfirmTransferModal from '../../components/ConfirmTransferModal';
-import CrossChainModal from '../../components/CrossChainModal';
+import ConfirmTransferModal from '../../components/ConfirmTransferModal'
+import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Field } from '../../state/swap/actions'
 import Loader from '../../components/Loader'
@@ -49,12 +41,11 @@ import ReactGA from 'react-ga'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import SwapsTabs from '../../components/SwapsTabs'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
@@ -368,9 +359,15 @@ export default function Swap() {
     }
   }, [chainId])
 
+  const startNewSwap = () => {
+    setTokenTransferState(ChainTransferState.NotStarted)
+    BreakCrosschainSwap()
+  }
+
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
+    startNewSwap()
   }
   const showCrossChainModal = () => {
     setShowCrossChainModal(true)
@@ -379,6 +376,7 @@ export default function Swap() {
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false);
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
+    startNewSwap()
   }
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
@@ -392,6 +390,7 @@ export default function Swap() {
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
   const hideConfirmTransferModal = () => {
     setConfirmTransferModalOpen(false)
+    startNewSwap()
   }
   const showConfirmTransferModal = () => {
     setConfirmTransferModalOpen(true)

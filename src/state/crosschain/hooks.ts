@@ -235,7 +235,7 @@ export function useCrosschainHooks() {
 
     console.log('deposit result', resultDepositTx)
 
-    await resultDepositTx.wait(2) // need more than one because we catch event on first confirmation
+    await resultDepositTx.wait(3) // need more than one because we catch event on first confirmation
 
     console.log('resultDepositTx.wait done')
 
@@ -259,6 +259,7 @@ export function useCrosschainHooks() {
           null
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+          console.log("ProposalEvent status", status)
           let crosschainState = getCrosschainState()
           if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
             dispatch(setCrosschainTransferStatus({
