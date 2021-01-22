@@ -204,56 +204,7 @@ export function useCrossChain() {
   const { account, chainId, library } = useActiveWeb3React()
   web3React = useActiveWeb3React()
 
-  // init mock
-  useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: account || '' }))
-    dispatch(setCurrentTxID({ txID: '' }))
-    dispatch(setAvailableChains({
-      chains: GetAvailableChains(GetChainNameById(chainId || -1))
-    }))
-
-    dispatch(setAvailableTokens({
-      tokens: []
-    }))
-    dispatch(setTargetChain({
-      chain: {
-        name: '',
-        chainID: ''
-      }
-    }))
-    dispatch(setCurrentChain({
-      chain: {
-        name: '',
-        chainID: ''
-      }
-    }))
-    dispatch(setCurrentToken({
-      token: {
-        name: '',
-        address: ''
-      }
-    }))
-    dispatch(setTransferAmount({ amount: '' }))
-  }, [])
-
-  // change target chain
-  useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: account || '' }))
-    dispatch(setCurrentTxID({ txID: '' }))
-
-    dispatch(setAvailableTokens({
-      tokens: GetAvailableTokens(currentChain.name)
-    }))
-  }, [targetChain])
-
-  // to address
-  useEffect(() => {
-    dispatch(setCrosschainRecipient({ address: account || '' }))
-    UpdateOwnTokenBalance().catch(console.error)
-  }, [account, currentToken])
-
-
-  useEffect(() => {
+  const initAll = () => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     const currentChainName = GetChainNameById(chainId || -1)
@@ -287,7 +238,26 @@ export function useCrossChain() {
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
-  }, [chainId])
+  }
+
+  useEffect(initAll, [])
+  useEffect(initAll, [chainId])
+
+  useEffect(() => {
+    dispatch(setCrosschainRecipient({ address: account || '' }))
+    dispatch(setCurrentTxID({ txID: '' }))
+
+    dispatch(setAvailableTokens({
+      tokens: GetAvailableTokens(currentChain.name)
+    }))
+  }, [targetChain])
+
+  // to address
+  useEffect(() => {
+    dispatch(setCrosschainRecipient({ address: account || '' }))
+    UpdateOwnTokenBalance().catch(console.error)
+    UpdateFee().catch(console.error)
+  }, [account, currentToken])
 }
 
 export async function MakeApprove() {
