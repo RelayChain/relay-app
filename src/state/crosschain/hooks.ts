@@ -27,6 +27,10 @@ import { ChainTransferState } from '../../pages/Swap'
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
+var dispatch: AppDispatch
+var web3React: any
+var crosschainState: AppState['crosschain']
+
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
@@ -150,10 +154,6 @@ function GetChainNameById(chainID: number): string {
 }
 
 export function useCrosschainHooks() {
-
-  let dispatch = useDispatch<AppDispatch>()
-  let web3React = useActiveWeb3React()
-  let crosschainState = useCrosschainState()
 
   const BreakCrosschainSwap = () => {
     dispatch(setCurrentTxID({
@@ -337,7 +337,9 @@ export function useCrosschainHooks() {
 }
 
 export function useCrossChain() {
-  const dispatch = useDispatch()
+  dispatch = useDispatch()
+  web3React = useActiveWeb3React()
+  crosschainState = useCrosschainState()
   const {
     currentRecipient,
     currentTxID,
