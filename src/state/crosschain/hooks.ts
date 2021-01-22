@@ -309,8 +309,8 @@ export async function MakeApprove() {
 
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-  console.log("currentChain.bridgeAddress, crosschainState.transferAmount", currentChain.bridgeAddress, crosschainState.transferAmount)
-  const result = await tokenContract.approve(currentChain.bridgeAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
+  console.log("currentChain.bridgeAddress, crosschainState.transferAmount", currentChain.erc20HandlerAddress, crosschainState.transferAmount)
+  const result = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
     gasLimit: '300000'
   })
 
