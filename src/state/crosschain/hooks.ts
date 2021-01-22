@@ -347,7 +347,10 @@ export function useCrossChain() {
 
   const { UpdateOwnTokenBalance, UpdateFee } = useCrosschainHooks()
 
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
+  const chainIdFromWeb3React = useActiveWeb3React().chainId
+
+  const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -398,7 +401,7 @@ export function useCrossChain() {
   }
 
   useEffect(initAll, [])
-  useEffect(initAll, [chainId])
+  useEffect(initAll, [chainId, library])
 
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))

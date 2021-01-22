@@ -357,7 +357,7 @@ export default function Swap() {
     if (x) {
       setTransferTo(x);
     }
-  }, [chainId])
+  }, [chainId, currentChain])
 
   const startNewSwap = () => {
     setTokenTransferState(ChainTransferState.NotStarted)
