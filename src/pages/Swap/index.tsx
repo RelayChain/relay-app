@@ -427,13 +427,6 @@ export default function Swap() {
       />
 
       <AppBody>
-        <ButtonPrimary onClick={()=>{
-          console.log('currentTxID', currentTxID)
-          console.log('currentToken', currentToken)
-        }}>
-          sadfdsf
-        </ButtonPrimary>
-        <span>crosschainTransferStatus {crosschainTransferStatus}</span>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <CrossChainModal
