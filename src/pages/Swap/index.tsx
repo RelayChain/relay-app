@@ -6,8 +6,10 @@ import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/Bette
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
+import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
 import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { LinkStyledButton, TYPE } from '../../theme'
+import { MakeDeposit, useCrossChain, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -25,6 +27,7 @@ import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import AppBody from '../AppBody'
+import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
 import { ChainId } from '@zeroexchange/sdk'
@@ -45,15 +48,12 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
+import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useCrosschainState, useCrossChain, MakeDeposit } from '../../state/crosschain/hooks'
-import { CrosschainChain, CrosschainToken, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../state'
-
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
@@ -73,6 +73,22 @@ export enum ChainTransferState {
   TransferPending = 'TRANSFER_PENDING',
   TransferComplete = 'TRANSFER_COMPLETE'
 }
+
+const CrossChainLabels = styled.div`
+  p {
+    display: flex;
+    text-align: left;
+    font-weight: normal;
+    color: rgba(255,255,255,.5);
+    margin-top: .5rem;
+    margin-bottom: 0;
+    font-size: .9rem;
+    span {
+      margin-left: auto;
+      font-weight: bold;
+    }
+  }
+`
 
 export default function Swap() {
   useCrossChain()
@@ -452,14 +468,6 @@ export default function Swap() {
             onShowTransferChainModal={showTransferChainModal}
           />
 
-          {
-            isCrossChain && <>
-              <span>Bridge fee {crosschainFee}</span>
-              <br/>
-              <span>Available balance {currentBalance}</span>
-            </>
-          }
-
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -496,7 +504,7 @@ export default function Swap() {
               </AutoRow>
             </AutoColumn>
             <CurrencyInputPanel
-              blockchain={'Avalanche'}
+              blockchain={isCrossChain ? currentChain.name : getChainName()}
               value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
               label={'To'}
@@ -522,6 +530,15 @@ export default function Swap() {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
+
+            {
+              isCrossChain && <>
+                <CrossChainLabels>
+                  <p>Fee: <span>{crosschainFee}</span></p>
+                  <p>Available Balance: <span>{currentBalance}</span></p>
+                </CrossChainLabels>
+              </>
+            }
 
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
@@ -653,11 +670,6 @@ export default function Swap() {
               </Column>
             )}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            {betterTradeLinkVersion ? (
-              <BetterTradeLink version={betterTradeLinkVersion} />
-            ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
-              <DefaultVersionLink />
-            ) : null}
           </BottomGrouping>
         </Wrapper>
       </AppBody>

@@ -14,14 +14,6 @@ import TransferPending from './TransferPending'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 
-// export enum ChainTransferState {
-//   NotStarted = 'NOT_STARTED',
-//   ApprovalPending = 'APPROVE_PENDING',
-//   ApprovalComplete = 'APPROVE_COMPLETE',
-//   TransferPending = 'TRANSFER_PENDING',
-//   TransferComplete = 'TRANSFER_COMPLETE'
-// }
-
 interface ConfirmTransferProps {
   isOpen: boolean;
   onDismiss: () => void;
@@ -69,7 +61,7 @@ export default function ConfirmTransferModal({
     if(approveStatus){
       changeTransferState(ChainTransferState.ApprovalComplete)
     }
-  }, [approveStatus])
+  }, [approveStatus, changeTransferState])
 
   const [ title, setTitle ] = useState('');
   useEffect(() => {

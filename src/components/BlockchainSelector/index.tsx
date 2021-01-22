@@ -1,14 +1,15 @@
 import { ChevronDown, ChevronsRight, Link } from 'react-feather'
 
 import BlockchainLogo from '../BlockchainLogo';
+import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
 import styled from 'styled-components'
-import { CrosschainChain } from '../../state/crosschain/actions'
 
 const Container = styled.div`
   border: 1px dashed rgba(38, 98, 255, .5);
   border-radius: 14px;
   margin-bottom: 1.5rem;
+  margin-top: .5rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -38,12 +39,12 @@ const Container = styled.div`
     }
   }
 `
-const Row = styled.div<{ borderBottom: boolean }>`
+const Row = styled.div<{ borderBottom: boolean, isCrossChain?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: ${({ isCrossChain }) => (!isCrossChain ? '0 1rem 0 1rem' : '1rem')};
   border-bottom: ${({ borderBottom }) => (borderBottom ? '1px dashed rgba(38, 98, 255, .5)' : 'none')};
 `
 
@@ -82,7 +83,7 @@ const BlockchainSelector = ({
   return (
     <Container>
       { !isCrossChain &&
-        <Row borderBottom={false}>
+        <Row borderBottom={false} isCrossChain={isCrossChain}>
           <Link size={16} />
           <h5>
             Blockchain:
@@ -95,7 +96,7 @@ const BlockchainSelector = ({
         </Row>
       }
       { isCrossChain &&
-        <Row borderBottom={false}>
+        <Row borderBottom={false} isCrossChain={isCrossChain}>
           <p className="crosschain currentchain">
             <BlockchainLogo size="18px" blockchain={typeof(blockchain) !== "string"? blockchain.name : ""} style={{ marginBottom: '-3px' }} />
             <span>{typeof(blockchain) !== "string"? blockchain.name : ""}</span>
