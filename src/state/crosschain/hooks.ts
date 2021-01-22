@@ -226,7 +226,8 @@ export function useCrosschainHooks() {
     console.log('_totalRelayersm', await bridgeContract._totalRelayers().catch(console.error))
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '800000',
-      value: WithoutDecimalsHexString(crosschainState.crosschainFee)
+      value: WithoutDecimalsHexString(crosschainState.crosschainFee),
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     }).catch(console.error)
 
     if (!resultDepositTx) {
@@ -235,7 +236,7 @@ export function useCrosschainHooks() {
 
     console.log('deposit result', resultDepositTx)
 
-    await resultDepositTx.wait(3) // need more than one because we catch event on first confirmation
+    await resultDepositTx.wait(2) // need more than one because we catch event on first confirmation
 
     console.log('resultDepositTx.wait done')
 
@@ -288,7 +289,8 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
     console.log('currentChain.bridgeAddress, crosschainState.transferAmount', currentChain.erc20HandlerAddress, crosschainState.transferAmount)
     const resultApproveTx = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
-      gasLimit: '300000'
+      gasLimit: '300000',
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     })
 
     dispatch(setCrosschainTransferStatus({
