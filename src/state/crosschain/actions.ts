@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ChainTransferState } from '../../pages/Swap'
 
 export enum ProposalStatus {
   INACTIVE = 0,
@@ -22,7 +23,6 @@ export interface CrosschainChain {
   isNativeWrappedToken?: boolean;
 }
 
-export const setCrosschainSwapStatus = createAction<{ txID: string, status: ProposalStatus }>('crosschain/set-swaps-tatus')
 export const setCrosschainRecipient = createAction<{ address: string }>('crosschain/set-recipient')
 export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-currentTxID')
 export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
@@ -33,5 +33,4 @@ export const setCurrentToken = createAction<{ token: CrosschainToken }>('crossch
 export const setCurrentTokenBalance = createAction<{ balance: string }>('crosschain/set-balance')
 export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')
 export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-fee')
-export const setDeposiStatus = createAction<{ confirmed: boolean }>('crosschain/set-deposit-status')
-export const setApproveStatus = createAction<{ confirmed: boolean }>('crosschain/set-approve-status')
+export const setCrosschainTransferStatus = createAction<{ status: ChainTransferState }>('crosschain/set-transfer-status')

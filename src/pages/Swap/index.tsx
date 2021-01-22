@@ -96,7 +96,6 @@ export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const {
-    swapStatus,
     currentRecipient,
     currentTxID,
     availableChains,
@@ -107,7 +106,7 @@ export default function Swap() {
     transferAmount,
     crosschainFee,
     targetChain,
-    approveStatus
+    crosschainTransferStatus,
   } = useCrosschainState()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -426,7 +425,7 @@ export default function Swap() {
       />
 
       <AppBody>
-        <span>approveStatus {approveStatus ? "1" : "0"}</span>
+        <span>crosschainTransferStatus {crosschainTransferStatus}</span>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <CrossChainModal

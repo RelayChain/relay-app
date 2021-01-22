@@ -1,24 +1,22 @@
 import {
   CrosschainChain,
   CrosschainToken,
-  setApproveStatus,
   setAvailableChains,
   setAvailableTokens,
   setCrosschainFee,
   setCrosschainRecipient,
-  setCrosschainSwapStatus,
+  setCrosschainTransferStatus,
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
-  setDeposiStatus,
   setTargetChain,
   setTransferAmount
 } from './actions'
 import { createAction, createReducer } from '@reduxjs/toolkit'
+import { ChainTransferState } from '../../pages/Swap'
 
 export interface CrosschainState {
-  readonly swapStatus: {}
   readonly currentRecipient: string
   readonly currentTxID: string
   readonly availableChains: Array<CrosschainChain>
@@ -29,12 +27,10 @@ export interface CrosschainState {
   readonly currentBalance: string
   readonly transferAmount: string
   readonly crosschainFee: string
-  readonly depositStatus: boolean
-  readonly approveStatus: boolean
+  readonly crosschainTransferStatus: ChainTransferState
 }
 
 const initialState: CrosschainState = {
-  swapStatus: {},
   currentRecipient: '',
   currentTxID: '',
   availableChains: new Array<CrosschainChain>(),
@@ -54,22 +50,11 @@ const initialState: CrosschainState = {
   currentBalance: '',
   transferAmount: '',
   crosschainFee: '',
-  depositStatus: false,
-  approveStatus: false,
+  crosschainTransferStatus: ChainTransferState.NotStarted,
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
   builder
-    .addCase(setCrosschainSwapStatus, (state, { payload: { txID, status } }) => {
-      const currentState = { ...initialState, ...state };
-      return {
-        ...currentState,
-        swapStatus: {
-          ...state.swapStatus,
-          [txID]: status
-        }
-      }
-    })
     .addCase(setCrosschainRecipient, (state, { payload: { address } }) => {
       const currentState = { ...initialState, ...state };
       return {
@@ -141,18 +126,11 @@ export default createReducer<CrosschainState>(initialState, builder =>
         crosschainFee: value
       }
     })
-    .addCase(setDeposiStatus, (state, { payload: { confirmed } }) => {
+    .addCase(setCrosschainTransferStatus, (state, { payload: { status } }) => {
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
-        depositStatus: confirmed
-      }
-    })
-    .addCase(setApproveStatus, (state, { payload: { confirmed } }) => {
-      const currentState = { ...initialState, ...state };
-      return {
-        ...currentState,
-        approveStatus: confirmed
+        crosschainTransferStatus: status
       }
     })
 )

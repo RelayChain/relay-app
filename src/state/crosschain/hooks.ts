@@ -4,31 +4,25 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import {
-  CrosschainChain, CrosschainToken,
-  ProposalStatus, setApproveStatus,
+  CrosschainChain,
+  CrosschainToken,
+  ProposalStatus,
   setAvailableChains,
   setAvailableTokens,
   setCrosschainFee,
   setCrosschainRecipient,
-  setCrosschainSwapStatus,
+  setCrosschainTransferStatus,
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
-  setCurrentTxID, setDeposiStatus, setTargetChain,
+  setCurrentTxID,
+  setTargetChain,
   setTransferAmount
 } from './actions'
-import { BridgeConfig, ChainbridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
+import { BridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
 import { ChainId } from '@zeroexchange/sdk'
-import Web3 from 'web3'
-import {
-  BigNumber,
-  BigNumberish,
-  ContractTransaction,
-  ethers,
-  Overrides,
-  PayableOverrides,
-  utils
-} from 'ethers'
+import { BigNumber, ethers, utils } from 'ethers'
+import { ChainTransferState } from '../../pages/Swap'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -187,7 +181,6 @@ export function useCrossChain() {
   dispatch = useDispatch<AppDispatch>()
 
   const {
-    swapStatus,
     currentRecipient,
     currentTxID,
     availableChains,
@@ -263,43 +256,38 @@ export function useCrossChain() {
 export async function MakeApprove() {
   const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
   const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
-  //
-  // const web3CurrentChain = new Web3(currentChain.rpcUrl)
-  // const tokenContract = new web3CurrentChain.eth.Contract(TokenABI, currentToken.address, {
-  //   from: web3React.account,
-  //   gasPrice: '20000000000'
-  // })
-  // console.log('tokenContract', tokenContract)
-  // const rawTX = tokenContract.methods.approve(currentChain.bridgeAddress, crosschainState.transferAmount).encodeABI();
-  // var decodedTx = txDecoder.decodeTx(rawTX);
 
   dispatch(setCurrentTxID({
     txID: ''
+  }))
+  dispatch(setCrosschainTransferStatus({
+    status: ChainTransferState.NotStarted
   }))
 
   const signer = web3React.library.getSigner()
   const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
   console.log('currentChain.bridgeAddress, crosschainState.transferAmount', currentChain.erc20HandlerAddress, crosschainState.transferAmount)
-  const result = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
+  const resultApproveTx = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
     gasLimit: '300000'
   })
 
-  dispatch(setApproveStatus({
-    confirmed: false
+  dispatch(setCrosschainTransferStatus({
+    status: ChainTransferState.ApprovalPending
   }))
   dispatch(setCurrentTxID({
-    txID: result.hash
+    txID: resultApproveTx.hash
   }))
 
-  result.wait(2).then(() => {
-    dispatch(setApproveStatus({
-      confirmed: true
-    }))
+  resultApproveTx.wait(2).then(() => {
+    if (crosschainState.currentTxID === resultApproveTx.hash) {
+      dispatch(setCurrentTxID({
+        txID: ''
+      }))
+      dispatch(setCrosschainTransferStatus({
+        status: ChainTransferState.ApprovalComplete
+      }))
+    }
   })
-
-  dispatch(setApproveStatus({
-    confirmed: true
-  }))
 }
 
 export async function MakeDeposit() {
@@ -370,11 +358,11 @@ export async function MakeDeposit() {
 
   console.log('resultDepositTx.wait done')
 
-  dispatch(setDeposiStatus({
-    confirmed: false
-  }))
   dispatch(setCurrentTxID({
     txID: resultDepositTx.hash
+  }))
+  dispatch(setCrosschainTransferStatus({
+    status: ChainTransferState.TransferPending
   }))
 
   {
@@ -388,11 +376,9 @@ export async function MakeDeposit() {
         null
       ),
       (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-        console.log('originChainId, depositNonce, status, resourceId, dataHash, tx', originChainId, depositNonce, status, resourceId, dataHash, tx)
-
-        if (status == ProposalStatus.EXECUTED) {
-          dispatch(setDeposiStatus({
-            confirmed: true
+        if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
+          dispatch(setCrosschainTransferStatus({
+            status: ChainTransferState.TransferComplete
           }))
         }
       }

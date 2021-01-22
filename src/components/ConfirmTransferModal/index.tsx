@@ -56,12 +56,12 @@ export default function ConfirmTransferModal({
   test,
 }: ConfirmTransferProps) {
 
-  const {approveStatus} = useCrosschainState()
+  const {crosschainTransferStatus} = useCrosschainState()
   useEffect(()=>{
-    if(approveStatus){
+    if(crosschainTransferStatus === ChainTransferState.ApprovalComplete){
       changeTransferState(ChainTransferState.ApprovalComplete)
     }
-  }, [approveStatus, changeTransferState])
+  }, [crosschainTransferStatus])
 
   const [ title, setTitle ] = useState('');
   useEffect(() => {

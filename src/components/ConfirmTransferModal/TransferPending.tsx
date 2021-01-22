@@ -19,12 +19,12 @@ const ConfirmedIcon = styled(ColumnCenter)`
 export default function TransferPending ({ changeTransferState }: {
   changeTransferState: (state: ChainTransferState) => void;
 }) {
-  const {depositStatus} = useCrosschainState()
+  const {crosschainTransferStatus} = useCrosschainState()
   useEffect(()=>{
-    if(depositStatus){
+    if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
       changeTransferState(ChainTransferState.TransferComplete)
     }
-  }, [depositStatus, changeTransferState])
+  }, [crosschainTransferStatus])
 
   return (
     <Section>
