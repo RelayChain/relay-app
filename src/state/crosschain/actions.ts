@@ -1,12 +1,11 @@
 import { createAction } from '@reduxjs/toolkit'
 
 export enum ProposalStatus {
-  NONE = 'None',
-  INACTIVE = 'Inactive',
-  ACTIVE = 'Active',
-  PASSED = 'Passed',
-  EXECUTED = 'Executed',
-  CANCELLED = 'Cancelled',
+  INACTIVE = 0,
+  ACTIVE,
+  PASSED,
+  EXECUTED,
+  CANCELLED,
 }
 
 export interface CrosschainToken {
