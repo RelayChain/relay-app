@@ -3,7 +3,6 @@ import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import BlockchainLogo from '../BlockchainLogo';
 import { ButtonPrimary } from '../Button'
-import { ChainTransferState } from '../../pages/Swap';
 import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo'
@@ -12,7 +11,8 @@ import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
 import { TruncatedText } from './styleds'
 import styled from 'styled-components'
-import { MakeApprove } from '../../state/crosschain/hooks'
+import { useCrosschainHooks } from '../../state/crosschain/hooks'
+import { ChainTransferState } from '../../state/crosschain/actions'
 
 interface NotStartedProps {
   activeChain?: string;
@@ -69,6 +69,7 @@ export default function NotStarted ({
   changeTransferState,
   tokenTransferState,
 }: NotStartedProps) {
+  const {MakeApprove} = useCrosschainHooks()
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">

@@ -72,9 +72,6 @@ const BlockchainSelector = ({
     onShowTransferChainModal();
   }
 
-  console.log("blockchain", blockchain)
-  console.log("transferTo", transferTo)
-
   if (!blockchain) {
     return <div />
   }

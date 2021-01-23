@@ -1,13 +1,13 @@
 import { AutoColumn, ColumnCenter } from '../Column'
 import React, { useEffect } from 'react'
 
-import { ChainTransferState } from '../../pages/Swap'
 import Circle from '../../assets/images/blue-loader.svg'
 import { CustomLightSpinner } from '../../theme/components'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { swap } from 'formik'
 import { useCrosschainState } from '../../state/crosschain/hooks'
+import { ChainTransferState } from '../../state/crosschain/actions'
 
 const Section = styled(AutoColumn)`
   padding: 24px;
@@ -19,12 +19,12 @@ const ConfirmedIcon = styled(ColumnCenter)`
 export default function TransferPending ({ changeTransferState }: {
   changeTransferState: (state: ChainTransferState) => void;
 }) {
-  const {depositStatus} = useCrosschainState()
+  const {crosschainTransferStatus} = useCrosschainState()
   useEffect(()=>{
-    if(depositStatus){
+    if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
       changeTransferState(ChainTransferState.TransferComplete)
     }
-  }, [depositStatus, changeTransferState])
+  }, [crosschainTransferStatus])
 
   return (
     <Section>
