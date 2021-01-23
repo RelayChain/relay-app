@@ -4,14 +4,15 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
-import Column, { AutoColumn } from '../../components/Column'
-import { ChainTransferState, CrosschainChain, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
 import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { ChainTransferState, CrosschainChain, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
-import { useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import styled, { ThemeContext } from 'styled-components'
+import { useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -41,7 +42,6 @@ import ReactGA from 'react-ga'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import SwapsTabs from '../../components/SwapsTabs'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -54,6 +54,7 @@ import { useSwapCallback } from '../../hooks/useSwapCallback'
 
 const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.FUJI]: 'Avalanche',
 }
 
@@ -61,6 +62,11 @@ const SUPPORTED_CHAINS = [
   'Ethereum',
   'Avalanche',
   'Polkadot'
+]
+
+const ETH_RPCS = [
+  'Ethereum',
+  'Rinkeby',
 ]
 
 const CrossChainLabels = styled.div`
@@ -348,14 +354,15 @@ export default function Swap() {
     }))
   }
 
-  const [transferTo, setTransferTo] = useState('');
+  const [transferTo, setTransferTo] = useState<string>('');
   useEffect(() => {
-    let x = SUPPORTED_CHAINS.find((x) => {
-      let ch = chainId ? CHAIN_LABELS[chainId] : 'Ethereum';
-      return x !== ch;
-    });
-    if (x) {
-      setTransferTo(x);
+    // change logic when we add polka
+    if (chainId) {
+      if (ETH_RPCS.indexOf((CHAIN_LABELS[chainId] || 'Ethereum')) !== -1) {
+        setTransferTo('Avalanche')
+      } else {
+        setTransferTo('Ethereum')
+      }
     }
   }, [chainId, currentChain])
 
@@ -474,7 +481,7 @@ export default function Swap() {
           <BlockchainSelector
             isCrossChain={isCrossChain}
             supportedChains={SUPPORTED_CHAINS}
-            blockchain={isCrossChain ? currentChain : (!!chainId && !!CHAIN_LABELS[chainId] ?  CHAIN_LABELS[chainId] : 'Ethereum')}
+            blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
             transferTo={isCrossChain? targetChain : transferTo}
             onShowCrossChainModal={showCrossChainModal}
             onShowTransferChainModal={showTransferChainModal}
@@ -547,7 +554,6 @@ export default function Swap() {
               isCrossChain && <>
                 <CrossChainLabels>
                   <p>Fee: <span>{crosschainFee}</span></p>
-                  <p>Available Balance: <span>{currentBalance}</span></p>
                 </CrossChainLabels>
               </>
             }
@@ -584,7 +590,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {isCrossChain && transferAmount.length ? (
+            {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
               <>
                 <ButtonPrimary onClick={showConfirmTransferModal}>
                   Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
