@@ -3,22 +3,21 @@ import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import BlockchainLogo from '../BlockchainLogo';
 import { ButtonPrimary } from '../Button'
+import { ChainTransferState } from '../../state/crosschain/actions'
 import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
-import CurrencyLogo from '../CurrencyLogo'
 import React from 'react'
 import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
 import { TruncatedText } from './styleds'
 import styled from 'styled-components'
 import { useCrosschainHooks } from '../../state/crosschain/hooks'
-import { ChainTransferState } from '../../state/crosschain/actions'
 
 interface NotStartedProps {
   activeChain?: string;
   transferTo?: string;
   currency?: Currency | null;
-  value?: string;
+  value?: any;
   trade?: Trade
   changeTransferState: (state: ChainTransferState) => void;
   tokenTransferState: ChainTransferState;
@@ -70,22 +69,27 @@ export default function NotStarted ({
   tokenTransferState,
 }: NotStartedProps) {
   const {MakeApprove} = useCrosschainHooks()
+
+  const formatValue = (value: string) => {
+    return parseFloat(parseFloat(value).toFixed(6)).toString()
+  }
+
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <CurrencyLogo currency={trade?.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <BlockchainLogo size="24px" blockchain={currency?.symbol} style={{ marginBottom: '-3px', marginRight: '12px' }} />
           <TruncatedText
             fontSize={24}
             fontWeight={500}
             color={''}
           >
-            {trade?.inputAmount.toSignificant(6)}
+            {formatValue(value)}
           </TruncatedText>
         </RowFixed>
         <RowFixed gap={'0px'}>
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {trade?.inputAmount.currency.symbol}
+            {currency?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>

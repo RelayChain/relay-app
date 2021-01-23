@@ -57,7 +57,7 @@ const BlockchainSelector = ({
   onShowTransferChainModal
 }: {
   blockchain: string | CrosschainChain | undefined
-  transferTo: string | CrosschainChain;
+  transferTo: any // tslint not working here, same as above
   isCrossChain?: boolean
   supportedChains: string[]
   onShowCrossChainModal: () => void
@@ -95,13 +95,13 @@ const BlockchainSelector = ({
       { isCrossChain &&
         <Row borderBottom={false} isCrossChain={isCrossChain}>
           <p className="crosschain currentchain">
-            <BlockchainLogo size="18px" blockchain={typeof(blockchain) !== "string"? blockchain.name : ""} style={{ marginBottom: '-3px' }} />
-            <span>{typeof(blockchain) !== "string"? blockchain.name : ""}</span>
+            <BlockchainLogo size="18px" blockchain={typeof(blockchain) !== "string" ? blockchain.name : blockchain } style={{ marginBottom: '-3px' }} />
+            <span>{typeof(blockchain) !== "string"? blockchain.name : blockchain }</span>
           </p>
           <ChevronsRight />
           <p className="crosschain" onClick={openTransferModal}>
-            <BlockchainLogo size="18px" blockchain={typeof(transferTo) !== "string"? transferTo.name : ""} style={{ marginBottom: '-3px' }} />
-            <span>{typeof(transferTo) !== "string"? transferTo.name : ""}</span>
+            <BlockchainLogo size="18px" blockchain={typeof(transferTo) !== "string" ? transferTo.name : blockchain } style={{ marginBottom: '-3px' }} />
+            <span>{typeof(transferTo) !== "string"? transferTo.name : blockchain }</span>
             <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
           </p>
         </Row>
