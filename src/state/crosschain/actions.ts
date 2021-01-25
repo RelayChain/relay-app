@@ -20,6 +20,7 @@ export interface CrosschainChain {
   imageUri?: string;
   resourceId?: string;
   isNativeWrappedToken?: boolean;
+  assetBase?: string;
 }
 
 export enum ChainTransferState {
@@ -34,6 +35,7 @@ export const setCrosschainRecipient = createAction<{ address: string }>('crossch
 export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-currentTxID')
 export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
 export const setAvailableTokens = createAction<{ tokens: Array<CrosschainToken> }>('crosschain/set-availableTokens')
+export const setTargetTokens = createAction<{ targetTokens: Array<CrosschainToken> }>('crosschain/set-targetTokens')
 export const setCurrentChain = createAction<{ chain: CrosschainChain }>('crosschain/set-currentChain')
 export const setTargetChain = createAction<{ chain: CrosschainChain }>('crosschain/set-target-Chain')
 export const setCurrentToken = createAction<{ token: CrosschainToken }>('crosschain/set-currentToken')

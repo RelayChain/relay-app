@@ -1,27 +1,29 @@
-import { Currency, ETHER, Token } from '@zeroexchange/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import ReactGA from 'react-ga'
-import { useTranslation } from 'react-i18next'
-import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useSelectedListInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import { isAddress } from '../../utils'
+import { Currency, ETHER, Token } from '@zeroexchange/sdk'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
+import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import Row, { RowBetween } from '../Row'
+import { useAllTokens, useToken } from '../../hooks/Tokens'
+
+import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
 import Column from '../Column'
-import ListLogo from '../ListLogo'
-import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from './filtering'
+import { FixedSizeList } from 'react-window'
+import ListLogo from '../ListLogo'
+import QuestionHelper from '../QuestionHelper'
+import ReactGA from 'react-ga'
 import SortButton from './SortButton'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
+import { filterTokens } from './filtering'
+import { isAddress } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from '../../state/crosschain/hooks'
+import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import { useTranslation } from 'react-i18next'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -31,6 +33,7 @@ interface CurrencySearchProps {
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   onChangeList: () => void
+  isCrossChain?: boolean
 }
 
 export function CurrencySearch({
@@ -40,7 +43,8 @@ export function CurrencySearch({
   showCommonBases,
   onDismiss,
   isOpen,
-  onChangeList
+  onChangeList,
+  isCrossChain,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -54,6 +58,24 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+
+  // cross chain
+  const {
+    availableTokens,
+    currentChain,
+    targetChain,
+    targetTokens,
+  } = useCrosschainState()
+
+  const availableTokensArray = availableTokens.map((x: any) => {
+    return new Token(
+      x.chainId,
+      x.address,
+      x.decimals,
+      x.symbol,
+      x.name
+    )
+  });
 
   useEffect(() => {
     if (isAddressSearch) {
@@ -79,7 +101,7 @@ export function CurrencySearch({
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
-    const sorted = filteredTokens.sort(tokenComparator)
+    let sorted = filteredTokens.sort(tokenComparator)
     const symbolMatch = searchQuery
       .toLowerCase()
       .split(/\s+/)
@@ -92,7 +114,7 @@ export function CurrencySearch({
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
-  }, [filteredTokens, searchQuery, searchToken, tokenComparator])
+  }, [filteredTokens, searchQuery, searchToken, tokenComparator, isCrossChain, availableTokens])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -143,25 +165,29 @@ export function CurrencySearch({
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
             Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
+            { !isCrossChain &&
+              <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
+            }
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <SearchInput
-          type="text"
-          id="token-search-input"
-          placeholder={t('tokenSearchPlaceholder')}
-          value={searchQuery}
-          ref={inputRef as RefObject<HTMLInputElement>}
-          onChange={handleInput}
-          onKeyDown={handleEnter}
-        />
+        { !isCrossChain &&
+          <SearchInput
+            type="text"
+            id="token-search-input"
+            placeholder={t('tokenSearchPlaceholder')}
+            value={searchQuery}
+            ref={inputRef as RefObject<HTMLInputElement>}
+            onChange={handleInput}
+            onKeyDown={handleEnter}
+          />
+        }
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
           <Text fontSize={14} fontWeight={500}>
-            Token Name
+            { !isCrossChain ? 'Token Name' : 'Available Cross-Chain Tokens' }
           </Text>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
@@ -175,7 +201,7 @@ export function CurrencySearch({
             <CurrencyList
               height={height}
               showETH={showETH}
-              currencies={filteredSortedTokens}
+              currencies={ !isCrossChain ? filteredSortedTokens : availableTokensArray }
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}

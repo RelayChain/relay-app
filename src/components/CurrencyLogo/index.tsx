@@ -1,12 +1,12 @@
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import ZeroLogo from '../../assets/images/logo-zero-124.png'
-import useHttpLocations from '../../hooks/useHttpLocations'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
+import ZeroLogo from '../../assets/images/logo-zero-124.png'
+import styled from 'styled-components'
+import useHttpLocations from '../../hooks/useHttpLocations'
 
 const getTokenLogoURL = (address: string) => {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`

@@ -1,10 +1,11 @@
-import { Currency } from '@zeroexchange/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
-import ReactGA from 'react-ga'
-import useLast from '../../hooks/useLast'
-import Modal from '../Modal'
+
+import { Currency } from '@zeroexchange/sdk'
 import { CurrencySearch } from './CurrencySearch'
 import { ListSelect } from './ListSelect'
+import Modal from '../Modal'
+import ReactGA from 'react-ga'
+import useLast from '../../hooks/useLast'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -13,6 +14,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  isCrossChain?: boolean;
 }
 
 export default function CurrencySearchModal({
@@ -21,6 +23,7 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
+  isCrossChain,
   showCommonBases = false
 }: CurrencySearchModalProps) {
   const [listView, setListView] = useState<boolean>(false)
@@ -68,6 +71,7 @@ export default function CurrencySearchModal({
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
+          isCrossChain={isCrossChain}
         />
       )}
     </Modal>

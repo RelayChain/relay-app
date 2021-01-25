@@ -4,9 +4,10 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
-import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { ChainTransferState, CrosschainChain, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
+import { Field, selectCurrency } from '../../state/swap/actions'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -35,7 +36,6 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Field } from '../../state/swap/actions'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import ReactGA from 'react-ga'
@@ -101,6 +101,7 @@ export default function Swap() {
     transferAmount,
     crosschainFee,
     targetChain,
+    targetTokens,
     crosschainTransferStatus,
   } = useCrosschainState()
 
@@ -348,10 +349,30 @@ export default function Swap() {
   // swaps or cross chain
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
   const handleSetIsCrossChain = (bool: boolean) => {
+
     setIsCrossChain(bool);
+
     dispatch(setTransferAmount({
       amount: inputAmountToTrack
     }))
+    
+    // if cross chain, choose first available token
+    if (bool === true) {
+      const currencyId = availableTokens[0].address;
+      dispatch(
+        selectCurrency({
+          field: Field.INPUT,
+          currencyId
+        })
+      )
+    } else { // if back to swaps, set to ETH as default
+      dispatch(
+        selectCurrency({
+          field: Field.INPUT,
+          currencyId: 'ETH'
+        })
+      )
+    }
   }
 
   const [transferTo, setTransferTo] = useState<string>('');
@@ -528,12 +549,12 @@ export default function Swap() {
               onUserInput={handleTypeOutput}
               label={'To'}
               showMaxButton={false}
-              hideBalance={isCrossChain}
               currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               isCrossChain={isCrossChain}
               disableCurrencySelect={isCrossChain ? true : false}
+              hideBalance={isCrossChain}
               id="swap-currency-output"
             />
 

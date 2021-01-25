@@ -13,6 +13,7 @@ import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { darken } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
 
@@ -147,6 +148,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   isCrossChain?: boolean;
+  crossChainBalance?: string;
 }
 
 export default function CurrencyInputPanel({
@@ -169,6 +171,7 @@ export default function CurrencyInputPanel({
   showCommonBases,
   customBalanceText,
   isCrossChain,
+  crossChainBalance
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -177,6 +180,13 @@ export default function CurrencyInputPanel({
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
+
+  const {
+    availableTokens,
+    currentChain,
+    targetChain,
+    targetTokens,
+  } = useCrosschainState()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -216,9 +226,9 @@ export default function CurrencyInputPanel({
                   fontSize={14}
                   style={{ display: 'inline', cursor: 'pointer' }}
                 >
-                  {!hideBalance && !!currency && selectedCurrencyBalance
-                    ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                    : ' -'}
+                {!hideBalance && !!currency && selectedCurrencyBalance
+                  ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                  : '-'}
                 </TYPE.body>
               )}
             </RowBetween>
@@ -280,6 +290,7 @@ export default function CurrencyInputPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          isCrossChain={isCrossChain}
         />
       )}
       {!disableBlockchainSelect && onBlockchainSelect && (

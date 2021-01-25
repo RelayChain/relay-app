@@ -1,8 +1,5 @@
-import store, { AppDispatch, AppState } from '../index'
-import { useCallback, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { useActiveWeb3React } from '../../hooks'
+import { BigNumber, ethers, utils } from 'ethers'
+import { BridgeConfig, TokenConfig, crosschainConfig } from '../../constants/CrosschainConfig'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -18,12 +15,16 @@ import {
   setCurrentTokenBalance,
   setCurrentTxID,
   setTargetChain,
+  setTargetTokens,
   setTransferAmount
 } from './actions'
-import { BridgeConfig, crosschainConfig, TokenConfig } from '../../constants/CrosschainConfig'
+import store, { AppDispatch, AppState } from '../index'
+import { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import { ChainId } from '@zeroexchange/sdk'
-import { BigNumber, ethers, utils } from 'ethers'
 import { initialState } from './reducer'
+import { useActiveWeb3React } from '../../hooks'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -130,12 +131,15 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
     if (chain.name === chainName) {
       chain.tokens.map((token: TokenConfig) => {
         const t = {
+          chainId: chain.chainId,
           address: token.address,
           name: token.name || '',
           symbol: token.symbol || '',
+          decimals: token.decimals,
           imageUri: token.imageUri,
           resourceId: token.resourceId,
-          isNativeWrappedToken: token.isNativeWrappedToken
+          isNativeWrappedToken: token.isNativeWrappedToken,
+          assetBase: token.assetBase,
         }
         result.push(t)
       })
@@ -350,7 +354,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library?._network?.chainId || chainIdFromWeb3React
+  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -379,8 +383,12 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
+    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
+    }))
+    dispatch(setTargetTokens({
+      targetTokens: targetTokens.length ? targetTokens : []
     }))
     dispatch(setTargetChain({
       chain: newTargetCain
