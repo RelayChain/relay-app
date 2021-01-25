@@ -31,11 +31,14 @@ import AppBody from '../AppBody'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
+import ChainBridgeModal from '../../components/ChainBridgeModal'
+import Circle from '../../assets/images/circle-grey.svg'
 import { ClickableText } from '../Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { CustomLightSpinner } from '../../theme/components'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import ReactGA from 'react-ga'
@@ -84,6 +87,29 @@ const CrossChainLabels = styled.div`
     }
   }
 `
+const ChainBridgePending = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  padding: .25rem 1rem .25rem 1rem;
+  background: #40444F;
+  border-radius: 30px;
+  margin-top: 2rem;
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.1);
+  transition: all .2s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    background: lighten(#40444F, 5%);
+  }
+  p {
+    font-size: .9rem;
+    font-weight: bold;
+  }
+`
+
 
 export default function Swap() {
   useCrossChain()
@@ -355,7 +381,7 @@ export default function Swap() {
     dispatch(setTransferAmount({
       amount: inputAmountToTrack
     }))
-    
+
     // if cross chain, choose first available token
     if (bool === true) {
       const currencyId = availableTokens[0].address;
@@ -391,6 +417,19 @@ export default function Swap() {
     setTokenTransferState(ChainTransferState.NotStarted)
     BreakCrosschainSwap()
   }
+
+  const [showChainBridgeModal, setShowChainBridgeModal] = useState(false);
+  const hideChainBridgeModal = () => {
+    setShowChainBridgeModal(false)
+  }
+
+  // test - get this from chainbridge state
+  const pendingChainBridgeTransfers = [
+    { state: 'WaitingRelayers', symbol: 'wETH', amount: '1.348', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
+    { state: 'MintingToken', symbol: 'wETH', amount: '7.02', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
+    { state: 'TokenMinted', symbol: 'wETH', amount: '993.23', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
+    { state: 'Cancelled', symbol: 'wETH', amount: '443.21', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
+  ]
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
   const hideCrossChainModal = () => {
@@ -482,7 +521,11 @@ export default function Swap() {
             value={formattedAmounts[Field.INPUT]}
             currency={currencies[Field.INPUT]}
             trade={trade}
-            test={handleTokenTransfer}
+          />
+          <ChainBridgeModal
+            isOpen={showChainBridgeModal}
+            onDismiss={hideChainBridgeModal}
+            pendingTransfers={pendingChainBridgeTransfers}
           />
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -714,6 +757,12 @@ export default function Swap() {
         </Wrapper>
       </AppBody>
 
+      <ChainBridgePending onClick={() => setShowChainBridgeModal(true)}>
+        <p>
+          {`You have ${pendingChainBridgeTransfers?.length} cross-chain transfers`}
+        </p>
+        <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px'}} />
+      </ChainBridgePending>
 
       { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} />}
 
