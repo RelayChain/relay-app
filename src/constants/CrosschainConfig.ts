@@ -42,10 +42,17 @@ export const crosschainConfig: ChainbridgeConfig = {
             tokens: [
                 {
                     address: "0xBef34a5f6624DfDBED42fBda56759Be39CfDd696",
-                    name: "An ERC20",
-                    symbol: "wETC",
+                    name: "wETH",
+                    symbol: "wETH",
                     resourceId:
                         "0x000000000000000000000080F62f18bf8C48580EC4f3769afC89FEF9ca45e001",
+                },
+                {
+                    address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
+                    name: "USDT",
+                    symbol: "USDT",
+                    resourceId:
+                      "0x000000000000000000000086D646e76806DCD652a5aFA7AaA20D428B76A35601",
                 },
             ],
         },
@@ -63,10 +70,17 @@ export const crosschainConfig: ChainbridgeConfig = {
             tokens: [
                 {
                     address: "0x80F62f18bf8C48580EC4f3769afC89FEF9ca45e0",
-                    name: "An ERC20",
-                    symbol: "ERC20",
+                    name: "zETH",
+                    symbol: "zETH",
                     resourceId:
                         "0x0000000000000000000000Bef34a5f6624DfDBED42fBda56759Be39CfDd69601",
+                },
+                {
+                    address: "0x1569c1edc28F7141Cf5FdE18f27e5E4db6E85a34",
+                    name: "zUSDT",
+                    symbol: "zUSDT",
+                    resourceId:
+                        "0x00000000000000000000001569c1edc28F7141Cf5FdE18f27e5E4db6E85a3401",
                 },
             ],
         },
