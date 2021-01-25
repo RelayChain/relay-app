@@ -224,7 +224,17 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.FUJI]: 'Avalanche',
+}
+
+const NETWORK_SYMBOLS: any = {
+  ['Ethereum']: 'ETH',
+  ['Rinkeby']: 'ETH',
+  ['Ropsten']: 'ETH',
+  ['Görli']: 'ETH',
+  ['Kovan']: 'ETH',
+  ['Avalanche']: 'AVAX'
 }
 
 export default function Header() {
@@ -234,6 +244,12 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
+
+  let label, symbol = '';
+  if (chainId) {
+    label = NETWORK_LABELS[chainId];
+    symbol = NETWORK_SYMBOLS[label || 'Ethereum'];
+  }
 
   return (
     <HeaderFrame>
@@ -279,7 +295,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                {userEthBalance?.toSignificant(4)} {symbol}
               </BalanceText>
             ) : null}
             <Web3Status />

@@ -528,6 +528,7 @@ export default function Swap() {
               onUserInput={handleTypeOutput}
               label={'To'}
               showMaxButton={false}
+              hideBalance={isCrossChain}
               currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
