@@ -200,7 +200,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={showETH}
+              showETH={ isCrossChain ? false : showETH }
               currencies={ !isCrossChain ? filteredSortedTokens : availableTokensArray }
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

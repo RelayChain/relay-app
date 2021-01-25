@@ -72,7 +72,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rpcUrl: "https://api.avax-test.network/ext/bc/C/rpc",
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/kotti/tx",
-      nativeTokenSymbol: "AVA",
+      nativeTokenSymbol: "AVAX",
       defaultGasPrice: 523,
       tokens: [
         {

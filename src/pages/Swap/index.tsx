@@ -618,7 +618,7 @@ export default function Swap() {
             {
               isCrossChain && <>
                 <CrossChainLabels>
-                  <p>Fee: <span>{crosschainFee}</span></p>
+                  <p>Fee: <span>{crosschainFee} {currentChain?.symbol}</span></p>
                 </CrossChainLabels>
               </>
             }

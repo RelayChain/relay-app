@@ -59,7 +59,8 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
     if (chain.name === currentChainName) {
       result = {
         name: chain.name,
-        chainID: String(chain.chainId)
+        chainID: String(chain.chainId),
+        symbol: chain.nativeTokenSymbol
       }
     }
   }))
