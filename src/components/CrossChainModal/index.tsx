@@ -103,7 +103,7 @@ export default function CrossChainModal({
             <span>{activeChain}</span>
           </li>
           {supportedChains.map((chain: CrosschainChain) =>
-            <li onClick={() => {
+            <li key={chain.name} onClick={() => {
                 if (isTransfer) {
                   selectTransferChain(chain)
                   onDismiss()
