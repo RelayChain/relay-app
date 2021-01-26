@@ -44,13 +44,13 @@ export const crosschainConfig: ChainbridgeConfig = {
       nativeTokenSymbol: "Mock",
       tokens: [
         {
-          address: "0xBef34a5f6624DfDBED42fBda56759Be39CfDd696",
+          address: "0x6Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E",
           name: "wETH",
           symbol: "wETH",
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
-            "0x000000000000000000000080F62f18bf8C48580EC4f3769afC89FEF9ca45e001",
+            "0x00000000000000000000006Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E00",
         },
         {
           address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
@@ -59,7 +59,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'USDT',
           decimals: 18,
           resourceId:
-            "0x000000000000000000000086D646e76806DCD652a5aFA7AaA20D428B76A35601",
+            "0x000000000000000000000086D646e76806DCD652a5aFA7AaA20D428B76A35600",
         },
       ],
     },
@@ -76,13 +76,13 @@ export const crosschainConfig: ChainbridgeConfig = {
       defaultGasPrice: 523,
       tokens: [
         {
-          address: "0x80F62f18bf8C48580EC4f3769afC89FEF9ca45e0",
+          address: "0xbe113Dc920b8774c3f03195D6b3445F9B7884C2D",
           name: "zETH",
           symbol: "zETH",
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
-            "0x0000000000000000000000Bef34a5f6624DfDBED42fBda56759Be39CfDd69601",
+            "0x0000000000000000000000be113Dc920b8774c3f03195D6b3445F9B7884C2D01",
         },
         {
           address: "0x1569c1edc28F7141Cf5FdE18f27e5E4db6E85a34",
