@@ -6,9 +6,10 @@ import {
   CrosschainToken,
   ProposalStatus,
   setAvailableChains,
-  setAvailableTokens,
+  setAvailableTokens, setCrosschainDepositConfirmed,
   setCrosschainFee,
   setCrosschainRecipient,
+  setCrosschainSwapDetails,
   setCrosschainTransferStatus,
   setCurrentChain,
   setCurrentToken,
@@ -16,7 +17,7 @@ import {
   setCurrentTxID,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount
+  setTransferAmount, SwapDetails
 } from './actions'
 import store, { AppDispatch, AppState } from '../index'
 import { useCallback, useEffect } from 'react'
@@ -178,6 +179,17 @@ export function useCrosschainHooks() {
     dispatch(setCrosschainTransferStatus({
       status: ChainTransferState.NotStarted
     }))
+
+    dispatch(setCrosschainSwapDetails({
+      details: {
+        status: ProposalStatus.INACTIVE,
+        voteCount: 0
+      }
+    }))
+
+    dispatch(setCrosschainDepositConfirmed({
+      confirmed: false
+    }))
   }
 
   const MakeDeposit = async () => {
@@ -220,6 +232,10 @@ export function useCrosschainHooks() {
 
     await resultDepositTx.wait(1)
 
+    dispatch(setCrosschainDepositConfirmed({
+      confirmed: true
+    }))
+
     const web3CurrentChain = new Web3(currentChain.rpcUrl)
     const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
@@ -244,7 +260,13 @@ export function useCrosschainHooks() {
           const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
           const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce,web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
           console.log('proposal',proposal)
-          if (proposal && Number(proposal._status) == ProposalStatus.EXECUTED) {
+          dispatch(setCrosschainSwapDetails({
+            details: {
+              status: proposal._status,
+              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
+            }
+          }))
+          if (proposal && proposal._status == ProposalStatus.EXECUTED) {
             dispatch(setCrosschainTransferStatus({
               status: ChainTransferState.TransferComplete
             }))

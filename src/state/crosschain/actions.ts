@@ -1,11 +1,11 @@
 import { createAction } from '@reduxjs/toolkit'
 
 export enum ProposalStatus {
-  INACTIVE = 0,
-  ACTIVE,
-  PASSED,
-  EXECUTED,
-  CANCELLED,
+  INACTIVE = "0",
+  ACTIVE = "1",
+  PASSED = "2",
+  EXECUTED = "3",
+  CANCELLED = "4",
 }
 
 export interface CrosschainToken {
@@ -31,6 +31,11 @@ export enum ChainTransferState {
   TransferComplete = 'TRANSFER_COMPLETE'
 }
 
+export interface SwapDetails {
+  status: ProposalStatus,
+  voteCount: number
+}
+
 export const setCrosschainRecipient = createAction<{ address: string }>('crosschain/set-recipient')
 export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-currentTxID')
 export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
@@ -43,3 +48,5 @@ export const setCurrentTokenBalance = createAction<{ balance: string }>('crossch
 export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')
 export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-fee')
 export const setCrosschainTransferStatus = createAction<{ status: ChainTransferState }>('crosschain/set-transfer-status')
+export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }>('crosschain/set-deposit-confirmed')
+export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
