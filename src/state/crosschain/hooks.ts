@@ -240,7 +240,6 @@ export function useCrosschainHooks() {
     const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
     let nonce = receipt.logs[2].topics[3]
-    console.log('nonce', nonce);
 
     dispatch(setCurrentTxID({
       txID: resultDepositTx.hash
@@ -255,11 +254,9 @@ export function useCrosschainHooks() {
       while (true) {
         try {
           await delay(5000);
-          console.log("process proposal")
           const web3TargetChain = new Web3(targetChain.rpcUrl)
           const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
           const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce,web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
-          console.log('proposal',proposal)
           dispatch(setCrosschainSwapDetails({
             details: {
               status: proposal._status,
