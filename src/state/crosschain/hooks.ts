@@ -239,7 +239,7 @@ export function useCrosschainHooks() {
     const web3CurrentChain = new Web3(currentChain.rpcUrl)
     const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
-    let nonce = receipt.logs[2].topics[3]
+    let nonce = receipt.logs[receipt.logs.length - 1].topics[3]
 
     dispatch(setCurrentTxID({
       txID: resultDepositTx.hash
