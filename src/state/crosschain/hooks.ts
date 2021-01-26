@@ -6,9 +6,10 @@ import {
   CrosschainToken,
   ProposalStatus,
   setAvailableChains,
-  setAvailableTokens,
+  setAvailableTokens, setCrosschainDepositConfirmed,
   setCrosschainFee,
   setCrosschainRecipient,
+  setCrosschainSwapDetails,
   setCrosschainTransferStatus,
   setCurrentChain,
   setCurrentToken,
@@ -16,7 +17,7 @@ import {
   setCurrentTxID,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount
+  setTransferAmount, SwapDetails
 } from './actions'
 import store, { AppDispatch, AppState } from '../index'
 import { useCallback, useEffect } from 'react'
@@ -25,6 +26,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ChainId } from '@zeroexchange/sdk'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
+import Web3 from 'web3'
+import { Bridge } from '@chainsafe/chainbridge-contracts/dist/ethers/Bridge'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -32,9 +35,14 @@ const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').ab
 var dispatch: AppDispatch
 var web3React: any
 
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
+
 function getCrosschainState(): AppState['crosschain'] {
   return store.getState().crosschain || initialState
 }
@@ -140,7 +148,7 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
           imageUri: token.imageUri,
           resourceId: token.resourceId,
           isNativeWrappedToken: token.isNativeWrappedToken,
-          assetBase: token.assetBase,
+          assetBase: token.assetBase
         }
         result.push(t)
       })
@@ -171,6 +179,17 @@ export function useCrosschainHooks() {
     dispatch(setCrosschainTransferStatus({
       status: ChainTransferState.NotStarted
     }))
+
+    dispatch(setCrosschainSwapDetails({
+      details: {
+        status: ProposalStatus.INACTIVE,
+        voteCount: 0
+      }
+    }))
+
+    dispatch(setCrosschainDepositConfirmed({
+      confirmed: false
+    }))
   }
 
   const MakeDeposit = async () => {
@@ -186,18 +205,6 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-
-    let nonce = '-1'
-    bridgeContract.once(
-      bridgeContract.filters.Deposit(
-        targetChain.chainId,
-        currentToken.resourceId,
-        null
-      ),
-      (_, __, depositNonce) => {
-        nonce = `${depositNonce.toString()}`
-      }
-    )
 
     const data =
       '0x' +
@@ -223,7 +230,16 @@ export function useCrosschainHooks() {
       return
     }
 
-    await resultDepositTx.wait(2) // need more than one because we catch event on first confirmation
+    await resultDepositTx.wait(1)
+
+    dispatch(setCrosschainDepositConfirmed({
+      confirmed: true
+    }))
+
+    const web3CurrentChain = new Web3(currentChain.rpcUrl)
+    const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
+
+    let nonce = receipt.logs[2].topics[3]
 
     dispatch(setCurrentTxID({
       txID: resultDepositTx.hash
@@ -235,25 +251,28 @@ export function useCrosschainHooks() {
     UpdateOwnTokenBalance().catch(console.error)
 
     {
-      const destinationBridge = new ethers.Contract(targetChain.bridgeAddress, BridgeABI, new ethers.providers.JsonRpcProvider(targetChain.rpcUrl))
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          currentChain.chainId,
-          BigNumber.from(nonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          console.log("ProposalEvent status", status)
-          let crosschainState = getCrosschainState()
-          if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
+      while (true) {
+        try {
+          await delay(5000);
+          const web3TargetChain = new Web3(targetChain.rpcUrl)
+          const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
+          const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce,web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
+          dispatch(setCrosschainSwapDetails({
+            details: {
+              status: proposal._status,
+              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
+            }
+          }))
+          if (proposal && proposal._status == ProposalStatus.EXECUTED) {
             dispatch(setCrosschainTransferStatus({
               status: ChainTransferState.TransferComplete
             }))
+            break
           }
+        }catch (e) {
+          console.error(e)
         }
-      )
+      }
     }
   }
 
@@ -284,7 +303,7 @@ export function useCrosschainHooks() {
       txID: resultApproveTx.hash
     }))
 
-    resultApproveTx.wait(2).then(() => {
+    resultApproveTx.wait(1).then(() => {
       let crosschainState = getCrosschainState()
       if (crosschainState.currentTxID === resultApproveTx.hash) {
         dispatch(setCurrentTxID({
@@ -355,7 +374,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
+  const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -384,7 +403,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
