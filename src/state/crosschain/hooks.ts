@@ -26,12 +26,17 @@ import { ChainId } from '@zeroexchange/sdk'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import Web3 from 'web3'
+import { Bridge } from '@chainsafe/chainbridge-contracts/dist/ethers/Bridge'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
 var dispatch: AppDispatch
 var web3React: any
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
@@ -231,25 +236,24 @@ export function useCrosschainHooks() {
     UpdateOwnTokenBalance().catch(console.error)
 
     {
-      const destinationBridge = new ethers.Contract(targetChain.bridgeAddress, BridgeABI, new ethers.providers.JsonRpcProvider(targetChain.rpcUrl))
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          currentChain.chainId,
-          BigNumber.from(nonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          console.log('ProposalEvent status', status)
-          let crosschainState = getCrosschainState()
-          if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
+      while (true) {
+        try {
+          await delay(5000);
+          console.log("process proposal")
+          const web3TargetChain = new Web3(targetChain.rpcUrl)
+          const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
+          const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce,web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
+          console.log('proposal',proposal)
+          if (proposal && Number(proposal._status) == ProposalStatus.EXECUTED) {
             dispatch(setCrosschainTransferStatus({
               status: ChainTransferState.TransferComplete
             }))
+            break
           }
+        }catch (e) {
+          console.error(e)
         }
-      )
+      }
     }
   }
 
