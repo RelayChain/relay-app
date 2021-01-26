@@ -215,7 +215,7 @@ export function useCrosschainHooks() {
       return
     }
 
-    await resultDepositTx.wait(1)
+    await resultDepositTx.wait()
 
     dispatch(setCrosschainDepositConfirmed({
       confirmed: true
@@ -288,7 +288,7 @@ export function useCrosschainHooks() {
       txID: resultApproveTx.hash
     }))
 
-    resultApproveTx.wait(1).then(() => {
+    resultApproveTx.wait().then(() => {
       let crosschainState = getCrosschainState()
       if (crosschainState.currentTxID === resultApproveTx.hash) {
         dispatch(setCurrentTxID({
