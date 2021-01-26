@@ -91,22 +91,7 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   return result
 }
 
-function GetChainbridgeConfigByTokenAddress(address: string): BridgeConfig {
-  let result: BridgeConfig | undefined
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
-    chain.tokens.map((token: TokenConfig) => {
-      if (token.address === address) {
-        result = chain
-      }
-    })
-  }))
-  if (!result) {
-    throw Error(`unknown id ${address}`)
-  }
-  return result
-}
-
-function GetTokenByAddress(address: string): TokenConfig {
+export function GetTokenByAddress(address: string): TokenConfig {
   let result: TokenConfig | undefined
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     chain.tokens.map((token: TokenConfig) => {

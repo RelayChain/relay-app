@@ -5,7 +5,13 @@ import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../con
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
-import { ChainTransferState, CrosschainChain, setTargetChain, setTransferAmount } from '../../state/crosschain/actions'
+import {
+  ChainTransferState,
+  CrosschainChain,
+  setCurrentToken,
+  setTargetChain,
+  setTransferAmount
+} from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -13,7 +19,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import styled, { ThemeContext } from 'styled-components'
-import { useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
+import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -349,6 +355,13 @@ export default function Swap() {
     inputCurrency => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
+      const newToken = GetTokenByAddress(inputCurrency.address)
+      dispatch(setCurrentToken({
+        token: {
+          name: newToken.name || '',
+          address: newToken.address,
+        }
+      }))
     },
     [onCurrencySelection]
   )
