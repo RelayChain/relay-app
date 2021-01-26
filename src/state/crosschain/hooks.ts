@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ChainId } from '@zeroexchange/sdk'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
+import Web3 from 'web3'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -35,6 +36,7 @@ var web3React: any
 export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
+
 function getCrosschainState(): AppState['crosschain'] {
   return store.getState().crosschain || initialState
 }
@@ -140,7 +142,7 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
           imageUri: token.imageUri,
           resourceId: token.resourceId,
           isNativeWrappedToken: token.isNativeWrappedToken,
-          assetBase: token.assetBase,
+          assetBase: token.assetBase
         }
         result.push(t)
       })
@@ -187,18 +189,6 @@ export function useCrosschainHooks() {
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
 
-    let nonce = '-1'
-    bridgeContract.once(
-      bridgeContract.filters.Deposit(
-        targetChain.chainId,
-        currentToken.resourceId,
-        null
-      ),
-      (_, __, depositNonce) => {
-        nonce = `${depositNonce.toString()}`
-      }
-    )
-
     const data =
       '0x' +
       utils
@@ -223,7 +213,13 @@ export function useCrosschainHooks() {
       return
     }
 
-    await resultDepositTx.wait(2) // need more than one because we catch event on first confirmation
+    await resultDepositTx.wait(1)
+
+    const web3CurrentChain = new Web3(currentChain.rpcUrl)
+    const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
+
+    let nonce = receipt.logs[2].topics[3]
+    console.log('nonce', nonce);
 
     dispatch(setCurrentTxID({
       txID: resultDepositTx.hash
@@ -245,7 +241,7 @@ export function useCrosschainHooks() {
           null
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          console.log("ProposalEvent status", status)
+          console.log('ProposalEvent status', status)
           let crosschainState = getCrosschainState()
           if (status == ProposalStatus.EXECUTED && crosschainState.currentTxID === resultDepositTx.hash) {
             dispatch(setCrosschainTransferStatus({
@@ -284,7 +280,7 @@ export function useCrosschainHooks() {
       txID: resultApproveTx.hash
     }))
 
-    resultApproveTx.wait(2).then(() => {
+    resultApproveTx.wait(1).then(() => {
       let crosschainState = getCrosschainState()
       if (crosschainState.currentTxID === resultApproveTx.hash) {
         dispatch(setCurrentTxID({
@@ -355,7 +351,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
+  const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -384,7 +380,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
