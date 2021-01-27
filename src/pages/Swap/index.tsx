@@ -136,8 +136,6 @@ export default function Swap() {
     targetTokens,
     crosschainTransferStatus,
   } = useCrosschainState()
-
-  console.log("AVAILABLE TOKENS ===== ", availableTokens);
   
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
 
