@@ -136,7 +136,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@types/yup": "^0.29.11",
-    "@zeroexchange/sdk": "^3.0.8",
+    "@zeroexchange/sdk": "https://github.com/microcrontop/sdk.git#941a049dc4f5ab0d3c98c5509a33dc3f6652e6c5",
     "node-sass": "4.14.1",
     "react-virtualized": "^9.22.3",
     "web3": "^1.3.1"
