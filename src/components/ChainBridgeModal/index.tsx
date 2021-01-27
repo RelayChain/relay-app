@@ -58,7 +58,7 @@ export default function ChainBridgeModal({
       <h5>Pending Cross-Chain Transfers:</h5>
       <ListContainer>
         {pendingTransfers?.map((item: any) =>
-          <ChainBridgeItem item={item}>
+          <ChainBridgeItem key={item.symbol} item={item}>
           </ChainBridgeItem>
         )}
       </ListContainer>

@@ -12,6 +12,7 @@ import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { darken } from 'polished'
+import { returnBalanceNum } from '../../constants';
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -227,7 +228,7 @@ export default function CurrencyInputPanel({
                   style={{ display: 'inline', cursor: 'pointer' }}
                 >
                 {!hideBalance && !!currency && selectedCurrencyBalance
-                  ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                  ? (customBalanceText ?? 'Balance: ') + `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), { groupSeparator: ',' })}`
                   : '-'}
                 </TYPE.body>
               )}

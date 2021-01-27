@@ -13,6 +13,7 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { isTokenOnList } from '../../utils'
+import { returnBalanceNum } from '../../constants';
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -25,8 +26,8 @@ function currencyKey(currency: Currency): string {
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
-  max-width: 5rem;
   text-overflow: ellipsis;
+  max-width: 150px;
 `
 
 const Tag = styled.div`
@@ -44,7 +45,7 @@ const Tag = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' })}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`
