@@ -15,7 +15,7 @@ import { useCrosschainState } from '../../state/crosschain/hooks'
 interface ChainBridgeProps {
   isOpen: boolean;
   onDismiss: () => void;
-  pendingTransfers?: any[];
+  pendingTransfer?: any;
 }
 
 const ModalContainer = styled.div`
@@ -28,7 +28,7 @@ const ModalContainer = styled.div`
     font-weight: bold;
     margin-bottom: 1rem;
     display: block;
-    text-align: left;
+    text-align: center;
     margin-top: 1rem;
     font-size: 1rem;
   }
@@ -43,7 +43,7 @@ const ListContainer = styled.div`
 export default function ChainBridgeModal({
   isOpen,
   onDismiss,
-  pendingTransfers,
+  pendingTransfer,
 }: ChainBridgeProps) {
 
   const {crosschainTransferStatus} = useCrosschainState()
@@ -57,10 +57,8 @@ export default function ChainBridgeModal({
       </RowBetween>
       <h5>Pending Cross-Chain Transfers:</h5>
       <ListContainer>
-        {pendingTransfers?.map((item: any) =>
-          <ChainBridgeItem key={item.symbol} item={item}>
-          </ChainBridgeItem>
-        )}
+        <ChainBridgeItem item={pendingTransfer}>
+        </ChainBridgeItem>
       </ListContainer>
       </ModalContainer>
     </Modal>

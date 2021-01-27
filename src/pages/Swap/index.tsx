@@ -138,7 +138,7 @@ export default function Swap() {
   } = useCrosschainState()
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
-  
+
   const {BreakCrosschainSwap} = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -442,12 +442,16 @@ export default function Swap() {
   }
 
   // test - get this from chainbridge state
-  const pendingChainBridgeTransfers = [
-    { state: 'WaitingRelayers', symbol: 'wETH', amount: '1.348', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
-    { state: 'MintingToken', symbol: 'wETH', amount: '7.02', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
-    { state: 'TokenMinted', symbol: 'wETH', amount: '993.23', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
-    { state: 'Cancelled', symbol: 'wETH', amount: '443.21', decimals: 18, name: 'Ethereum', address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574' },
-  ]
+  const pendingChainBridgeTransfer = {
+    state: 'WaitingRelayers',
+    currentSymbol: 'wUSDT',
+    targetSymbol: 'zUSDT',
+    assetBase: 'USDT',
+    amount: '1.348',
+    decimals: 18,
+    name: 'Ethereum',
+    address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+  }
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
   const hideCrossChainModal = () => {
@@ -543,7 +547,7 @@ export default function Swap() {
           <ChainBridgeModal
             isOpen={showChainBridgeModal}
             onDismiss={hideChainBridgeModal}
-            pendingTransfers={pendingChainBridgeTransfers}
+            pendingTransfer={pendingChainBridgeTransfer}
           />
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -778,7 +782,7 @@ export default function Swap() {
 
       <ChainBridgePending onClick={() => setShowChainBridgeModal(true)}>
         <p>
-          {`You have ${pendingChainBridgeTransfers?.length} cross-chain transfers`}
+          {`Cross-chain transfer pending`}
         </p>
         <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px'}} />
       </ChainBridgePending>

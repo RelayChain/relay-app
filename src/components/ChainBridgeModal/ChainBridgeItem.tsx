@@ -1,5 +1,5 @@
 import { AutoColumn, ColumnCenter } from '../Column'
-import { CheckCircle, XCircle } from 'react-feather'
+import { CheckCircle, ChevronsDown, XCircle } from 'react-feather'
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 
 import Circle from '../../assets/images/circle-grey.svg'
@@ -17,23 +17,25 @@ const ListItem = styled.div`
   background: rgba(255,255,255,.085);
   margin-bottom: .5rem;
   border-radius: 8px;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   p {
     margin-top: 0;
     margin-bottom: 0;
     font-weight: bold;
-    font-size: .9rem;
+    font-size: 1.5rem;
     span {
-      margin-left: 10px;
+      margin-right: 10px;
     }
   }
   .status {
     display: flex;
-    margin-left: auto;
-    font-size: .85rem;
+    font-size: 1rem;
     flex-direction: row;
     align-items: center;
+    opacity: .5
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 `
 
@@ -41,9 +43,10 @@ export default function ChainBridgeItem ({ item, children, ...rest }: { item: an
 
   const currency = {
     decimals: item.decimals,
-    symbol: item.symbol,
     name: item.name,
     address: item.address,
+    symbol: item.assetBase,
+    assetBase: item.assetBase,
   };
 
   const message = {
@@ -55,10 +58,15 @@ export default function ChainBridgeItem ({ item, children, ...rest }: { item: an
 
   return (
     <ListItem>
-      <CurrencyLogo size="16px" style={{ marginRight: '8px' }} currency={currency} />
+      <CurrencyLogo size="50px" style={{ margin: '1rem 1rem 1.25rem 1rem' }} currency={currency} />
       <p>
-        { item?.symbol }
         <span>{ item?.amount}</span>
+        { item?.currentSymbol }
+      </p>
+      <ChevronsDown size="30" style={{ marginTop: '1rem', marginBottom: '1rem' }} />
+      <p>
+        <span>{ item?.amount}</span>
+        { item?.targetSymbol }
       </p>
       <div className="status">
         { message[item?.state]}
