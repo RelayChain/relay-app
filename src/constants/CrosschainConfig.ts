@@ -54,8 +54,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
-          name: "USDT",
-          symbol: "USDT",
+          name: "wUSDT",
+          symbol: "wUSDT",
           assetBase: 'USDT',
           decimals: 18,
           resourceId:
@@ -65,7 +65,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0xA49992e58b3242852DE6D6c8c5B01e3f16Ec1c0a",
           name: "wBTC",
           symbol: "wBTC",
-          assetBase: 'wBTC',
+          assetBase: 'BTC',
           decimals: 18,
           resourceId:
             "0x0000000000000000000000A49992e58b3242852DE6D6c8c5B01e3f16Ec1c0a00",
@@ -74,7 +74,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x790Bdb1d44EcE3e6b45F3D4307C08e4636365D24",
           name: "wUSDC",
           symbol: "wUSDC",
-          assetBase: 'wUSDC',
+          assetBase: 'USDC',
           decimals: 18,
           resourceId:
             "0x0000000000000000000000790Bdb1d44EcE3e6b45F3D4307C08e4636365D2400",
@@ -115,7 +115,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0xBdc570Df37814c873C3a9bCF3751E52A36758d2f",
           name: "zBTC",
           symbol: "zBTC",
-          assetBase: 'zBTC',
+          assetBase: 'BTC',
           decimals: 18,
           resourceId:
             "0x0000000000000000000000Bdc570Df37814c873C3a9bCF3751E52A36758d2f01",
@@ -124,7 +124,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x961b714a7d2c4B263fcB91b26a5CFd6268b874ec",
           name: "zUSDC",
           symbol: "zUSDC",
-          assetBase: 'zUSDC',
+          assetBase: 'USDC',
           decimals: 18,
           resourceId:
             "0x0000000000000000000000961b714a7d2c4B263fcB91b26a5CFd6268b874ec01",

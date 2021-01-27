@@ -14,12 +14,12 @@ import {
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
+import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import styled, { ThemeContext } from 'styled-components'
-import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -137,6 +137,8 @@ export default function Swap() {
     crosschainTransferStatus,
   } = useCrosschainState()
 
+  const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
+  
   const {BreakCrosschainSwap} = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -359,8 +361,10 @@ export default function Swap() {
       const newToken = GetTokenByAddress(inputCurrency.address)
       dispatch(setCurrentToken({
         token: {
-          name: newToken.name || '',
-          address: newToken.address,
+          name: newToken?.name || '',
+          address: newToken?.address|| '',
+          assetBase: newToken?.assetBase|| '',
+          symbol: newToken?.symbol|| '',
         }
       }))
     },
@@ -612,6 +616,7 @@ export default function Swap() {
               isCrossChain={isCrossChain}
               disableCurrencySelect={isCrossChain ? true : false}
               hideBalance={isCrossChain}
+              currentTargetToken={currentTargetToken}
               id="swap-currency-output"
             />
 

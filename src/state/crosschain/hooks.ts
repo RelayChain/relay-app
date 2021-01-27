@@ -5,8 +5,10 @@ import {
   CrosschainChain,
   CrosschainToken,
   ProposalStatus,
+  SwapDetails,
   setAvailableChains,
-  setAvailableTokens, setCrosschainDepositConfirmed,
+  setAvailableTokens,
+  setCrosschainDepositConfirmed,
   setCrosschainFee,
   setCrosschainRecipient,
   setCrosschainSwapDetails,
@@ -17,17 +19,17 @@ import {
   setCurrentTxID,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount, SwapDetails
+  setTransferAmount
 } from './actions'
 import store, { AppDispatch, AppState } from '../index'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { Bridge } from '@chainsafe/chainbridge-contracts/dist/ethers/Bridge'
 import { ChainId } from '@zeroexchange/sdk'
+import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
-import Web3 from 'web3'
-import { Bridge } from '@chainsafe/chainbridge-contracts/dist/ethers/Bridge'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -36,7 +38,7 @@ var dispatch: AppDispatch
 var web3React: any
 
 function delay(ms: number) {
-  return new Promise( resolve => setTimeout(resolve, ms) );
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function useCrosschainState(): AppState['crosschain'] {
@@ -241,11 +243,11 @@ export function useCrosschainHooks() {
           await delay(5000);
           const web3TargetChain = new Web3(targetChain.rpcUrl)
           const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
-          const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce,web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
+          const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce, web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
           dispatch(setCrosschainSwapDetails({
             details: {
               status: proposal._status,
-              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
+              voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
             }
           }))
           if (proposal && proposal._status == ProposalStatus.EXECUTED) {
@@ -254,7 +256,7 @@ export function useCrosschainHooks() {
             }))
             break
           }
-        }catch (e) {
+        } catch (e) {
           console.error(e)
         }
       }
@@ -359,7 +361,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library?._network?.chainId || chainIdFromWeb3React
+  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -388,7 +390,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
@@ -405,7 +407,9 @@ export function useCrossChain() {
     dispatch(setCurrentToken({
       token: tokens.length ? tokens[0] : {
         name: '',
-        address: ''
+        address: '',
+        assetBase: '',
+        symbol: '',
       }
     }))
     dispatch(setTransferAmount({ amount: '' }))

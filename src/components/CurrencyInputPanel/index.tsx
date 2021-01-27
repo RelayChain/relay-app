@@ -150,6 +150,7 @@ interface CurrencyInputPanelProps {
   customBalanceText?: string
   isCrossChain?: boolean;
   crossChainBalance?: string;
+  currentTargetToken?: any;
 }
 
 export default function CurrencyInputPanel({
@@ -172,7 +173,8 @@ export default function CurrencyInputPanel({
   showCommonBases,
   customBalanceText,
   isCrossChain,
-  crossChainBalance
+  crossChainBalance,
+  currentTargetToken
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -181,13 +183,6 @@ export default function CurrencyInputPanel({
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
-
-  const {
-    availableTokens,
-    currentChain,
-    targetChain,
-    targetTokens,
-  } = useCrosschainState()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -271,11 +266,14 @@ export default function CurrencyInputPanel({
                 </StyledTokenName>
               ) : (
                 <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                  {(currency && currency.symbol && currency.symbol.length > 20
+                  { isCrossChain && label === 'To' ?
+                    `${currentTargetToken?.symbol}`
+                    : (currency && currency.symbol && currency.symbol.length > 20
                     ? currency.symbol.slice(0, 4) +
                       '...' +
                       currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                    : currency?.symbol) || t('selectToken')}
+                    : currency?.symbol) || t('selectToken')
+                  }
                 </StyledTokenName>
               )}
               {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!currency} />}

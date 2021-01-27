@@ -11,6 +11,8 @@ export enum ProposalStatus {
 export interface CrosschainToken {
   name: string,
   address: string,
+  assetBase: string,
+  symbol: string,
 }
 
 export interface CrosschainChain {

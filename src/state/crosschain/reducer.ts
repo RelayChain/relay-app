@@ -3,6 +3,7 @@ import {
   CrosschainChain,
   CrosschainToken,
   ProposalStatus,
+  SwapDetails,
   setAvailableChains,
   setAvailableTokens,
   setCrosschainDepositConfirmed,
@@ -16,7 +17,7 @@ import {
   setCurrentTxID,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount, SwapDetails
+  setTransferAmount
 } from './actions'
 import { createAction, createReducer } from '@reduxjs/toolkit'
 
@@ -53,7 +54,9 @@ export const initialState: CrosschainState = {
   },
   currentToken: {
     name: '',
-    address: ''
+    address: '',
+    assetBase: '',
+    symbol: ''
   },
   currentBalance: '',
   transferAmount: '',
@@ -153,14 +156,14 @@ export default createReducer<CrosschainState>(initialState, builder =>
         crosschainTransferStatus: status
       }
     })
-    .addCase(setCrosschainSwapDetails, (state, { payload: { details }  }) => {
+    .addCase(setCrosschainSwapDetails, (state, { payload: { details } }) => {
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
         swapDetails: details
       }
     })
-    .addCase(setCrosschainDepositConfirmed, (state, { payload: { confirmed }  }) => {
+    .addCase(setCrosschainDepositConfirmed, (state, { payload: { confirmed } }) => {
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
