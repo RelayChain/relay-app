@@ -63,29 +63,29 @@ export default function CurrencyLogo({
   }
 
   // cross chain
-  if (currency.symbol === 'ETH') {
+  if (currency?.symbol === 'ETH' || currency?.symbol === 'wETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'USDT') {
+  if (currency?.symbol === 'USDT') {
     return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'USDC') {
+  if (currency?.symbol === 'USDC') {
     return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'BTC' || currency.symbol === 'wBTC') {
+  if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {
     return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
   }
 
-  if (currency.symbol === 'zETH') {
+  if (currency?.symbol === 'zETH') {
     return <StyledEthereumLogo src={ZETHLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'zUSDT') {
+  if (currency?.symbol === 'zUSDT') {
     return <StyledEthereumLogo src={ZUSDTLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'zUSDC') {
+  if (currency?.symbol === 'zUSDC') {
     return <StyledEthereumLogo src={ZUSDCLogo} size={size} style={style} />
   }
-  if (currency.symbol === 'zBTC') {
+  if (currency?.symbol === 'zBTC') {
     return <StyledEthereumLogo src={ZBTCLogo} size={size} style={style} />
   }
 

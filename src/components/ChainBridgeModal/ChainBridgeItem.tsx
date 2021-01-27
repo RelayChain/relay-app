@@ -46,7 +46,6 @@ export default function ChainBridgeItem ({ item, children, ...rest }: { item: an
     name: item.name,
     address: item.address,
     symbol: item.assetBase,
-    assetBase: item.assetBase,
   };
 
   const message = {
