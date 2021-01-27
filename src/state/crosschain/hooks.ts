@@ -91,22 +91,7 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   return result
 }
 
-function GetChainbridgeConfigByTokenAddress(address: string): BridgeConfig {
-  let result: BridgeConfig | undefined
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
-    chain.tokens.map((token: TokenConfig) => {
-      if (token.address === address) {
-        result = chain
-      }
-    })
-  }))
-  if (!result) {
-    throw Error(`unknown id ${address}`)
-  }
-  return result
-}
-
-function GetTokenByAddress(address: string): TokenConfig {
+export function GetTokenByAddress(address: string): TokenConfig {
   let result: TokenConfig | undefined
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     chain.tokens.map((token: TokenConfig) => {
@@ -230,7 +215,7 @@ export function useCrosschainHooks() {
       return
     }
 
-    await resultDepositTx.wait(1)
+    await resultDepositTx.wait()
 
     dispatch(setCrosschainDepositConfirmed({
       confirmed: true
@@ -239,7 +224,7 @@ export function useCrosschainHooks() {
     const web3CurrentChain = new Web3(currentChain.rpcUrl)
     const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
-    let nonce = receipt.logs[2].topics[3]
+    let nonce = receipt.logs[receipt.logs.length - 1].topics[3]
 
     dispatch(setCurrentTxID({
       txID: resultDepositTx.hash
@@ -303,7 +288,7 @@ export function useCrosschainHooks() {
       txID: resultApproveTx.hash
     }))
 
-    resultApproveTx.wait(1).then(() => {
+    resultApproveTx.wait().then(() => {
       let crosschainState = getCrosschainState()
       if (crosschainState.currentTxID === resultApproveTx.hash) {
         dispatch(setCurrentTxID({

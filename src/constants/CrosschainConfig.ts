@@ -41,16 +41,16 @@ export const crosschainConfig: ChainbridgeConfig = {
       rpcUrl: "https://rinkeby.infura.io/v3/45174a29359d4b07ade01676259bc47a",
       type: "Ethereum",
       blockExplorer: "https://ropsten.etherscan.io/tx",
-      nativeTokenSymbol: "Mock",
+      nativeTokenSymbol: "ETH",
       tokens: [
         {
-          address: "0xBef34a5f6624DfDBED42fBda56759Be39CfDd696",
+          address: "0x6Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E",
           name: "wETH",
           symbol: "wETH",
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
-            "0x000000000000000000000080F62f18bf8C48580EC4f3769afC89FEF9ca45e001",
+            "0x00000000000000000000006Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E00",
         },
         {
           address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
@@ -59,7 +59,25 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'USDT',
           decimals: 18,
           resourceId:
-            "0x000000000000000000000086D646e76806DCD652a5aFA7AaA20D428B76A35601",
+            "0x000000000000000000000086D646e76806DCD652a5aFA7AaA20D428B76A35600",
+        },
+        {
+          address: "0xA49992e58b3242852DE6D6c8c5B01e3f16Ec1c0a",
+          name: "wBTC",
+          symbol: "wBTC",
+          assetBase: 'wBTC',
+          decimals: 18,
+          resourceId:
+            "0x0000000000000000000000A49992e58b3242852DE6D6c8c5B01e3f16Ec1c0a00",
+        },
+        {
+          address: "0x790Bdb1d44EcE3e6b45F3D4307C08e4636365D24",
+          name: "wUSDC",
+          symbol: "wUSDC",
+          assetBase: 'wUSDC',
+          decimals: 18,
+          resourceId:
+            "0x0000000000000000000000790Bdb1d44EcE3e6b45F3D4307C08e4636365D2400",
         },
       ],
     },
@@ -76,13 +94,13 @@ export const crosschainConfig: ChainbridgeConfig = {
       defaultGasPrice: 523,
       tokens: [
         {
-          address: "0x80F62f18bf8C48580EC4f3769afC89FEF9ca45e0",
+          address: "0xbe113Dc920b8774c3f03195D6b3445F9B7884C2D",
           name: "zETH",
           symbol: "zETH",
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
-            "0x0000000000000000000000Bef34a5f6624DfDBED42fBda56759Be39CfDd69601",
+            "0x0000000000000000000000be113Dc920b8774c3f03195D6b3445F9B7884C2D01",
         },
         {
           address: "0x1569c1edc28F7141Cf5FdE18f27e5E4db6E85a34",
@@ -92,6 +110,24 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId:
             "0x00000000000000000000001569c1edc28F7141Cf5FdE18f27e5E4db6E85a3401",
+        },
+        {
+          address: "0xBdc570Df37814c873C3a9bCF3751E52A36758d2f",
+          name: "zBTC",
+          symbol: "zBTC",
+          assetBase: 'zBTC',
+          decimals: 18,
+          resourceId:
+            "0x0000000000000000000000Bdc570Df37814c873C3a9bCF3751E52A36758d2f01",
+        },
+        {
+          address: "0x961b714a7d2c4B263fcB91b26a5CFd6268b874ec",
+          name: "zUSDC",
+          symbol: "zUSDC",
+          assetBase: 'zUSDC',
+          decimals: 18,
+          resourceId:
+            "0x0000000000000000000000961b714a7d2c4B263fcB91b26a5CFd6268b874ec01",
         },
       ],
     },
