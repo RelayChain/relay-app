@@ -63,31 +63,16 @@ export default function CurrencyLogo({
   }
 
   // cross chain
-  if (currency.assetBase && currency.symbol === 'ETH') {
+  if (currency.symbol === 'ETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
-  if (currency.assetBase && currency.symbol === 'USDT') {
+  if (currency.symbol === 'USDT') {
     return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
   }
-  if (currency.assetBase && currency.symbol === 'USDC') {
+  if (currency.symbol === 'USDC') {
     return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
   }
-  if (currency.assetBase && currency.symbol === 'BTC') {
-    return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
-  }
-
-  // cross chain search
-
-  if (currency.symbol === 'wETH') {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
-  }
-  if (currency.symbol === 'wUSDT') {
-    return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
-  }
-  if (currency.symbol === 'wUSDC') {
-    return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
-  }
-  if (currency.symbol === 'wBTC') {
+  if (currency.symbol === 'BTC' || currency.symbol === 'wBTC') {
     return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
   }
 

@@ -45,8 +45,8 @@ export const crosschainConfig: ChainbridgeConfig = {
       tokens: [
         {
           address: "0x6Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E",
-          name: "wETH",
-          symbol: "wETH",
+          name: "ETH",
+          symbol: "ETH",
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
@@ -54,8 +54,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
-          name: "wUSDT",
-          symbol: "wUSDT",
+          name: "USDT",
+          symbol: "USDT",
           assetBase: 'USDT',
           decimals: 18,
           resourceId:
@@ -72,8 +72,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: "0x790Bdb1d44EcE3e6b45F3D4307C08e4636365D24",
-          name: "wUSDC",
-          symbol: "wUSDC",
+          name: "USDC",
+          symbol: "USDC",
           assetBase: 'USDC',
           decimals: 18,
           resourceId:
