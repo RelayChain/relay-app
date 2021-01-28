@@ -56,7 +56,8 @@ export const initialState: CrosschainState = {
     name: '',
     address: '',
     assetBase: '',
-    symbol: ''
+    symbol: '',
+    decimals: 18
   },
   currentBalance: '',
   transferAmount: '',

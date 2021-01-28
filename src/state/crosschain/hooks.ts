@@ -56,8 +56,8 @@ function WithDecimals(value: string | number): string {
   return utils.formatUnits(value, 18)
 }
 
-function WithoutDecimalsHexString(value: string): string {
-  return BigNumber.from(utils.parseUnits(value, 18)).toHexString()
+function WithDecimalsHexString(value: string, decimals: number): string {
+  return BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 }
 
 function GetCurrentChain(currentChainName: string): CrosschainChain {
@@ -203,7 +203,7 @@ export function useCrosschainHooks() {
       utils
         .hexZeroPad(
           // TODO Wire up dynamic token decimals
-          WithoutDecimalsHexString(crosschainState.transferAmount),
+          WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
           32
         )
         .substr(2) + // Deposit Amount (32 bytes)
@@ -214,7 +214,7 @@ export function useCrosschainHooks() {
 
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '800000',
-      value: WithoutDecimalsHexString(crosschainState.crosschainFee),
+      value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     }).catch((err: any) => {
       console.log(err);
@@ -290,7 +290,7 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
+    tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '300000',
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     }).then((resultApproveTx: any) => {
@@ -426,6 +426,7 @@ export function useCrossChain() {
         address: '',
         assetBase: '',
         symbol: '',
+        decimals: 18,
       }
     }))
     dispatch(setTransferAmount({ amount: '' }))

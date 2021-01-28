@@ -13,6 +13,7 @@ export interface CrosschainToken {
   address: string,
   assetBase: string,
   symbol: string,
+  decimals: number,
 }
 
 export interface CrosschainChain {
