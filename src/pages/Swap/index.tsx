@@ -406,13 +406,15 @@ export default function Swap() {
 
     // if cross chain, choose first available token
     if (bool === true) {
-      const currencyId = availableTokens[0].address;
-      dispatch(
-        selectCurrency({
-          field: Field.INPUT,
-          currencyId
-        })
-      )
+      if (availableTokens.length) {
+        const currencyId = availableTokens[0].address
+        dispatch(
+          selectCurrency({
+            field: Field.INPUT,
+            currencyId
+          })
+        )
+      }
     } else { // if back to swaps, set to ETH as default
       dispatch(
         selectCurrency({
