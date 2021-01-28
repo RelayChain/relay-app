@@ -364,6 +364,7 @@ export default function Swap() {
           address: newToken?.address|| '',
           assetBase: newToken?.assetBase|| '',
           symbol: newToken?.symbol|| '',
+          decimals: newToken?.decimals|| 18,
         }
       }))
     },
