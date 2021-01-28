@@ -100,15 +100,14 @@ const ChainBridgePending = styled.div`
   align-items: center;
   min-height: 40px;
   padding: .25rem 1rem .25rem 1rem;
-  background: #40444F;
   border-radius: 30px;
   margin-top: 2rem;
   color: rgba(255,255,255,.75);
-  border: 1px solid rgba(255,255,255,.1);
   transition: all .2s ease-in-out;
+  background: linear-gradient(45deg, #5496ff, #8739e5);
   &:hover {
     cursor: pointer;
-    background: lighten(#40444F, 5%);
+    filter: brightness(1.2);
   }
   p {
     font-size: .9rem;
@@ -136,7 +135,7 @@ export default function Swap() {
     targetTokens,
     crosschainTransferStatus,
   } = useCrosschainState()
-  
+
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
 
   const {BreakCrosschainSwap} = useCrosschainHooks()
