@@ -152,6 +152,8 @@ function GetChainNameById(chainID: number): string {
     return 'Ethereum'
   } else if (chainID === ChainId.FUJI) {
     return 'Avalanche'
+  } else if (chainID === ChainId.AVALANCHE) {
+    return 'Avalanche'
   }
   return ''
 }
