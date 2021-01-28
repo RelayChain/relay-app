@@ -23,7 +23,7 @@ export default function ApprovalPending () {
         <Text fontWeight={500} fontSize={20}>
           Waiting For Transfer Approval
         </Text>
-        <Text fontSize={12} color="#565A69" textAlign="center">
+        <Text fontSize={14} color="#565A69" textAlign="center">
           Approve this transaction in your wallet
         </Text>
       </AutoColumn>

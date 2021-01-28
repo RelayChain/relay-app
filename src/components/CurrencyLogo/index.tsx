@@ -66,10 +66,10 @@ export default function CurrencyLogo({
   if (currency?.symbol === 'ETH' || currency?.symbol === 'wETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDT') {
+  if (currency?.symbol === 'USDT'|| currency?.symbol === 'wUSDT') {
     return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDC') {
+  if (currency?.symbol === 'USDC'|| currency?.symbol === 'wUSDC') {
     return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
   }
   if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {

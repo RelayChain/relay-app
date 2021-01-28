@@ -22,12 +22,14 @@ const Message = styled.p`
   }
 `
 
-export default function TransferComplete ({ onDismiss, activeChain, transferTo, trade }: {
+export default function TransferComplete ({ onDismiss, activeChain, transferTo, transferAmount, currentToken }: {
   onDismiss: () => void;
   activeChain?: string;
   transferTo?: string;
-  trade?: Trade
+  transferAmount?: string;
+  currentToken?: any;
 }) {
+
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -35,8 +37,8 @@ export default function TransferComplete ({ onDismiss, activeChain, transferTo, 
         <CheckCircle size={'66'} style={{ margin: '.5rem', color: '#27AE60' }} />
       </RowFixed>
       <RowFixed style={{ width: '100%', marginTop: '1rem'}}>
-        <Text fontSize={16} textAlign="center" style={{ lineHeight: "20px"}}>
-          <b>{trade?.inputAmount.toSignificant(6)} {trade?.inputAmount.currency.symbol} </b> 
+        <Text fontSize={17} textAlign="center" style={{ lineHeight: "20px"}}>
+          <b>{transferAmount} {currentToken?.symbol} </b>
           tokens were successfully transferred from {activeChain} to {transferTo}.
         </Text>
       </RowFixed>

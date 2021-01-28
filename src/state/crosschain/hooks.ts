@@ -180,6 +180,11 @@ export function useCrosschainHooks() {
   }
 
   const MakeDeposit = async () => {
+
+    dispatch(setCrosschainTransferStatus({
+      status: ChainTransferState.TransferPending
+    }))
+
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
@@ -211,7 +216,10 @@ export function useCrosschainHooks() {
       gasLimit: '800000',
       value: WithoutDecimalsHexString(crosschainState.crosschainFee),
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
-    }).catch(console.error)
+    }).catch((err: any) => {
+      console.log(err);
+      BreakCrosschainSwap();
+    })
 
     if (!resultDepositTx) {
       return
@@ -232,7 +240,7 @@ export function useCrosschainHooks() {
       txID: resultDepositTx.hash
     }))
     dispatch(setCrosschainTransferStatus({
-      status: ChainTransferState.TransferPending
+      status: ChainTransferState.TransferComplete
     }))
 
     UpdateOwnTokenBalance().catch(console.error)
@@ -244,18 +252,22 @@ export function useCrosschainHooks() {
           const web3TargetChain = new Web3(targetChain.rpcUrl)
           const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
           const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce, web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
+          console.log("web3TargetChain ===== ", web3TargetChain);
+          console.log("destinationBridge ======= ", destinationBridge);
+          console.log("Proposal ====== ", proposal);
           dispatch(setCrosschainSwapDetails({
             details: {
               status: proposal._status,
               voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
             }
           }))
+
           if (proposal && proposal._status == ProposalStatus.EXECUTED) {
-            dispatch(setCrosschainTransferStatus({
-              status: ChainTransferState.TransferComplete
-            }))
-            break
+            setTimeout(() => {
+              BreakCrosschainSwap();
+            }, 5000);
           }
+
         } catch (e) {
           console.error(e)
         }
@@ -278,29 +290,33 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    const resultApproveTx = await tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
+    tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount), {
       gasLimit: '300000',
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
-    })
+    }).then((resultApproveTx: any) => {
+      dispatch(setCrosschainTransferStatus({
+        status: ChainTransferState.ApprovalPending
+      }))
+      dispatch(setCurrentTxID({
+        txID: resultApproveTx.hash
+      }))
 
-    dispatch(setCrosschainTransferStatus({
-      status: ChainTransferState.ApprovalPending
-    }))
-    dispatch(setCurrentTxID({
-      txID: resultApproveTx.hash
-    }))
-
-    resultApproveTx.wait().then(() => {
-      let crosschainState = getCrosschainState()
-      if (crosschainState.currentTxID === resultApproveTx.hash) {
-        dispatch(setCurrentTxID({
-          txID: ''
-        }))
-        dispatch(setCrosschainTransferStatus({
-          status: ChainTransferState.ApprovalComplete
-        }))
-      }
-    })
+      resultApproveTx.wait().then(() => {
+        let crosschainState = getCrosschainState()
+        if (crosschainState.currentTxID === resultApproveTx.hash) {
+          dispatch(setCurrentTxID({
+            txID: ''
+          }))
+          dispatch(setCrosschainTransferStatus({
+            status: ChainTransferState.ApprovalComplete
+          }))
+        }
+      }).catch((err: any) => {
+        BreakCrosschainSwap();
+      });
+    }).catch((err: any) => {
+      BreakCrosschainSwap();
+    });
   }
 
   const UpdateOwnTokenBalance = async () => {
