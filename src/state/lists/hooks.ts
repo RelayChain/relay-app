@@ -57,7 +57,8 @@ const EMPTY_LIST: TokenAddressMap = {
       },
       []
     )
-  }
+  },
+  [ChainId.AVALANCHE]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
