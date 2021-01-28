@@ -3803,22 +3803,9 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
 
-"@zeroexchange/sdk@^3.0.8":
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.0.8.tgz#07691af4a88bfafd9d7cda13271b19c82d5adfd6"
-  integrity sha512-wMpTaLSCo3BVApgpnjz6VqS9rMn2Q168Tm0PqNZMz0RnPG7FSbPq6Qro6s/L1KhsqO1+dBM56b7TNLsvVyr68g==
-  dependencies:
-    "@uniswap/v2-core" "^1.0.0"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.1"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-    toformat "^2.0.0"
-
-"@zeroexchange/sdk@https://github.com/microcrontop/sdk.git#011a3da2752a26aebc33c8ff9321829b55cbf374":
+"@zeroexchange/sdk@https://github.com/microcrontop/sdk.git#8f565adc59890b0ddc7b8bb0c389122afeac1943":
   version "3.0.9"
-  resolved "https://github.com/microcrontop/sdk.git#011a3da2752a26aebc33c8ff9321829b55cbf374"
+  resolved "https://github.com/microcrontop/sdk.git#8f565adc59890b0ddc7b8bb0c389122afeac1943"
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"

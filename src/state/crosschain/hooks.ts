@@ -82,20 +82,32 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   if (typeof (chainID) === 'string') {
     chainID = Number(chainID)
   }
-  let result: BridgeConfig | undefined
+  let result: BridgeConfig = {
+    chainId: -1,
+    networkId: -1,
+    name: "",
+    bridgeAddress: "",
+    erc20HandlerAddress: "",
+    rpcUrl: "",
+    tokens: [],
+    nativeTokenSymbol: "",
+    type: "Ethereum",
+  }
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     if (chain.chainId === chainID) {
       result = chain
     }
   }))
-  if (!result) {
-    throw Error(`unknown id ${chainID}`)
-  }
   return result
 }
 
 export function GetTokenByAddress(address: string): TokenConfig {
-  let result: TokenConfig | undefined
+  let result: TokenConfig = {
+    address: '',
+    decimals: 18,
+    resourceId: '',
+    assetBase: ''
+  }
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     chain.tokens.map((token: TokenConfig) => {
       if (token.address === address) {
@@ -103,9 +115,6 @@ export function GetTokenByAddress(address: string): TokenConfig {
       }
     })
   }))
-  if (!result) {
-    throw Error(`unknown id ${address}`)
-  }
   return result
 }
 
@@ -151,6 +160,8 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.RINKEBY) {
     return 'Ethereum'
   } else if (chainID === ChainId.FUJI) {
+    return 'Avalanche'
+  } else if (chainID === ChainId.AVALANCHE) {
     return 'Avalanche'
   }
   return ''

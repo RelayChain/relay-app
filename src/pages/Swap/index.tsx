@@ -361,16 +361,18 @@ export default function Swap() {
     inputCurrency => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
-      const newToken = GetTokenByAddress(inputCurrency.address)
-      dispatch(setCurrentToken({
-        token: {
-          name: newToken?.name || '',
-          address: newToken?.address|| '',
-          assetBase: newToken?.assetBase|| '',
-          symbol: newToken?.symbol|| '',
-          decimals: newToken?.decimals|| 18,
-        }
-      }))
+      if (inputCurrency?.address) {
+        const newToken = GetTokenByAddress(inputCurrency.address)
+        dispatch(setCurrentToken({
+          token: {
+            name: newToken?.name || '',
+            address: newToken?.address || '',
+            assetBase: newToken?.assetBase || '',
+            symbol: newToken?.symbol || '',
+            decimals: newToken?.decimals || 18
+          }
+        }))
+      }
     },
     [onCurrencySelection]
   )
@@ -406,13 +408,15 @@ export default function Swap() {
 
     // if cross chain, choose first available token
     if (bool === true) {
-      const currencyId = availableTokens[0].address;
-      dispatch(
-        selectCurrency({
-          field: Field.INPUT,
-          currencyId
-        })
-      )
+      if (availableTokens.length) {
+        const currencyId = availableTokens[0].address
+        dispatch(
+          selectCurrency({
+            field: Field.INPUT,
+            currencyId
+          })
+        )
+      }
     } else { // if back to swaps, set to ETH as default
       dispatch(
         selectCurrency({
