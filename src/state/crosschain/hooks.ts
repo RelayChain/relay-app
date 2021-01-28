@@ -257,7 +257,6 @@ export function useCrosschainHooks() {
       votes: state ?.swapDetails ?.voteCount,
     }
 
-    console.log("ABOUT TO SET =========== ", pendingTransfer);
     dispatch(setPendingTransfer({
       pendingTransfer,
     }))
