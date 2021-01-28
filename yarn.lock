@@ -3803,9 +3803,9 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
 
-"@zeroexchange/sdk@https://github.com/microcrontop/sdk.git#524d446b0db2ae5de93fb44ca4aab544a2acc34b":
+"@zeroexchange/sdk@https://github.com/microcrontop/sdk.git#8f565adc59890b0ddc7b8bb0c389122afeac1943":
   version "3.0.9"
-  resolved "https://github.com/microcrontop/sdk.git#524d446b0db2ae5de93fb44ca4aab544a2acc34b"
+  resolved "https://github.com/microcrontop/sdk.git#8f565adc59890b0ddc7b8bb0c389122afeac1943"
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"

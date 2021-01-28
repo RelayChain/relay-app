@@ -361,16 +361,18 @@ export default function Swap() {
     inputCurrency => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
-      const newToken = GetTokenByAddress(inputCurrency.address)
-      dispatch(setCurrentToken({
-        token: {
-          name: newToken?.name || '',
-          address: newToken?.address|| '',
-          assetBase: newToken?.assetBase|| '',
-          symbol: newToken?.symbol|| '',
-          decimals: newToken?.decimals|| 18,
-        }
-      }))
+      if (inputCurrency?.address) {
+        const newToken = GetTokenByAddress(inputCurrency.address)
+        dispatch(setCurrentToken({
+          token: {
+            name: newToken?.name || '',
+            address: newToken?.address || '',
+            assetBase: newToken?.assetBase || '',
+            symbol: newToken?.symbol || '',
+            decimals: newToken?.decimals || 18
+          }
+        }))
+      }
     },
     [onCurrencySelection]
   )

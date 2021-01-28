@@ -88,10 +88,17 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
       result = chain
     }
   }))
-  if (!result) {
-    throw Error(`unknown id ${chainID}`)
+  return {
+    chainId: -1,
+    networkId: -1,
+    name: "",
+    bridgeAddress: "",
+    erc20HandlerAddress: "",
+    rpcUrl: "",
+    tokens: [],
+    nativeTokenSymbol: "",
+    type: "Ethereum",
   }
-  return result
 }
 
 export function GetTokenByAddress(address: string): TokenConfig {
@@ -103,10 +110,12 @@ export function GetTokenByAddress(address: string): TokenConfig {
       }
     })
   }))
-  if (!result) {
-    throw Error(`unknown id ${address}`)
+  return {
+    address: '',
+    decimals: 18,
+    resourceId: '',
+    assetBase: '',
   }
-  return result
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
