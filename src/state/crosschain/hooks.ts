@@ -82,13 +82,7 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   if (typeof (chainID) === 'string') {
     chainID = Number(chainID)
   }
-  let result: BridgeConfig | undefined
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
-    if (chain.chainId === chainID) {
-      result = chain
-    }
-  }))
-  return {
+  let result: BridgeConfig = {
     chainId: -1,
     networkId: -1,
     name: "",
@@ -99,10 +93,21 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
     nativeTokenSymbol: "",
     type: "Ethereum",
   }
+  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+    if (chain.chainId === chainID) {
+      result = chain
+    }
+  }))
+  return result
 }
 
 export function GetTokenByAddress(address: string): TokenConfig {
-  let result: TokenConfig | undefined
+  let result: TokenConfig = {
+    address: '',
+    decimals: 18,
+    resourceId: '',
+    assetBase: ''
+  }
   crosschainConfig.chains.map(((chain: BridgeConfig) => {
     chain.tokens.map((token: TokenConfig) => {
       if (token.address === address) {
@@ -110,12 +115,7 @@ export function GetTokenByAddress(address: string): TokenConfig {
       }
     })
   }))
-  return {
-    address: '',
-    decimals: 18,
-    resourceId: '',
-    assetBase: '',
-  }
+  return result
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
