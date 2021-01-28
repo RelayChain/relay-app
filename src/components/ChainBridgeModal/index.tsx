@@ -43,12 +43,11 @@ const ListContainer = styled.div`
 export default function ChainBridgeModal({
   isOpen,
   onDismiss,
-  pendingTransfer,
 }: ChainBridgeProps) {
 
-  const state = useCrosschainState();
+  const { pendingTransfer } = useCrosschainState();
 
-  console.log("GOT THE STATE ====== ", state);
+  console.log("GOT THE PENDING TRANSFER ====== ", pendingTransfer);
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
@@ -57,7 +56,7 @@ export default function ChainBridgeModal({
         <div />
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
-      <h5>Pending Cross-Chain Transfers:</h5>
+      <h5>Pending Cross-Chain Transfer:</h5>
       <ListContainer>
         <ChainBridgeItem item={pendingTransfer}>
         </ChainBridgeItem>

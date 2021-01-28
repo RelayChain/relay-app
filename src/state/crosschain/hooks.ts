@@ -17,9 +17,10 @@ import {
   setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
+  setPendingTransfer,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount
+  setTransferAmount,
 } from './actions'
 import store, { AppDispatch, AppState } from '../index'
 import { useCallback, useEffect } from 'react'
@@ -243,6 +244,24 @@ export function useCrosschainHooks() {
       status: ChainTransferState.TransferComplete
     }))
 
+    const state = getCrosschainState();
+    const pendingTransfer = {
+      currentSymbol: state ?.currentToken ?.symbol,
+      targetSymbol: state ?.targetTokens ?.find(x => x.assetBase === state ?.currentToken ?.assetBase) ?.symbol,
+      assetBase: state ?.currentToken ?.assetBase,
+      amount: state ?.transferAmount,
+      decimals: state ?.currentToken ?.decimals,
+      name: state ?.targetChain ?.name,
+      address: state ?.currentToken ?.address,
+      status: state ?.swapDetails ?.status,
+      votes: state ?.swapDetails ?.voteCount,
+    }
+
+    console.log("ABOUT TO SET =========== ", pendingTransfer);
+    dispatch(setPendingTransfer({
+      pendingTransfer,
+    }))
+
     UpdateOwnTokenBalance().catch(console.error)
 
     {
@@ -252,9 +271,6 @@ export function useCrosschainHooks() {
           const web3TargetChain = new Web3(targetChain.rpcUrl)
           const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
           const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce, web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
-          console.log("web3TargetChain ===== ", web3TargetChain);
-          console.log("destinationBridge ======= ", destinationBridge);
-          console.log("Proposal ====== ", proposal);
           dispatch(setCrosschainSwapDetails({
             details: {
               status: proposal._status,
@@ -390,7 +406,7 @@ export function useCrossChain() {
       currentBalance,
       transferAmount,
       crosschainFee,
-      targetChain
+      targetChain,
     } = getCrosschainState()
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
@@ -426,6 +442,7 @@ export function useCrossChain() {
         address: '',
         assetBase: '',
         symbol: '',
+        decimals: 18
       }
     }))
     dispatch(setTransferAmount({ amount: '' }))

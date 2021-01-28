@@ -368,6 +368,7 @@ export default function Swap() {
           address: newToken?.address|| '',
           assetBase: newToken?.assetBase|| '',
           symbol: newToken?.symbol|| '',
+          decimals: newToken?.decimals || 18,
         }
       }))
     },
@@ -444,18 +445,6 @@ export default function Swap() {
       startNewSwap();
     }
     setShowChainBridgeModal(false)
-  }
-
-  // test - get this from chainbridge state
-  const pendingChainBridgeTransfer = {
-    state: 'WaitingRelayers',
-    currentSymbol: 'wUSDT',
-    targetSymbol: 'zUSDT',
-    assetBase: 'USDT',
-    amount: '1.348',
-    decimals: 18,
-    name: 'Ethereum',
-    address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
   }
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
@@ -560,7 +549,6 @@ export default function Swap() {
           <ChainBridgeModal
             isOpen={showChainBridgeModal}
             onDismiss={hideChainBridgeModal}
-            pendingTransfer={pendingChainBridgeTransfer}
           />
           <ConfirmSwapModal
             isOpen={showConfirm}
