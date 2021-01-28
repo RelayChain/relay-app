@@ -47,8 +47,6 @@ export default function ChainBridgeModal({
 
   const { pendingTransfer } = useCrosschainState();
 
-  console.log("GOT THE PENDING TRANSFER ====== ", pendingTransfer);
-
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
       <ModalContainer>
