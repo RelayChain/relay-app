@@ -290,7 +290,7 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    tokenContract.approve(currentChain.erc20HandlerAddress, WithoutDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
+    tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '300000',
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     }).then((resultApproveTx: any) => {
