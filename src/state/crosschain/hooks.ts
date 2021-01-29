@@ -29,6 +29,7 @@ import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
+import { afterWrite } from '@popperjs/core'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -189,6 +190,10 @@ export function useCrosschainHooks() {
     }))
   }
 
+  const getNonce = async (): Promise<number> => {
+    return await web3React.library.getSigner().getTransactionCount()
+  }
+
   const MakeDeposit = async () => {
 
     dispatch(setCrosschainTransferStatus({
@@ -225,7 +230,8 @@ export function useCrosschainHooks() {
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '800000',
       value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9),
+      nonce: await getNonce()
     }).catch((err: any) => {
       console.log(err);
       BreakCrosschainSwap();
@@ -314,7 +320,8 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '300000',
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9),
+      nonce: await getNonce()
     }).then((resultApproveTx: any) => {
       dispatch(setCrosschainTransferStatus({
         status: ChainTransferState.ApprovalPending
