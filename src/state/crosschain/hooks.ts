@@ -33,6 +33,7 @@ import { afterWrite } from '@popperjs/core'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
+const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
 var dispatch: AppDispatch
 var web3React: any
@@ -317,7 +318,9 @@ export function useCrosschainHooks() {
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+    // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
+    const ABI = currentToken.address === "0xdAC17F958D2ee523a2206206994597C13D831ec7" ? USDTTokenABI : TokenABI
+    const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '300000',
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9),
