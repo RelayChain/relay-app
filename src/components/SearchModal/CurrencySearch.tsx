@@ -10,6 +10,7 @@ import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
+import { DEFAULT_TOKEN_LIST } from '../../constants/DefaultTokenList';
 import { FixedSizeList } from 'react-window'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
@@ -77,6 +78,16 @@ export function CurrencySearch({
     )
   });
 
+  const defaultTokenList = DEFAULT_TOKEN_LIST.map((x: any) => {
+    return new Token(
+      x.chainId,
+      x.address,
+      x.decimals,
+      x.symbol,
+      x.name
+    )
+  });
+
   useEffect(() => {
     if (isAddressSearch) {
       ReactGA.event({
@@ -96,7 +107,7 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(Object.values(allTokens), searchQuery)
+    return filterTokens(defaultTokenList, searchQuery)
   }, [isAddressSearch, searchToken, allTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {

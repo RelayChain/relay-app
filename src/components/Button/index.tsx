@@ -1,10 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
+import { ButtonProps, Button as RebassButton } from 'rebass/styled-components'
 import { darken, lighten } from 'polished'
 
-import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
-import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import React from 'react'
+import { RowBetween } from '../Row'
+import styled from 'styled-components'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -239,6 +239,32 @@ export const ButtonWhite = styled(Base)`
   &:disabled {
     opacity: 50%;
     cursor: auto;
+  }
+`
+
+export const ButtonWhiteBg = styled(Base)`
+  background-color: #fff;
+  color: rgba(0,0,0,.5);
+  transition: all .2s ease-in-out;
+  text-deecoration: none !important;
+  &:focus {
+    background-color: #fff;
+    opacity: .8;
+  }
+  &:hover {
+    background-color: #fff;
+    opacity: .8;
+  }
+  &:active {
+    background-color: #fff;
+    opacity: .8;
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+  * {
+    text-deecoration: none !important;
   }
 `
 

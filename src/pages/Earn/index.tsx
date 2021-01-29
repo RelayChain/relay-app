@@ -4,6 +4,7 @@ import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
 import { ButtonUNIGradient } from '../../components/Button'
+import { ChainId } from '@zeroexchange/sdk';
 //import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
@@ -54,11 +55,31 @@ const VoteCard = styled(DataCard)`
 // `
 
 export default function Earn() {
+
+  // get chainId
   const { chainId } = useActiveWeb3React()
+
+  const pools = {
+    [ChainId.MAINNET]: [
+      {
+        baseSymbol: 'ETH',
+        baseAddress: 'ETH',
+        otherSymbol: 'ZERO',
+        otherAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
+      }
+    ],
+    [ChainId.AVALANCHE]: [
+      {
+        baseSymbol: 'AVAX',
+        baseAddress: 'avaxaddresshere',
+        otherSymbol: 'ZERO',
+        otherAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
+      }
+    ]
+  }
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()
-
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
@@ -84,23 +105,28 @@ export default function Earn() {
               </TYPE.white>
             </RowBetween>
           </AutoColumn>
-          <ButtonUNIGradient
-            id="join-pool-button"
-            as={Link}
-            padding="6px 8px"
-            to="/add/ETH/0xF0939011a9bb95c3B791f0cb546377Ed2693a574"
-            style={{ margin: '20px 0px 0px auto' }}
-          >
-            <Text fontWeight={500} fontSize={16}>
-              Add ETH/ZERO Liquidity
-            </Text>
-          </ButtonUNIGradient>
+          { chainId && pools[chainId] &&
+            pools[chainId].map((pool: any, index: number) =>
+              <ButtonUNIGradient
+                key={index}
+                id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
+                as={Link}
+                padding="6px 8px"
+                to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
+                style={{ margin: '20px 0px 0px auto' }}
+              >
+                <Text fontWeight={500} fontSize={16}>
+                  Add {`${pool.baseSymbol}/${pool.otherSymbol}`} Liquidity
+                </Text>
+              </ButtonUNIGradient>
+            )
+          }
         </CardSection>
         <CardBGImage />
         <CardNoise />
       </VoteCard>
 
-      <TopSection gap="md">
+      {/*<TopSection gap="md">
         <DataCard>
           <CardBGImage />
           <CardNoise />
@@ -126,7 +152,7 @@ export default function Earn() {
           <CardBGImage />
           <CardNoise />
         </DataCard>
-      </TopSection>
+      </TopSection>*/}
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
