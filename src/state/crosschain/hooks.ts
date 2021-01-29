@@ -29,7 +29,8 @@ import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
-import { afterWrite } from '@popperjs/core'
+
+// import { afterWrite } from '@popperjs/core'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -466,5 +467,5 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
-  }, [account, currentToken])
+  }, [account, currentToken, UpdateFee, UpdateOwnTokenBalance])
 }

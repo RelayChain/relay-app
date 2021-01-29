@@ -49,7 +49,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'ETH',
           decimals: 18,
           resourceId:
-              "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200",
+            "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200",
         },
         {
           address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -71,7 +71,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
           name: "wBTC",
           symbol: "wBTC",
-          assetBase: 'wBTC',
+          assetBase: 'BTC',
           decimals: 18,
           resourceId: "0x00000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c59901",
         },
@@ -117,7 +117,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x23729144FEf299FA056BBBe29e2f01e79d7A634b",
           name: "zUSDC",
           symbol: "zUSDC",
-          assetBase: 'zUSDC',
+          assetBase: 'USDC',
           decimals: 18,
           resourceId: "0x000000000000000000000023729144FEf299FA056BBBe29e2f01e79d7A634b02",
         },
@@ -125,7 +125,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x3B8eCf240b4Ea45BD9C02e60cddA1225a49BC6DA",
           name: "zBTC",
           symbol: "zBTC",
-          assetBase: 'zBTC',
+          assetBase: 'BTC',
           decimals: 18,
           resourceId: "0x00000000000000000000003B8eCf240b4Ea45BD9C02e60cddA1225a49BC6DA02",
         },
@@ -133,7 +133,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: "0x12f108E6138d4A9c58511e042399cF8f90D5673f",
           name: "zDAI",
           symbol: "zDAI",
-          assetBase: 'zDAI',
+          assetBase: 'DAI',
           decimals: 18,
           resourceId: "0x000000000000000000000012f108E6138d4A9c58511e042399cF8f90D5673f02",
         },
@@ -141,7 +141,7 @@ export const crosschainConfig: ChainbridgeConfig = {
     },
   ]
 
-// rinkeby - FUJI
+  // rinkeby - FUJI
   // chains: [
   //   {
   //     chainId: 0,
