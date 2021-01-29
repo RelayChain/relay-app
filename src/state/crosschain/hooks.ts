@@ -456,5 +456,5 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
-  }, [account, currentToken, UpdateOwnTokenBalance, UpdateFee])
+  }, [account, currentToken])
 }
