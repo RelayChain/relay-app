@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@zeroexchange/app",
+  "description": "Zero Exchange App",
   "homepage": ".",
   "private": true,
   "devDependencies": {
