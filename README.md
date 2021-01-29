@@ -1,4 +1,4 @@
-# Zero Exchange App
+# Zero.Exchange App
 
 [![Lint](https://github.com/zeroexchange/app/workflows/Lint/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ALint)
 [![Tests](https://github.com/zeroexchange/app/workflows/Tests/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ATests)
