@@ -1,13 +1,9 @@
-import { AutoColumn, ColumnCenter } from '../Column'
 import { CheckCircle, ChevronsDown, XCircle } from 'react-feather'
-import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 
 import Circle from '../../assets/images/circle-grey.svg'
 import CurrencyLogo from '../CurrencyLogo'
 import { CustomLightSpinner } from '../../theme/components'
 import React from 'react'
-import Row from '../Row';
-import { Text } from 'rebass'
 import styled from 'styled-components'
 
 const ListItem = styled.div`
@@ -50,11 +46,11 @@ export default function ChainBridgeItem ({ item, children, ...rest }: { item: an
 
 
   const message = {
-    ['0']: 'Relayers Pending...',
-    ['1']: 'Voting started...',
-    ['2']: 'Wrapping up...',
-    ['3']: 'Transfer Success!',
-    ['4']: 'Transfer Cancelled.',
+    0: 'Relayers Pending...',
+    1: 'Voting started...',
+    2: 'Wrapping up...',
+    3: 'Transfer Success!',
+    4: 'Transfer Cancelled.',
   }
 
   return (

@@ -3,7 +3,6 @@ import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Row, { RowBetween } from '../Row'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
@@ -23,6 +22,7 @@ import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
+import { useToken } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 
@@ -54,7 +54,6 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
-  const allTokens = useAllTokens()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
@@ -63,9 +62,6 @@ export function CurrencySearch({
   // cross chain
   const {
     availableTokens,
-    currentChain,
-    targetChain,
-    targetTokens,
   } = useCrosschainState()
 
   const availableTokensArray = availableTokens.map((x: any) => {
@@ -108,7 +104,7 @@ export function CurrencySearch({
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(defaultTokenList, searchQuery)
-  }, [isAddressSearch, searchToken, allTokens, searchQuery])
+  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
@@ -125,7 +121,7 @@ export function CurrencySearch({
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
-  }, [filteredTokens, searchQuery, searchToken, tokenComparator, isCrossChain, availableTokens])
+  }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {

@@ -1,5 +1,4 @@
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
@@ -14,6 +13,7 @@ import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
+import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -23,10 +23,10 @@ const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `
 
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-`
+// const TopSection = styled(AutoColumn)`
+//   max-width: 720px;
+//   width: 100%;
+// `
 
 const PoolSection = styled.div`
   display: grid;

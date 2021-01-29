@@ -14,7 +14,6 @@ import { TYPE } from '../../theme'
 import { darken } from 'polished'
 import { returnBalanceNum } from '../../constants';
 import { useActiveWeb3React } from '../../hooks'
-import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
 

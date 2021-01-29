@@ -1,10 +1,9 @@
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -19,7 +18,6 @@ import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainStat
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -29,7 +27,7 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -46,6 +44,7 @@ import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
@@ -56,6 +55,7 @@ import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import { getTradeVersion } from '../../data/V1'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -124,20 +124,17 @@ export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const {
-    currentRecipient,
     currentTxID,
     availableChains,
     availableTokens,
     currentChain,
     currentToken,
-    currentBalance,
     transferAmount,
     crosschainFee,
     targetChain,
     targetTokens,
     crosschainTransferStatus,
     swapDetails,
-    depositConfirmed
   } = useCrosschainState()
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
@@ -196,14 +193,13 @@ export default function Swap() {
     [Version.v2]: v2Trade
   }
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
-  const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-        ? Version.v2
-        : undefined
+  // const betterTradeLinkVersion: Version | undefined =
+  //   toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+  //     ? Version.v1
+  //     : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
+  //       ? Version.v2
+  //       : undefined
 
   const parsedAmounts = showWrap
     ? {
@@ -222,19 +218,19 @@ export default function Swap() {
 
   // track the input amount, on change, if crosschain, dispatch
   const [ inputAmountToTrack, setInputAmountToTrack ] = useState('');
-  const handleInputAmountChange = (amount: string) => {
+  const handleInputAmountChange = useCallback((amount: string) => {
     setInputAmountToTrack(amount)
     dispatch(setTransferAmount({
       amount: amount
     }))
-  }
+  }, [setInputAmountToTrack, dispatch])
 
   const handleTypeInput = useCallback(
     (value: string) => {
       handleInputAmountChange(value)
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput, handleInputAmountChange]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -374,7 +370,7 @@ export default function Swap() {
         }))
       }
     },
-    [onCurrencySelection]
+    [onCurrencySelection, dispatch]
   )
 
   const handleMaxInput = useCallback(() => {
@@ -382,7 +378,7 @@ export default function Swap() {
       handleInputAmountChange(maxAmountInput.toExact())
       onUserInput(Field.INPUT, maxAmountInput.toExact())
     }
-  }, [maxAmountInput, onUserInput])
+  }, [maxAmountInput, onUserInput, handleInputAmountChange])
 
   // not sure we need this
   // const handleMaxInputCrosschain = useCallback(() => {
@@ -491,10 +487,6 @@ export default function Swap() {
     if (state === ChainTransferState.NotStarted && currentTxID.length) {
       BreakCrosschainSwap()
     }
-  }
-  // token transfer modals & handlers
-  const handleTokenTransfer = () => {
-    hideConfirmTransferModal();
   }
 
   const getChainName = (): string => {

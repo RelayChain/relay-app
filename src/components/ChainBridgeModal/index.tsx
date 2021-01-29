@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react'
-
-import AutoSizer from 'react-virtualized-auto-sizer'
 import ChainBridgeItem from './ChainBridgeItem';
-import { ChainTransferState } from '../../state/crosschain/actions'
 import { CloseIcon } from '../../theme/components'
-import { Currency } from '@zeroexchange/sdk'
-import CurrencyLogo from '../CurrencyLogo';
 import Modal from '../Modal'
+import React from 'react'
 import { RowBetween } from '../Row'
-import { Trade } from '@zeroexchange/sdk'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 

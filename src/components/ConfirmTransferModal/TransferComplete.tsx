@@ -4,7 +4,6 @@ import { CheckCircle } from 'react-feather'
 import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
-import { Trade } from '@zeroexchange/sdk'
 import styled from 'styled-components'
 
 const Message = styled.p`

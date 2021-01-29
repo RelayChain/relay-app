@@ -21,7 +21,8 @@ import {
   setTargetTokens,
   setTransferAmount
 } from './actions'
-import { createAction, createReducer } from '@reduxjs/toolkit'
+
+import { createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
   readonly currentRecipient: string
