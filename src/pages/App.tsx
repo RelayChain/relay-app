@@ -1,4 +1,4 @@
-import './snow.scss';
+import './snow.css';
 
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { Suspense } from 'react'
