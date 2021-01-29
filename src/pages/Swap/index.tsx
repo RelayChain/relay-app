@@ -67,6 +67,7 @@ const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.FUJI]: 'Avalanche',
+  [ChainId.AVALANCHE]: 'Avalanche',
 }
 
 const SUPPORTED_CHAINS = [
@@ -138,7 +139,7 @@ export default function Swap() {
   } = useCrosschainState()
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
-  
+
   const {BreakCrosschainSwap} = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -566,6 +567,7 @@ export default function Swap() {
             pointerEvents: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? 'auto' : 'none',
             filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)',
           }}>
+
             <BlockchainSelector
               isCrossChain={isCrossChain}
               supportedChains={SUPPORTED_CHAINS}

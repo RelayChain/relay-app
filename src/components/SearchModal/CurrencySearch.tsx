@@ -1,5 +1,5 @@
+import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Row, { RowBetween } from '../Row'
@@ -103,8 +103,8 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(defaultTokenList, searchQuery)
-  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList])
+    return filterTokens(chainId === ChainId.MAINNET ? defaultTokenList : availableTokensArray, searchQuery)
+  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
