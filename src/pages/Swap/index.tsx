@@ -1,3 +1,4 @@
+import { AVAX_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -44,7 +45,6 @@ import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
@@ -159,6 +159,7 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -194,13 +195,6 @@ export default function Swap() {
     [Version.v2]: v2Trade
   }
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
-
-  // const betterTradeLinkVersion: Version | undefined =
-  //   toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-  //     ? Version.v1
-  //     : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-  //       ? Version.v2
-  //       : undefined
 
   const parsedAmounts = showWrap
     ? {
@@ -418,7 +412,7 @@ export default function Swap() {
       dispatch(
         selectCurrency({
           field: Field.INPUT,
-          currencyId: 'ETH'
+          currencyId: chainId && chainId === ChainId.MAINNET ? 'ETH' : AVAX_ADDRESS
         })
       )
     }

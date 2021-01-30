@@ -56,6 +56,7 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
+      { chainId && chainId === ChainId.MAINNET &&
         <BaseWrapper
           onClick={() => {
             if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
@@ -69,6 +70,7 @@ export default function CommonBases({
             ETH
           </Text>
         </BaseWrapper>
+      }
         {(array).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (

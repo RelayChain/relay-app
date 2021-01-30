@@ -1,3 +1,5 @@
+import { ChainId, Token } from '@zeroexchange/sdk';
+
 export type TokenConfig = {
   chainId?: string;
   address: string;

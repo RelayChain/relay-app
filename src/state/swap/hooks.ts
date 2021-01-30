@@ -225,7 +225,7 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
     if (urlParam.toUpperCase() === 'ETH') return 'ETH'
     if (valid === false) return 'ETH'
   }
-  return 'ETH' ?? ''
+  return '';
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -287,13 +287,12 @@ export function useDefaultsFromURLSearch():
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
-
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId || '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient
       })
     )

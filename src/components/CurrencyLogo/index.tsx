@@ -1,6 +1,7 @@
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
 
+import AvaxLogo from '../../assets/images/avax-logo.png'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../Logo'
@@ -60,6 +61,10 @@ export default function CurrencyLogo({
 
   if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+  }
+
+  if (currency?.symbol === 'AVAX' || currency?.symbol === 'WAVAX' || currency?.symbol === 'AVA') {
+    return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
   }
 
   // cross chain
