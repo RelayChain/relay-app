@@ -111,7 +111,7 @@ export function GetTokenByAddress(address: string): TokenConfig {
   }
   for (let chain of crosschainConfig.chains) {
     for (let token of chain.tokens) {
-      if (token.address.toLowerCase() === address.toLowerCase()) {
+      if (token.address === address) {
         result = token
         return result;
       }
