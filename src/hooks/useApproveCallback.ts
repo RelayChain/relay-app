@@ -1,17 +1,19 @@
-import { MaxUint256 } from '@ethersproject/constants'
-import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@zeroexchange/sdk'
-import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESS } from '../constants'
-import { useTokenAllowance } from '../data/Allowances'
+import { ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
+import { useCallback, useMemo } from 'react'
+import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
+
+import { BigNumber } from '@ethersproject/bignumber'
 import { Field } from '../state/swap/actions'
-import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
-import { calculateGasMargin } from '../utils'
-import { useTokenContract } from './useContract'
-import { useActiveWeb3React } from './index'
+import { MaxUint256 } from '@ethersproject/constants'
+import { ROUTER_ADDRESS } from '../constants'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Version } from './useToggledVersion'
+import { calculateGasMargin } from '../utils'
+import { computeSlippageAdjustedAmounts } from '../utils/prices'
+import { useActiveWeb3React } from './index'
+import { useTokenAllowance } from '../data/Allowances'
+import { useTokenContract } from './useContract'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -25,10 +27,10 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
-  const pendingApproval = useHasPendingApproval(token?.address, spender)
+  const pendingApproval = useHasPendingApproval(token ?.address, spender)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -45,7 +47,7 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
-  const tokenContract = useTokenContract(token?.address)
+  const tokenContract = useTokenContract(token ?.address)
   const addTransaction = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
@@ -80,9 +82,12 @@ export function useApproveCallback(
       return tokenContract.estimateGas.approve(spender, amountToApprove.raw.toString())
     })
 
+    // hardcode gas for avalanche
+    const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(470) : estimatedGas
+
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
+        gasLimit: calculateGasMargin(gas)
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
