@@ -65,7 +65,10 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 
-  if (currency?.symbol === 'AVAX' || currency?.symbol === 'WAVAX' || currency?.symbol === 'AVA') {
+  if (currency?.symbol === 'AVAX' ||
+      currency?.symbol === 'WAVAX' ||
+      currency?.symbol === 'AVA' ||
+      currency?.symbol === 'eAVAX') {
     return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
   }
 
@@ -98,7 +101,7 @@ export default function CurrencyLogo({
   if (currency?.symbol === 'zBTC') {
     return <StyledEthereumLogo src={ZBTCLogo} size={size} style={style} />
   }
-  
+
   if (currency?.symbol === 'zDAI') {
     return <StyledEthereumLogo src={ZDAILogo} size={size} style={style} />
   }

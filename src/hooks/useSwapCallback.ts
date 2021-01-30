@@ -1,18 +1,19 @@
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { ChainId, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@zeroexchange/sdk'
+import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
+
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
-import isZero from '../utils/isZero'
-import v1SwapArguments from '../utils/v1SwapArguments'
-import { useActiveWeb3React } from './index'
-import { useV1ExchangeContract } from './useContract'
-import useTransactionDeadline from './useTransactionDeadline'
-import useENS from './useENS'
 import { Version } from './useToggledVersion'
+import isZero from '../utils/isZero'
+import { useActiveWeb3React } from './index'
+import useENS from './useENS'
+import { useMemo } from 'react'
+import { useTransactionAdder } from '../state/transactions/hooks'
+import useTransactionDeadline from './useTransactionDeadline'
+import { useV1ExchangeContract } from './useContract'
+import v1SwapArguments from '../utils/v1SwapArguments'
 
 export enum SwapCallbackState {
   INVALID,
@@ -198,8 +199,11 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
+        // hardcode gas for avalanche
+        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(470) : gasEstimate
+
         return contract[methodName](...args, {
-          gasLimit: calculateGasMargin(gasEstimate),
+          gasLimit: calculateGasMargin(gas),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
@@ -213,10 +217,10 @@ export function useSwapCallback(
               recipient === account
                 ? base
                 : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
+                recipientAddressOrName && isAddress(recipientAddressOrName)
+                  ? shortenAddress(recipientAddressOrName)
+                  : recipientAddressOrName
+                }`
 
             const withVersion =
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
@@ -229,7 +233,7 @@ export function useSwapCallback(
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (error ?.code === 4001) {
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that
