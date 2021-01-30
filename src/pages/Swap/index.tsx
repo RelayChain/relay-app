@@ -104,11 +104,17 @@ const ChainBridgePending = styled.div`
   align-items: center;
   min-height: 40px;
   padding: .25rem 1rem .25rem 1rem;
-  border-radius: 30px;
+  border-radius: 12px;
   margin-top: 2rem;
   color: rgba(255,255,255,.75);
   transition: all .2s ease-in-out;
   background: linear-gradient(45deg, #5496ff, #8739e5);
+  position: fixed;
+  top: 68px; right: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    position: relative;
+    top: auto; right: auto;
+  `};
   &:hover {
     cursor: pointer;
     filter: brightness(1.2);
@@ -160,7 +166,7 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
-  
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
