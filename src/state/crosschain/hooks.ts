@@ -233,7 +233,7 @@ export function useCrosschainHooks() {
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '800000',
       value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9),
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9),
       nonce: await getNonce()
     }).catch((err: any) => {
       console.log(err);
@@ -324,8 +324,8 @@ export function useCrosschainHooks() {
     const ABI = currentToken.address === "0xdAC17F958D2ee523a2206206994597C13D831ec7" ? USDTTokenABI : TokenABI
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
-      gasLimit: '300000',
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9),
+      gasLimit: '70000',
+      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9),
       nonce: await getNonce()
     }).then((resultApproveTx: any) => {
       dispatch(setCrosschainTransferStatus({
