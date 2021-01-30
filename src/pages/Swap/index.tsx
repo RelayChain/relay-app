@@ -138,10 +138,7 @@ export default function Swap() {
     swapDetails,
   } = useCrosschainState()
 
-  console.log("CURRENT TOKEN ======= ", currentToken);
-  console.log('TARGET TOKENS =======', targetTokens);
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
-  console.log("CURRENT TARGET TOKEN ====== ", currentTargetToken);
 
   const {BreakCrosschainSwap} = useCrosschainHooks()
 
