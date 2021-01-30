@@ -62,7 +62,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         //   resourceId: "0x0000000000000000000000dAC17F958D2ee523a2206206994597C13D831ec700",
         // },
         {
-          address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          address: "0x278cDd6847ef830c23cac61C17Eab837fEa1C29A",
           name: "USDC",
           symbol: "USDC",
           assetBase: 'USDC',
@@ -70,7 +70,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: "0x0000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4801",
         },
         {
-          address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
           name: "wBTC",
           symbol: "wBTC",
           assetBase: 'BTC',
@@ -78,7 +78,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: "0x00000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c59901",
         },
         {
-          address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+          address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
           name: "DAI",
           symbol: "DAI",
           assetBase: 'DAI',
