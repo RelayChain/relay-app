@@ -296,18 +296,18 @@ export function useCrosschainHooks() {
           details: {
             status: proposal._status,
             voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
-          }
+            }
         }))
 
         if (proposal && proposal._status === ProposalStatus.EXECUTED) {
-          setTimeout(() => {
-            BreakCrosschainSwap();
-          }, 5000);
+          await delay(5000);
+          BreakCrosschainSwap();
         }
 
       } catch (e) {
         console.error(e)
       }
+
     }
   }
 
