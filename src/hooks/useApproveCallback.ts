@@ -1,6 +1,6 @@
 import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
 import { ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
-import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
+// import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 
@@ -8,7 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Field } from '../state/swap/actions'
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Version } from './useToggledVersion'
+// import { Version } from './useToggledVersion'
 import { calculateGasMargin } from '../utils'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
@@ -99,18 +99,19 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction, chainId])
 
   return [approvalState, approve]
 }
 
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
+  const { chainId } = useActiveWeb3React()
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
+  // const tradeIsV1 = getTradeVersion(trade) === Version.v1
+  // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
   return useApproveCallback(amountToApprove, chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
 }

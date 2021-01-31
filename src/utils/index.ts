@@ -1,3 +1,4 @@
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
 import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
@@ -5,7 +6,6 @@ import { AddressZero } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getAddress } from '@ethersproject/address'
 
@@ -103,7 +103,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
+export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 
