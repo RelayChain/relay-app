@@ -139,10 +139,7 @@ export function useDerivedSwapInfo(): {
     recipient
   } = useSwapState()
 
-  console.log("SWP STATE ******", inputCurrencyId);
-
   const inputCurrency = useCurrency(inputCurrencyId)
-  console.log("***", inputCurrency);
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
