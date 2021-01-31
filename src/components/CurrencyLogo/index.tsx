@@ -67,6 +67,7 @@ export default function CurrencyLogo({
 
   if (currency?.symbol === 'AVAX' ||
       currency?.symbol === 'WAVAX' ||
+      currency?.symbol === 'wAVAX' ||
       currency?.symbol === 'AVA' ||
       currency?.symbol === 'eAVAX') {
     return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />

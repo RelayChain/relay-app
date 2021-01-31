@@ -14,7 +14,7 @@ export const WAVAX_TOKEN = new Token(
   ChainId.AVALANCHE,
   '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
   18,
-  'WAVAX',
+  'wAVAX',
   'Avalanche'
 )
 
@@ -115,7 +115,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.AVALANCHE]: [WAVAX_TOKEN],
+  [ChainId.AVALANCHE]: [],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
 
