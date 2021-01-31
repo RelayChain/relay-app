@@ -38,7 +38,12 @@ export default function TransferComplete ({ onDismiss, activeChain, transferTo, 
       <RowFixed style={{ width: '100%', marginTop: '1rem'}}>
         <Text fontSize={17} textAlign="center" style={{ lineHeight: "20px"}}>
           <b>{transferAmount} {currentToken?.symbol} </b>
-          tokens were successfully transferred from {activeChain} to {transferTo}.
+          tokens were successfully transferred into the ChainBridge, and are now being sent from {activeChain} to {transferTo}.
+        </Text>
+      </RowFixed>
+      <RowFixed style={{ width: '100%'}}>
+        <Text fontSize={17} textAlign="center" style={{ lineHeight: "20px"}}>
+          Santa's reindeer are busy relaying the transaction across the chains, this process can sometimes take up to 15 minutes.
         </Text>
       </RowFixed>
       <RowFixed>
