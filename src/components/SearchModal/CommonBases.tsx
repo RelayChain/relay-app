@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -68,6 +68,21 @@ export default function CommonBases({
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
             ETH
+          </Text>
+        </BaseWrapper>
+      }
+      { chainId && chainId === ChainId.AVALANCHE &&
+        <BaseWrapper
+          onClick={() => {
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
+              onSelect(AVAX)
+            }
+          }}
+          disable={selectedCurrency === AVAX}
+        >
+          <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
+          <Text fontWeight={500} fontSize={16}>
+            AVAX
           </Text>
         </BaseWrapper>
       }

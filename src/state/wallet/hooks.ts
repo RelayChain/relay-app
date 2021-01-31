@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
@@ -14,6 +14,7 @@ import { useUserUnclaimedAmount } from '../claim/hooks'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
+
 export function useETHBalances(
   uncheckedAddresses?: (string | undefined)[]
 ): { [address: string]: CurrencyAmount | undefined } {
@@ -107,15 +108,16 @@ export function useCurrencyBalances(
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies ?.some(currency => currency === ETHER) ?? false, [currencies])
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  // const containsETH: boolean = useMemo(() => currencies ?.some(currency => currency === ETHER) ?? false, [currencies])
+  const ethBalance = useETHBalances(account ? [account] : [])
+  // const ethBalance = useETHBalances(account ? [account] : []) ?.[account ?? '']
 
   return useMemo(
     () =>
       currencies ?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER) return ethBalance[account]
+        if (currency === ETHER || currency === AVAX) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]

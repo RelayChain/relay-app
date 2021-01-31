@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -173,7 +173,11 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+
+  const { chainId } = useActiveWeb3React()
+
+  const nativeToken = chainId === ChainId.MAINNET ? Currency.ETHER : Currency.AVAX
+  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [currencies, showETH, nativeToken])
 
   const Row = useCallback(
     ({ data, index, style }) => {

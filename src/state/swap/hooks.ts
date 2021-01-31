@@ -1,5 +1,5 @@
+import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,10 +33,21 @@ export function useSwapActionHandlers(): {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
+
+      let selected: any;
+      if (currency instanceof Token) {
+        selected = currency.address
+      }
+      if (currency === ETHER) {
+        selected = 'ETH';
+      }
+      if (currency === AVAX) {
+        selected = 'AVAX';
+      }
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId: selected
         })
       )
     },
@@ -128,7 +139,10 @@ export function useDerivedSwapInfo(): {
     recipient
   } = useSwapState()
 
+  console.log("SWP STATE ******", inputCurrencyId);
+
   const inputCurrency = useCurrency(inputCurrencyId)
+  console.log("***", inputCurrency);
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null

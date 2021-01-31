@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -103,6 +103,15 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const isETH = currencyId ?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? ETHER : token
+  const isAVAX = currencyId ?.toUpperCase() === 'AVAX'
+  const token = useToken((isETH || isAVAX) ? undefined : currencyId)
+
+  if (isETH) {
+    return ETHER
+  } else if (isAVAX) {
+    return AVAX
+  } else {
+    return token
+  }
+
 }

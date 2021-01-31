@@ -1,4 +1,3 @@
-import { AVAX_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -46,6 +45,7 @@ import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
@@ -189,6 +189,7 @@ export default function Swap() {
     currencies,
     inputError: swapInputError
   } = useDerivedSwapInfo()
+
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -419,7 +420,7 @@ export default function Swap() {
       dispatch(
         selectCurrency({
           field: Field.INPUT,
-          currencyId: chainId && chainId === ChainId.MAINNET ? 'ETH' : AVAX_ADDRESS
+          currencyId: chainId && chainId === ChainId.MAINNET ? 'ETH' : 'AVAX'
         })
       )
     }
