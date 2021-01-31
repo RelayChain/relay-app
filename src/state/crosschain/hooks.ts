@@ -191,6 +191,11 @@ export function useCrosschainHooks() {
     dispatch(setCrosschainDepositConfirmed({
       confirmed: false
     }))
+
+    dispatch(setPendingTransfer({
+      pendingTransfer: {}
+    }))
+
   }
 
   const getNonce = async (): Promise<number> => {
