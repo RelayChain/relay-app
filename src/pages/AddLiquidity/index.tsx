@@ -1,8 +1,9 @@
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { Dots, Wrapper } from '../Pool/styleds'
 import React, { useCallback, useContext, useState } from 'react'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
@@ -22,7 +23,6 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import { PairState } from '../../data/Reserves'
 import { Plus } from 'react-feather'
 import { PoolPriceBar } from './PoolPriceBar'
-import { ROUTER_ADDRESS } from '../../constants'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { TYPE } from '../../theme'
@@ -119,8 +119,8 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 

@@ -1,9 +1,10 @@
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -22,7 +23,6 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { Field } from '../../state/burn/actions'
 import { LightCard } from '../../components/Card'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import { ROUTER_ADDRESS } from '../../constants'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import Slider from '../../components/Slider'
@@ -102,7 +102,7 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -139,7 +139,7 @@ export default function RemoveLiquidity({
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESS,
+      spender: chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()

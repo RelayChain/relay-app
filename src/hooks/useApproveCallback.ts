@@ -1,3 +1,4 @@
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
 import { ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
@@ -6,7 +7,6 @@ import { useHasPendingApproval, useTransactionAdder } from '../state/transaction
 import { BigNumber } from '@ethersproject/bignumber'
 import { Field } from '../state/swap/actions'
 import { MaxUint256 } from '@ethersproject/constants'
-import { ROUTER_ADDRESS } from '../constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Version } from './useToggledVersion'
 import { calculateGasMargin } from '../utils'
@@ -112,5 +112,5 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
   )
   const tradeIsV1 = getTradeVersion(trade) === Version.v1
   const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
-  return useApproveCallback(amountToApprove, tradeIsV1 ? v1ExchangeAddress : ROUTER_ADDRESS)
+  return useApproveCallback(amountToApprove, chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
 }
