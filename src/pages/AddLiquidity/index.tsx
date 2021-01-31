@@ -32,6 +32,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
+import { useCrossChain } from '../../state/crosschain/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
@@ -44,6 +45,8 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+  useCrossChain();
+
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
