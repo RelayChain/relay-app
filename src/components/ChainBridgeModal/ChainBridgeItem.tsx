@@ -4,6 +4,7 @@ import Circle from '../../assets/images/circle-grey.svg'
 import CurrencyLogo from '../CurrencyLogo'
 import { CustomLightSpinner } from '../../theme/components'
 import React from 'react'
+import { returnNumberDecimals } from '../../constants';
 import styled from 'styled-components'
 
 const ListItem = styled.div`
@@ -57,12 +58,12 @@ export default function ChainBridgeItem ({ item, children, ...rest }: { item: an
     <ListItem>
       <CurrencyLogo size="50px" style={{ margin: '1rem 1rem 1.25rem 1rem' }} currency={currency} />
       <p>
-        <span>{ item?.amount}</span>
+        <span>{ returnNumberDecimals(item?.amount, 6) }</span>
         { item?.currentSymbol }
       </p>
       <ChevronsDown size="30" style={{ marginTop: '1rem', marginBottom: '1rem' }} />
       <p>
-        <span>{ item?.amount}</span>
+        <span>{ returnNumberDecimals(item?.amount, 6) }</span>
         { item?.targetSymbol }
       </p>
       <div className="status">

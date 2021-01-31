@@ -23,6 +23,10 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
+export const returnNumberDecimals = (num: string, decimals: number) => {
+  return parseFloat(parseFloat(num).toFixed(decimals).toString());
+}
+
 export const returnBalanceNum = (obj?: any, decimals?: number) => {
   const str = obj.toExact();
   let [str1, str2] = str.split('.');
