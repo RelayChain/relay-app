@@ -84,7 +84,7 @@ export function useApproveCallback(
     })
 
     // hardcode gas for avalanche
-    const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(30000) : estimatedGas
+    const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(250000) : estimatedGas
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
