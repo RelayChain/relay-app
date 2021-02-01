@@ -1,9 +1,9 @@
+import { AVAX, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { Dots, Wrapper } from '../Pool/styleds'
 import React, { useCallback, useContext, useState } from 'react'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
@@ -126,7 +126,10 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
+
     const router = getRouterContract(chainId, library, account)
+
+    console.log("ROUTER CONTRACT ===== ", router);
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -142,8 +145,9 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
+    if (currencyA === ETHER || currencyB === ETHER || currencyA === AVAX || currencyB === AVAX) {
+      console.log("CURRENCY IS NATIIVE, INSIDE ====== ");
+      const tokenBIsETH = (currencyB === ETHER || currencyB === AVAX)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -171,13 +175,22 @@ export default function AddLiquidity({
       value = null
     }
 
+    console.log("ABOUT TO ESTIMATE GAS ===== ", args, value);
+    
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
+      .then((estimatedGasLimit) => {
+
+        // hardcode gas for avalanche
+        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(250000) : estimatedGasLimit
+
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
+          gasLimit: calculateGasMargin(gas)
         }).then(response => {
+
+          console.log("RESPONSE ====== ", response);
+
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -200,8 +213,9 @@ export default function AddLiquidity({
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
         })
-      )
+      })
       .catch(error => {
+        console.log("ESTIMATE ERROR ====== ", error);
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
