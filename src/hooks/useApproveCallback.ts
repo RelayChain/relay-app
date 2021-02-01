@@ -1,5 +1,5 @@
+import { AVAX, ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
-import { ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
 // import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -36,6 +36,7 @@ export function useApproveCallback(
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
+    if (amountToApprove.currency === AVAX) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
