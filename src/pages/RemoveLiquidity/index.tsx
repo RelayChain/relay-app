@@ -125,7 +125,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${chainId && chainId === ChainId.MAINNET ? 'Uniswap V2' : 'ZERO-LP'}`,
+      name: `${chainId && chainId === ChainId.MAINNET ? 'Uniswap V2' : 'ZERO-LP-Token'}`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
