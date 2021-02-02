@@ -1,26 +1,27 @@
-import React, { useCallback, useContext } from 'react'
-import { useDispatch } from 'react-redux'
-import styled, { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { AppDispatch } from '../../state'
-import { clearAllTransactions } from '../../state/transactions/actions'
-import { shortenAddress } from '../../utils'
-import { AutoRow } from '../Row'
-import Copy from './Copy'
-import Transaction from './Transaction'
-
-import { SUPPORTED_WALLETS } from '../../constants'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import Identicon from '../Identicon'
-import { ButtonSecondary } from '../Button'
-import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import React, { useCallback, useContext } from 'react'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import styled, { ThemeContext } from 'styled-components'
+
+import { AppDispatch } from '../../state'
+import { AutoRow } from '../Row'
+import { ButtonSecondary } from '../Button'
+import { ChainId } from '@zeroexchange/sdk';
+import { ReactComponent as Close } from '../../assets/images/x.svg'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import Copy from './Copy'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import Identicon from '../Identicon'
+import { ExternalLink as LinkIcon } from 'react-feather'
+import PortisIcon from '../../assets/images/portisIcon.png'
+import { SUPPORTED_WALLETS } from '../../constants'
+import Transaction from './Transaction'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import { clearAllTransactions } from '../../state/transactions/actions'
+import { getEtherscanLink } from '../../utils'
+import { shortenAddress } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { useDispatch } from 'react-redux'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -358,7 +359,9 @@ export default function AccountDetails({
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
+                            </span>
                           </AddressLink>
                         )}
                       </div>
@@ -380,7 +383,9 @@ export default function AccountDetails({
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
+                            </span>
                           </AddressLink>
                         )}
                       </div>

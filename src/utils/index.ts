@@ -37,6 +37,9 @@ export function getEtherscanLink(
   if (chainId === ChainId.FUJI) {
     prefix = `https://cchain.explorer.avax-test.network`
   }
+  if (chainId === ChainId.AVALANCHE) {
+    prefix = `https://cchain.explorer.avax.network`
+  }
   switch (type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
