@@ -3,7 +3,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-export const AVAX_ROUTER_ADDRESS = '0x786701505349A494d3C6601043D948516d5bB8e8' // mainnet avalanche
+export const AVAX_ROUTER_ADDRESS = '0x85995d5f8ee9645cA855e92de16FA62D26398060' // mainnet avalanche
 export const ETH_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // mainnet ethereum
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
