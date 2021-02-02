@@ -434,7 +434,20 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} ZERO LP tokens available</TYPE.main>
+          <div>
+            <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} ZERO LP tokens available</TYPE.main>
+            <DataRow style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                width={'fit-content'}
+                as={Link}
+                to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+              >
+                Remove Liquidity
+              </ButtonPrimary>
+            </DataRow>
+          </div>
         )}
       </PositionInfo>
     </PageWrapper>
