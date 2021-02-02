@@ -1,15 +1,15 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@zeroexchange/sdk'
+import { AppDispatch, AppState } from '../index'
+import { Field, typeInput } from './actions'
+import { PairState, usePair } from '../../data/Reserves'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PairState, usePair } from '../../data/Reserves'
-import { useTotalSupply } from '../../data/TotalSupply'
-
-import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
-import { AppDispatch, AppState } from '../index'
+
 import { tryParseAmount } from '../swap/hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -21,18 +21,18 @@ export function useDerivedMintInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined
 ): {
-  dependentField: Field
-  currencies: { [field in Field]?: Currency }
-  pair?: Pair | null
-  pairState: PairState
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
-  price?: Price
-  noLiquidity?: boolean
-  liquidityMinted?: TokenAmount
-  poolTokenPercentage?: Percent
-  error?: string
-} {
+    dependentField: Field
+    currencies: { [field in Field]?: Currency }
+    pair?: Pair | null
+    pairState: PairState
+    currencyBalances: { [field in Field]?: CurrencyAmount }
+    parsedAmounts: { [field in Field]?: CurrencyAmount }
+    price?: Price
+    noLiquidity?: boolean
+    liquidityMinted?: TokenAmount
+    poolTokenPercentage?: Percent
+    error?: string
+  } {
   const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -50,7 +50,7 @@ export function useDerivedMintInfo(
 
   // pair
   const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
-  const totalSupply = useTotalSupply(pair?.liquidityToken)
+  const totalSupply = useTotalSupply(pair ?.liquidityToken)
 
   const noLiquidity: boolean =
     pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
@@ -83,7 +83,7 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+        return (dependentCurrency === ETHER || dependentCurrency === AVAX) ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
       return undefined
     } else {
@@ -145,12 +145,12 @@ export function useDerivedMintInfo(
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
-  if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+  if (currencyAAmount && currencyBalances ?.[Field.CURRENCY_A] ?.lessThan(currencyAAmount)) {
+    error = 'Insufficient ' + currencies[Field.CURRENCY_A] ?.symbol + ' balance'
   }
 
-  if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+  if (currencyBAmount && currencyBalances ?.[Field.CURRENCY_B] ?.lessThan(currencyBAmount)) {
+    error = 'Insufficient ' + currencies[Field.CURRENCY_B] ?.symbol + ' balance'
   }
 
   return {
@@ -171,9 +171,9 @@ export function useDerivedMintInfo(
 export function useMintActionHandlers(
   noLiquidity: boolean | undefined
 ): {
-  onFieldAInput: (typedValue: string) => void
-  onFieldBInput: (typedValue: string) => void
-} {
+    onFieldAInput: (typedValue: string) => void
+    onFieldBInput: (typedValue: string) => void
+  } {
   const dispatch = useDispatch<AppDispatch>()
 
   const onFieldAInput = useCallback(
