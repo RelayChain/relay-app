@@ -1,9 +1,9 @@
+import { AVAX, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
@@ -211,8 +211,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsETH = (currencyB === ETHER || currencyB === AVAX)
+    const oneCurrencyIsETH = (currencyA === ETHER || currencyB === AVAX) || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -379,11 +379,12 @@ export default function RemoveLiquidity({
   }
 
   function modalBottom() {
+    const symbolName = chainId && chainId === ChainId.MAINNET ? 'UNI ' : 'AVAX '
     return (
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            { symbolName + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -430,7 +431,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
+  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER || currencyB === AVAX || currencyA === AVAX
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -566,11 +567,16 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-                              currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                            to={`/remove/${(currencyA === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdA}/${
+                              (currencyB === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdB
                             }`}
                           >
-                            Receive WETH
+                            { chainId && chainId === ChainId.MAINNET &&
+                              'Receive WETH'
+                            }
+                            { chainId && chainId === ChainId.AVALANCHE &&
+                              'Receive WAVAX'
+                            }
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -578,7 +584,12 @@ export default function RemoveLiquidity({
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
-                            Receive ETH
+                            { chainId && chainId === ChainId.MAINNET &&
+                              'Receive ETH'
+                            }
+                            { chainId && chainId === ChainId.AVALANCHE &&
+                              'Receive AVAX'
+                            }
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>
