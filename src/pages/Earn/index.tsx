@@ -70,10 +70,34 @@ export default function Earn() {
     ],
     [ChainId.AVALANCHE]: [
       {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'zETH',
+        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'zUSD',
+        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'AVAX',
+        otherAddress: 'AVAX'
+      },
+      {
         baseSymbol: 'AVAX',
-        baseAddress: 'avaxaddresshere',
-        otherSymbol: 'ZERO',
-        otherAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
+        baseAddress: 'AVAX',
+        otherSymbol: 'zUSD',
+        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
+      },
+      {
+        baseSymbol: 'AVAX',
+        baseAddress: 'AVAX',
+        otherSymbol: 'zETH',
+        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
       }
     ]
   }
