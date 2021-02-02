@@ -125,7 +125,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: `${chainId && chainId === ChainId.MAINNET ? 'Uniswap V2' : 'ZERO-LP'}`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -212,7 +212,7 @@ export default function RemoveLiquidity({
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
     const currencyBIsETH = (currencyB === ETHER || currencyB === AVAX)
-    const oneCurrencyIsETH = (currencyA === ETHER || currencyB === AVAX) || currencyBIsETH
+    const oneCurrencyIsETH = (currencyA === ETHER || currencyA === AVAX) || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -431,7 +431,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER || currencyB === AVAX || currencyA === AVAX
+  const oneCurrencyIsETH = (currencyA === ETHER || currencyB === ETHER || currencyB === AVAX || currencyA === AVAX)
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
