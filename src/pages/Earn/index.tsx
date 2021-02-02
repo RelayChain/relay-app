@@ -1,8 +1,8 @@
+import { ButtonSecondary, ButtonUNIGradient } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
-import { ButtonUNIGradient } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk';
 //import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
@@ -21,6 +21,12 @@ import { useActiveWeb3React } from '../../hooks'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+`
+const ResponsiveButtonSecondary = styled(ButtonSecondary)`
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 48%;
+  `};
 `
 
 // const TopSection = styled(AutoColumn)`
@@ -151,6 +157,12 @@ export default function Earn() {
         <CardBGImage />
         <CardNoise />
       </VoteCard>
+
+      <RowBetween>
+        <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '5px 5px 5px auto' }}>
+          Create New Pool Pair
+        </ResponsiveButtonSecondary>
+      </RowBetween>
 
       {/*<TopSection gap="md">
         <DataCard>
