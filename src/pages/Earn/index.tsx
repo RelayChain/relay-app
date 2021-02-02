@@ -84,7 +84,7 @@ export default function Earn() {
       {
         baseSymbol: 'ZERO',
         baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-        otherSymbol: 'zUSD',
+        otherSymbol: 'USDC',
         otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
       },
       {
@@ -96,7 +96,7 @@ export default function Earn() {
       {
         baseSymbol: 'AVAX',
         baseAddress: 'AVAX',
-        otherSymbol: 'zUSD',
+        otherSymbol: 'USDC',
         otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
       },
       {
