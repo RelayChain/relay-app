@@ -11,7 +11,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -21,6 +21,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration": true,
+    "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "types": ["react-spring", "jest"],
     "baseUrl": "src"

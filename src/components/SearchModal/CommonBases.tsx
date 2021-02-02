@@ -1,13 +1,13 @@
-import React from 'react'
-import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from '@zeroexchange/sdk'
-import styled from 'styled-components'
+import { AVAX, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 
-import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+import QuestionHelper from '../QuestionHelper'
+import React from 'react'
+import { SUGGESTED_BASES } from '../../constants'
+import { Text } from 'rebass'
+import styled from 'styled-components'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -34,6 +34,19 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
+
+  const zeroToken = new Token(
+    1,
+    '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+    18,
+    'ZERO',
+    'Zero'
+  )
+  let array: any = chainId ? SUGGESTED_BASES[chainId] : [];
+  if (chainId && chainId === 1 && !array.find((x: any) => x.address === '0xF0939011a9bb95c3B791f0cb546377Ed2693a574')) {
+    array.unshift(zeroToken);
+  }
+
   return (
     <AutoColumn gap="md">
       <AutoRow>
@@ -43,6 +56,7 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
+      { chainId && chainId === ChainId.MAINNET &&
         <BaseWrapper
           onClick={() => {
             if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
@@ -56,7 +70,23 @@ export default function CommonBases({
             ETH
           </Text>
         </BaseWrapper>
-        {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
+      }
+      { chainId && chainId === ChainId.AVALANCHE &&
+        <BaseWrapper
+          onClick={() => {
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
+              onSelect(AVAX)
+            }
+          }}
+          disable={selectedCurrency === AVAX}
+        >
+          <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
+          <Text fontWeight={500} fontSize={16}>
+            AVAX
+          </Text>
+        </BaseWrapper>
+      }
+        {(array).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>

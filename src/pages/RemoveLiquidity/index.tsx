@@ -1,48 +1,48 @@
-import { splitSignature } from '@ethersproject/bytes'
-import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@zeroexchange/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { AVAX, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
+import { StyledInternalLink, TYPE } from '../../theme'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
+
+import { AddRemoveTabs } from '../../components/NavigationTabs'
+import AppBody from '../AppBody'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CurrencyLogo from '../../components/CurrencyLogo'
+import { Dots } from '../../components/swap/styleds'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import { Field } from '../../state/burn/actions'
+import { LightCard } from '../../components/Card'
+import { MinimalPositionCard } from '../../components/PositionCard'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
+import Slider from '../../components/Slider'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
-import { LightCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-
-import Slider from '../../components/Slider'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
-import { usePairContract } from '../../hooks/useContract'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { TransactionResponse } from '@ethersproject/providers'
 import { currencyId } from '../../utils/currencyId'
-import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import AppBody from '../AppBody'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { Dots } from '../../components/swap/styleds'
+import { splitSignature } from '@ethersproject/bytes'
+import { useActiveWeb3React } from '../../hooks'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
-import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
-import { Field } from '../../state/burn/actions'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useCrossChain } from '../../state/crosschain/hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
+import useIsArgentWallet from '../../hooks/useIsArgentWallet'
+import { usePairContract } from '../../hooks/useContract'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { BigNumber } from '@ethersproject/bignumber'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 export default function RemoveLiquidity({
   history,
@@ -50,6 +50,8 @@ export default function RemoveLiquidity({
     params: { currencyIdA, currencyIdB }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+  useCrossChain()
+
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
@@ -100,7 +102,7 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -123,7 +125,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: `${chainId && chainId === ChainId.MAINNET ? 'Uniswap V2' : 'ZERO-LP-Token'}`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -137,7 +139,7 @@ export default function RemoveLiquidity({
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESS,
+      spender: chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -209,8 +211,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsETH = (currencyB === ETHER || currencyB === AVAX)
+    const oneCurrencyIsETH = (currencyA === ETHER || currencyA === AVAX) || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -377,11 +379,12 @@ export default function RemoveLiquidity({
   }
 
   function modalBottom() {
+    const symbolName = chainId && chainId === ChainId.MAINNET ? 'UNI ' : 'AVAX '
     return (
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            { symbolName + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -428,7 +431,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
+  const oneCurrencyIsETH = (currencyA === ETHER || currencyB === ETHER || currencyB === AVAX || currencyA === AVAX)
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -564,11 +567,16 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-                              currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                            to={`/remove/${(currencyA === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdA}/${
+                              (currencyB === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdB
                             }`}
                           >
-                            Receive WETH
+                            { chainId && chainId === ChainId.MAINNET &&
+                              'Receive WETH'
+                            }
+                            { chainId && chainId === ChainId.AVALANCHE &&
+                              'Receive WAVAX'
+                            }
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -576,7 +584,12 @@ export default function RemoveLiquidity({
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
-                            Receive ETH
+                            { chainId && chainId === ChainId.MAINNET &&
+                              'Receive ETH'
+                            }
+                            { chainId && chainId === ChainId.AVALANCHE &&
+                              'Receive AVAX'
+                            }
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

@@ -1,5 +1,5 @@
+import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,10 +33,21 @@ export function useSwapActionHandlers(): {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
+
+      let selected: any;
+      if (currency instanceof Token) {
+        selected = currency.address
+      }
+      if (currency === ETHER) {
+        selected = 'ETH';
+      }
+      if (currency === AVAX) {
+        selected = 'AVAX';
+      }
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId: selected
         })
       )
     },
@@ -225,7 +236,7 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
     if (urlParam.toUpperCase() === 'ETH') return 'ETH'
     if (valid === false) return 'ETH'
   }
-  return 'ETH' ?? ''
+  return '';
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -287,13 +298,12 @@ export function useDefaultsFromURLSearch():
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
-
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId || '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient
       })
     )

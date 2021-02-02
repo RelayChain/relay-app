@@ -1,15 +1,38 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+
+export const AVAX_ROUTER_ADDRESS = '0x85995d5f8ee9645cA855e92de16FA62D26398060' // mainnet avalanche
+export const ETH_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // mainnet ethereum
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7';
+export const WAVAX_TOKEN = new Token(
+  ChainId.AVALANCHE,
+  '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+  18,
+  'WAVAX',
+  'Avalanche'
+)
 
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
+}
+
+export const returnNumberDecimals = (num: string, decimals: number) => {
+  return parseFloat(parseFloat(num).toFixed(decimals).toString());
+}
+
+export const returnBalanceNum = (obj?: any, decimals?: number) => {
+  const str = obj.toExact();
+  let [str1, str2] = str.split('.');
+  if (str2) {
+    return str1.length + decimals;
+  } else {
+    return str1.length;
+  }
 }
 
 export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
@@ -39,7 +62,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.FUJI]: new Token(ChainId.FUJI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.FUJI]: new Token(ChainId.FUJI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -60,7 +84,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.FUJI]: [WETH[ChainId.FUJI]]
+  [ChainId.FUJI]: [WETH[ChainId.FUJI]],
+  [ChainId.AVALANCHE]: [WETH[ChainId.AVALANCHE]]
 }
 
 // used to construct intermediary pairs for trading
@@ -88,6 +113,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.AVALANCHE]: [],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
 

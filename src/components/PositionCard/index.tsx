@@ -1,17 +1,18 @@
 import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Card, { GreyCard, LightCard } from '../Card'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { JSBI, Pair, Percent, TokenAmount } from '@zeroexchange/sdk'
 import React, { useState } from 'react'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
-import { ButtonEmpty } from '../Button'
 import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../CurrencyLogo'
 import { Dots } from '../swap/styleds'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { TYPE } from '../../theme'
 import { Text } from 'rebass'
+import { currencyId } from '../../utils/currencyId'
 import { darken } from 'polished'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -47,10 +48,10 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
-  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
+  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0, chainId)
+  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1, chainId)
 
   const [showMore, setShowMore] = useState(false)
 
@@ -136,6 +137,13 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   '-'
                 )}
               </FixedHeightRow>
+                <StyledInternalLink to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+                  <ButtonPrimary
+                    style={{ marginTop: '1rem'}}
+                    >
+                    Remove Liquidity
+                  </ButtonPrimary>
+                </StyledInternalLink>
             </AutoColumn>
           </AutoColumn>
         </GreyCard>
@@ -155,10 +163,10 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const currency0 = unwrappedToken(pair.token0)
-  const currency1 = unwrappedToken(pair.token1)
+  const currency0 = unwrappedToken(pair.token0, chainId)
+  const currency1 = unwrappedToken(pair.token1, chainId)
 
   const [showMore, setShowMore] = useState(false)
 

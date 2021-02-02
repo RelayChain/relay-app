@@ -1,21 +1,23 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { FadedSpan, MenuItem } from './styleds'
+import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { WrappedTokenInfo, useSelectedTokenList } from '../../state/lists/hooks'
+import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
+
+import Column from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
 import { FixedSizeList } from 'react-window'
+import Loader from '../Loader'
+import { MouseoverTooltip } from '../Tooltip'
+import { RowFixed } from '../Row'
 import { Text } from 'rebass'
+import { isTokenOnList } from '../../utils'
+import { returnBalanceNum } from '../../constants';
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
-import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
-import Column from '../Column'
-import { RowFixed } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
-import { MouseoverTooltip } from '../Tooltip'
-import { FadedSpan, MenuItem } from './styleds'
-import Loader from '../Loader'
-import { isTokenOnList } from '../../utils'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -24,8 +26,8 @@ function currencyKey(currency: Currency): string {
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
-  max-width: 5rem;
   text-overflow: ellipsis;
+  max-width: 150px;
 `
 
 const Tag = styled.div`
@@ -43,7 +45,7 @@ const Tag = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' })}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`
@@ -171,7 +173,11 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+
+  const { chainId } = useActiveWeb3React()
+
+  const nativeToken = chainId === ChainId.MAINNET ? Currency.ETHER : Currency.AVAX
+  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [currencies, showETH, nativeToken])
 
   const Row = useCallback(
     ({ data, index, style }) => {

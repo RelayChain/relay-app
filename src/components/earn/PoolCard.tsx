@@ -1,6 +1,6 @@
 import { Break, CardBGImage, CardNoise } from './styled'
-import { ButtonEmpty, ButtonPrimary } from '../Button'
-import { ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { ButtonPrimary, ButtonWhiteBg } from '../Button'
+import { ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
@@ -12,6 +12,7 @@ import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
 import styled from 'styled-components'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -70,11 +71,14 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+
+  const { chainId } = useActiveWeb3React()
+
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
-  const currency0 = unwrappedToken(token0)
-  const currency1 = unwrappedToken(token1)
+  const currency0 = unwrappedToken(token0, chainId)
+  const currency1 = unwrappedToken(token1, chainId)
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -118,14 +122,16 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        <ExternalLink href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
-          target="_blank" style={{ width: '100%' }}>
-          <ButtonEmpty padding="8px" borderRadius="8px">
-            View Charts
-          </ButtonEmpty>
-        </ExternalLink>
+        { chainId === ChainId.MAINNET ?
+          <ExternalLink href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
+            target="_blank" style={{ width: '100%', textDecoration: 'none' }}>
+            <ButtonWhiteBg padding="8px" borderRadius="8px">
+              View Charts
+            </ButtonWhiteBg>
+          </ExternalLink> : <div></div>
+        }
 
-        <StyledInternalLink to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+        <StyledInternalLink to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%', paddingLeft: '10px' }}>
           <ButtonPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
           </ButtonPrimary>

@@ -1,16 +1,16 @@
-import { ChainId } from '@zeroexchange/sdk'
+import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { AutoColumn, ColumnCenter } from '../Column'
+import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
-import { Text } from 'rebass'
-import { CloseIcon, CustomLightSpinner } from '../../theme/components'
-import { RowBetween } from '../Row'
-import { AlertTriangle, ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
-import Circle from '../../assets/images/blue-loader.svg'
 
+import { ButtonPrimary } from '../Button'
+import { ChainId } from '@zeroexchange/sdk'
+import Circle from '../../assets/images/blue-loader.svg'
+import { ExternalLink } from '../../theme'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
+import { Text } from 'rebass'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -88,7 +88,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Etherscan
+                { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
               </Text>
             </ExternalLink>
           )}

@@ -3,6 +3,7 @@ import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 import { AutoColumn } from '../Column'
+import { ChainId } from '@zeroexchange/sdk'
 import { RowBetween } from '../Row'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
@@ -104,7 +105,7 @@ export default function AddressInputPanel({
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  (View on Etherscan)
+                  ({ chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'})
                 </ExternalLink>
               )}
             </RowBetween>
