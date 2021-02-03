@@ -122,7 +122,7 @@ export default function Earn() {
   return (
     <PageWrapper gap="lg" justify="center">
       <h2>Pools closed. Come back tomorrow degens :)</h2>
-      <VoteCard style={{ opacity: '.5', pointerEvents: 'none'}}>
+      <VoteCard /** style={{ opacity: '.5', pointerEvents: 'none'}}*/>
         <CardBGImage />
         <CardNoise />
         <CardSection>
@@ -159,7 +159,7 @@ export default function Earn() {
         <CardNoise />
       </VoteCard>
 
-      <RowBetween style={{ opacity: '.5', pointerEvents: 'none'}}>
+      <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
         <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '5px 5px 5px auto' }}>
           Create New Pool Pair
         </ResponsiveButtonSecondary>
