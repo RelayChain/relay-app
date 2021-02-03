@@ -212,7 +212,7 @@ export default function Manage({
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
-  const symbol = chainId && chainId === ChainId.MAINNET ? 'ETH' : 'AVAX';
+  const symbol = WETH?.symbol
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
