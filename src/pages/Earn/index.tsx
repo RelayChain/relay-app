@@ -121,7 +121,7 @@ export default function Earn() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <VoteCard style={{ opacity: '.5', pointerEvents: 'none'}}>
+      <VoteCard>
         <CardBGImage />
         <CardNoise />
         <CardSection>
