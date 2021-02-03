@@ -121,7 +121,6 @@ export default function Earn() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <h2>Pools closed. Come back tomorrow degens :)</h2>
       <VoteCard style={{ opacity: '.5', pointerEvents: 'none'}}>
         <CardBGImage />
         <CardNoise />
