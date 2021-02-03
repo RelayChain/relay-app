@@ -233,11 +233,13 @@ export function useCrosschainHooks() {
         .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
         .substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-
+    const gasPriceFromChain = (targetChain.chainId === 2) ?
+      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
+      utils.parseUnits(currentGasPrice, 0)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '800000',
       value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
-      gasPrice: utils.parseUnits(currentGasPrice, 0),
+      gasPrice: gasPriceFromChain,
       nonce: await getNonce()
     }).catch((err: any) => {
       console.log(err);
@@ -322,6 +324,10 @@ export function useCrosschainHooks() {
       status: ChainTransferState.NotStarted
     }))
 
+    const gasPriceFromChain = (currentChain.chainId === 2) ?
+      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
+      utils.parseUnits(currentGasPrice, 0)
+
     // @ts-ignore
     const signer = web3React.library.getSigner()
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
@@ -329,7 +335,7 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '70000',
-      gasPrice: utils.parseUnits(currentGasPrice, 0),
+      gasPrice: gasPriceFromChain,
       nonce: await getNonce()
     }).then((resultApproveTx: any) => {
       dispatch(setCrosschainTransferStatus({
