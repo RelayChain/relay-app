@@ -74,7 +74,7 @@ export function CurrencySearch({
     )
   });
 
-  const defaultTokenList = DEFAULT_TOKEN_LIST.map((x: any) => {
+  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
     return new Token(
       x.chainId,
       x.address,
