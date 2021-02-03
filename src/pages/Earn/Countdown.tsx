@@ -37,15 +37,15 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   let timeRemaining: number
   let message: string
   if (timeUntilGenesis >= 0) {
-    message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'AVAX'} lifts open in`
+    message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts open in`
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
     if (ongoing) {
-      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'AVAX'} lifts close in`
+      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts close in`
       timeRemaining = timeUntilEnd
     } else {
-      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'AVAX'} lifts are closed!`
+      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts are closed!`
       timeRemaining = Infinity
     }
   }
