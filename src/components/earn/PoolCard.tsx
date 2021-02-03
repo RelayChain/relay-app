@@ -2,11 +2,12 @@ import { AVAX, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { Break, CardBGImage, CardNoise } from './styled'
 import { ButtonPrimary, ButtonWhiteBg } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import React, { useState } from 'react'
+import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import { AutoColumn } from '../Column'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import React from 'react'
 import { RowBetween } from '../Row'
 import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
@@ -14,9 +15,12 @@ import styled from 'styled-components'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
+import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
+import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const StatContainer = styled.div`
   display: flex;
@@ -70,29 +74,45 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
 
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
-  const token0 = stakingInfo.tokens[0]
-  const token1 = stakingInfo.tokens[1]
+  const token0 = stakingInfoTop.tokens[0]
+  const token1 = stakingInfoTop.tokens[1]
 
   const currency0 = unwrappedToken(token0, chainId)
   const currency1 = unwrappedToken(token1, chainId)
 
-  const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
+  // get currencies and pair
+  const [currencyA, currencyB] = [useCurrency(currencyId(currency0)), useCurrency(currencyId(currency1))]
+  const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
+  const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
-  // get the color of the token
-  const token = (currency0 === ETHER || currency0 === AVAX) ? token1 : token0
-  const WETH = (currency0 === ETHER || currency0 === AVAX) ? token0 : token1
+  const [, stakingTokenPair] = usePair(tokenA, tokenB)
+  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
+
+  // detect existing unstaked LP position to show add button if none found
+  const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
+  const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
+
+  // toggle for staking modal and unstaking modal
+  const [showStakingModal, setShowStakingModal] = useState(false)
+  const [showUnstakingModal, setShowUnstakingModal] = useState(false)
+  const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
+
+  // fade cards if nothing staked or nothing earned yet
+  const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
+
+  const token = (currencyA === ETHER || currencyA === AVAX) ? tokenB : tokenA
+  const WETH = (currencyA === ETHER || currencyA === AVAX) ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
-  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
-  const [, stakingTokenPair] = usePair(...stakingInfo.tokens)
-
-  // let returnOverMonth: Percent = new Percent('0')
+  // get WETH value of staked LP tokens
+  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
   let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
-  if (totalSupplyOfStakingToken && stakingTokenPair) {
+  if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInWETH = new TokenAmount(
       WETH,
