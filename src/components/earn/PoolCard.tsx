@@ -131,7 +131,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  const symbol = chainId && chainId === ChainId.MAINNET ? 'ETH' : 'AVAX';
+  const symbol = WETH?.symbol
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
