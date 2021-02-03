@@ -14,6 +14,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { Text } from 'rebass'
 import { currencyId } from '../../utils/currencyId'
 import { darken } from 'polished'
+import { returnNumberDecimals } from '../../constants';
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -258,7 +259,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token0Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token0Deposited?.toSignificant(6)}
+                    {returnNumberDecimals(token0Deposited?.toSignificant(6), 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
@@ -276,7 +277,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token1Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token1Deposited?.toSignificant(6)}
+                    {returnNumberDecimals(token1Deposited?.toSignificant(6), 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
