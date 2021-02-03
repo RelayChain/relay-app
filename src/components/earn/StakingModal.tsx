@@ -145,7 +145,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'ZERO-LP-Token',
       version: '1',
       chainId: chainId,
       verifyingContract: pairContract.address

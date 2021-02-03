@@ -1,6 +1,6 @@
+import { AVAX, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { Break, CardBGImage, CardNoise } from './styled'
 import { ButtonPrimary, ButtonWhiteBg } from '../Button'
-import { ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
@@ -83,8 +83,8 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = currency0 === ETHER ? token1 : token0
-  const WETH = currency0 === ETHER ? token0 : token1
+  const token = (currency0 === ETHER || currency0 === AVAX) ? token1 : token0
+  const WETH = (currency0 === ETHER || currency0 === AVAX) ? token0 : token1
   const backgroundColor = useColor(token)
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
@@ -110,6 +110,8 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
+
+  const symbol = chainId && chainId === ChainId.MAINNET ? 'ETH' : 'AVAX';
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -145,7 +147,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <TYPE.white>
             {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
           </TYPE.white>
         </RowBetween>
         <RowBetween>
