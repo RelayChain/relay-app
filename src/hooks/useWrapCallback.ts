@@ -1,9 +1,10 @@
-import { Currency, currencyEquals, ETHER, WETH } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
+import { AVAX, Currency, ETHER, WETH, currencyEquals } from '@zeroexchange/sdk'
+
 import { tryParseAmount } from '../state/swap/hooks'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
+import { useCurrencyBalance } from '../state/wallet/hooks'
+import { useMemo } from 'react'
+import { useTransactionAdder } from '../state/transactions/hooks'
 import { useWETHContract } from './useContract'
 
 export enum WrapType {
@@ -36,19 +37,19 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
+    if ((inputCurrency === ETHER || inputCurrency === AVAX) && currencyEquals(WETH[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
-                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
-                } catch (error) {
-                  console.error('Could not deposit', error)
-                }
+              try {
+                const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+              } catch (error) {
+                console.error('Could not deposit', error)
               }
+            }
             : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
       }
@@ -58,13 +59,13 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
-                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
-                } catch (error) {
-                  console.error('Could not withdraw', error)
-                }
+              try {
+                const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+              } catch (error) {
+                console.error('Could not withdraw', error)
               }
+            }
             : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient WETH balance'
       }
