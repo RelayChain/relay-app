@@ -176,13 +176,13 @@ export default function AddLiquidity({
     }
 
     console.log("ABOUT TO ESTIMATE GAS ===== ", args, value);
-    
+
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) => {
 
         // hardcode gas for avalanche
-        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(250000) : estimatedGasLimit
+        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(350000) : estimatedGasLimit
 
         method(...args, {
           ...(value ? { value } : {}),

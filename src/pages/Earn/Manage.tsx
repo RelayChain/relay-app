@@ -212,12 +212,18 @@ export default function Manage({
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
+
+  const showMe = (pair: any) => {
+    return pair?.token0?.symbol === stakingTokenPair?.token0?.symbol &&
+           pair?.token1?.symbol === stakingTokenPair?.token1?.symbol
+  }
+
   const symbol = WETH?.symbol
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
+          {currencyA?.symbol}/{currencyB?.symbol} Liquidity Mining
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -269,7 +275,7 @@ export default function Manage({
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
-                {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
+                {`Add ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
@@ -277,6 +283,18 @@ export default function Manage({
           <CardNoise />
         </VoteCard>
       )}
+
+      {!showAddLiquidityButton && stakingInfo &&
+        <ButtonPrimary
+          padding="8px"
+          borderRadius="8px"
+          width={'fit-content'}
+          as={Link}
+          to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+        >
+          {`Add more ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
+        </ButtonPrimary>
+      }
 
       {stakingInfo && (
         <>
@@ -381,12 +399,9 @@ export default function Manage({
           </EmptyProposals>
         ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
           <>
-            {v2PairsWithoutStakedAmount.map(v2Pair => (
-              <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-            ))}
             {stakingPairs.map(
               (stakingPair, i) =>
-                stakingPair[1] && ( // skip pairs that arent loaded
+                stakingPair[1] && showMe(stakingPair[1]) && (
                   <FullPositionCard
                     key={stakingInfosWithBalance[i].stakingRewardAddress}
                     pair={stakingPair[1]}
