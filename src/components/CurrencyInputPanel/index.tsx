@@ -293,6 +293,7 @@ export default function CurrencyInputPanel({
             </>
           )}
           <CurrencySelect
+            style={{ opacity: `${isCrossChain && label === 'To' && !currency?.symbol ? '0' : '1'}`}}
             selected={!!currency}
             className="open-currency-select-button"
             onClick={() => {
@@ -314,7 +315,7 @@ export default function CurrencyInputPanel({
               ) : (
                 <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                   { isCrossChain && label === 'To' ?
-                    `${currentTargetToken?.symbol}`
+                    `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                     : (currency && currency.symbol && currency.symbol.length > 20
                     ? currency.symbol.slice(0, 4) +
                       '...' +

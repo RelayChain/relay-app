@@ -404,26 +404,6 @@ export default function Swap() {
     dispatch(setTransferAmount({
       amount: inputAmountToTrack
     }))
-
-    // if cross chain, choose first available token
-    if (bool === true) {
-      if (availableTokens.length) {
-        const currencyId = availableTokens[0].address
-        dispatch(
-          selectCurrency({
-            field: Field.INPUT,
-            currencyId
-          })
-        )
-      }
-    } else { // if back to swaps, set to ETH as default
-      dispatch(
-        selectCurrency({
-          field: Field.INPUT,
-          currencyId: chainId && chainId === ChainId.MAINNET ? 'ETH' : 'AVAX'
-        })
-      )
-    }
   }
 
   const [transferTo, setTransferTo] = useState<string>('');
