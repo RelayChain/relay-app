@@ -51,9 +51,9 @@ export default function useWrapCallback(
               }
             }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient balance'
       }
-    } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    } else if (currencyEquals(WETH[chainId], inputCurrency) && (outputCurrency === ETHER || outputCurrency === AVAX)) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
@@ -67,7 +67,7 @@ export default function useWrapCallback(
               }
             }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient WETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient balance'
       }
     } else {
       return NOT_APPLICABLE

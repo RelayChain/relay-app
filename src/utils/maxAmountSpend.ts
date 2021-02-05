@@ -1,4 +1,5 @@
-import { CurrencyAmount, ETHER, JSBI } from '@zeroexchange/sdk'
+import { AVAX, CurrencyAmount, ETHER, JSBI } from '@zeroexchange/sdk'
+
 import { MIN_ETH } from '../constants'
 
 /**
@@ -7,7 +8,7 @@ import { MIN_ETH } from '../constants'
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount.currency === ETHER) {
+  if (currencyAmount.currency === ETHER || currencyAmount.currency === AVAX) {
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH))
     } else {
