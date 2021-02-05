@@ -347,15 +347,35 @@ export function useCrosschainHooks() {
 
       resultApproveTx.wait().then(() => {
         let crosschainState = getCrosschainState()
-        if (crosschainState.currentTxID === resultApproveTx.hash) {
-          dispatch(setCurrentTxID({
-            txID: ''
-          }))
-          dispatch(setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalComplete
-          }))
+        const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        return tokenContract.allowance(crosschainState.currentRecipient,
+          currentChain.erc20HandlerAddress)
+      }).then((approvedAmount: any) => {
+        const crosschainState2 = getCrosschainState()
+        console.log("🚀 ~ file: hooks.ts ~ line 357 ~ resultApproveTx.wait ~ approvedAmount", approvedAmount)
+console.log('crosschainState2.currentTxID === resultApproveTx.hash :>> ', crosschainState2.currentTxID, resultApproveTx.hash);
+        if (crosschainState2.currentTxID === resultApproveTx.hash) {
+
+          const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
+            crosschainState2.transferAmount, currentToken.decimals))
+          console.log("🚀 ~ file: hooks.ts ~ line 361 ~ resultApproveTx.wait ~ countTokenForTransfer", countTokenForTransfer)
+          if (countTokenForTransfer.gte(approvedAmount)) {
+            console.log('countTokenForTransfer.gte(approvedAmount) :>> ', countTokenForTransfer.gte(approvedAmount));
+            dispatch(setCurrentTxID({
+              txID: ''
+            }))
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.ApprovalComplete
+            }))
+
+          } else {
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.NotStarted
+            }))
+          }
         }
-      }).catch((err: any) => {
+      }
+      ).catch((err: any) => {
         BreakCrosschainSwap();
       });
     }).catch((err: any) => {
