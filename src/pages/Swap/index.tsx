@@ -136,7 +136,7 @@ export default function Swap() {
     targetTokens,
     crosschainTransferStatus,
   } = useCrosschainState()
-  
+
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
 
   const {BreakCrosschainSwap} = useCrosschainHooks()
@@ -480,7 +480,6 @@ export default function Swap() {
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
   const hideConfirmTransferModal = () => {
     setConfirmTransferModalOpen(false)
-    startNewSwap()
   }
   const showConfirmTransferModal = () => {
     setConfirmTransferModalOpen(true)

@@ -247,7 +247,7 @@ export function useCrosschainHooks() {
           dispatch(setCrosschainSwapDetails({
             details: {
               status: proposal._status,
-              voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
+              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
             }
           }))
           if (proposal && proposal._status == ProposalStatus.EXECUTED) {
@@ -279,8 +279,8 @@ export function useCrosschainHooks() {
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
     const resultApproveTx = await tokenContract.approve(
-        currentChain.erc20HandlerAddress,
-        WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
+      currentChain.erc20HandlerAddress,
+      WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
       gasLimit: '300000',
       gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
     })
@@ -293,16 +293,31 @@ export function useCrosschainHooks() {
     }))
 
     resultApproveTx.wait().then(() => {
-      let crosschainState = getCrosschainState()
-      if (crosschainState.currentTxID === resultApproveTx.hash) {
-        dispatch(setCurrentTxID({
-          txID: ''
-        }))
-        dispatch(setCrosschainTransferStatus({
-          status: ChainTransferState.ApprovalComplete
-        }))
+      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+      const amount = tokenContract.allowance(crosschainState.currentRecipient,
+        currentChain.erc20HandlerAddress)
+      return amount;
+    }).then((approvedAmount: any) => {
+      const crosschainState2 = getCrosschainState()
+
+      if (crosschainState2.currentTxID === resultApproveTx.hash) {
+        const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
+          crosschainState2.transferAmount, currentToken.decimals))
+        if (countTokenForTransfer.gte(approvedAmount)) {
+          dispatch(setCurrentTxID({
+            txID: ''
+          }))
+          dispatch(setCrosschainTransferStatus({
+            status: ChainTransferState.ApprovalComplete
+          }))
+        } else {
+          dispatch(setCrosschainTransferStatus({
+            status: ChainTransferState.NotStarted
+          }))
+        }
       }
-    })
+    }
+    )
   }
 
   const UpdateOwnTokenBalance = async () => {
@@ -363,7 +378,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
+  const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
     const {
@@ -392,7 +407,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
