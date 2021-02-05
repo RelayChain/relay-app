@@ -1,18 +1,20 @@
 import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Card, { GreyCard, LightCard } from '../Card'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { JSBI, Pair, Percent, TokenAmount } from '@zeroexchange/sdk'
 import React, { useState } from 'react'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
-import { ButtonEmpty } from '../Button'
 import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../CurrencyLogo'
 import { Dots } from '../swap/styleds'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { TYPE } from '../../theme'
 import { Text } from 'rebass'
+import { currencyId } from '../../utils/currencyId'
 import { darken } from 'polished'
+import { returnNumberDecimals } from '../../constants';
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -47,10 +49,10 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
-  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
+  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0, chainId)
+  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1, chainId)
 
   const [showMore, setShowMore] = useState(false)
 
@@ -61,7 +63,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
-
   const [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
@@ -136,6 +137,13 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   '-'
                 )}
               </FixedHeightRow>
+                <StyledInternalLink to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+                  <ButtonPrimary
+                    style={{ marginTop: '1rem'}}
+                    >
+                    Remove Liquidity
+                  </ButtonPrimary>
+                </StyledInternalLink>
             </AutoColumn>
           </AutoColumn>
         </GreyCard>
@@ -155,10 +163,10 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const currency0 = unwrappedToken(pair.token0)
-  const currency1 = unwrappedToken(pair.token1)
+  const currency0 = unwrappedToken(pair.token0, chainId)
+  const currency1 = unwrappedToken(pair.token1, chainId)
 
   const [showMore, setShowMore] = useState(false)
 
@@ -173,7 +181,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
 
-  const [token0Deposited, token1Deposited] =
+  let [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
@@ -184,6 +192,34 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
         ]
       : [undefined, undefined]
+
+  // fix eth balances =================
+  const transformBalance = (x: any) => {
+    if (!x) return;
+    const num = x.length - 18;
+    const y = x.substring((x.length - 18), 18);
+    let z = x.substring(0, num);
+    z = z.replace('.', '');
+    return `${z}.${y}`;
+  }
+
+  const t0 = pair?.token0;
+  const t1 = pair?.token1;
+
+  const t0symbol = t0?.symbol;
+  const t1symbol = t1?.symbol;
+  let t0Deposited: any, t1Deposited: any;
+  if (t0symbol?.includes('ETH')) {
+    t0Deposited = transformBalance(token0Deposited?.raw?.toString())
+  } else {
+    t0Deposited = token0Deposited?.toSignificant(6)
+  }
+
+  if (t1symbol?.includes('ETH')) {
+    t1Deposited = transformBalance(token1Deposited?.raw?.toString())
+  } else {
+    t1Deposited = token1Deposited?.toSignificant(6)
+  }
 
   const backgroundColor = useColor(pair?.token0)
 
@@ -250,7 +286,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token0Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token0Deposited?.toSignificant(6)}
+                    {returnNumberDecimals(t0Deposited, 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
@@ -268,7 +304,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token1Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token1Deposited?.toSignificant(6)}
+                    {returnNumberDecimals(t1Deposited, 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>

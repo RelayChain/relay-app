@@ -54,12 +54,7 @@ export default function ConfirmTransferModal({
   tokenTransferState,
 }: ConfirmTransferProps) {
 
-  const {crosschainTransferStatus, swapDetails, depositConfirmed} = useCrosschainState()
-  useEffect(()=>{
-    if(crosschainTransferStatus === ChainTransferState.ApprovalComplete){
-      changeTransferState(ChainTransferState.ApprovalComplete)
-    }
-  }, [crosschainTransferStatus])
+  const { currentToken, transferAmount } = useCrosschainState();
 
   const [ title, setTitle ] = useState('');
   useEffect(() => {
@@ -91,9 +86,6 @@ export default function ConfirmTransferModal({
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <h5>{title}</h5>
-        <span>swapDetails status {swapDetails.status}</span>
-        <span>swapDetails voteCount {String(swapDetails.voteCount)}</span>
-        <span>depositConfirmed {depositConfirmed?"true":"false"}</span>
 
       {tokenTransferState === ChainTransferState.NotStarted &&
         <NotStarted
@@ -104,7 +96,8 @@ export default function ConfirmTransferModal({
           trade={trade}
           changeTransferState={changeTransferState}
           tokenTransferState={tokenTransferState}
-        />}
+        />
+      }
 
       { tokenTransferState === ChainTransferState.ApprovalPending &&
         <ApprovalPending />
@@ -127,7 +120,8 @@ export default function ConfirmTransferModal({
           activeChain={activeChain}
           transferTo={transferTo}
           onDismiss={onDismiss}
-          trade={trade}
+          currentToken={currentToken}
+          transferAmount={transferAmount}
         />
       }
       </ModalContainer>

@@ -5,7 +5,6 @@ import {
   CrosschainChain,
   CrosschainToken,
   ProposalStatus,
-  SwapDetails,
   setAvailableChains,
   setAvailableTokens,
   setCrosschainDepositConfirmed,
@@ -17,22 +16,26 @@ import {
   setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
+  setPendingTransfer,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount
+  setTransferAmount,
 } from './actions'
 import store, { AppDispatch, AppState } from '../index'
-import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Bridge } from '@chainsafe/chainbridge-contracts/dist/ethers/Bridge'
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
+import { useEffect } from 'react'
+import useGasPrice from 'hooks/useGasPrice'
+
+// import { afterWrite } from '@popperjs/core'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
+const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
 var dispatch: AppDispatch
 var web3React: any
@@ -65,7 +68,7 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
     name: '',
     chainID: ''
   }
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+  for (let chain of crosschainConfig.chains) {
     if (chain.name === currentChainName) {
       result = {
         name: chain.name,
@@ -73,7 +76,7 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         symbol: chain.nativeTokenSymbol
       }
     }
-  }))
+  }
   return result
 }
 
@@ -81,51 +84,61 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   if (typeof (chainID) === 'string') {
     chainID = Number(chainID)
   }
-  let result: BridgeConfig | undefined
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+  let result: BridgeConfig = {
+    chainId: -1,
+    networkId: -1,
+    name: "",
+    bridgeAddress: "",
+    erc20HandlerAddress: "",
+    rpcUrl: "",
+    tokens: [],
+    nativeTokenSymbol: "",
+    type: "Ethereum",
+  }
+  for (let chain of crosschainConfig.chains) {
     if (chain.chainId === chainID) {
       result = chain
     }
-  }))
-  if (!result) {
-    throw Error(`unknown id ${chainID}`)
   }
   return result
 }
 
 export function GetTokenByAddress(address: string): TokenConfig {
-  let result: TokenConfig | undefined
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
-    chain.tokens.map((token: TokenConfig) => {
+  let result: TokenConfig = {
+    address: '',
+    decimals: 18,
+    resourceId: '',
+    assetBase: ''
+  }
+  for (let chain of crosschainConfig.chains) {
+    for (let token of chain.tokens) {
       if (token.address === address) {
         result = token
+        return result;
       }
-    })
-  }))
-  if (!result) {
-    throw Error(`unknown id ${address}`)
+    }
   }
   return result
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+  for (let chain of crosschainConfig.chains) {
     if (chain.name !== currentChainName) {
       result.push({
         name: chain.name,
         chainID: String(chain.chainId)
       })
     }
-  }))
+  }
   return result
 }
 
 function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   const result: Array<CrosschainToken> = []
-  crosschainConfig.chains.map(((chain: BridgeConfig) => {
+  for (let chain of crosschainConfig.chains) {
     if (chain.name === chainName) {
-      chain.tokens.map((token: TokenConfig) => {
+      for (let token of chain.tokens) {
         const t = {
           chainId: chain.chainId,
           address: token.address,
@@ -138,9 +151,9 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
           assetBase: token.assetBase
         }
         result.push(t)
-      })
+      }
     }
-  }))
+  }
   return result
 }
 
@@ -150,6 +163,8 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.RINKEBY) {
     return 'Ethereum'
   } else if (chainID === ChainId.FUJI) {
+    return 'Avalanche'
+  } else if (chainID === ChainId.AVALANCHE) {
     return 'Avalanche'
   }
   return ''
@@ -177,19 +192,31 @@ export function useCrosschainHooks() {
     dispatch(setCrosschainDepositConfirmed({
       confirmed: false
     }))
+
+    dispatch(setPendingTransfer({
+      pendingTransfer: {}
+    }))
+
+  }
+
+  const getNonce = async (): Promise<number> => {
+    return await web3React.library.getSigner().getTransactionCount()
   }
 
   const MakeDeposit = async () => {
+
+    dispatch(setCrosschainTransferStatus({
+      status: ChainTransferState.TransferPending
+    }))
+
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
     const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
-
+    const currentGasPrice = await useGasPrice();
     dispatch(setCurrentTxID({
       txID: ''
     }))
-
-    // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
 
@@ -206,12 +233,18 @@ export function useCrosschainHooks() {
         .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
         .substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-
+    const gasPriceFromChain = (targetChain.chainId === 2) ?
+      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
+      utils.parseUnits(currentGasPrice, 0)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
-      gasLimit: '800000',
+      gasLimit: '250000',
       value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
-    }).catch(console.error)
+      gasPrice: gasPriceFromChain,
+      nonce: await getNonce()
+    }).catch((err: any) => {
+      console.log(err);
+      BreakCrosschainSwap();
+    })
 
     if (!resultDepositTx) {
       return
@@ -232,34 +265,50 @@ export function useCrosschainHooks() {
       txID: resultDepositTx.hash
     }))
     dispatch(setCrosschainTransferStatus({
-      status: ChainTransferState.TransferPending
+      status: ChainTransferState.TransferComplete
+    }))
+
+    const state = getCrosschainState();
+    const pendingTransfer = {
+      currentSymbol: state?.currentToken?.symbol,
+      targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
+      assetBase: state?.currentToken?.assetBase,
+      amount: state?.transferAmount,
+      decimals: state?.currentToken?.decimals,
+      name: state?.targetChain?.name,
+      address: state?.currentToken?.address,
+      status: state?.swapDetails?.status,
+      votes: state?.swapDetails?.voteCount,
+    }
+
+    dispatch(setPendingTransfer({
+      pendingTransfer,
     }))
 
     UpdateOwnTokenBalance().catch(console.error)
 
-    {
-      while (true) {
-        try {
-          await delay(5000);
-          const web3TargetChain = new Web3(targetChain.rpcUrl)
-          const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
-          const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce, web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
-          dispatch(setCrosschainSwapDetails({
-            details: {
-              status: proposal._status,
-              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
-            }
-          }))
-          if (proposal && proposal._status == ProposalStatus.EXECUTED) {
-            dispatch(setCrosschainTransferStatus({
-              status: ChainTransferState.TransferComplete
-            }))
-            break
+    while (true) {
+      try {
+        await delay(5000);
+        const web3TargetChain = new Web3(targetChain.rpcUrl)
+        const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
+        const proposal = await destinationBridge.methods.getProposal(currentChain.chainId, nonce, web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))).call().catch()
+        dispatch(setCrosschainSwapDetails({
+          details: {
+            status: proposal._status,
+            voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
           }
-        } catch (e) {
-          console.error(e)
+        }))
+
+        if (proposal && proposal._status === ProposalStatus.EXECUTED) {
+          await delay(5000);
+          BreakCrosschainSwap();
         }
+
+      } catch (e) {
+        console.error(e)
       }
+
     }
   }
 
@@ -267,7 +316,7 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
-
+    const currentGasPrice = await useGasPrice();
     dispatch(setCurrentTxID({
       txID: ''
     }))
@@ -275,49 +324,63 @@ export function useCrosschainHooks() {
       status: ChainTransferState.NotStarted
     }))
 
+    const gasPriceFromChain = (currentChain.chainId === 2) ?
+      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
+      utils.parseUnits(currentGasPrice, 0)
+
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    const resultApproveTx = await tokenContract.approve(
-      currentChain.erc20HandlerAddress,
-      WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
-      gasLimit: '300000',
-      gasPrice: utils.parseUnits(String(currentChain.defaultGasPrice || 30), 9)
-    })
+    // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
+    const ABI = currentToken.address === "0xdAC17F958D2ee523a2206206994597C13D831ec7" ? USDTTokenABI : TokenABI
+    const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
+    tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
+      gasLimit: '70000',
+      gasPrice: gasPriceFromChain,
+      nonce: await getNonce()
+    }).then((resultApproveTx: any) => {
+      dispatch(setCrosschainTransferStatus({
+        status: ChainTransferState.ApprovalPending
+      }))
+      dispatch(setCurrentTxID({
+        txID: resultApproveTx.hash
+      }))
 
-    dispatch(setCrosschainTransferStatus({
-      status: ChainTransferState.ApprovalPending
-    }))
-    dispatch(setCurrentTxID({
-      txID: resultApproveTx.hash
-    }))
+      resultApproveTx.wait().then(() => {
+        let crosschainState = getCrosschainState()
+        const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        return tokenContract.allowance(crosschainState.currentRecipient,
+          currentChain.erc20HandlerAddress)
+      }).then((approvedAmount: any) => {
+        const crosschainState2 = getCrosschainState()
+        console.log("🚀 ~ file: hooks.ts ~ line 357 ~ resultApproveTx.wait ~ approvedAmount", approvedAmount)
+console.log('crosschainState2.currentTxID === resultApproveTx.hash :>> ', crosschainState2.currentTxID, resultApproveTx.hash);
+        if (crosschainState2.currentTxID === resultApproveTx.hash) {
 
-    resultApproveTx.wait().then(() => {
-      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-      const amount = tokenContract.allowance(crosschainState.currentRecipient,
-        currentChain.erc20HandlerAddress)
-      return amount;
-    }).then((approvedAmount: any) => {
-      const crosschainState2 = getCrosschainState()
+          const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
+            crosschainState2.transferAmount, currentToken.decimals))
+          console.log("🚀 ~ file: hooks.ts ~ line 361 ~ resultApproveTx.wait ~ countTokenForTransfer", countTokenForTransfer)
+          if (countTokenForTransfer.gte(approvedAmount)) {
+            console.log('countTokenForTransfer.gte(approvedAmount) :>> ', countTokenForTransfer.gte(approvedAmount));
+            dispatch(setCurrentTxID({
+              txID: ''
+            }))
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.ApprovalComplete
+            }))
 
-      if (crosschainState2.currentTxID === resultApproveTx.hash) {
-        const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
-          crosschainState2.transferAmount, currentToken.decimals))
-        if (countTokenForTransfer.gte(approvedAmount)) {
-          dispatch(setCurrentTxID({
-            txID: ''
-          }))
-          dispatch(setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalComplete
-          }))
-        } else {
-          dispatch(setCrosschainTransferStatus({
-            status: ChainTransferState.NotStarted
-          }))
+          } else {
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.NotStarted
+            }))
+          }
         }
       }
-    }
-    )
+      ).catch((err: any) => {
+        BreakCrosschainSwap();
+      });
+    }).catch((err: any) => {
+      BreakCrosschainSwap();
+    });
   }
 
   const UpdateOwnTokenBalance = async () => {
@@ -360,17 +423,11 @@ export function useCrosschainHooks() {
 export function useCrossChain() {
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
+
   const {
-    currentRecipient,
-    currentTxID,
-    availableChains,
-    availableTokens,
     currentChain,
+    targetChain,
     currentToken,
-    currentBalance,
-    transferAmount,
-    crosschainFee,
-    targetChain
   } = useCrosschainState()
 
   const { UpdateOwnTokenBalance, UpdateFee } = useCrosschainHooks()
@@ -381,18 +438,7 @@ export function useCrossChain() {
   const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
-    const {
-      currentRecipient,
-      currentTxID,
-      availableChains,
-      availableTokens,
-      currentChain,
-      currentToken,
-      currentBalance,
-      transferAmount,
-      crosschainFee,
-      targetChain
-    } = getCrosschainState()
+
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     const currentChainName = GetChainNameById(chainId || -1)
@@ -427,7 +473,7 @@ export function useCrossChain() {
         address: '',
         assetBase: '',
         symbol: '',
-        decimals: 18,
+        decimals: 18
       }
     }))
     dispatch(setTransferAmount({ amount: '' }))
@@ -445,7 +491,7 @@ export function useCrossChain() {
     dispatch(setAvailableTokens({
       tokens: GetAvailableTokens(currentChain.name)
     }))
-  }, [targetChain])
+  }, [targetChain, account, currentChain])
 
   // to address
   useEffect(() => {

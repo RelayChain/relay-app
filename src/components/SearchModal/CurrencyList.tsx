@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -105,6 +105,8 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.00001 ?
+                      true : false
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
@@ -150,7 +152,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+        {balance && hasABalance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
   )
@@ -173,7 +175,11 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+
+  const { chainId } = useActiveWeb3React()
+
+  const nativeToken = chainId === ChainId.MAINNET ? Currency.ETHER : Currency.AVAX
+  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [currencies, showETH, nativeToken])
 
   const Row = useCallback(
     ({ data, index, style }) => {

@@ -1,15 +1,15 @@
+import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Row, { RowBetween } from '../Row'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
+import { DEFAULT_TOKEN_LIST } from '../../constants/DefaultTokenList';
 import { FixedSizeList } from 'react-window'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
@@ -22,6 +22,7 @@ import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
+import { useToken } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 
@@ -53,7 +54,6 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
-  const allTokens = useAllTokens()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
@@ -62,12 +62,19 @@ export function CurrencySearch({
   // cross chain
   const {
     availableTokens,
-    currentChain,
-    targetChain,
-    targetTokens,
   } = useCrosschainState()
 
   const availableTokensArray = availableTokens.map((x: any) => {
+    return new Token(
+      x.chainId,
+      x.address,
+      x.decimals,
+      x.symbol,
+      x.name
+    )
+  });
+
+  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
     return new Token(
       x.chainId,
       x.address,
@@ -96,8 +103,8 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(Object.values(allTokens), searchQuery)
-  }, [isAddressSearch, searchToken, allTokens, searchQuery])
+    return filterTokens(chainId === ChainId.MAINNET ? defaultTokenList : availableTokensArray, searchQuery)
+  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
@@ -114,7 +121,7 @@ export function CurrencySearch({
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
-  }, [filteredTokens, searchQuery, searchToken, tokenComparator, isCrossChain, availableTokens])
+  }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -200,7 +207,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={ isCrossChain ? false : showETH }
+              showETH={ (isCrossChain || chainId !== ChainId.MAINNET)  ? false : showETH }
               currencies={ !isCrossChain ? filteredSortedTokens : availableTokensArray }
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

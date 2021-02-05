@@ -1,9 +1,9 @@
+import { ButtonSecondary, ButtonUNIGradient } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
-import { ButtonUNIGradient } from '../../components/Button'
+import { ChainId } from '@zeroexchange/sdk';
 //import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
+import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,11 +22,17 @@ const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
 `
-
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
+const ResponsiveButtonSecondary = styled(ButtonSecondary)`
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 48%;
+  `};
 `
+
+// const TopSection = styled(AutoColumn)`
+//   max-width: 720px;
+//   width: 100%;
+// `
 
 const PoolSection = styled.div`
   display: grid;
@@ -54,11 +61,55 @@ const VoteCard = styled(DataCard)`
 // `
 
 export default function Earn() {
+
+  // get chainId
   const { chainId } = useActiveWeb3React()
+
+  const pools = {
+    [ChainId.MAINNET]: [
+      {
+        baseSymbol: 'ETH',
+        baseAddress: 'ETH',
+        otherSymbol: 'ZERO',
+        otherAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
+      }
+    ],
+    [ChainId.AVALANCHE]: [
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'zETH',
+        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'USDC',
+        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        otherSymbol: 'AVAX',
+        otherAddress: 'AVAX'
+      },
+      {
+        baseSymbol: 'AVAX',
+        baseAddress: 'AVAX',
+        otherSymbol: 'USDC',
+        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
+      },
+      {
+        baseSymbol: 'AVAX',
+        baseAddress: 'AVAX',
+        otherSymbol: 'zETH',
+        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
+      }
+    ]
+  }
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()
-
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
@@ -83,24 +134,37 @@ export default function Earn() {
                 {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
               </TYPE.white>
             </RowBetween>
+            <div style={{ display: 'block', width: '100%'}}>
+              <h3 style={{ marginBottom: '.5rem'}}>Add Liquidity:</h3>
+              { chainId && pools[chainId] &&
+                pools[chainId].map((pool: any, index: number) => <>
+                  <ButtonUNIGradient
+                    key={index}
+                    id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
+                    as={Link}
+                    to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
+                    style={{ margin: '1rem .5rem', display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}
+                  >
+                    <Text fontWeight={500} fontSize={14}>
+                      {`${pool.baseSymbol}/${pool.otherSymbol}`}
+                    </Text>
+                  </ButtonUNIGradient>
+                </>)
+              }
+            </div>
           </AutoColumn>
-          <ButtonUNIGradient
-            id="join-pool-button"
-            as={Link}
-            padding="6px 8px"
-            to="/add/ETH/0xF0939011a9bb95c3B791f0cb546377Ed2693a574"
-            style={{ margin: '20px 0px 0px auto' }}
-          >
-            <Text fontWeight={500} fontSize={16}>
-              Add ETH/ZERO Liquidity
-            </Text>
-          </ButtonUNIGradient>
         </CardSection>
         <CardBGImage />
         <CardNoise />
       </VoteCard>
 
-      <TopSection gap="md">
+      <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
+        <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '5px 5px 5px auto' }}>
+          Create New Pool Pair
+        </ResponsiveButtonSecondary>
+      </RowBetween>
+
+      {/*<TopSection gap="md">
         <DataCard>
           <CardBGImage />
           <CardNoise />
@@ -126,7 +190,7 @@ export default function Earn() {
           <CardBGImage />
           <CardNoise />
         </DataCard>
-      </TopSection>
+      </TopSection>*/}
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
@@ -144,7 +208,7 @@ export default function Earn() {
           ) : (
             stakingInfosWithBalance?.map(stakingInfo => {
               // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
             })
           )}
         </PoolSection>

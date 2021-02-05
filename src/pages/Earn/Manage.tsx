@@ -1,6 +1,6 @@
+import { AVAX, ChainId, ETHER, JSBI, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { ETHER, JSBI, Pair, TokenAmount } from '@zeroexchange/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
@@ -129,8 +129,8 @@ export default function Manage({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER ? tokenB : tokenA
-  const WETH = currencyA === ETHER ? tokenA : tokenB
+  const token = (currencyA === ETHER || currencyA === AVAX) ? tokenB : tokenA
+  const WETH = (currencyA === ETHER || currencyA === AVAX) ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -213,11 +213,17 @@ export default function Manage({
     )
   })
 
+  const showMe = (pair: any) => {
+    return pair?.token0?.symbol === stakingTokenPair?.token0?.symbol &&
+           pair?.token1?.symbol === stakingTokenPair?.token1?.symbol
+  }
+
+  const symbol = WETH?.symbol
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
+          {currencyA?.symbol}/{currencyB?.symbol} Liquidity Mining
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -229,7 +235,7 @@ export default function Manage({
             <TYPE.body fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInUSDC
                 ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -269,7 +275,7 @@ export default function Manage({
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
-                {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
+                {`Add ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
@@ -277,6 +283,18 @@ export default function Manage({
           <CardNoise />
         </VoteCard>
       )}
+
+      {!showAddLiquidityButton && stakingInfo &&
+        <ButtonPrimary
+          padding="8px"
+          borderRadius="8px"
+          width={'fit-content'}
+          as={Link}
+          to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+        >
+          {`Add more ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
+        </ButtonPrimary>
+      }
 
       {stakingInfo && (
         <>
@@ -381,12 +399,9 @@ export default function Manage({
           </EmptyProposals>
         ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
           <>
-            {v2PairsWithoutStakedAmount.map(v2Pair => (
-              <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-            ))}
             {stakingPairs.map(
               (stakingPair, i) =>
-                stakingPair[1] && ( // skip pairs that arent loaded
+                stakingPair[1] && showMe(stakingPair[1]) && (
                   <FullPositionCard
                     key={stakingInfosWithBalance[i].stakingRewardAddress}
                     pair={stakingPair[1]}
@@ -434,7 +449,20 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} ZERO LP tokens available</TYPE.main>
+          <div>
+            <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} ZERO LP tokens available</TYPE.main>
+            <DataRow style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                width={'fit-content'}
+                as={Link}
+                to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+              >
+                Remove Liquidity
+              </ButtonPrimary>
+            </DataRow>
+          </div>
         )}
       </PositionInfo>
     </PageWrapper>

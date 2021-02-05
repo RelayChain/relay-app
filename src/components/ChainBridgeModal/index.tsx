@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react'
-
-import AutoSizer from 'react-virtualized-auto-sizer'
 import ChainBridgeItem from './ChainBridgeItem';
-import { ChainTransferState } from '../../state/crosschain/actions'
 import { CloseIcon } from '../../theme/components'
-import { Currency } from '@zeroexchange/sdk'
-import CurrencyLogo from '../CurrencyLogo';
 import Modal from '../Modal'
+import React from 'react'
 import { RowBetween } from '../Row'
-import { Trade } from '@zeroexchange/sdk'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 
@@ -43,10 +37,9 @@ const ListContainer = styled.div`
 export default function ChainBridgeModal({
   isOpen,
   onDismiss,
-  pendingTransfer,
 }: ChainBridgeProps) {
 
-  const {crosschainTransferStatus} = useCrosschainState()
+  const { pendingTransfer } = useCrosschainState();
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
@@ -55,7 +48,7 @@ export default function ChainBridgeModal({
         <div />
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
-      <h5>Pending Cross-Chain Transfers:</h5>
+      <h5>Pending Cross-Chain Transfer:</h5>
       <ListContainer>
         <ChainBridgeItem item={pendingTransfer}>
         </ChainBridgeItem>

@@ -226,15 +226,17 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
   [ChainId.FUJI]: 'Avalanche',
+  [ChainId.AVALANCHE]: 'Avalanche',
+  [ChainId.MAINNET]: 'Ethereum'
 }
 
 const NETWORK_SYMBOLS: any = {
-  ['Ethereum']: 'ETH',
-  ['Rinkeby']: 'ETH',
-  ['Ropsten']: 'ETH',
-  ['Görli']: 'ETH',
-  ['Kovan']: 'ETH',
-  ['Avalanche']: 'AVAX'
+  Ethereum: 'ETH',
+  Rinkeby: 'ETH',
+  Ropsten: 'ETH',
+  Görli: 'ETH',
+  Kovan: 'ETH',
+  Avalanche: 'AVAX'
 }
 
 export default function Header() {

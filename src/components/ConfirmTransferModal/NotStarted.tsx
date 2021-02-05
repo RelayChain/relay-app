@@ -6,6 +6,7 @@ import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
 import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
+import CurrencyLogo from '../CurrencyLogo';
 import React from 'react'
 import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
@@ -78,7 +79,9 @@ export default function NotStarted ({
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <BlockchainLogo size="24px" blockchain={currency?.symbol} style={{ marginBottom: '-3px', marginRight: '12px' }} />
+          {currency &&
+            <CurrencyLogo size="24px" currency={currency} style={{ marginBottom: '-3px', marginRight: '12px' }} />
+          }
           <TruncatedText
             fontSize={24}
             fontWeight={500}

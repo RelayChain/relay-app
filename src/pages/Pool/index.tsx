@@ -1,7 +1,7 @@
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ChainId, JSBI, Pair } from '@zeroexchange/sdk'
 import { ExternalLink, HideSmall, StyledInternalLink, TYPE } from '../../theme'
-import { JSBI, Pair } from '@zeroexchange/sdk'
 import React, { useContext, useMemo } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
 import styled, { ThemeContext } from 'styled-components'
@@ -75,7 +75,7 @@ const EmptyProposals = styled.div`
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -161,7 +161,7 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH" style={{ margin: '10px' }}>
+                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '10px' }}>
                   Create a pair
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH" style={{ margin: '10px' }}>
@@ -186,14 +186,16 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                <ButtonSecondary>
-                  <RowBetween>
-                    <ExternalLink href={'https://uniswap.info/account/' + account}>
-                      Account analytics and accrued fees
-                    </ExternalLink>
-                    <span> ↗</span>
-                  </RowBetween>
-                </ButtonSecondary>
+                { chainId && chainId === ChainId.MAINNET && 
+                  <ButtonSecondary>
+                    <RowBetween>
+                      <ExternalLink href={'https://uniswap.info/account/' + account}>
+                        Account analytics and accrued fees
+                      </ExternalLink>
+                      <span> ↗</span>
+                    </RowBetween>
+                  </ButtonSecondary>
+                }
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

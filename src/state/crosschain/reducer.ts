@@ -2,6 +2,7 @@ import {
   ChainTransferState,
   CrosschainChain,
   CrosschainToken,
+  PendingTransfer,
   ProposalStatus,
   SwapDetails,
   setAvailableChains,
@@ -15,11 +16,13 @@ import {
   setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
+  setPendingTransfer,
   setTargetChain,
   setTargetTokens,
   setTransferAmount
 } from './actions'
-import { createAction, createReducer } from '@reduxjs/toolkit'
+
+import { createReducer } from '@reduxjs/toolkit'
 
 export interface CrosschainState {
   readonly currentRecipient: string
@@ -36,6 +39,7 @@ export interface CrosschainState {
   readonly crosschainTransferStatus: ChainTransferState
   readonly swapDetails: SwapDetails
   readonly depositConfirmed: boolean
+  readonly pendingTransfer: PendingTransfer
 }
 
 export const initialState: CrosschainState = {
@@ -67,7 +71,8 @@ export const initialState: CrosschainState = {
     status: ProposalStatus.INACTIVE,
     voteCount: 0
   },
-  depositConfirmed: false
+  depositConfirmed: false,
+  pendingTransfer: {}
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -77,6 +82,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
       return {
         ...currentState,
         currentRecipient: address
+      }
+    })
+    .addCase(setPendingTransfer, (state, { payload: { pendingTransfer } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        pendingTransfer,
       }
     })
     .addCase(setCurrentTxID, (state, { payload: { txID } }) => {

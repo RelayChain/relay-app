@@ -85,7 +85,7 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
         address = '0x59F49F35495854023983C877A7781eAb3A63A0f2'
         break
       case ChainId.AVALANCHE:
-        address = '0xd2b4cD0966D08fE000CED7B73DFcbD2Ec000759F'
+        address = '0x59F49F35495854023983C877A7781eAb3A63A0f2'
         break
     }
   }

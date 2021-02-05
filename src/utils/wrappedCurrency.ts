@@ -1,7 +1,10 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
+import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH[chainId] : currency instanceof Token ? currency : undefined
+  return chainId && currency === ETHER ? WETH[chainId] :
+    chainId && currency === AVAX ? WETH[chainId] :
+      currency instanceof Token ? currency :
+        undefined
 }
 
 export function wrappedCurrencyAmount(
@@ -12,7 +15,8 @@ export function wrappedCurrencyAmount(
   return token && currencyAmount ? new TokenAmount(token, currencyAmount.raw) : undefined
 }
 
-export function unwrappedToken(token: Token): Currency {
-  if (token.equals(WETH[token.chainId])) return ETHER
+export function unwrappedToken(token: Token, chainId?: ChainId): Currency {
+  if (token.equals(WETH[token.chainId]) && chainId === ChainId.MAINNET) return ETHER
+  if (token.equals(WETH[token.chainId]) && chainId === ChainId.AVALANCHE) return AVAX
   return token
 }

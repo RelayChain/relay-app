@@ -4,7 +4,6 @@ import { CheckCircle } from 'react-feather'
 import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
-import { Trade } from '@zeroexchange/sdk'
 import styled from 'styled-components'
 
 const Message = styled.p`
@@ -22,12 +21,14 @@ const Message = styled.p`
   }
 `
 
-export default function TransferComplete ({ onDismiss, activeChain, transferTo, trade }: {
+export default function TransferComplete ({ onDismiss, activeChain, transferTo, transferAmount, currentToken }: {
   onDismiss: () => void;
   activeChain?: string;
   transferTo?: string;
-  trade?: Trade
+  transferAmount?: string;
+  currentToken?: any;
 }) {
+
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -35,9 +36,14 @@ export default function TransferComplete ({ onDismiss, activeChain, transferTo, 
         <CheckCircle size={'66'} style={{ margin: '.5rem', color: '#27AE60' }} />
       </RowFixed>
       <RowFixed style={{ width: '100%', marginTop: '1rem'}}>
-        <Text fontSize={16} textAlign="center" style={{ lineHeight: "20px"}}>
-          <b>{trade?.inputAmount.toSignificant(6)} {trade?.inputAmount.currency.symbol} </b> 
-          tokens were successfully transferred from {activeChain} to {transferTo}.
+        <Text fontSize={17} textAlign="center" style={{ lineHeight: "20px"}}>
+          <b>{transferAmount} {currentToken?.symbol} </b>
+          tokens were successfully transferred into the ChainBridge, and are now being sent from {activeChain} to {transferTo}.
+        </Text>
+      </RowFixed>
+      <RowFixed style={{ width: '100%'}}>
+        <Text fontSize={17} textAlign="center" style={{ lineHeight: "20px"}}>
+          Santa's reindeer are busy relaying the transaction across the chains, this process can sometimes take up to 15 minutes.
         </Text>
       </RowFixed>
       <RowFixed>

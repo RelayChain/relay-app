@@ -1,13 +1,16 @@
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
 
+import AvaxLogo from '../../assets/images/avax-logo.png'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
+import DAILogo from '../../assets/images/crosschain/wDAI.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
 import USDTLogo from '../../assets/images/crosschain/wUSDT.png'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import ZBTCLogo from '../../assets/images/crosschain/zBTC.png'
+import ZDAILogo from '../../assets/images/crosschain/zDAI.png'
 import ZETHLogo from '../../assets/images/crosschain/zETH.png'
 import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
 import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
@@ -62,18 +65,29 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 
+  if (currency?.symbol === 'AVAX' ||
+      currency?.symbol === 'WAVAX' ||
+      currency?.symbol === 'wAVAX' ||
+      currency?.symbol === 'AVA' ||
+      currency?.symbol === 'eAVAX') {
+    return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
+  }
+
   // cross chain
   if (currency?.symbol === 'ETH' || currency?.symbol === 'wETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDT') {
+  if (currency?.symbol === 'USDT'|| currency?.symbol === 'wUSDT') {
     return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDC') {
+  if (currency?.symbol === 'USDC'|| currency?.symbol === 'wUSDC') {
     return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
   }
   if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {
     return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
+  }
+  if (currency?.symbol === 'DAI' || currency?.symbol === 'wDAI') {
+    return <StyledEthereumLogo src={DAILogo} size={size} style={style} />
   }
 
   if (currency?.symbol === 'zETH') {
@@ -87,6 +101,10 @@ export default function CurrencyLogo({
   }
   if (currency?.symbol === 'zBTC') {
     return <StyledEthereumLogo src={ZBTCLogo} size={size} style={style} />
+  }
+
+  if (currency?.symbol === 'zDAI') {
+    return <StyledEthereumLogo src={ZDAILogo} size={size} style={style} />
   }
 
   if (currency && currency.symbol === 'ZERO') {

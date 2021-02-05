@@ -39,6 +39,18 @@ export interface SwapDetails {
   voteCount: number
 }
 
+export interface PendingTransfer {
+  currentSymbol?: string,
+  targetSymbol?: string,
+  assetBase?: string,
+  amount?: string,
+  decimals?: number,
+  name?: string,
+  address?: string,
+  status?: string,
+  votes?: number,
+}
+
 export const setCrosschainRecipient = createAction<{ address: string }>('crosschain/set-recipient')
 export const setCurrentTxID = createAction<{ txID: string }>('crosschain/set-currentTxID')
 export const setAvailableChains = createAction<{ chains: Array<CrosschainChain> }>('crosschain/set-availableChains')
@@ -53,3 +65,4 @@ export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-
 export const setCrosschainTransferStatus = createAction<{ status: ChainTransferState }>('crosschain/set-transfer-status')
 export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }>('crosschain/set-deposit-confirmed')
 export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
+export const setPendingTransfer = createAction<{ pendingTransfer: PendingTransfer }>('crosschain/set-pending-transfer')
