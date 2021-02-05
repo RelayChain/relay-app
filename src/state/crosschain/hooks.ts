@@ -238,7 +238,7 @@ export function useCrosschainHooks() {
       utils.parseUnits(currentGasPrice, 0)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '250000',
-      value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
+      value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
       gasPrice: gasPriceFromChain,
       nonce: await getNonce()
     }).catch((err: any) => {
