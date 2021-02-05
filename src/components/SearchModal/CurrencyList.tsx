@@ -105,6 +105,8 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.00001 ?
+                      true : false
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
@@ -150,7 +152,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+        {balance && hasABalance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
   )

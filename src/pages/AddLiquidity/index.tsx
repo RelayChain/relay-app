@@ -129,8 +129,6 @@ export default function AddLiquidity({
 
     const router = getRouterContract(chainId, library, account)
 
-    console.log("ROUTER CONTRACT ===== ", router);
-
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
       return
@@ -146,7 +144,6 @@ export default function AddLiquidity({
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER || currencyA === AVAX || currencyB === AVAX) {
-      console.log("CURRENCY IS NATIIVE, INSIDE ====== ");
       const tokenBIsETH = (currencyB === ETHER || currencyB === AVAX)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
@@ -175,8 +172,6 @@ export default function AddLiquidity({
       value = null
     }
 
-    console.log("ABOUT TO ESTIMATE GAS ===== ", args, value);
-
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) => {
@@ -188,8 +183,6 @@ export default function AddLiquidity({
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(gas)
         }).then(response => {
-
-          console.log("RESPONSE ====== ", response);
 
           setAttemptingTxn(false)
 
@@ -215,7 +208,6 @@ export default function AddLiquidity({
         })
       })
       .catch(error => {
-        console.log("ESTIMATE ERROR ====== ", error);
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
