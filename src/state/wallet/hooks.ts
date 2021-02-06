@@ -1,4 +1,4 @@
-import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
@@ -16,7 +16,8 @@ import { useUserUnclaimedAmount } from '../claim/hooks'
  */
 
 export function useETHBalances(
-  uncheckedAddresses?: (string | undefined)[]
+  uncheckedAddresses?: (string | undefined)[],
+  chainId?: ChainId
 ): { [address: string]: CurrencyAmount | undefined } {
   const multicallContract = useMulticallContract()
 
@@ -41,7 +42,7 @@ export function useETHBalances(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results ?.[i] ?.result ?.[0]
-        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
+        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()), chainId)
         return memo
       }, {}),
     [addresses, results]
@@ -101,7 +102,8 @@ export function useTokenBalance(account?: string, token?: Token): TokenAmount | 
 
 export function useCurrencyBalances(
   account?: string,
-  currencies?: (Currency | undefined)[]
+  currencies?: (Currency | undefined)[],
+  chainId?: (ChainId | undefined)
 ): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(() => currencies ?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
     currencies
@@ -109,7 +111,7 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
   // const containsETH: boolean = useMemo(() => currencies ?.some(currency => currency === ETHER) ?? false, [currencies])
-  const ethBalance = useETHBalances(account ? [account] : [])
+  const ethBalance = useETHBalances(account ? [account] : [], chainId)
   // const ethBalance = useETHBalances(account ? [account] : []) ?.[account ?? '']
 
   return useMemo(
@@ -124,8 +126,8 @@ export function useCurrencyBalances(
   )
 }
 
-export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount | undefined {
-  return useCurrencyBalances(account, [currency])[0]
+export function useCurrencyBalance(account?: string, currency?: Currency, chainId?: ChainId): CurrencyAmount | undefined {
+  return useCurrencyBalances(account, [currency], chainId)[0]
 }
 
 // mimics useAllBalances

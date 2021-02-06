@@ -289,7 +289,7 @@ export default function Swap() {
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
 
-  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade, chainId)
 
   const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
@@ -541,6 +541,7 @@ export default function Swap() {
               onConfirm={handleSwap}
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
+              chainId={chainId}
             />
 
             <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} />
@@ -786,7 +787,7 @@ export default function Swap() {
         </ChainBridgePending> : ''
       }
 
-      { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} />}
+      { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
 
     </>
   )

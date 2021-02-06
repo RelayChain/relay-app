@@ -24,6 +24,7 @@ import { currencyId } from '../../utils/currencyId'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { useCurrency } from '../../hooks/Tokens'
+import { useHistory } from 'react-router';
 import { usePair } from '../../data/Reserves'
 import { usePairs } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
@@ -108,7 +109,7 @@ export default function Manage({
   const { account, chainId } = useActiveWeb3React()
 
   const theme = useContext(ThemeContext)
-
+  let history = useHistory();
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
@@ -176,6 +177,8 @@ export default function Manage({
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
+
+
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
@@ -187,9 +190,9 @@ export default function Manage({
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
+      tokenPairsWithLiquidityTokens?.filter(({ liquidityToken }) => {
+        v2PairsBalances[liquidityToken?.address]?.greaterThan('0')
+      }),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 

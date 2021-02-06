@@ -244,7 +244,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   let label, symbol = '';

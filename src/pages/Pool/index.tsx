@@ -186,7 +186,7 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                { chainId && chainId === ChainId.MAINNET && 
+                { chainId && chainId === ChainId.MAINNET &&
                   <ButtonSecondary>
                     <RowBetween>
                       <ExternalLink href={'https://uniswap.info/account/' + account}>
