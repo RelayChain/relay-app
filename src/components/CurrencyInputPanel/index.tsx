@@ -232,7 +232,7 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const hasABalance = selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 0.00001 ?
+  const hasABalance = selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 0.0000001 ?
                       true : false
 
   return (<>

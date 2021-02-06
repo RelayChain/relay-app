@@ -113,7 +113,7 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.00001 ?
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ?
                       true : false
   // only show add or remove buttons if not on selected list
   return (
