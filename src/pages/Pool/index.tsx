@@ -94,9 +94,11 @@ export default function Pool() {
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
+        if (liquidityToken) {
+          v2PairsBalances[liquidityToken?.address]?.greaterThan('0')
+        }
+      }),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
@@ -186,7 +188,7 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                { chainId && chainId === ChainId.MAINNET && 
+                { chainId && chainId === ChainId.MAINNET &&
                   <ButtonSecondary>
                     <RowBetween>
                       <ExternalLink href={'https://uniswap.info/account/' + account}>
