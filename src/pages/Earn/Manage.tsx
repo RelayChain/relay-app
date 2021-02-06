@@ -191,7 +191,9 @@ export default function Manage({
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens?.filter(({ liquidityToken }) => {
-        v2PairsBalances[liquidityToken?.address]?.greaterThan('0')
+        if (liquidityToken) {
+          v2PairsBalances[liquidityToken?.address]?.greaterThan('0')
+        }
       }),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
