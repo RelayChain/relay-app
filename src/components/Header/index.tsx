@@ -1,3 +1,4 @@
+import { Book, DollarSign, RefreshCw } from 'react-feather'
 import Row, { RowFixed } from '../Row'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
@@ -205,9 +206,9 @@ const StyledNavLink = styled(NavLink).attrs({
   color: ${({ theme }) => theme.text2};
   font-size: 1rem;
   width: fit-content;
-  margin: 0 12px;
+  margin: 0 16px;
   font-weight: 500;
-
+  transition: all .2s ease-in-out;
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
@@ -264,13 +265,19 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            <RefreshCw size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('swap')}
           </StyledNavLink>
           {/*<StyledNavLink id={`chain-nav-link`} to={'/chainbridge'}>
             {t('Chain Bridge')}
           </StyledNavLink>*/}
           <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
+            <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Earn')}
+          </StyledNavLink>
+          <StyledNavLink id={`guides-nav-link`} to={'/guides'}>
+            <Book size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
+            {t('Guides')}
           </StyledNavLink>
           {/*<StyledNavLink id={`pool-nav-link`} to={'/pool'}>
             {t('Pool')}
