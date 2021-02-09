@@ -16,6 +16,7 @@ import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Earn from './Earn'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import Guides from './Guides'
 import Header from '../components/Header'
 import Manage from './Earn/Manage'
 import MigrateV1 from './MigrateV1'
@@ -104,6 +105,7 @@ export default function App() {
               <Route exact strict path="/find" component={PoolFinder} />
               {/*<Route exact strict path="/pool" component={Pool} />*/}
               <Route exact strict path="/earn" component={Earn} />
+              <Route exact strict path="/guides" component={Guides} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />

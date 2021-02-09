@@ -41,10 +41,10 @@ export default function ChainBridgeModal({
 
   const { pendingTransfer } = useCrosschainState();
 
-  if (!pendingTransfer?.amount) {
-    onDismiss()
-  }
-  
+  // if (!pendingTransfer?.amount) {
+  //   onDismiss()
+  // }
+
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
       <ModalContainer>
@@ -52,11 +52,20 @@ export default function ChainBridgeModal({
         <div />
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
-      <h5>Pending Cross-Chain Transfer:</h5>
-      <ListContainer>
-        <ChainBridgeItem item={pendingTransfer}>
-        </ChainBridgeItem>
-      </ListContainer>
+      { pendingTransfer && pendingTransfer.amount ?
+        <>
+          <h5>Pending Cross-Chain Transfer:</h5>
+          <ListContainer>
+            <ChainBridgeItem item={pendingTransfer}>
+            </ChainBridgeItem>
+          </ListContainer>
+        </>
+        :
+        <>
+          <h5>No pending transfers</h5>
+        </>
+      }
+
       </ModalContainer>
     </Modal>
   )

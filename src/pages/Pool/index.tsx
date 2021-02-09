@@ -96,7 +96,7 @@ export default function Pool() {
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
         if (liquidityToken) {
-          v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+          v2PairsBalances[liquidityToken?.address]?.greaterThan('0')
         }
       }),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
