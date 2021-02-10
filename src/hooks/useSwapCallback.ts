@@ -162,6 +162,8 @@ export function useSwapCallback(
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
+                    console.log("******* call error", call);
+                    console.log("******* ERRR error", callError);
                     let errorMessage: string
                     switch (callError.reason) {
                       case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
@@ -172,6 +174,12 @@ export function useSwapCallback(
                       default:
                         errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.`
                     }
+
+                    // weird error on avax swaps
+                    if (callError && !callError.reason && callError.code === -32603) {
+                      errorMessage = `Please increase the slippage tolerance in your settings to execute this transaction. Also try clearing your browser cache and refreshing the page.`
+                    }
+
                     return { call, error: new Error(errorMessage) }
                   })
               })
