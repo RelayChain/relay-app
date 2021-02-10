@@ -94,11 +94,13 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const showETH: boolean = useMemo(() => {
-    const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+  // const showETH: boolean = useMemo(() => {
+  //   const s = searchQuery.toLowerCase().trim()
+  //   return s === '' || s === 'e' || s === 'et' || s === 'eth' || s.includes('ava')
+  // }, [searchQuery])
 
+  const showETH = true;
+  
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
@@ -207,7 +209,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={ (isCrossChain || chainId !== ChainId.MAINNET)  ? false : showETH }
+              showETH={ isCrossChain ? false : showETH }
               currencies={ !isCrossChain ? filteredSortedTokens : availableTokensArray }
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}
