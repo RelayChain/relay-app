@@ -95,13 +95,15 @@ function CurrencyRow({
   onSelect,
   isSelected,
   otherSelected,
-  style
+  style,
+  isEnd
 }: {
   currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
+  isEnd: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -116,9 +118,10 @@ function CurrencyRow({
   const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ?
                       true : false
   // only show add or remove buttons if not on selected list
+
   return (
     <MenuItem
-      style={style}
+      style={{ ...style, borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}` }}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
@@ -143,7 +146,8 @@ function CurrencyRow({
               </LinkStyledButton>
             </TYPE.main>
           ) : null}
-          {!isOnSelectedList && !customAdded ? (
+          {/* Fix this so (Add) works for Avax support */}
+          {!isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
@@ -160,7 +164,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance && hasABalance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+        {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
   )
@@ -202,6 +206,7 @@ export default function CurrencyList({
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={otherSelected}
+          isEnd={index === data.length - 1}
         />
       )
     },
