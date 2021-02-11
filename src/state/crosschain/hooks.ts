@@ -352,15 +352,11 @@ export function useCrosschainHooks() {
           currentChain.erc20HandlerAddress)
       }).then((approvedAmount: any) => {
         const crosschainState2 = getCrosschainState()
-        console.log("🚀 ~ file: hooks.ts ~ line 357 ~ resultApproveTx.wait ~ approvedAmount", approvedAmount)
-console.log('crosschainState2.currentTxID === resultApproveTx.hash :>> ', crosschainState2.currentTxID, resultApproveTx.hash);
         if (crosschainState2.currentTxID === resultApproveTx.hash) {
 
           const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
             crosschainState2.transferAmount, currentToken.decimals))
-          console.log("🚀 ~ file: hooks.ts ~ line 361 ~ resultApproveTx.wait ~ countTokenForTransfer", countTokenForTransfer)
           if (countTokenForTransfer.gte(approvedAmount)) {
-            console.log('countTokenForTransfer.gte(approvedAmount) :>> ', countTokenForTransfer.gte(approvedAmount));
             dispatch(setCurrentTxID({
               txID: ''
             }))

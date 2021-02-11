@@ -455,7 +455,8 @@ export default function Swap() {
 
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
   const hideConfirmTransferModal = () => {
-    setConfirmTransferModalOpen(false)
+    startNewSwap()    
+    setConfirmTransferModalOpen(false)    
   }
   const showConfirmTransferModal = () => {
     setConfirmTransferModalOpen(true)
