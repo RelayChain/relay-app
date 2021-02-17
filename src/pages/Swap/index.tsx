@@ -49,7 +49,6 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
-import ReactGA from 'react-ga'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import SwapsTabs from '../../components/SwapsTabs'
 import { Text } from 'rebass'
@@ -303,20 +302,6 @@ export default function Swap() {
       .then(hash => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
 
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-                ? 'Swap w/o Send + recipient'
-                : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade)
-          ].join('/')
-        })
       })
       .catch(error => {
         setSwapState({

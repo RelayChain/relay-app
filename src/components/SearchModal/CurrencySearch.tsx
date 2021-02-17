@@ -13,7 +13,6 @@ import { DEFAULT_TOKEN_LIST } from '../../constants/DefaultTokenList';
 import { FixedSizeList } from 'react-window'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
-import ReactGA from 'react-ga'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -86,11 +85,6 @@ export function CurrencySearch({
 
   useEffect(() => {
     if (isAddressSearch) {
-      ReactGA.event({
-        category: 'Currency Select',
-        action: 'Search by address',
-        label: isAddressSearch
-      })
     }
   }, [isAddressSearch])
 

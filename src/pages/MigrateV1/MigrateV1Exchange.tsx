@@ -23,7 +23,6 @@ import { EmptyState } from './EmptyState'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import QuestionHelper from '../../components/QuestionHelper'
-import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { useActiveWeb3React } from '../../hooks'
@@ -163,12 +162,6 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
       .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Migrate',
-          action: 'V1->V2',
-          label: token?.symbol
-        })
-
         addTransaction(response, {
           summary: `Migrate ${token.symbol} liquidity to V2`
         })
