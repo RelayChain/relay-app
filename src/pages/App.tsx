@@ -15,7 +15,6 @@ import AddressClaimModal from '../components/claim/AddressClaimModal'
 import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Earn from './Earn'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Guides from './Guides'
 import Header from '../components/Header'
 import Manage from './Earn/Manage'
@@ -83,7 +82,6 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
-      <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
         <div className="snow-bg snow"></div>

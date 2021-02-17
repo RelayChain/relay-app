@@ -4,7 +4,6 @@ import { Currency } from '@zeroexchange/sdk'
 import { CurrencySearch } from './CurrencySearch'
 import { ListSelect } from './ListSelect'
 import Modal from '../Modal'
-import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'
 
 interface CurrencySearchModalProps {
@@ -44,17 +43,9 @@ export default function CurrencySearchModal({
   )
 
   const handleClickChangeList = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Change Lists'
-    })
     setListView(true)
   }, [])
   const handleClickBack = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Back'
-    })
     setListView(false)
   }, [])
 

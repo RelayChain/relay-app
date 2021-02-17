@@ -17,7 +17,6 @@ import { Dots } from '../../components/swap/styleds'
 import { EmptyState } from './EmptyState'
 import { LightCard } from '../../components/Card'
 import QuestionHelper from '../../components/QuestionHelper'
-import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { V1LiquidityInfo } from './MigrateV1Exchange'
 import { isAddress } from '../../utils'
@@ -73,12 +72,6 @@ function V1PairRemoval({
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
       .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Remove',
-          action: 'V1',
-          label: token?.symbol
-        })
-
         addTransaction(response, {
           summary: `Remove ${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`
         })
