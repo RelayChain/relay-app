@@ -118,12 +118,12 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: "0x00000000000000000000007Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE901",
         },
         {
-          address: "0xf39f9671906d8630812f9d9863bBEf5D523c84Ab",
+          address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
           name: "UNI",
           symbol: "UNI",
           assetBase: 'UNI',
           decimals: 18,
-          resourceId: "0x0000000000000000000000f39f9671906d8630812f9d9863bBEf5D523c84Ab01",
+          resourceId: "0x00000000000000000000001f9840a85d5aF5bf1D1762F925BDADdC4201F98401",
         },
         {
           address: "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
