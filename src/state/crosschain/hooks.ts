@@ -233,7 +233,7 @@ export function useCrosschainHooks() {
         .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
         .substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    const gasPriceFromChain = (currentChain.chainId === 0) ?
+    const gasPriceFromChain = (currentChain.chainId === 1) ?
       WithDecimalsHexString(currentGasPrice, 0) :
       WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
@@ -324,7 +324,7 @@ export function useCrosschainHooks() {
       status: ChainTransferState.NotStarted
     }))
 
-    const gasPriceFromChain = (currentChain.chainId === 0) ?
+    const gasPriceFromChain = (currentChain.chainId === 1) ?
       WithDecimalsHexString(currentGasPrice, 0) :
       WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
 
