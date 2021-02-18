@@ -1,9 +1,10 @@
-import { Currency, currencyEquals, ETHER, WETH } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
+import { AVAX, Currency, ETHER, WETH, currencyEquals } from '@zeroexchange/sdk'
+
 import { tryParseAmount } from '../state/swap/hooks'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
+import { useCurrencyBalance } from '../state/wallet/hooks'
+import { useMemo } from 'react'
+import { useTransactionAdder } from '../state/transactions/hooks'
 import { useWETHContract } from './useContract'
 
 export enum WrapType {
@@ -26,7 +27,7 @@ export default function useWrapCallback(
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETHContract()
-  const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
+  const balance = useCurrencyBalance(account ?? undefined, inputCurrency, chainId)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
   const addTransaction = useTransactionAdder()
@@ -36,37 +37,37 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
+    if ((inputCurrency === ETHER || inputCurrency === AVAX) && currencyEquals(WETH[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
-                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
-                } catch (error) {
-                  console.error('Could not deposit', error)
-                }
+              try {
+                const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+              } catch (error) {
+                console.error('Could not deposit', error)
               }
+            }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient balance'
       }
-    } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    } else if (currencyEquals(WETH[chainId], inputCurrency) && (outputCurrency === ETHER || outputCurrency === AVAX)) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
-                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
-                } catch (error) {
-                  console.error('Could not withdraw', error)
-                }
+              try {
+                const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+              } catch (error) {
+                console.error('Could not withdraw', error)
               }
+            }
             : undefined,
-        inputError: sufficientBalance ? undefined : 'Insufficient WETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient balance'
       }
     } else {
       return NOT_APPLICABLE

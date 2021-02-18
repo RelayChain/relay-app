@@ -1,5 +1,5 @@
+import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
 import { AddressZero } from '@ethersproject/constants'
@@ -116,5 +116,6 @@ export function escapeRegExp(string: string): string {
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
+  if (currency === AVAX) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId] ?.[currency.address])
 }

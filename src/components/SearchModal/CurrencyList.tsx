@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -20,7 +20,15 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+  if (currency instanceof Token) {
+    return currency.address;
+  } else if (currency === ETHER) {
+    return 'ETHER';
+  } else if (currency === AVAX) {
+    return 'AVAX';
+  } else {
+    return '';
+  }
 }
 
 const StyledBalanceText = styled(Text)`
@@ -87,28 +95,33 @@ function CurrencyRow({
   onSelect,
   isSelected,
   otherSelected,
-  style
+  style,
+  isEnd
 }: {
   currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
+  isEnd: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
+  const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ?
+                      true : false
   // only show add or remove buttons if not on selected list
+
   return (
     <MenuItem
-      style={style}
+      style={{ ...style, borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}` }}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
@@ -133,7 +146,8 @@ function CurrencyRow({
               </LinkStyledButton>
             </TYPE.main>
           ) : null}
-          {!isOnSelectedList && !customAdded ? (
+          {/* Fix this so (Add) works for Avax support */}
+          {!isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
@@ -150,7 +164,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+        {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
   )
@@ -192,6 +206,7 @@ export default function CurrencyList({
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={otherSelected}
+          isEnd={index === data.length - 1}
         />
       )
     },

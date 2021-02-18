@@ -13,7 +13,6 @@ import { DEFAULT_TOKEN_LIST } from '../../constants/DefaultTokenList';
 import { FixedSizeList } from 'react-window'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
-import ReactGA from 'react-ga'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -86,19 +85,16 @@ export function CurrencySearch({
 
   useEffect(() => {
     if (isAddressSearch) {
-      ReactGA.event({
-        category: 'Currency Select',
-        action: 'Search by address',
-        label: isAddressSearch
-      })
     }
   }, [isAddressSearch])
 
-  const showETH: boolean = useMemo(() => {
-    const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+  // const showETH: boolean = useMemo(() => {
+  //   const s = searchQuery.toLowerCase().trim()
+  //   return s === '' || s === 'e' || s === 'et' || s === 'eth' || s.includes('ava')
+  // }, [searchQuery])
 
+  const showETH = true;
+  
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
@@ -207,7 +203,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={ (isCrossChain || chainId !== ChainId.MAINNET)  ? false : showETH }
+              showETH={ isCrossChain ? false : showETH }
               currencies={ !isCrossChain ? filteredSortedTokens : availableTokensArray }
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

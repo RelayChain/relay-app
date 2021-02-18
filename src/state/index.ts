@@ -12,7 +12,7 @@ import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import crosschain from './crosschain/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'crosschain']
 
 const store = configureStore({
   reducer: {

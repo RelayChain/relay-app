@@ -1,9 +1,8 @@
-import { AddressZero } from '@ethersproject/constants'
 import {
+  AVAX,
   BigintIsh,
   Currency,
   CurrencyAmount,
-  currencyEquals,
   ETHER,
   JSBI,
   Pair,
@@ -13,21 +12,24 @@ import {
   TokenAmount,
   Trade,
   TradeType,
-  WETH
+  WETH,
+  currencyEquals
 } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
-import { useActiveWeb3React } from '../hooks'
-import { useAllTokens } from '../hooks/Tokens'
-import { useV1FactoryContract } from '../hooks/useContract'
-import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+
+import { AddressZero } from '@ethersproject/constants'
+import { Version } from '../hooks/useToggledVersion'
+import { useActiveWeb3React } from '../hooks'
+import { useAllTokens } from '../hooks/Tokens'
+import { useMemo } from 'react'
+import { useV1FactoryContract } from '../hooks/useContract'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
 
   const inputs = useMemo(() => [tokenAddress], [tokenAddress])
-  return useSingleCallResult(contract, 'getExchange', inputs)?.result?.[0]
+  return useSingleCallResult(contract, 'getExchange', inputs) ?.result ?.[0]
 }
 
 export class MockV1Pair extends Pair {
@@ -40,7 +42,7 @@ function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
   const token = inputCurrency instanceof Token ? inputCurrency : undefined
 
   const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
+  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token ?.address)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
 
@@ -61,8 +63,8 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 
   return useMemo(
     () =>
-      data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
-        if (result?.[0] && result[0] !== AddressZero) {
+      data ?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
+        if (result ?.[0] && result[0] !== AddressZero) {
           memo[result[0]] = allTokens[args[ix][0]]
         }
         return memo
@@ -88,7 +90,7 @@ export function useUserHasLiquidityInAllTokens(): boolean | undefined {
   return useMemo(
     () =>
       Object.keys(balances).some(tokenAddress => {
-        const b = balances[tokenAddress]?.raw
+        const b = balances[tokenAddress] ?.raw
         return b && JSBI.greaterThan(b, JSBI.BigInt(0))
       }),
     [balances]
@@ -108,8 +110,8 @@ export function useV1Trade(
   const inputPair = useMockV1Pair(inputCurrency)
   const outputPair = useMockV1Pair(outputCurrency)
 
-  const inputIsETH = inputCurrency === ETHER
-  const outputIsETH = outputCurrency === ETHER
+  const inputIsETH = (inputCurrency === ETHER || inputCurrency === AVAX)
+  const outputIsETH = (outputCurrency === ETHER || inputCurrency === AVAX)
 
   // construct a direct or through ETH v1 route
   let pairs: Pair[] = []
@@ -137,7 +139,7 @@ export function useV1Trade(
 }
 
 export function getTradeVersion(trade?: Trade): Version | undefined {
-  const isV1 = trade?.route?.pairs?.some(pair => pair instanceof MockV1Pair)
+  const isV1 = trade ?.route ?.pairs ?.some(pair => pair instanceof MockV1Pair)
   if (isV1) return Version.v1
   if (isV1 === false) return Version.v2
   return undefined
@@ -152,8 +154,8 @@ export function useV1TradeExchangeAddress(trade: Trade | undefined): string | un
     return trade.inputAmount instanceof TokenAmount
       ? trade.inputAmount.token.address
       : trade.outputAmount instanceof TokenAmount
-      ? trade.outputAmount.token.address
-      : undefined
+        ? trade.outputAmount.token.address
+        : undefined
   }, [trade])
   return useV1ExchangeAddress(tokenAddress)
 }

@@ -63,7 +63,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
-
   const [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
@@ -182,7 +181,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
 
-  const [token0Deposited, token1Deposited] =
+  let [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
@@ -193,6 +192,34 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
         ]
       : [undefined, undefined]
+
+  // fix eth balances =================
+  const transformBalance = (x: any) => {
+    if (!x) return;
+    const num = x.length - 18;
+    const y = x.substring((x.length - 18), 18);
+    let z = x.substring(0, num);
+    z = z.replace('.', '');
+    return `${z}.${y}`;
+  }
+
+  const t0 = pair?.token0;
+  const t1 = pair?.token1;
+
+  const t0symbol = t0?.symbol;
+  const t1symbol = t1?.symbol;
+  let t0Deposited: any, t1Deposited: any;
+  if (t0symbol?.includes('ETH')) {
+    t0Deposited = transformBalance(token0Deposited?.raw?.toString())
+  } else {
+    t0Deposited = token0Deposited?.toSignificant(6)
+  }
+
+  if (t1symbol?.includes('ETH')) {
+    t1Deposited = transformBalance(token1Deposited?.raw?.toString())
+  } else {
+    t1Deposited = token1Deposited?.toSignificant(6)
+  }
 
   const backgroundColor = useColor(pair?.token0)
 
@@ -259,7 +286,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token0Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {returnNumberDecimals(token0Deposited?.toSignificant(6), 6)}
+                    {returnNumberDecimals(t0Deposited, 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
@@ -277,7 +304,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               {token1Deposited ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {returnNumberDecimals(token1Deposited?.toSignificant(6), 6)}
+                    {returnNumberDecimals(t1Deposited, 6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>

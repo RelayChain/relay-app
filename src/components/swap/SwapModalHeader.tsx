@@ -1,36 +1,39 @@
-import { Trade, TradeType } from '@zeroexchange/sdk'
+import { AlertTriangle, ArrowDown } from 'react-feather'
+import { ChainId, Trade, TradeType } from '@zeroexchange/sdk'
 import React, { useContext, useMemo } from 'react'
-import { ArrowDown, AlertTriangle } from 'react-feather'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import { RowBetween, RowFixed } from '../Row'
+import { SwapShowAcceptChanges, TruncatedText } from './styleds'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { isAddress, shortenAddress } from '../../utils'
+
+import { AutoColumn } from '../Column'
+import { ButtonPrimary } from '../Button'
+import CurrencyLogo from '../CurrencyLogo'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
-import { isAddress, shortenAddress } from '../../utils'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import { RowBetween, RowFixed } from '../Row'
-import { TruncatedText, SwapShowAcceptChanges } from './styleds'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
 
 export default function SwapModalHeader({
   trade,
   allowedSlippage,
   recipient,
   showAcceptChanges,
-  onAcceptChanges
+  onAcceptChanges,
+  chainId
 }: {
   trade: Trade
   allowedSlippage: number
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  chainId: ChainId
 }) {
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     trade,
     allowedSlippage
   ])
-  const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade, chainId), [trade])
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   const theme = useContext(ThemeContext)

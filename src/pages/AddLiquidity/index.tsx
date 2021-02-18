@@ -23,7 +23,6 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import { PairState } from '../../data/Reserves'
 import { Plus } from 'react-feather'
 import { PoolPriceBar } from './PoolPriceBar'
-import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -129,8 +128,6 @@ export default function AddLiquidity({
 
     const router = getRouterContract(chainId, library, account)
 
-    console.log("ROUTER CONTRACT ===== ", router);
-
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
       return
@@ -146,7 +143,6 @@ export default function AddLiquidity({
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER || currencyA === AVAX || currencyB === AVAX) {
-      console.log("CURRENCY IS NATIIVE, INSIDE ====== ");
       const tokenBIsETH = (currencyB === ETHER || currencyB === AVAX)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
@@ -175,21 +171,17 @@ export default function AddLiquidity({
       value = null
     }
 
-    console.log("ABOUT TO ESTIMATE GAS ===== ", args, value);
-    
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) => {
 
         // hardcode gas for avalanche
-        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(250000) : estimatedGasLimit
+        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(350000) : estimatedGasLimit
 
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(gas)
         }).then(response => {
-
-          console.log("RESPONSE ====== ", response);
 
           setAttemptingTxn(false)
 
@@ -207,15 +199,9 @@ export default function AddLiquidity({
 
           setTxHash(response.hash)
 
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
-          })
         })
       })
       .catch(error => {
-        console.log("ESTIMATE ERROR ====== ", error);
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {

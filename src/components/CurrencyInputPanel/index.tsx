@@ -1,9 +1,11 @@
+import { Check, Copy } from 'react-feather'
 import { Currency, Pair } from '@zeroexchange/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 // import BlockchainLogo from '../BlockchainLogo'
 import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -92,6 +94,49 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
+const CopyRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 1rem;
+  margin-top: -5px;
+  p {
+    margin-top: 0;
+    margin-bottom: 0;
+    background: rgba(255,255,255,.075);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: .8rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    opacity: .75;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    min-height: 25px;
+    min-width: 86px;
+    span {
+      margin-right: 4px;
+    }
+    .active {
+      display: block;
+    }
+    .inactive {
+      display: none;
+    }
+    &:active {
+      opacity: 1;
+      .active {
+        display: none;
+      }
+      .inactive {
+        display: block;
+      }
+    }
+  }
+`
+
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   border: 1px solid ${({ theme }) => theme.bg2};
@@ -137,7 +182,7 @@ interface CurrencyInputPanelProps {
   label?: string
   onCurrencySelect?: (currency: Currency) => void
   onBlockchainSelect?: (blockchain: Currency) => void
-  currency?: Currency | null
+  currency?: any
   disableCurrencySelect?: boolean
   disableBlockchainSelect?: boolean
   hideBalance?: boolean
@@ -179,15 +224,18 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const [modal2Open, setModal2Open] = useState(false)
-  const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const { account, chainId } = useActiveWeb3React()
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, chainId)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
 
-  return (
+  const hasABalance = selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 0.0000001 ?
+                      true : false
+
+  return (<>
     <InputPanel id={id}>
       <Container hideInput={hideInput}>
         {!hideInput && (
@@ -215,13 +263,13 @@ export default function CurrencyInputPanel({
               </BlockchainSelect>
               {account && (
                 <TYPE.body
-                  onClick={onMax}
+                  onClick={hasABalance ? onMax : () =>{}}
                   color={theme.text2}
                   fontWeight={500}
                   fontSize={14}
                   style={{ display: 'inline', cursor: 'pointer' }}
                 >
-                {!hideBalance && !!currency && selectedCurrencyBalance
+                {!hideBalance && !!currency && selectedCurrencyBalance && hasABalance
                   ? (customBalanceText ?? 'Balance: ') + `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), { groupSeparator: ',' })}`
                   : '-'}
                 </TYPE.body>
@@ -239,12 +287,13 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-              {account && currency && showMaxButton && label !== 'To' && (
+              {account && currency && showMaxButton && hasABalance && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
           )}
           <CurrencySelect
+            style={{ opacity: `${isCrossChain && label === 'To' && !currency?.symbol ? '0' : '1'}`}}
             selected={!!currency}
             className="open-currency-select-button"
             onClick={() => {
@@ -266,7 +315,7 @@ export default function CurrencyInputPanel({
               ) : (
                 <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                   { isCrossChain && label === 'To' ?
-                    `${currentTargetToken?.symbol}`
+                    `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                     : (currency && currency.symbol && currency.symbol.length > 20
                     ? currency.symbol.slice(0, 4) +
                       '...' +
@@ -302,5 +351,17 @@ export default function CurrencyInputPanel({
         />
       )}
     </InputPanel>
-  )
+    { currency && currency?.address &&
+      <CopyRow>
+        <CopyToClipboard text={currency?.address}>
+          <p>
+            <span className="active">address</span>
+            <Copy className="active" size={'14'} />
+            <span className="inactive" style={{ color: 'green' }}>copied!</span>
+            <Check className="inactive" color="green" size={'14'} />
+          </p>
+        </CopyToClipboard>
+      </CopyRow>
+    }
+  </>)
 }

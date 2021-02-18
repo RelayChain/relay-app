@@ -238,7 +238,7 @@ export function useCrosschainHooks() {
       utils.parseUnits(currentGasPrice, 0)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '250000',
-      value: WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals),
+      value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
       gasPrice: gasPriceFromChain,
       nonce: await getNonce()
     }).catch((err: any) => {
@@ -270,15 +270,15 @@ export function useCrosschainHooks() {
 
     const state = getCrosschainState();
     const pendingTransfer = {
-      currentSymbol: state?.currentToken?.symbol,
-      targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
-      assetBase: state?.currentToken?.assetBase,
-      amount: state?.transferAmount,
-      decimals: state?.currentToken?.decimals,
-      name: state?.targetChain?.name,
-      address: state?.currentToken?.address,
-      status: state?.swapDetails?.status,
-      votes: state?.swapDetails?.voteCount,
+      currentSymbol: state ?.currentToken ?.symbol,
+      targetSymbol: state ?.targetTokens ?.find(x => x.assetBase === state ?.currentToken ?.assetBase) ?.symbol,
+      assetBase: state ?.currentToken ?.assetBase,
+      amount: state ?.transferAmount,
+      decimals: state ?.currentToken ?.decimals,
+      name: state ?.targetChain ?.name,
+      address: state ?.currentToken ?.address,
+      status: state ?.swapDetails ?.status,
+      votes: state ?.swapDetails ?.voteCount,
     }
 
     dispatch(setPendingTransfer({
@@ -296,7 +296,7 @@ export function useCrosschainHooks() {
         dispatch(setCrosschainSwapDetails({
           details: {
             status: proposal._status,
-            voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
+            voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
           }
         }))
 
@@ -347,15 +347,31 @@ export function useCrosschainHooks() {
 
       resultApproveTx.wait().then(() => {
         let crosschainState = getCrosschainState()
-        if (crosschainState.currentTxID === resultApproveTx.hash) {
-          dispatch(setCurrentTxID({
-            txID: ''
-          }))
-          dispatch(setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalComplete
-          }))
+        const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        return tokenContract.allowance(crosschainState.currentRecipient,
+          currentChain.erc20HandlerAddress)
+      }).then((approvedAmount: any) => {
+        const crosschainState2 = getCrosschainState()
+        if (crosschainState2.currentTxID === resultApproveTx.hash) {
+
+          const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
+            crosschainState2.transferAmount, currentToken.decimals))
+          if (countTokenForTransfer.gte(approvedAmount)) {
+            dispatch(setCurrentTxID({
+              txID: ''
+            }))
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.ApprovalComplete
+            }))
+
+          } else {
+            dispatch(setCrosschainTransferStatus({
+              status: ChainTransferState.NotStarted
+            }))
+          }
         }
-      }).catch((err: any) => {
+      }
+      ).catch((err: any) => {
         BreakCrosschainSwap();
       });
     }).catch((err: any) => {
@@ -415,7 +431,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library?._network?.chainId || chainIdFromWeb3React
+  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
 
@@ -433,7 +449,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
@@ -445,16 +461,6 @@ export function useCrossChain() {
     }))
     dispatch(setCurrentChain({
       chain: GetCurrentChain(currentChainName)
-    }))
-
-    dispatch(setCurrentToken({
-      token: tokens.length ? tokens[0] : {
-        name: '',
-        address: '',
-        assetBase: '',
-        symbol: '',
-        decimals: 18
-      }
     }))
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance().catch(console.error)
