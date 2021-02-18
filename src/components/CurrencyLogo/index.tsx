@@ -15,6 +15,7 @@ import ZETHLogo from '../../assets/images/crosschain/zETH.png'
 import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
 import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
 import ZeroLogo from '../../assets/images/logo-zero-124.png'
+import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
 
@@ -46,17 +47,30 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
-
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
     if (currency && currency.symbol === 'ZERO') return []
-
     if (currency instanceof Token) {
-      if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, getTokenLogoURL(currency.address)]
+
+      // find logos on ETH address for non-ETH assets
+      let logoAddress = currency.address;
+      let allConfigTokens: any = [];
+      crosschainConfig.chains.map(chain => {
+        chain.tokens.map(token => {
+          allConfigTokens.push(token);
+        })
+      })
+      let chosenToken = allConfigTokens.find((token: any) => token.address === currency.address);
+      let ethToken = crosschainConfig.chains[0].tokens.find((token: any) => token.assetBase === chosenToken.assetBase);
+      if (ethToken) {
+        logoAddress = ethToken.address;
       }
 
-      return [getTokenLogoURL(currency.address)]
+      if (currency instanceof WrappedTokenInfo) {
+        return [...uriLocations, getTokenLogoURL(logoAddress)]
+      }
+
+      return [getTokenLogoURL(logoAddress)]
     }
     return []
   }, [currency, uriLocations])
