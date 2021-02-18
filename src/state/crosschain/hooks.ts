@@ -233,9 +233,9 @@ export function useCrosschainHooks() {
         .hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32)
         .substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    const gasPriceFromChain = (targetChain.chainId === 2) ?
-      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
-      utils.parseUnits(currentGasPrice, 0)
+    const gasPriceFromChain = (currentChain.chainId === 0) ?
+      WithDecimalsHexString(currentGasPrice, 0) :
+      WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
     const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
       gasLimit: '250000',
       value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
@@ -270,15 +270,15 @@ export function useCrosschainHooks() {
 
     const state = getCrosschainState();
     const pendingTransfer = {
-      currentSymbol: state ?.currentToken ?.symbol,
-      targetSymbol: state ?.targetTokens ?.find(x => x.assetBase === state ?.currentToken ?.assetBase) ?.symbol,
-      assetBase: state ?.currentToken ?.assetBase,
-      amount: state ?.transferAmount,
-      decimals: state ?.currentToken ?.decimals,
-      name: state ?.targetChain ?.name,
-      address: state ?.currentToken ?.address,
-      status: state ?.swapDetails ?.status,
-      votes: state ?.swapDetails ?.voteCount,
+      currentSymbol: state?.currentToken?.symbol,
+      targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
+      assetBase: state?.currentToken?.assetBase,
+      amount: state?.transferAmount,
+      decimals: state?.currentToken?.decimals,
+      name: state?.targetChain?.name,
+      address: state?.currentToken?.address,
+      status: state?.swapDetails?.status,
+      votes: state?.swapDetails?.voteCount,
     }
 
     dispatch(setPendingTransfer({
@@ -296,7 +296,7 @@ export function useCrosschainHooks() {
         dispatch(setCrosschainSwapDetails({
           details: {
             status: proposal._status,
-            voteCount: !!proposal ?._yesVotes ? proposal._yesVotes.length : 0
+            voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
           }
         }))
 
@@ -324,9 +324,9 @@ export function useCrosschainHooks() {
       status: ChainTransferState.NotStarted
     }))
 
-    const gasPriceFromChain = (currentChain.chainId === 2) ?
-      utils.parseUnits(String(currentChain.defaultGasPrice || 90), 9) :
-      utils.parseUnits(currentGasPrice, 0)
+    const gasPriceFromChain = (currentChain.chainId === 0) ?
+      WithDecimalsHexString(currentGasPrice, 0) :
+      WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -334,7 +334,7 @@ export function useCrosschainHooks() {
     const ABI = currentToken.address === "0xdAC17F958D2ee523a2206206994597C13D831ec7" ? USDTTokenABI : TokenABI
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
-      gasLimit: '70000',
+      gasLimit: '50000',
       gasPrice: gasPriceFromChain,
       nonce: await getNonce()
     }).then((resultApproveTx: any) => {
@@ -431,7 +431,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-  const chainId = library ?._network ?.chainId || chainIdFromWeb3React
+  const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
 
@@ -449,7 +449,7 @@ export function useCrossChain() {
     }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain ?.name)
+    const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(setAvailableTokens({
       tokens: tokens.length ? tokens : []
     }))
