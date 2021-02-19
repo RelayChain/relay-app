@@ -61,7 +61,7 @@ export default function CurrencyLogo({
         })
       })
       let chosenToken = allConfigTokens.find((token: any) => token.address === currency.address);
-      let ethToken = crosschainConfig.chains[0].tokens.find((token: any) => token.assetBase === chosenToken.assetBase);
+      let ethToken = crosschainConfig.chains[0].tokens.find((token: any) => token?.assetBase === chosenToken?.assetBase);
       if (ethToken) {
         logoAddress = ethToken.address;
       }
