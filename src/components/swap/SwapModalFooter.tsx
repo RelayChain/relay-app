@@ -1,35 +1,38 @@
-import { Trade, TradeType } from '@zeroexchange/sdk'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ChainId, Trade, TradeType } from '@zeroexchange/sdk'
 import React, { useContext, useMemo, useState } from 'react'
-import { Repeat } from 'react-feather'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
+import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 import {
   computeSlippageAdjustedAmounts,
   computeTradePriceBreakdown,
   formatExecutionPrice,
   warningSeverity
 } from '../../utils/prices'
-import { ButtonError } from '../Button'
+
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ButtonError } from '../Button'
+import { Field } from '../../state/swap/actions'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
+import QuestionHelper from '../QuestionHelper'
+import { Repeat } from 'react-feather'
+import { TYPE } from '../../theme'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
 
 export default function SwapModalFooter({
   trade,
   onConfirm,
   allowedSlippage,
   swapErrorMessage,
-  disabledConfirm
+  disabledConfirm,
+  chainId
 }: {
   trade: Trade
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
+  chainId: ChainId
 }) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useContext(ThemeContext)
@@ -37,7 +40,7 @@ export default function SwapModalFooter({
     allowedSlippage,
     trade
   ])
-  const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade, chainId), [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 
   return (

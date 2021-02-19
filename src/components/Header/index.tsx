@@ -1,4 +1,5 @@
-import { Book, DollarSign, RefreshCw } from 'react-feather'
+import { BarChart, Book, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
+import { ExternalLink, TYPE } from '../../theme'
 import Row, { RowFixed } from '../Row'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
@@ -92,11 +93,24 @@ const HeaderRow = styled(RowFixed)`
   `};
 `
 
+const HeaderExternalLink = styled(ExternalLink)`
+  margin: 0 16px;
+  font-size: 1rem;
+  color: #C3C5CB;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: 0 6px;
+    font-size: .85rem;
+  `};
+`
+
 const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
+    padding: .5rem 0 .5rem .5rem;
     justify-content: flex-end;
+    svg {
+      display: none;
+    }
 `};
 `
 
@@ -219,6 +233,10 @@ const StyledNavLink = styled(NavLink).attrs({
   :focus {
     color: ${({ theme }) => theme.primary1};
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: .85rem;
+    margin: 0 6px;
+`};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -245,7 +263,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   let label, symbol = '';
@@ -268,20 +286,18 @@ export default function Header() {
             <RefreshCw size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('swap')}
           </StyledNavLink>
-          {/*<StyledNavLink id={`chain-nav-link`} to={'/chainbridge'}>
-            {t('Chain Bridge')}
-          </StyledNavLink>*/}
           <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
             <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Earn')}
           </StyledNavLink>
+          <HeaderExternalLink href={`https://charts.zero.exchange`}>
+            <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
+            Charts
+          </HeaderExternalLink>
           <StyledNavLink id={`guides-nav-link`} to={'/guides'}>
             <Book size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Guides')}
           </StyledNavLink>
-          {/*<StyledNavLink id={`pool-nav-link`} to={'/pool'}>
-            {t('Pool')}
-          </StyledNavLink>*/}
         </HeaderLinks>
       </HeaderRow>
       {/*<CurrentChain>

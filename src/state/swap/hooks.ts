@@ -1,4 +1,4 @@
-import { AVAX, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
@@ -90,7 +90,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
     if (typedValueParsed !== '0') {
       return currency instanceof Token
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed), currency ?.symbol === 'ETH' ? ChainId.MAINNET : ChainId.AVALANCHE)
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)

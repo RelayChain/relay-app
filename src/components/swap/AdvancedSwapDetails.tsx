@@ -1,16 +1,17 @@
-import { Trade, TradeType } from '@zeroexchange/sdk'
+import { ChainId, Trade, TradeType } from '@zeroexchange/sdk'
+import { ExternalLink, TYPE } from '../../theme'
 import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { Field } from '../../state/swap/actions'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
-import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
+import styled, { ThemeContext } from 'styled-components'
+
+import { AutoColumn } from '../Column'
+import { Field } from '../../state/swap/actions'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import QuestionHelper from '../QuestionHelper'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
+import { useUserSlippageTolerance } from '../../state/user/hooks'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -22,9 +23,9 @@ const InfoLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text1};
 `
 
-function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
+function TradeSummary({ trade, allowedSlippage, chainId }: { trade: Trade; allowedSlippage: number, chainId?: ChainId }) {
   const theme = useContext(ThemeContext)
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade, chainId)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
@@ -75,10 +76,11 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 }
 
 export interface AdvancedSwapDetailsProps {
-  trade?: Trade
+  trade?: Trade,
+  chainId?: ChainId,
 }
 
-export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, chainId }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -89,7 +91,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
     <AutoColumn gap="md">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
+          <TradeSummary trade={trade} chainId={chainId} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
               <SectionBreak />

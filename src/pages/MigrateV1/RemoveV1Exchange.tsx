@@ -1,29 +1,29 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { JSBI, Token, TokenAmount, WETH, Fraction, Percent, CurrencyAmount } from '@zeroexchange/sdk'
+import { BackArrow, TYPE } from '../../theme'
+import { CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
+import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import React, { useCallback, useMemo, useState } from 'react'
-import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
-import { ButtonConfirmed } from '../../components/Button'
-import { LightCard } from '../../components/Card'
+import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
+import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
+
+import { AddressZero } from '@ethersproject/constants'
 import { AutoColumn } from '../../components/Column'
-import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
+import { BodyWrapper } from '../AppBody'
+import { ButtonConfirmed } from '../../components/Button'
+import { Contract } from '@ethersproject/contracts'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { Dots } from '../../components/swap/styleds'
+import { EmptyState } from './EmptyState'
+import { LightCard } from '../../components/Card'
+import QuestionHelper from '../../components/QuestionHelper'
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { V1LiquidityInfo } from './MigrateV1Exchange'
+import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
-import { useV1ExchangeContract } from '../../hooks/useContract'
-import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
-import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
-import { useTokenBalance, useETHBalances } from '../../state/wallet/hooks'
-import { BackArrow, TYPE } from '../../theme'
-import { isAddress } from '../../utils'
-import { BodyWrapper } from '../AppBody'
-import { EmptyState } from './EmptyState'
-import { V1LiquidityInfo } from './MigrateV1Exchange'
-import { AddressZero } from '@ethersproject/constants'
-import { Dots } from '../../components/swap/styleds'
-import { Contract } from '@ethersproject/contracts'
 import { useTotalSupply } from '../../data/TotalSupply'
+import { useV1ExchangeContract } from '../../hooks/useContract'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -50,8 +50,8 @@ function V1PairRemoval({
   const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
   const ethWorth: CurrencyAmount = exchangeETHBalance
-    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
-    : CurrencyAmount.ether(ZERO)
+    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient, chainId)
+    : CurrencyAmount.ether(ZERO, chainId)
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
     ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
@@ -72,12 +72,6 @@ function V1PairRemoval({
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
       .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Remove',
-          action: 'V1',
-          label: token?.symbol
-        })
-
         addTransaction(response, {
           summary: `Remove ${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`
         })

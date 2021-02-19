@@ -1,33 +1,33 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { AddressZero } from '@ethersproject/constants'
-import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
-import React, { useCallback, useMemo, useState } from 'react'
-import ReactGA from 'react-ga'
-import { Redirect, RouteComponentProps } from 'react-router'
-import { Text } from 'rebass'
-import { ButtonConfirmed } from '../../components/Button'
-import { LightCard, PinkCard, YellowCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
-import QuestionHelper from '../../components/QuestionHelper'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { Dots } from '../../components/swap/styleds'
+import { BackArrow, ExternalLink, TYPE } from '../../theme'
+import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
+import { LightCard, PinkCard, YellowCard } from '../../components/Card'
+import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { PairState, usePair } from '../../data/Reserves'
-import { useTotalSupply } from '../../data/TotalSupply'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Redirect, RouteComponentProps } from 'react-router'
+import { getEtherscanLink, isAddress } from '../../utils'
+import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
+import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
+import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
+
+import { AddressZero } from '@ethersproject/constants'
+import { AutoColumn } from '../../components/Column'
+import { BodyWrapper } from '../AppBody'
+import { ButtonConfirmed } from '../../components/Button'
+import CurrencyLogo from '../../components/CurrencyLogo'
+import { Dots } from '../../components/swap/styleds'
+import { EmptyState } from './EmptyState'
+import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
+import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
+import QuestionHelper from '../../components/QuestionHelper'
+import { Text } from 'rebass'
+import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
-import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
-import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
-import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
-import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isAddress } from '../../utils'
-import { BodyWrapper } from '../AppBody'
-import { EmptyState } from './EmptyState'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -103,8 +103,8 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
   const ethWorth: CurrencyAmount = exchangeETHBalance
-    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
-    : CurrencyAmount.ether(ZERO)
+    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient, chainId)
+    : CurrencyAmount.ether(ZERO, chainId)
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
     ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
@@ -162,12 +162,6 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
       .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Migrate',
-          action: 'V1->V2',
-          label: token?.symbol
-        })
-
         addTransaction(response, {
           summary: `Migrate ${token.symbol} liquidity to V2`
         })

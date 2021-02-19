@@ -19,6 +19,7 @@ import { useCallback, useMemo } from 'react'
 import flatMap from 'lodash.flatmap'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { useHistory } from "react-router-dom";
 
 function serializeToken(token: Token): SerializedToken {
   return {

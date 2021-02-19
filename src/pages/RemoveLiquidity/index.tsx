@@ -23,7 +23,6 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { Field } from '../../state/burn/actions'
 import { LightCard } from '../../components/Card'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import Slider from '../../components/Slider'
 import { Text } from 'rebass'
@@ -326,12 +325,6 @@ export default function RemoveLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/')
-          })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)

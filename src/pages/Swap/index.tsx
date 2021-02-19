@@ -49,7 +49,6 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
-import ReactGA from 'react-ga'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import SwapsTabs from '../../components/SwapsTabs'
 import { Text } from 'rebass'
@@ -289,7 +288,7 @@ export default function Swap() {
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
 
-  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade, chainId)
 
   const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
@@ -303,20 +302,6 @@ export default function Swap() {
       .then(hash => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
 
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-                ? 'Swap w/o Send + recipient'
-                : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade)
-          ].join('/')
-        })
       })
       .catch(error => {
         setSwapState({
@@ -455,7 +440,8 @@ export default function Swap() {
 
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
   const hideConfirmTransferModal = () => {
-    setConfirmTransferModalOpen(false)
+    startNewSwap()    
+    setConfirmTransferModalOpen(false)    
   }
   const showConfirmTransferModal = () => {
     setConfirmTransferModalOpen(true)
@@ -541,6 +527,7 @@ export default function Swap() {
               onConfirm={handleSwap}
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
+              chainId={chainId}
             />
 
             <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} />
@@ -786,7 +773,7 @@ export default function Swap() {
         </ChainBridgePending> : ''
       }
 
-      { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} />}
+      { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
 
     </>
   )

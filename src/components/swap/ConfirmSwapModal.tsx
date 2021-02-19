@@ -1,9 +1,10 @@
-import { currencyEquals, Trade } from '@zeroexchange/sdk'
+import { ChainId, Trade, currencyEquals } from '@zeroexchange/sdk'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
 } from '../TransactionConfirmationModal'
+
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
@@ -33,7 +34,8 @@ export default function ConfirmSwapModal({
   swapErrorMessage,
   isOpen,
   attemptingTxn,
-  txHash
+  txHash,
+  chainId
 }: {
   isOpen: boolean
   trade: Trade | undefined
@@ -46,6 +48,7 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapErrorMessage: string | undefined
   onDismiss: () => void
+  chainId: ChainId
 }) {
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
@@ -60,6 +63,7 @@ export default function ConfirmSwapModal({
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
+        chainId={chainId}
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
@@ -72,6 +76,7 @@ export default function ConfirmSwapModal({
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
         allowedSlippage={allowedSlippage}
+        chainId={chainId}
       />
     ) : null
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
