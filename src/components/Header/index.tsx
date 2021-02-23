@@ -294,10 +294,10 @@ export default function Header() {
             <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             Charts
           </HeaderExternalLink>
-          <StyledNavLink id={`guides-nav-link`} to={'/guides'}>
+          <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
             <Book size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('Guides')}
-          </StyledNavLink>
+            Guides
+          </HeaderExternalLink>
         </HeaderLinks>
       </HeaderRow>
       {/*<CurrentChain>
