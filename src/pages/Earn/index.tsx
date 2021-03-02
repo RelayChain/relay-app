@@ -3,7 +3,7 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
-import { ChainId } from '@zeroexchange/sdk';
+import { ChainId } from '@zeroexchange/sdk'
 //import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
@@ -61,7 +61,6 @@ const VoteCard = styled(DataCard)`
 // `
 
 export default function Earn() {
-
   // get chainId
   const { chainId } = useActiveWeb3React()
 
@@ -105,6 +104,23 @@ export default function Earn() {
         otherSymbol: 'zETH',
         otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
       }
+    ],
+    [ChainId.SMART_CHAIN]: [
+      {
+        baseSymbol: 'BNB',
+        baseAddress: 'BNB',
+        otherSymbol: 'BNB'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x4dDE6f0113a76b21B69f3e5340FD71dEa035a5f3',
+        otherSymbol: 'TC1'
+      },
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x4dDE6f0113a76b21B69f3e5340FD71dEa035a5f3',
+        otherSymbol: 'TC2'
+      }
     ]
   }
 
@@ -134,23 +150,30 @@ export default function Earn() {
                 {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
               </TYPE.white>
             </RowBetween>
-            <div style={{ display: 'block', width: '100%'}}>
-              <h3 style={{ marginBottom: '.5rem'}}>Add Liquidity:</h3>
-              { chainId && pools[chainId] &&
-                pools[chainId].map((pool: any, index: number) => <>
-                  <ButtonUNIGradient
-                    key={index}
-                    id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
-                    as={Link}
-                    to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
-                    style={{ margin: '1rem .5rem', display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}
-                  >
-                    <Text fontWeight={500} fontSize={14}>
-                      {`${pool.baseSymbol}/${pool.otherSymbol}`}
-                    </Text>
-                  </ButtonUNIGradient>
-                </>)
-              }
+            <div style={{ display: 'block', width: '100%' }}>
+              <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
+              {chainId &&
+                pools[chainId] &&
+                pools[chainId].map((pool: any, index: number) => (
+                  <>
+                    <ButtonUNIGradient
+                      key={index}
+                      id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
+                      as={Link}
+                      to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
+                      style={{
+                        margin: '1rem .5rem',
+                        display: 'inline-flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Text fontWeight={500} fontSize={14}>
+                        {`${pool.baseSymbol}/${pool.otherSymbol}`}
+                      </Text>
+                    </ButtonUNIGradient>
+                  </>
+                ))}
             </div>
           </AutoColumn>
         </CardSection>
@@ -159,7 +182,12 @@ export default function Earn() {
       </VoteCard>
 
       <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
-        <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '5px 5px 5px auto' }}>
+        <ResponsiveButtonSecondary
+          as={Link}
+          padding="6px 8px"
+          to={`create/${chainId === ChainId.MAINNET ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
+          style={{ margin: '5px 5px 5px auto' }}
+        >
           Create New Pool Pair
         </ResponsiveButtonSecondary>
       </RowBetween>

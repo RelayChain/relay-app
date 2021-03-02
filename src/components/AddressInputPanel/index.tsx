@@ -8,6 +8,7 @@ import { RowBetween } from '../Row'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import useENS from '../../hooks/useENS'
+import { CHAIN_LABELS } from '../../constants'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -105,7 +106,7 @@ export default function AddressInputPanel({
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  ({ chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'})
+                  {chainId && `View on ${CHAIN_LABELS[chainId]}`}
                 </ExternalLink>
               )}
             </RowBetween>

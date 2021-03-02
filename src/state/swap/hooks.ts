@@ -1,4 +1,4 @@
-import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
@@ -33,16 +33,18 @@ export function useSwapActionHandlers(): {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
-
-      let selected: any;
+      let selected: any
       if (currency instanceof Token) {
         selected = currency.address
       }
       if (currency === ETHER) {
-        selected = 'ETH';
+        selected = 'ETH'
       }
       if (currency === AVAX) {
-        selected = 'AVAX';
+        selected = 'AVAX'
+      }
+      if (currency === BNB) {
+        selected = 'BNB'
       }
       dispatch(
         selectCurrency({
@@ -90,7 +92,14 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
     if (typedValueParsed !== '0') {
       return currency instanceof Token
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed), currency ?.symbol === 'ETH' ? ChainId.MAINNET : ChainId.AVALANCHE)
+        : CurrencyAmount.ether(
+            JSBI.BigInt(typedValueParsed),
+            currency?.symbol === 'ETH'
+              ? ChainId.MAINNET
+              : currency?.symbol === 'ETH'
+              ? ChainId.SMART_CHAIN
+              : ChainId.AVALANCHE
+          )
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -211,8 +220,8 @@ export function useDerivedSwapInfo(): {
         ? slippageAdjustedAmountsV1[Field.INPUT]
         : null
       : slippageAdjustedAmounts
-        ? slippageAdjustedAmounts[Field.INPUT]
-        : null
+      ? slippageAdjustedAmounts[Field.INPUT]
+      : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -236,7 +245,7 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
     if (urlParam.toUpperCase() === 'ETH') return 'ETH'
     if (valid === false) return 'ETH'
   }
-  return '';
+  return ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -293,7 +302,7 @@ export function useDefaultsFromURLSearch():
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<
     { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
-    >()
+  >()
 
   useEffect(() => {
     if (!chainId) return

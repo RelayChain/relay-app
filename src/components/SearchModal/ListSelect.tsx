@@ -121,7 +121,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   }, [dispatch, listUrl, pending])
 
   const handleRemoveList = useCallback(() => {
-    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {    
+    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
       dispatch(removeList(listUrl))
     }
   }, [dispatch, listUrl])

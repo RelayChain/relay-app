@@ -244,20 +244,20 @@ export const ButtonWhite = styled(Base)`
 
 export const ButtonWhiteBg = styled(Base)`
   background-color: #fff;
-  color: rgba(0,0,0,.5);
-  transition: all .2s ease-in-out;
+  color: rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease-in-out;
   text-deecoration: none !important;
   &:focus {
     background-color: #fff;
-    opacity: .8;
+    opacity: 0.8;
   }
   &:hover {
     background-color: #fff;
-    opacity: .8;
+    opacity: 0.8;
   }
   &:active {
     background-color: #fff;
-    opacity: .8;
+    opacity: 0.8;
   }
   &:disabled {
     opacity: 50%;

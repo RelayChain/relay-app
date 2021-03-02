@@ -96,7 +96,7 @@ const HeaderRow = styled(RowFixed)`
 const HeaderExternalLink = styled(ExternalLink)`
   margin: 0 16px;
   font-size: 1rem;
-  color: #C3C5CB;
+  color: #c3c5cb;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 0 6px;
     font-size: .85rem;
@@ -222,7 +222,7 @@ const StyledNavLink = styled(NavLink).attrs({
   width: fit-content;
   margin: 0 16px;
   font-weight: 500;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
@@ -246,6 +246,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: 'Kovan',
   [ChainId.FUJI]: 'Avalanche',
   [ChainId.AVALANCHE]: 'Avalanche',
+  [ChainId.SMART_CHAIN]: 'SmartChain',
   [ChainId.MAINNET]: 'Ethereum'
 }
 
@@ -255,21 +256,22 @@ const NETWORK_SYMBOLS: any = {
   Ropsten: 'ETH',
   Görli: 'ETH',
   Kovan: 'ETH',
-  Avalanche: 'AVAX'
+  Avalanche: 'AVAX',
+  SmartChain: 'BNB'
 }
 
 export default function Header() {
-
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
-  let label, symbol = '';
+  let label,
+    symbol = ''
   if (chainId) {
-    label = NETWORK_LABELS[chainId];
-    symbol = NETWORK_SYMBOLS[label || 'Ethereum'];
+    label = NETWORK_LABELS[chainId]
+    symbol = NETWORK_SYMBOLS[label || 'Ethereum']
   }
 
   return (

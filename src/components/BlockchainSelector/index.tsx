@@ -1,34 +1,34 @@
 import { ChevronDown, ChevronsRight, Link } from 'react-feather'
 
-import BlockchainLogo from '../BlockchainLogo';
+import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  border: 1px dashed rgba(38, 98, 255, .5);
+  border: 1px dashed rgba(38, 98, 255, 0.5);
   border-radius: 14px;
   margin-bottom: 1.5rem;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   h5 {
-    margin-left: .3rem;
+    margin-left: 0.3rem;
   }
   p {
     margin-left: auto;
-    padding: .5rem .25rem;
+    padding: 0.5rem 0.25rem;
     border-radius: 12px;
-    background: rgba(38, 98, 255, .25);
-    transition: all .2s ease-in-out;
-    font-size: .85rem;
+    background: rgba(38, 98, 255, 0.25);
+    transition: all 0.2s ease-in-out;
+    font-size: 0.85rem;
     span {
       margin-left: 4px;
       margin-right: 4px;
     }
     &:hover {
-      background: rgba(38, 98, 255, .75);
+      background: rgba(38, 98, 255, 0.75);
       cursor: pointer;
     }
     &.crosschain {
@@ -39,7 +39,7 @@ const Container = styled.div`
     }
   }
 `
-const Row = styled.div<{ borderBottom: boolean, isCrossChain?: boolean }>`
+const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -63,13 +63,12 @@ const BlockchainSelector = ({
   onShowCrossChainModal: () => void
   onShowTransferChainModal: () => void
 }) => {
-
   const openChangeChainInfo = () => {
-    onShowCrossChainModal();
+    onShowCrossChainModal()
   }
 
   const openTransferModal = () => {
-    onShowTransferChainModal();
+    onShowTransferChainModal()
   }
 
   if (!blockchain) {
@@ -79,33 +78,43 @@ const BlockchainSelector = ({
   // @ts-ignore
   return (
     <Container>
-      { !isCrossChain &&
+      {!isCrossChain && (
         <Row borderBottom={false} isCrossChain={isCrossChain}>
           <Link size={16} />
-          <h5>
-            Blockchain:
-          </h5>
+          <h5>Blockchain:</h5>
           <p onClick={openChangeChainInfo}>
-            <BlockchainLogo size="18px" blockchain={typeof(blockchain) === "string"? blockchain : ""} style={{ marginBottom: '-3px' }} />
+            <BlockchainLogo
+              size="18px"
+              blockchain={typeof blockchain === 'string' ? blockchain : ''}
+              style={{ marginBottom: '-3px' }}
+            />
             <span>{blockchain}</span>
             <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
           </p>
         </Row>
-      }
-      { isCrossChain &&
+      )}
+      {isCrossChain && (
         <Row borderBottom={false} isCrossChain={isCrossChain}>
           <p className="crosschain currentchain">
-            <BlockchainLogo size="18px" blockchain={typeof(blockchain) !== "string" ? blockchain.name : blockchain } style={{ marginBottom: '-3px' }} />
-            <span>{typeof(blockchain) !== "string"? blockchain.name : blockchain }</span>
+            <BlockchainLogo
+              size="18px"
+              blockchain={typeof blockchain !== 'string' ? blockchain.name : blockchain}
+              style={{ marginBottom: '-3px' }}
+            />
+            <span>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
           </p>
           <ChevronsRight />
           <p className="crosschain" onClick={openTransferModal}>
-            <BlockchainLogo size="18px" blockchain={typeof(transferTo) !== "string" ? transferTo.name : blockchain } style={{ marginBottom: '-3px' }} />
-            <span>{typeof(transferTo) !== "string"? transferTo.name : blockchain }</span>
+            <BlockchainLogo
+              size="18px"
+              blockchain={typeof transferTo !== 'string' ? transferTo.name : blockchain}
+              style={{ marginBottom: '-3px' }}
+            />
+            <span>{typeof transferTo !== 'string' ? transferTo.name : blockchain}</span>
             <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
           </p>
         </Row>
-      }
+      )}
     </Container>
   )
 }

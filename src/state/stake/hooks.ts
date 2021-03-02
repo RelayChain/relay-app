@@ -1,6 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO} from '../../constants'
+import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -45,7 +45,8 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.FUJI], MOCK1],
       stakingRewardAddress: '0x1F6271FedF344724DBd489ee4963f05AF8a0970c'
     }
-  ]
+  ],
+  [ChainId.AVALANCHE]: []
 }
 
 export interface StakingInfo {

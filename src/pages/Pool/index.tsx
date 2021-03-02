@@ -163,10 +163,23 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={`create/${ chainId === ChainId.MAINNET ? 'ETH' : 'AVAX' }`} style={{ margin: '10px' }}>
+                <ResponsiveButtonSecondary
+                  as={Link}
+                  padding="6px 8px"
+                  to={`create/${
+                    chainId === ChainId.MAINNET ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'
+                  }`}
+                  style={{ margin: '10px' }}
+                >
                   Create a pair
                 </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH" style={{ margin: '10px' }}>
+                <ResponsiveButtonPrimary
+                  id="join-pool-button"
+                  as={Link}
+                  padding="6px 8px"
+                  to="/add/ETH"
+                  style={{ margin: '10px' }}
+                >
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
                   </Text>
@@ -188,7 +201,7 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                { chainId && chainId === ChainId.MAINNET &&
+                {chainId && chainId === ChainId.MAINNET && (
                   <ButtonSecondary>
                     <RowBetween>
                       <ExternalLink href={'https://uniswap.info/account/' + account}>
@@ -197,7 +210,7 @@ export default function Pool() {
                       <span> ↗</span>
                     </RowBetween>
                   </ButtonSecondary>
-                }
+                )}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

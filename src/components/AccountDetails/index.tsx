@@ -6,7 +6,6 @@ import styled, { ThemeContext } from 'styled-components'
 import { AppDispatch } from '../../state'
 import { AutoRow } from '../Row'
 import { ButtonSecondary } from '../Button'
-import { ChainId } from '@zeroexchange/sdk';
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import Copy from './Copy'
@@ -14,7 +13,7 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import Identicon from '../Identicon'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import PortisIcon from '../../assets/images/portisIcon.png'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { CHAIN_LABELS, SUPPORTED_WALLETS } from '../../constants'
 import Transaction from './Transaction'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -359,9 +358,7 @@ export default function AccountDetails({
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>
-                              { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
-                            </span>
+                            <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
                           </AddressLink>
                         )}
                       </div>
@@ -383,9 +380,7 @@ export default function AccountDetails({
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>
-                              { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
-                            </span>
+                            <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
                           </AddressLink>
                         )}
                       </div>

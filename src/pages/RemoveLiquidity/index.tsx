@@ -1,5 +1,5 @@
-import { AVAX, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -101,7 +101,14 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(
+    parsedAmounts[Field.LIQUIDITY],
+    chainId === ChainId.MAINNET
+      ? ETH_ROUTER_ADDRESS
+      : chainId === ChainId.SMART_CHAIN
+      ? SMART_CHAIN_ROUTER_ADDRESS
+      : AVAX_ROUTER_ADDRESS
+  )
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -138,7 +145,12 @@ export default function RemoveLiquidity({
     ]
     const message = {
       owner: account,
-      spender: chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS,
+      spender:
+        chainId === ChainId.MAINNET
+          ? ETH_ROUTER_ADDRESS
+          : chainId === ChainId.SMART_CHAIN
+          ? SMART_CHAIN_ROUTER_ADDRESS
+          : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -210,8 +222,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = (currencyB === ETHER || currencyB === AVAX)
-    const oneCurrencyIsETH = (currencyA === ETHER || currencyA === AVAX) || currencyBIsETH
+    const currencyBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB
+    const oneCurrencyIsETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -372,12 +384,12 @@ export default function RemoveLiquidity({
   }
 
   function modalBottom() {
-    const symbolName = chainId && chainId === ChainId.MAINNET ? 'UNI ' : 'AVAX '
+    const symbolName = chainId === ChainId.MAINNET ? 'UNI ' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX '
     return (
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            { symbolName + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {symbolName + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -424,7 +436,13 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = (currencyA === ETHER || currencyB === ETHER || currencyB === AVAX || currencyA === AVAX)
+  const oneCurrencyIsETH =
+    currencyA === ETHER ||
+    currencyB === ETHER ||
+    currencyB === BNB ||
+    currencyB === AVAX ||
+    currencyA === AVAX ||
+    currencyA === BNB
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -560,16 +578,19 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${(currencyA === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdA}/${
-                              (currencyB === ETHER || currencyB === AVAX) ? WETH[chainId].address : currencyIdB
+                            to={`/remove/${
+                              currencyA === ETHER || currencyB === AVAX || currencyB === BNB
+                                ? WETH[chainId].address
+                                : currencyIdA
+                            }/${
+                              currencyB === ETHER || currencyB === AVAX || currencyB === BNB
+                                ? WETH[chainId].address
+                                : currencyIdB
                             }`}
                           >
-                            { chainId && chainId === ChainId.MAINNET &&
-                              'Receive WETH'
-                            }
-                            { chainId && chainId === ChainId.AVALANCHE &&
-                              'Receive WAVAX'
-                            }
+                            {chainId && chainId === ChainId.MAINNET && 'Receive WETH'}
+                            {chainId && chainId === ChainId.AVALANCHE && 'Receive WAVAX'}
+                            {chainId && chainId === ChainId.SMART_CHAIN && 'Receive WBNB'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -577,12 +598,9 @@ export default function RemoveLiquidity({
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
-                            { chainId && chainId === ChainId.MAINNET &&
-                              'Receive ETH'
-                            }
-                            { chainId && chainId === ChainId.AVALANCHE &&
-                              'Receive AVAX'
-                            }
+                            {chainId && chainId === ChainId.MAINNET && 'Receive ETH'}
+                            {chainId && chainId === ChainId.AVALANCHE && 'Receive AVAX'}
+                            {chainId && chainId === ChainId.SMART_CHAIN && 'Receive BNB'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

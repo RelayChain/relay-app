@@ -1,4 +1,4 @@
-import { AVAX, ChainId, CurrencyAmount, ETHER, JSBI } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, CurrencyAmount, ETHER, JSBI } from '@zeroexchange/sdk'
 
 import { MIN_ETH } from '../constants'
 
@@ -8,8 +8,13 @@ import { MIN_ETH } from '../constants'
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount.currency === ETHER || currencyAmount.currency === AVAX) {
-    const chainId = currencyAmount ?.currency === ETHER ? ChainId.MAINNET : ChainId.AVALANCHE;
+  if (currencyAmount.currency === ETHER || currencyAmount.currency === AVAX || currencyAmount.currency === BNB) {
+    const chainId =
+      currencyAmount?.currency === ETHER
+        ? ChainId.MAINNET
+        : currencyAmount?.currency === BNB
+        ? ChainId.SMART_CHAIN
+        : ChainId.AVALANCHE
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH), chainId)
     } else {

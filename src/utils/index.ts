@@ -1,5 +1,5 @@
-import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../constants'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
 import { AddressZero } from '@ethersproject/constants'
@@ -26,6 +26,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   42: 'kovan.',
   43113: 'FUJI',
   43114: 'AVALANCHE',
+  97: 'SMART_CHAIN'
 }
 
 export function getEtherscanLink(
@@ -39,6 +40,9 @@ export function getEtherscanLink(
   }
   if (chainId === ChainId.AVALANCHE) {
     prefix = `https://cchain.explorer.avax.network`
+  }
+  if (chainId === ChainId.SMART_CHAIN) {
+    prefix = `https://testnet.bscscan.com`
   }
   switch (type) {
     case 'transaction': {
@@ -107,7 +111,16 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 
 // account is optional
 export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+  return getContract(
+    chainId === ChainId.MAINNET
+      ? ETH_ROUTER_ADDRESS
+      : chainId === ChainId.SMART_CHAIN
+      ? SMART_CHAIN_ROUTER_ADDRESS
+      : AVAX_ROUTER_ADDRESS,
+    IUniswapV2Router02ABI,
+    library,
+    account
+  )
 }
 
 export function escapeRegExp(string: string): string {
@@ -117,5 +130,6 @@ export function escapeRegExp(string: string): string {
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
   if (currency === AVAX) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId] ?.[currency.address])
+  if (currency === BNB) return true
+  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

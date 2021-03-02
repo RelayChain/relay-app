@@ -2,6 +2,7 @@ import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
+import BNBLogo from '../../assets/images/binance-coin-logo.webp'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -51,19 +52,20 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
     if (currency && currency.symbol === 'ZERO') return []
     if (currency instanceof Token) {
-
       // find logos on ETH address for non-ETH assets
-      let logoAddress = currency.address;
-      let allConfigTokens: any = [];
+      let logoAddress = currency.address
+      const allConfigTokens: any = []
       crosschainConfig.chains.map(chain => {
         chain.tokens.map(token => {
-          allConfigTokens.push(token);
+          allConfigTokens.push(token)
         })
       })
-      let chosenToken = allConfigTokens.find((token: any) => token.address === currency.address);
-      let ethToken = crosschainConfig.chains[0].tokens.find((token: any) => token?.assetBase === chosenToken?.assetBase);
+      const chosenToken = allConfigTokens.find((token: any) => token.address === currency.address)
+      const ethToken = crosschainConfig.chains[0].tokens.find(
+        (token: any) => token?.assetBase === chosenToken?.assetBase
+      )
       if (ethToken) {
-        logoAddress = ethToken.address;
+        logoAddress = ethToken.address
       }
 
       if (currency instanceof WrappedTokenInfo) {
@@ -79,22 +81,33 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 
-  if (currency?.symbol === 'AVAX' ||
-      currency?.symbol === 'WAVAX' ||
-      currency?.symbol === 'wAVAX' ||
-      currency?.symbol === 'AVA' ||
-      currency?.symbol === 'eAVAX') {
+  if (
+    currency?.symbol === 'AVAX' ||
+    currency?.symbol === 'WAVAX' ||
+    currency?.symbol === 'wAVAX' ||
+    currency?.symbol === 'AVA' ||
+    currency?.symbol === 'eAVAX'
+  ) {
     return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
+  }
+
+  if (
+    currency?.symbol === 'BNB' ||
+    currency?.symbol === 'WBNB' ||
+    currency?.symbol === 'wBNB' ||
+    currency?.symbol === 'eBNB'
+  ) {
+    return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
   }
 
   // cross chain
   if (currency?.symbol === 'ETH' || currency?.symbol === 'wETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDT'|| currency?.symbol === 'wUSDT') {
+  if (currency?.symbol === 'USDT' || currency?.symbol === 'wUSDT') {
     return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'USDC'|| currency?.symbol === 'wUSDC') {
+  if (currency?.symbol === 'USDC' || currency?.symbol === 'wUSDC') {
     return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
   }
   if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {

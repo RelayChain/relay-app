@@ -1,4 +1,4 @@
-import ChainBridgeItem from './ChainBridgeItem';
+import ChainBridgeItem from './ChainBridgeItem'
 import { CloseIcon } from '../../theme/components'
 import Modal from '../Modal'
 import React from 'react'
@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 
 interface ChainBridgeProps {
-  isOpen: boolean;
-  onDismiss: () => void;
-  pendingTransfer?: any;
+  isOpen: boolean
+  onDismiss: () => void
+  pendingTransfer?: any
 }
 
 const ModalContainer = styled.div`
@@ -34,38 +34,37 @@ const ListContainer = styled.div`
   overflow: auto;
 `
 
-export default function ChainBridgeModal({
-  isOpen,
-  onDismiss,
-}: ChainBridgeProps) {
-
-  const { pendingTransfer } = useCrosschainState();
+export default function ChainBridgeModal({ isOpen, onDismiss }: ChainBridgeProps) {
+  const { pendingTransfer } = useCrosschainState()
 
   // if (!pendingTransfer?.amount) {
   //   onDismiss()
   // }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
       <ModalContainer>
-      <RowBetween>
-        <div />
-        <CloseIcon onClick={onDismiss} />
-      </RowBetween>
-      { pendingTransfer && pendingTransfer.amount ?
-        <>
-          <h5>Pending Cross-Chain Transfer:</h5>
-          <ListContainer>
-            <ChainBridgeItem item={pendingTransfer}>
-            </ChainBridgeItem>
-          </ListContainer>
-        </>
-        :
-        <>
-          <h5>No pending transfers</h5>
-        </>
-      }
-
+        <RowBetween>
+          <div />
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        {pendingTransfer?.amount ? (
+          <>
+            <h5>Pending Cross-Chain Transfer:</h5>
+            <ListContainer>
+              {
+                // @ts-ignore
+                <ChainBridgeItem item={pendingTransfer}></ChainBridgeItem>
+              }
+            </ListContainer>
+          </>
+        ) : (
+          <>
+            <h5>No pending transfers</h5>
+          </>
+        )}
       </ModalContainer>
     </Modal>
   )

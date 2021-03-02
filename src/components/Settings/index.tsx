@@ -2,11 +2,7 @@ import React, { useContext, useRef, useState } from 'react'
 import { RowBetween, RowFixed } from '../Row'
 import { Settings, X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
-import {
-  useExpertModeManager,
-  useUserSlippageTolerance,
-  useUserTransactionTTL
-} from '../../state/user/hooks'
+import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'

@@ -1,4 +1,4 @@
-import './snow.css';
+import './snow.css'
 
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { Suspense } from 'react'
@@ -20,7 +20,7 @@ import Header from '../components/Header'
 import Manage from './Earn/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import Mountains from '../components/Mountains';
+import Mountains from '../components/Mountains'
 import Polling from '../components/Header/Polling'
 // import Pool from './Pool'
 import PoolFinder from './PoolFinder'
@@ -79,7 +79,6 @@ function TopLevelModals() {
 }
 
 export default function App() {
-
   return (
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />

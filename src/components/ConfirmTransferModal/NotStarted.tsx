@@ -1,12 +1,12 @@
 import { RowBetween, RowFixed } from '../Row'
 
 import { AutoColumn } from '../Column'
-import BlockchainLogo from '../BlockchainLogo';
+import BlockchainLogo from '../BlockchainLogo'
 import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
 import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogo'
 import React from 'react'
 import { Text } from 'rebass'
 import { Trade } from '@zeroexchange/sdk'
@@ -15,13 +15,13 @@ import styled from 'styled-components'
 import { useCrosschainHooks } from '../../state/crosschain/hooks'
 
 interface NotStartedProps {
-  activeChain?: string;
-  transferTo?: string;
-  currency?: Currency | null;
-  value?: any;
+  activeChain?: string
+  transferTo?: string
+  currency?: Currency | null
+  value?: any
   trade?: Trade
-  changeTransferState: (state: ChainTransferState) => void;
-  tokenTransferState: ChainTransferState;
+  changeTransferState: (state: ChainTransferState) => void
+  tokenTransferState: ChainTransferState
 }
 
 const ChainContainer = styled.div`
@@ -40,15 +40,15 @@ const ChainItem = styled.div`
   margin: 1rem;
   position: relative;
   padding: 12px;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   border-radius: 12px;
   img {
     margin: auto;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 `
 const ChainMessage = styled.p`
-  font-size: .85rem;
+  font-size: 0.85rem;
   line-height: 1.25rem;
   a {
     font-weight: bold;
@@ -56,20 +56,21 @@ const ChainMessage = styled.p`
     cursor: pointer;
     outline: none;
     text-decoration: none;
-    margin-left: 4px; margin-right: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
   }
 `
 
-export default function NotStarted ({
+export default function NotStarted({
   activeChain,
   transferTo,
   currency,
   value,
   trade,
   changeTransferState,
-  tokenTransferState,
+  tokenTransferState
 }: NotStartedProps) {
-  const {MakeApprove} = useCrosschainHooks()
+  const { MakeApprove } = useCrosschainHooks()
 
   const formatValue = (value: string) => {
     return parseFloat(parseFloat(value).toFixed(6)).toString()
@@ -79,14 +80,10 @@ export default function NotStarted ({
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          {currency &&
+          {currency && (
             <CurrencyLogo size="24px" currency={currency} style={{ marginBottom: '-3px', marginRight: '12px' }} />
-          }
-          <TruncatedText
-            fontSize={24}
-            fontWeight={500}
-            color={''}
-          >
+          )}
+          <TruncatedText fontSize={24} fontWeight={500} color={''}>
             {formatValue(value)}
           </TruncatedText>
         </RowFixed>
@@ -112,19 +109,24 @@ export default function NotStarted ({
       <RowFixed gap={'0px'}>
         <ChainMessage>
           You will be transfering your {activeChain} tokens to the {transferTo} Blockchain. You must
-          <a href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
+          <a
+            href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
             rel="noopener noreferrer"
-            target="_blank">switch your RPC Network
+            target="_blank"
+          >
+            switch your RPC Network
           </a>
           to the appropriate settings once this is complete to view your tokens.
         </ChainMessage>
       </RowFixed>
       <RowBetween></RowBetween>
-      <RowFixed style={{ width: '100%'}}>
-        <ButtonPrimary onClick={() => {
-          MakeApprove().catch(console.error)
-          changeTransferState(ChainTransferState.ApprovalPending)
-        }}>
+      <RowFixed style={{ width: '100%' }}>
+        <ButtonPrimary
+          onClick={() => {
+            MakeApprove().catch(console.error)
+            changeTransferState(ChainTransferState.ApprovalPending)
+          }}
+        >
           Approve Transfer
         </ButtonPrimary>
       </RowFixed>

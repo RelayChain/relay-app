@@ -4,10 +4,11 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 export const AVAX_ROUTER_ADDRESS = '0x85995d5f8ee9645cA855e92de16FA62D26398060' // mainnet avalanche
+export const SMART_CHAIN_ROUTER_ADDRESS = '0x68e36E2c7E960F74a91b4B844c59EAbE3444D3C6' // mainnet smartChain
 export const ETH_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // mainnet ethereum
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7';
+export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -15,20 +16,30 @@ type ChainTokenList = {
 }
 
 export const returnNumberDecimals = (num: string, decimals: number) => {
-  return parseFloat(parseFloat(num).toFixed(decimals).toString());
+  return parseFloat(
+    parseFloat(num)
+      .toFixed(decimals)
+      .toString()
+  )
 }
 
 export const returnBalanceNum = (obj?: any, decimals?: number) => {
-  const str = obj.toExact();
-  let [str1, str2] = str.split('.');
+  const str = obj.toExact()
+  const [str1, str2] = str.split('.')
   if (str2) {
-    return str1.length + decimals;
+    return str1.length + decimals
   } else {
-    return str1.length;
+    return str1.length
   }
 }
 
-export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
+export const ZERO = new Token(
+  ChainId.MAINNET,
+  '0xf0939011a9bb95c3b791f0cb546377ed2693a574',
+  18,
+  'ZERO',
+  'Zero Exchange'
+)
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -37,14 +48,52 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 
-export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche')
-export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange')
-export const zDAI = new Token(ChainId.AVALANCHE, '0x12f108E6138d4A9c58511e042399cF8f90D5673f', 18, 'zDAI', 'Dai Stablecoin')
+export const WBNB = new Token(
+  ChainId.SMART_CHAIN,
+  '0x4a65edf0e3f097d1f3dFAcF5f99Eb8e61Ce23b2f',
+  18,
+  'WBNB',
+  'SMART_CHAIN'
+)
+
+export const WAVAX = new Token(
+  ChainId.AVALANCHE,
+  '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+  18,
+  'WAVAX',
+  'Avalanche'
+)
+export const zZERO = new Token(
+  ChainId.AVALANCHE,
+  '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+  18,
+  'ZERO',
+  'Zero Exchange'
+)
+export const zDAI = new Token(
+  ChainId.AVALANCHE,
+  '0x12f108E6138d4A9c58511e042399cF8f90D5673f',
+  18,
+  'zDAI',
+  'Dai Stablecoin'
+)
 export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'USD//C')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
 
-export const MOCK1 = new Token(ChainId.FUJI, '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351', 18, 'MOCK1', 'MOCK1 in Avalanche')
-export const MOCK2 = new Token(ChainId.FUJI, '0x5300A4834F1995828B99bE23bcD99C80002DE9c8', 18, 'MOCK2', 'MOCK2 in Avalanche')
+export const MOCK1 = new Token(
+  ChainId.FUJI,
+  '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351',
+  18,
+  'MOCK1',
+  'MOCK1 in Avalanche'
+)
+export const MOCK2 = new Token(
+  ChainId.FUJI,
+  '0x5300A4834F1995828B99bE23bcD99C80002DE9c8',
+  18,
+  'MOCK2',
+  'MOCK2 in Avalanche'
+)
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
@@ -63,7 +112,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.FUJI]: new Token(ChainId.FUJI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.SMART_CHAIN]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -85,7 +135,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
   [ChainId.FUJI]: [WETH[ChainId.FUJI]],
-  [ChainId.AVALANCHE]: [WETH[ChainId.AVALANCHE]]
+  [ChainId.AVALANCHE]: [WETH[ChainId.AVALANCHE]],
+  [ChainId.SMART_CHAIN]: [WETH[ChainId.SMART_CHAIN]]
 }
 
 // used to construct intermediary pairs for trading
@@ -114,6 +165,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
   [ChainId.AVALANCHE]: [],
+  [ChainId.SMART_CHAIN]: [],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
 
@@ -252,3 +304,15 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x901bb9583b24D97e995513C6778dc6888AB6870e',
   '0xA7e5d5A720f06526557c513402f2e6B5fA20b008'
 ]
+
+export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.RINKEBY]: 'Rinkeby',
+  [ChainId.FUJI]: 'Avalanche',
+  [ChainId.AVALANCHE]: 'Avalanche',
+  [ChainId.SMART_CHAIN]: 'Smart Chain'
+}
+
+export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot']
+
+export const ETH_RPCS = ['Ethereum', 'Rinkeby']

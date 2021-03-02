@@ -13,6 +13,7 @@ import { RowBetween } from '../Row'
 import { Text } from 'rebass'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+import { CHAIN_LABELS } from '../../constants'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -88,7 +89,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                { chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'}
+                {chainId && `View on ${CHAIN_LABELS[chainId]}`}
               </Text>
             </ExternalLink>
           )}

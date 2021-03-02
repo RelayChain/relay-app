@@ -8,9 +8,9 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
     return Promise.resolve('#FAAB14')
   }
-  var path;
-  if(token.address === '0xF0939011a9bb95c3B791f0cb546377Ed2693a574') {
-    path = `../../assets/images/logo-zero-124.png`;
+  let path
+  if (token.address === '0xF0939011a9bb95c3B791f0cb546377Ed2693a574') {
+    path = `../../assets/images/logo-zero-124.png`
   } else {
     path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
   }

@@ -75,7 +75,6 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
-
   const { chainId, account } = useActiveWeb3React()
 
   const token0 = stakingInfoTop.tokens[0]
@@ -105,8 +104,8 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = (currencyA === ETHER || currencyA === AVAX) ? tokenB : tokenA
-  const WETH = (currencyA === ETHER || currencyA === AVAX) ? tokenA : tokenB
+  const token = currencyA === ETHER || currencyA === AVAX ? tokenB : tokenA
+  const WETH = currencyA === ETHER || currencyA === AVAX ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -144,21 +143,28 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        { chainId === ChainId.MAINNET ?
-          <ExternalLink href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
-            target="_blank" style={{ width: '100%', textDecoration: 'none' }}>
+        {chainId === ChainId.MAINNET ? (
+          <ExternalLink
+            href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
+            target="_blank"
+            style={{ width: '100%', textDecoration: 'none' }}
+          >
             <ButtonWhiteBg padding="8px" borderRadius="8px">
               View Charts
             </ButtonWhiteBg>
-          </ExternalLink> : <div></div>
-        }
+          </ExternalLink>
+        ) : (
+          <div></div>
+        )}
 
-        <StyledInternalLink to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%', paddingLeft: '10px' }}>
+        <StyledInternalLink
+          to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`}
+          style={{ width: '100%', paddingLeft: '10px' }}
+        >
           <ButtonPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
           </ButtonPrimary>
         </StyledInternalLink>
-
       </TopSection>
 
       <StatContainer>
