@@ -52,6 +52,37 @@ const BottomSection = styled(AutoColumn)`
   position: relative;
 `
 
+const StyledBox = styled.div`
+  border-radius: 12px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  border: 2px solid ${({ theme }) => theme.green1};
+  padding: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  div {
+    color: ${({ theme }) => theme.green1};
+    font-weight: bold;
+  }
+`
+
+const GreenButton = styled.div`
+  padding: .75rem 1.25rem;
+  display: block;
+  text-align: center;
+  color: #fff !important;
+  background: ${({ theme }) => theme.green1};
+  border-radius: 12px;
+  cursor: pointer;
+  &:hover {
+    color: #fff !important;
+    background: ${({ theme }) => theme.green1};
+    opacity: .8;
+  }
+`
+
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
   z-index: 2;
@@ -388,6 +419,15 @@ export default function Manage({
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
+
+          {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
+            <StyledBox>
+              <TYPE.main>{userLiquidityUnstaked?.toSignificant(6)} ZERO LP tokens</TYPE.main>
+              <GreenButton onClick={handleDepositClick}>
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit ZERO LP Tokens'}
+              </GreenButton>
+            </StyledBox>
+          )}
         </BottomSection>
 
         {!account ? (
@@ -432,9 +472,16 @@ export default function Manage({
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            {stakingInfo && stakingInfo.active && (
-              <ButtonPrimary padding="8px" borderRadius="8px" width="160px" margin="10px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit ZERO LP Tokens'}
+
+            {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                width={'fit-content'}
+                as={Link}
+                to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+              >
+                Remove Liquidity
               </ButtonPrimary>
             )}
 
@@ -452,22 +499,6 @@ export default function Manage({
               </>
             )}
           </DataRow>
-        )}
-        {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <div>
-            <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} ZERO LP tokens available</TYPE.main>
-            <DataRow style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                width={'fit-content'}
-                as={Link}
-                to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
-              >
-                Remove Liquidity
-              </ButtonPrimary>
-            </DataRow>
-          </div>
         )}
       </PositionInfo>
     </PageWrapper>
