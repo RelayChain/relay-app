@@ -115,7 +115,7 @@ export default function Swap() {
 
   const {
     currentTxID,
-    availableChains,
+    availableChains: allChains,
     availableTokens,
     currentChain,
     currentToken,
@@ -126,8 +126,6 @@ export default function Swap() {
     crosschainTransferStatus,
     swapDetails
   } = useCrosschainState()
-
-  console.log('availableChains', availableChains)
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
@@ -150,6 +148,10 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
+
+  const availableChains = useMemo(() => {
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+  }, [allChains])
 
   const theme = useContext(ThemeContext)
 
@@ -332,6 +334,7 @@ export default function Swap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
+      console.log('inputCurrency=====', inputCurrency)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {

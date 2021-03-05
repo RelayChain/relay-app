@@ -167,7 +167,7 @@ export default function Pool() {
                   as={Link}
                   padding="6px 8px"
                   to={`create/${
-                    chainId === ChainId.MAINNET ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'
+                    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'
                   }`}
                   style={{ margin: '10px' }}
                 >
@@ -201,7 +201,7 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                {chainId && chainId === ChainId.MAINNET && (
+                {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && (
                   <ButtonSecondary>
                     <RowBetween>
                       <ExternalLink href={'https://uniswap.info/account/' + account}>

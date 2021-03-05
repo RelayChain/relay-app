@@ -143,7 +143,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        {chainId === ChainId.MAINNET ? (
+        {(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? (
           <ExternalLink
             href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
             target="_blank"

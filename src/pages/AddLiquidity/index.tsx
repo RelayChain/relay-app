@@ -120,7 +120,7 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId === ChainId.MAINNET
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS
@@ -128,7 +128,7 @@ export default function AddLiquidity({
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId === ChainId.MAINNET
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS

@@ -195,7 +195,7 @@ export default function CurrencyList({
   const { chainId } = useActiveWeb3React()
 
   const nativeToken =
-    chainId === ChainId.MAINNET ? Currency.ETHER : chainId === ChainId.SMART_CHAIN ? Currency.BNB : Currency.AVAX
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? Currency.ETHER : chainId === ChainId.SMART_CHAIN ? Currency.BNB : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,
     showETH,

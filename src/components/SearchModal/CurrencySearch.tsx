@@ -60,10 +60,11 @@ export function CurrencySearch({
 
   // cross chain
   const { availableTokens } = useCrosschainState()
-
+  console.log('availableTokens====', availableTokens)
   const availableTokensArray = availableTokens.map((x: any) => {
     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
   })
+  console.log('availableTokensArray====', availableTokensArray)
 
   const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
@@ -85,7 +86,10 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(chainId === ChainId.MAINNET ? defaultTokenList : availableTokensArray, searchQuery)
+    return filterTokens(
+      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY ? defaultTokenList : availableTokensArray,
+      searchQuery
+    )
   }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
@@ -183,7 +187,6 @@ export function CurrencySearch({
       </PaddedColumn>
 
       <Separator />
-
       <div style={{ flex: '1' }}>
         <AutoSizer disableWidth>
           {({ height }) => (

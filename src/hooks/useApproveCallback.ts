@@ -117,7 +117,7 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
   // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
   return useApproveCallback(
     amountToApprove,
-    chainId === ChainId.MAINNET
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS

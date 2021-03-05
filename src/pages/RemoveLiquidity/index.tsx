@@ -103,7 +103,7 @@ export default function RemoveLiquidity({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    chainId === ChainId.MAINNET
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS
@@ -131,7 +131,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${chainId && chainId === ChainId.MAINNET ? 'Uniswap V2' : 'ZERO-LP-Token'}`,
+      name: `${chainId && (chainId === ChainId.MAINNET  || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'}`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -146,7 +146,7 @@ export default function RemoveLiquidity({
     const message = {
       owner: account,
       spender:
-        chainId === ChainId.MAINNET
+        (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
           ? ETH_ROUTER_ADDRESS
           : chainId === ChainId.SMART_CHAIN
           ? SMART_CHAIN_ROUTER_ADDRESS
@@ -384,7 +384,7 @@ export default function RemoveLiquidity({
   }
 
   function modalBottom() {
-    const symbolName = chainId === ChainId.MAINNET ? 'UNI ' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX '
+    const symbolName = (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'UNI ' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX '
     return (
       <>
         <RowBetween>
@@ -588,7 +588,7 @@ export default function RemoveLiquidity({
                                 : currencyIdB
                             }`}
                           >
-                            {chainId && chainId === ChainId.MAINNET && 'Receive WETH'}
+                            {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
                             {chainId && chainId === ChainId.AVALANCHE && 'Receive WAVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN && 'Receive WBNB'}
                           </StyledInternalLink>
@@ -598,7 +598,7 @@ export default function RemoveLiquidity({
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
-                            {chainId && chainId === ChainId.MAINNET && 'Receive ETH'}
+                            {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
                             {chainId && chainId === ChainId.AVALANCHE && 'Receive AVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN && 'Receive BNB'}
                           </StyledInternalLink>

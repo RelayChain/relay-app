@@ -3,6 +3,7 @@ import { CrosschainChain } from '../../state/crosschain/actions'
 import Modal from '../Modal'
 import React from 'react'
 import styled from 'styled-components'
+import { CHAIN_LABELS } from '../../constants'
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -93,6 +94,7 @@ export default function CrossChainModal({
   isTransfer,
   selectTransferChain
 }: CrossChainModalProps) {
+  console.log('supportedChains======', supportedChains)
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>

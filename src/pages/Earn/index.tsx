@@ -185,7 +185,7 @@ export default function Earn() {
         <ResponsiveButtonSecondary
           as={Link}
           padding="6px 8px"
-          to={`create/${chainId === ChainId.MAINNET ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
+          to={`create/${(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
           style={{ margin: '5px 5px 5px auto' }}
         >
           Create New Pool Pair

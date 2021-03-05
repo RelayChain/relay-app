@@ -161,7 +161,7 @@ function GetChainNameById(chainID: number): string {
   if (chainID === ChainId.MAINNET) {
     return 'Ethereum'
   } else if (chainID === ChainId.RINKEBY) {
-    return 'Ethereum'
+    return 'Rinkeby'
   } else if (chainID === ChainId.FUJI) {
     return 'Avalanche'
   } else if (chainID === ChainId.AVALANCHE) {
@@ -251,7 +251,7 @@ export function useCrosschainHooks() {
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, {
-        gasLimit: '250000',
+        gasLimit: '500000',
         value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
@@ -490,6 +490,7 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))
     const currentChainName = GetChainNameById(chainId || -1)
+
     const chains = GetAvailableChains(currentChainName)
     dispatch(
       setAvailableChains({

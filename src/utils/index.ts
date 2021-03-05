@@ -11,11 +11,15 @@ import { getAddress } from '@ethersproject/address'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
-  try {
-    return getAddress(value)
-  } catch {
-    return false
+  if (value) {
+    try {
+      return getAddress(value)
+    } catch(e) {
+      console.log('e==========', e)
+      return false
+    }
   }
+  return false
 }
 
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
@@ -112,7 +116,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 // account is optional
 export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(
-    chainId === ChainId.MAINNET
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS

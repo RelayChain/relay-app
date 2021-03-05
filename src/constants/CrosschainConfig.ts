@@ -19,6 +19,7 @@ export type BridgeConfig = {
   bridgeAddress: string
   erc20HandlerAddress: string
   rpcUrl: string
+  gasLimit?: number
   type: 'Ethereum' | 'Substrate'
   tokens: TokenConfig[]
   nativeTokenSymbol: string
@@ -35,13 +36,14 @@ export const crosschainConfig: ChainbridgeConfig = {
   chains: [
     {
       chainId: 1,
-      networkId: 1,
-      name: 'Ethereum',
-      bridgeAddress: '0x278cDd6847ef830c23cac61C17Eab837fEa1C29A',
-      erc20HandlerAddress: '0xB8B493600A5b200Ca2c58fFA9dced00694fB3E38',
-      rpcUrl: 'https://mainnet.infura.io/v3/45174a29359d4b07ade01676259bc47a',
+      networkId: 4,
+      name: 'Rinkeby',
+      bridgeAddress: '0xc148a61CB324615F48854Ad5b87CfA2a21582D70',
+      erc20HandlerAddress: '0x3028d9d921A9cCF27266b47843Cb304109f867Df',
+      rpcUrl: 'https://rinkeby.infura.io/v3/97131c192c3645fa9ce01756e052e616',
       type: 'Ethereum',
-      blockExplorer: 'https://etherscan.io/tx',
+      gasLimit: 6721975,
+      blockExplorer: 'https://rinkeby.infura.io/v3/97131c192c3645fa9ce01756e052e616',
       nativeTokenSymbol: 'ETH',
       tokens: [
         {
@@ -149,20 +151,20 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
         },
         {
-          address: '0x7482351561A2696c8e79B0a4111185d857A863Bd',
-          name: 'TT1',
-          symbol: 'TT1',
-          assetBase: 'TT1',
+          address: '0x21441C83F5C097934694f433f63dE0aDf955Caf2',
+          name: 'BT1',
+          symbol: 'BT1',
+          assetBase: 'BT1',
           decimals: 18,
-          resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
+          resourceId: '0x000000000000000000000021441C83F5C097934694f433f63dE0aDf955Caf201'
         },
         {
-          address: '0x0cea103BB2Da46222FFfA9753B43733b0e1747Bc',
-          name: 'TT2',
-          symbol: 'TT2',
-          assetBase: 'TT2',
+          address: '0xc54eeef43EE3DBC41Aa821bC859c3A22E41Fd1B5',
+          name: 'BT2',
+          symbol: 'BT2',
+          assetBase: 'BT2',
           decimals: 18,
-          resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
+          resourceId: '0x0000000000000000000000c54eeef43EE3DBC41Aa821bC859c3A22E41Fd1B501'
         }
       ]
     },
@@ -288,10 +290,11 @@ export const crosschainConfig: ChainbridgeConfig = {
       chainId: 3,
       networkId: 97,
       name: 'Smart Chain',
-      bridgeAddress: '0xcF5a41A957b1bA7C20766c0E04B47D4B263D0345',
-      erc20HandlerAddress: '0x3483316d55358155b611d332276190463dC0F9f3',
+      bridgeAddress: '0xfD0301Ff8B53860120eD19D847884EfFdDD0FD88',
+      erc20HandlerAddress: '0xEf0f18Bf7e3ddE04E9Cf38F8Bc786E0207A87455',
       rpcUrl: 'https://data-seed-prebsc-1-s2.binance.org:8545',
       type: 'Ethereum',
+      gasLimit: 6721975,
       blockExplorer: 'https://testnet.bscscan.com/',
       nativeTokenSymbol: 'BNB',
       tokens: [

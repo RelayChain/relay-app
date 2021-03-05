@@ -49,7 +49,7 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        {chainId && chainId === ChainId.MAINNET && (
+        {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && (
           <BaseWrapper
             onClick={() => {
               if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
