@@ -146,7 +146,7 @@ export default function Swap() {
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
 
-  const {BreakCrosschainSwap} = useCrosschainHooks()
+  const {BreakCrosschainSwap, GetAllowance} = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -444,6 +444,7 @@ export default function Swap() {
     setConfirmTransferModalOpen(false)    
   }
   const showConfirmTransferModal = () => {
+    GetAllowance();
     setConfirmTransferModalOpen(true)
   }
 
