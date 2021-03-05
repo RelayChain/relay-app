@@ -35,6 +35,7 @@ import useGasPrice from 'hooks/useGasPrice'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
 let dispatch: AppDispatch
@@ -245,18 +246,21 @@ export function useCrosschainHooks() {
         .substr(2) + // Deposit Amount (32 bytes)
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    const gasPriceFromChain = (crosschainState.currentChain.name === "Ethereum") ?
-      WithDecimalsHexString(currentGasPrice, 0) :
-      WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
-    const resultDepositTx = await bridgeContract.deposit(targetChain.chainId, currentToken.resourceId, data, {
-      gasLimit: '500000',
-      value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
-      gasPrice: gasPriceFromChain,
-      nonce: await getNonce()
-    }).catch((err: any) => {
-      console.log(err);
-      BreakCrosschainSwap();
-    })
+    const gasPriceFromChain =
+      crosschainState.currentChain.name === 'Ethereum'
+        ? WithDecimalsHexString(currentGasPrice, 0)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+    const resultDepositTx = await bridgeContract
+      .deposit(targetChain.chainId, currentToken.resourceId, data, {
+        gasLimit: '500000',
+        value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+        gasPrice: gasPriceFromChain,
+        nonce: await getNonce()
+      })
+      .catch((err: any) => {
+        console.log(err)
+        BreakCrosschainSwap()
+      })
 
     if (!resultDepositTx) {
       return
@@ -305,6 +309,7 @@ export function useCrosschainHooks() {
       })
     )
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     UpdateOwnTokenBalance().catch(console.error)
 
     while (true) {
@@ -345,18 +350,23 @@ export function useCrosschainHooks() {
     const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
 
     // @ts-ignore
-    const signer = web3React.library.getSigner();
+    const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    const approvedAmount = await tokenContract.allowance(crosschainState.currentRecipient,
-      currentChain.erc20HandlerAddress);
-    const countTokenForTransfer = BigNumber.from(WithDecimalsHexString(
-      crosschainState.transferAmount, currentToken.decimals));
+    const approvedAmount = await tokenContract.allowance(
+      crosschainState.currentRecipient,
+      currentChain.erc20HandlerAddress
+    )
+    const countTokenForTransfer = BigNumber.from(
+      WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
+    )
     if (countTokenForTransfer.lte(approvedAmount)) {
-      dispatch(setCrosschainTransferStatus({
-        status: ChainTransferState.ApprovalComplete
-      }))
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.ApprovalComplete
+        })
+      )
     } else {
-      console.log('not approved before');
+      console.log('not approved before')
     }
   }
 
@@ -376,26 +386,37 @@ export function useCrosschainHooks() {
       })
     )
 
-    const gasPriceFromChain = (crosschainState.currentChain.name === "Ethereum") ?
-      WithDecimalsHexString(currentGasPrice, 0) :
-      WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+    const gasPriceFromChain =
+      crosschainState.currentChain.name === 'Ethereum'
+        ? WithDecimalsHexString(currentGasPrice, 0)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const ABI = currentToken.address === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? USDTTokenABI : TokenABI
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-    tokenContract.approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), {
-      gasLimit: '50000',
-      gasPrice: gasPriceFromChain,
-      nonce: await getNonce()
-    }).then((resultApproveTx: any) => {
-      dispatch(setCrosschainTransferStatus({
-        status: ChainTransferState.ApprovalPending
-      }))
-      dispatch(setCurrentTxID({
-        txID: resultApproveTx.hash
-      }))
+    tokenContract
+      .approve(
+        currentChain.erc20HandlerAddress,
+        WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
+        {
+          gasLimit: '50000',
+          gasPrice: gasPriceFromChain,
+          nonce: await getNonce()
+        }
+      )
+      .then((resultApproveTx: any) => {
+        dispatch(
+          setCrosschainTransferStatus({
+            status: ChainTransferState.ApprovalPending
+          })
+        )
+        dispatch(
+          setCurrentTxID({
+            txID: resultApproveTx.hash
+          })
+        )
 
         resultApproveTx
           .wait()
