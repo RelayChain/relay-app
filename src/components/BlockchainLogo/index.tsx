@@ -1,7 +1,7 @@
 import AvaxLogo from '../../assets/images/avax-logo.png'
+import BSCLogo from '../../assets/images/binance-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import PolkadotLogo from '../../assets/images/polkadot-logo.png'
-import BSCLogo from '../../assets/images/bsc-logo.jpg'
 import React from 'react'
 import styled from 'styled-components'
 
