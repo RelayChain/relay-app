@@ -859,13 +859,5 @@ export const DEFAULT_TOKEN_LIST = [
     name: 'Maker',
     symbol: 'MKR',
     decimals: 18
-  },
-  {
-    address: '0x4e304b8376904b294cf713425a966dd4c44c0369',
-    chainId: 4,
-    name: 'BT1',
-    symbol: 'BT1',
-    assetBase: 'BT1',
-    decimals: 18
   }
 ]

@@ -148,22 +148,6 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
-        },
-        {
-          address: '0x21441C83F5C097934694f433f63dE0aDf955Caf2',
-          name: 'BT1',
-          symbol: 'BT1',
-          assetBase: 'BT1',
-          decimals: 18,
-          resourceId: '0x000000000000000000000021441C83F5C097934694f433f63dE0aDf955Caf201'
-        },
-        {
-          address: '0xc54eeef43EE3DBC41Aa821bC859c3A22E41Fd1B5',
-          name: 'BT2',
-          symbol: 'BT2',
-          assetBase: 'BT2',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000c54eeef43EE3DBC41Aa821bC859c3A22E41Fd1B501'
         }
       ]
     },
@@ -296,24 +280,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       gasLimit: 6721975,
       blockExplorer: 'https://bscscan.com/',
       nativeTokenSymbol: 'BNB',
-      tokens: [
-        {
-          address: '0x4dDE6f0113a76b21B69f3e5340FD71dEa035a5f3',
-          name: 'TC1',
-          symbol: 'TC1',
-          assetBase: 'TC1',
-          decimals: 18,
-          resourceId: '0x00000000000000000000004dDE6f0113a76b21B69f3e5340FD71dEa035a5f303'
-        },
-        {
-          address: '0x4E304b8376904B294CF713425A966dd4c44c0369',
-          name: 'TC2',
-          symbol: 'TC2',
-          assetBase: 'TC2',
-          decimals: 18,
-          resourceId: '0x00000000000000000000004E304b8376904B294CF713425A966dd4c44c036903'
-        }
-      ]
+      tokens: []
     }
   ]
 
