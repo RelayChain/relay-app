@@ -1,4 +1,4 @@
-import { BarChart, Book, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
+import { BarChart, Book, CreditCard, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
 import { ExternalLink, TYPE } from '../../theme'
 import Row, { RowFixed } from '../Row'
 
@@ -284,18 +284,22 @@ export default function Header() {
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <RefreshCw size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('swap')}
+            {t('Swap')}
           </StyledNavLink>
           <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
             <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Earn')}
           </StyledNavLink>
+          <HeaderExternalLink href={`https://buy.zero.exchange`}>
+            <CreditCard size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
+            Buy Zero
+          </HeaderExternalLink>
           <HeaderExternalLink href={`https://charts.zero.exchange`}>
-            <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
+            <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
             Charts
           </HeaderExternalLink>
           <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
-            <Book size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
+            <Book size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-2px' }} />
             Guides
           </HeaderExternalLink>
         </HeaderLinks>
