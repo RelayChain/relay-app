@@ -40,21 +40,14 @@ export class MockV1Pair extends Pair {
 }
 
 function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
-  console.log('inputCurrency', inputCurrency)
   const token = inputCurrency instanceof Token ? inputCurrency : undefined
 
   const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  console.log('isWETH====', isWETH)
   const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
-  console.log('v1PairAddress=====', v1PairAddress)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
-  console.log('tokenBalance=======', tokenBalance)
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
-  console.log('ETHBalance======')
   return useMemo(() => {
     if (token && tokenBalance && ETHBalance && inputCurrency) {
-      console.log('ETHBalance=======', ETHBalance?.raw)
-      console.log('tokenBalance=======', tokenBalance)
       return new MockV1Pair(ETHBalance.raw, tokenBalance)
     }
     return undefined
@@ -115,11 +108,8 @@ export function useV1Trade(
   exactAmount?: CurrencyAmount
 ): Trade | undefined {
   // get the mock v1 pairs
-  console.log('asdasdjkhasd========')
   const inputPair = useMockV1Pair(inputCurrency)
-  console.log('useMockV1Pair=====')
   const outputPair = useMockV1Pair(outputCurrency)
-  console.log('outputPair=====')
   const inputIsETH = inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
   const outputIsETH = outputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
 

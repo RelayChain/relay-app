@@ -60,11 +60,10 @@ export function CurrencySearch({
 
   // cross chain
   const { availableTokens } = useCrosschainState()
-  console.log('availableTokens====', availableTokens)
+
   const availableTokensArray = availableTokens.map((x: any) => {
     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
   })
-  console.log('availableTokensArray====', availableTokensArray)
 
   const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
@@ -116,7 +115,6 @@ export function CurrencySearch({
     },
     [onDismiss, onCurrencySelect]
   )
-  console.log('filteredSortedTokens', filteredSortedTokens)
   // clear the input on open
   useEffect(() => {
     if (isOpen) setSearchQuery('')

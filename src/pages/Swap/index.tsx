@@ -334,7 +334,6 @@ export default function Swap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
-      console.log('inputCurrency=====', inputCurrency)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
@@ -471,7 +470,7 @@ export default function Swap() {
       showConfirmTransferModal()
     }
   }
-  console.log('chainId', chainId)
+
   return (
     <>
       <TokenWarningModal
