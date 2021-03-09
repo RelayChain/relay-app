@@ -169,6 +169,8 @@ function GetChainNameById(chainID: number): string {
     return 'Avalanche'
   } else if (chainID === ChainId.SMART_CHAIN) {
     return 'Smart Chain'
+  } else if (chainID === ChainId.SMART_CHAIN_TEST) {
+    return 'Smart Chain'
   }
   return ''
 }

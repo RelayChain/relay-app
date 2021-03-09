@@ -36,14 +36,13 @@ export const crosschainConfig: ChainbridgeConfig = {
   chains: [
     {
       chainId: 1,
-      networkId: 4,
-      name: 'Rinkeby',
-      bridgeAddress: '0xc148a61CB324615F48854Ad5b87CfA2a21582D70',
-      erc20HandlerAddress: '0x3028d9d921A9cCF27266b47843Cb304109f867Df',
-      rpcUrl: 'https://rinkeby.infura.io/v3/97131c192c3645fa9ce01756e052e616',
+      networkId: 1,
+      name: 'Ethereum',
+      bridgeAddress: '0x278cDd6847ef830c23cac61C17Eab837fEa1C29A',
+      erc20HandlerAddress: '0xB8B493600A5b200Ca2c58fFA9dced00694fB3E38',
+      rpcUrl: 'https://mainnet.infura.io/v3/45174a29359d4b07ade01676259bc47a',
       type: 'Ethereum',
-      gasLimit: 6721975,
-      blockExplorer: 'https://rinkeby.infura.io/v3/97131c192c3645fa9ce01756e052e616',
+      blockExplorer: 'https://etherscan.io/tx',
       nativeTokenSymbol: 'ETH',
       tokens: [
         {
@@ -288,14 +287,14 @@ export const crosschainConfig: ChainbridgeConfig = {
     },
     {
       chainId: 3,
-      networkId: 97,
+      networkId: 56,
       name: 'Smart Chain',
-      bridgeAddress: '0xfD0301Ff8B53860120eD19D847884EfFdDD0FD88',
-      erc20HandlerAddress: '0xEf0f18Bf7e3ddE04E9Cf38F8Bc786E0207A87455',
-      rpcUrl: 'https://data-seed-prebsc-1-s2.binance.org:8545',
+      bridgeAddress: '0xF82B6C89A1D3340733eA4f74F9D111b5D7127876',
+      erc20HandlerAddress: '0xD02408A62ED3708429ccFb04d9dEA302884ab6a7',
+      rpcUrl: 'https://bsc-dataseed2.binance.org',
       type: 'Ethereum',
       gasLimit: 6721975,
-      blockExplorer: 'https://testnet.bscscan.com/',
+      blockExplorer: 'https://bscscan.com/',
       nativeTokenSymbol: 'BNB',
       tokens: [
         {

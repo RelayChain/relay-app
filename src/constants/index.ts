@@ -4,7 +4,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 export const AVAX_ROUTER_ADDRESS = '0x85995d5f8ee9645cA855e92de16FA62D26398060' // mainnet avalanche
-export const SMART_CHAIN_ROUTER_ADDRESS = '0x68e36E2c7E960F74a91b4B844c59EAbE3444D3C6' // mainnet smartChain
+export const SMART_CHAIN_ROUTER_ADDRESS = '0xba79bf6D52934D3b55FE0c14565A083c74FBD224' // mainnet smartChain
 export const ETH_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // mainnet ethereum
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -50,7 +50,7 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 
 export const WBNB = new Token(
   ChainId.SMART_CHAIN,
-  '0x4a65edf0e3f097d1f3dFAcF5f99Eb8e61Ce23b2f',
+  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   18,
   'WBNB',
   'SMART_CHAIN'
@@ -113,7 +113,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.FUJI]: new Token(ChainId.FUJI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.SMART_CHAIN]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.SMART_CHAIN]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.SMART_CHAIN_TEST]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -136,7 +137,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
   [ChainId.FUJI]: [WETH[ChainId.FUJI]],
   [ChainId.AVALANCHE]: [WETH[ChainId.AVALANCHE]],
-  [ChainId.SMART_CHAIN]: [WETH[ChainId.SMART_CHAIN]]
+  [ChainId.SMART_CHAIN]: [WETH[ChainId.SMART_CHAIN]],
+  [ChainId.SMART_CHAIN_TEST]: [WETH[ChainId.SMART_CHAIN_TEST]]
 }
 
 // used to construct intermediary pairs for trading
@@ -166,6 +168,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
   [ChainId.AVALANCHE]: [],
   [ChainId.SMART_CHAIN]: [],
+  [ChainId.SMART_CHAIN_TEST]: [],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
 
@@ -310,7 +313,8 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.FUJI]: 'Avalanche',
   [ChainId.AVALANCHE]: 'Avalanche',
-  [ChainId.SMART_CHAIN]: 'Smart Chain'
+  [ChainId.SMART_CHAIN]: 'Smart Chain',
+  [ChainId.SMART_CHAIN_TEST]: 'Smart Chain'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot']

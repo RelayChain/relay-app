@@ -96,7 +96,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
             JSBI.BigInt(typedValueParsed),
             currency?.symbol === 'ETH'
               ? ChainId.MAINNET
-              : currency?.symbol === 'ETH'
+              : currency?.symbol === 'BNB'
               ? ChainId.SMART_CHAIN
               : ChainId.AVALANCHE
           )

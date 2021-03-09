@@ -30,7 +30,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   42: 'kovan.',
   43113: 'FUJI',
   43114: 'AVALANCHE',
-  97: 'SMART_CHAIN'
+  97: 'SMART_CHAIN_TEST',
+  56: 'SMART_CHAIN'
 }
 
 export function getEtherscanLink(
@@ -45,8 +46,11 @@ export function getEtherscanLink(
   if (chainId === ChainId.AVALANCHE) {
     prefix = `https://cchain.explorer.avax.network`
   }
-  if (chainId === ChainId.SMART_CHAIN) {
+  if (chainId === ChainId.SMART_CHAIN_TEST) {
     prefix = `https://testnet.bscscan.com`
+  }
+  if (chainId === ChainId.SMART_CHAIN) {
+    prefix = `https://bscscan.com`
   }
   switch (type) {
     case 'transaction': {
