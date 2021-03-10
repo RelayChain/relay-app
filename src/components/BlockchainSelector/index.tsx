@@ -2,7 +2,7 @@ import { ChevronDown, ChevronsRight, Link } from 'react-feather'
 
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -51,6 +51,7 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
 const BlockchainSelector = ({
   blockchain,
   transferTo,
+  onSetTransferTo,
   supportedChains,
   isCrossChain,
   onShowCrossChainModal,
@@ -61,8 +62,13 @@ const BlockchainSelector = ({
   isCrossChain?: boolean
   supportedChains: string[]
   onShowCrossChainModal: () => void
+  onSetTransferTo: (name: string) => void
   onShowTransferChainModal: () => void
 }) => {
+  useEffect(() => {
+    onSetTransferTo(transferTo.name)
+  }, [transferTo.name])
+
   const openChangeChainInfo = () => {
     onShowCrossChainModal()
   }
@@ -74,7 +80,6 @@ const BlockchainSelector = ({
   if (!blockchain) {
     return <div />
   }
-
   // @ts-ignore
   return (
     <Container>

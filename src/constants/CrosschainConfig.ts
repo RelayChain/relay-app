@@ -278,6 +278,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rpcUrl: 'https://bsc-dataseed2.binance.org',
       type: 'Ethereum',
       gasLimit: 6721975,
+      defaultGasPrice: 12.5,
       blockExplorer: 'https://bscscan.com/',
       nativeTokenSymbol: 'BNB',
       tokens: [

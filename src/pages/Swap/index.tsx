@@ -129,7 +129,7 @@ export default function Swap() {
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
-  const {BreakCrosschainSwap, GetAllowance} = useCrosschainHooks()
+  const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -440,7 +440,7 @@ export default function Swap() {
     setConfirmTransferModalOpen(false)
   }
   const showConfirmTransferModal = () => {
-    GetAllowance();
+    GetAllowance()
     setConfirmTransferModalOpen(true)
   }
 
@@ -534,6 +534,7 @@ export default function Swap() {
               }}
             >
               <BlockchainSelector
+                onSetTransferTo={setTransferTo}
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
                 blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
