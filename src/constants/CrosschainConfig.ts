@@ -280,7 +280,16 @@ export const crosschainConfig: ChainbridgeConfig = {
       gasLimit: 6721975,
       blockExplorer: 'https://bscscan.com/',
       nativeTokenSymbol: 'BNB',
-      tokens: []
+      tokens: [
+        {
+          address: '0x4022AfEB287052e6e587d39bA99f79cAFC47B570',
+          name: 'zUSDC',
+          symbol: 'zUSDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x00000000000000000000004022AfEB287052e6e587d39bA99f79cAFC47B57003'
+        }
+      ]
     }
   ]
 
