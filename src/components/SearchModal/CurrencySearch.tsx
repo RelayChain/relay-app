@@ -60,10 +60,16 @@ export function CurrencySearch({
 
   // cross chain
   const { availableTokens } = useCrosschainState()
-
-  const availableTokensArray = availableTokens.map((x: any) => {
-    return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-  })
+  // ChainId.RINKEBY BUSD
+  const availableTokensArray = isCrossChain
+    ? availableTokens
+        .filter(a => a.name !== 'BUSD')
+        .map((x: any) => {
+          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+        })
+    : availableTokens.map((x: any) => {
+        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+      })
 
   const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)

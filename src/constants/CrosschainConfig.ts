@@ -377,6 +377,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03',
+        },
+        {
+          address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+          name: 'BUSD',
+          symbol: 'BUSD',
+          assetBase: 'BUSD',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
         }
       ]
     }

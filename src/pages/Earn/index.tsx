@@ -105,23 +105,7 @@ export default function Earn() {
         otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
       }
     ],
-    [ChainId.SMART_CHAIN]: [
-      {
-        baseSymbol: 'BNB',
-        baseAddress: 'BNB',
-        otherSymbol: 'BNB'
-      },
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x4dDE6f0113a76b21B69f3e5340FD71dEa035a5f3',
-        otherSymbol: 'TC1'
-      },
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x4dDE6f0113a76b21B69f3e5340FD71dEa035a5f3',
-        otherSymbol: 'TC2'
-      }
-    ]
+    [ChainId.SMART_CHAIN]: []
   }
 
   // staking info for connected account
