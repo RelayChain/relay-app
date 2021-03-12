@@ -53,14 +53,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200'
         },
-        // {
-        //   address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-        //   name: "USDT",
-        //   symbol: "USDT",
-        //   assetBase: 'USDT',
-        //   decimals: 6,
-        //   resourceId: "0x0000000000000000000000dAC17F958D2ee523a2206206994597C13D831ec700",
-        // },
+        {
+          address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+          name: "USDT",
+          symbol: "USDT",
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: "0x0000000000000000000000dAC17F958D2ee523a2206206994597C13D831ec700",
+        },
         {
           address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
           name: 'USDC',
@@ -171,14 +171,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000f6F3EEa905ac1da6F6DD37d06810C6Fcb0EF518301'
         },
-        // {
-        //   address: "0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7",
-        //   name: "zUSDT",
-        //   symbol: "zUSDT",
-        //   assetBase: 'USDT',
-        //   decimals: 6,
-        //   resourceId: "0x0000000000000000000000a14d2e53e7578cD69A6B97Bff054F56280A8d2C801",
-        // },
+        {
+          address: "0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7",
+          name: "zUSDT",
+          symbol: "zUSDT",
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: "0x0000000000000000000000a14d2e53e7578cD69A6B97Bff054F56280A8d2C801",
+        },
         {
           address: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb',
           name: 'zUSDC',
@@ -379,7 +379,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03',
         }
       ]
-    }
+    },
   ]
 
   // rinkeby - FUJI
