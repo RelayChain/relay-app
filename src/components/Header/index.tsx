@@ -97,10 +97,16 @@ const HeaderExternalLink = styled(ExternalLink)`
   margin: 0 16px;
   font-size: 1rem;
   color: #c3c5cb;
+  transition: all .2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 0 6px;
     font-size: .85rem;
   `};
+  :hover,
+  :focus {
+    color: ${({ theme }) => theme.primary1};
+    text-decoration: none;
+  }
 `
 
 const HeaderLinks = styled(Row)`
