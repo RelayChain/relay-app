@@ -80,6 +80,9 @@ export const zDAI = new Token(
 export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'USD//C')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
 
+export const bnbZERO = new Token(ChainId.SMART_CHAIN, '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf', 18, 'ZERO', 'ZERO');
+export const bnbBUSD = new Token(ChainId.SMART_CHAIN, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD');
+
 export const MOCK1 = new Token(
   ChainId.FUJI,
   '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351',

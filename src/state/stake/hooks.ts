@@ -1,6 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO } from '../../constants'
+import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bnbZERO, bnbBUSD, WBNB } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -46,7 +46,16 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x1F6271FedF344724DBd489ee4963f05AF8a0970c'
     }
   ],
-  [ChainId.AVALANCHE]: []
+  [ChainId.SMART_CHAIN]: [
+    {
+      tokens: [bnbZERO, bnbBUSD],
+      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e',
+    },
+    {
+      tokens: [WBNB, bnbZERO],
+      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A',
+    },
+  ]
 }
 
 export interface StakingInfo {

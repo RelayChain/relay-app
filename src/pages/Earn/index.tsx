@@ -105,8 +105,30 @@ export default function Earn() {
         otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
       }
     ],
-    [ChainId.SMART_CHAIN]: []
-  }
+    [ChainId.SMART_CHAIN]: [
+      // https://bscscan.com/tx/0x11e8e1766788581dd7597c5eae53a4ebb0709f45b22850822f54c553e9eaca8c
+      {
+        baseSymbol: 'BNB',
+        baseAddress: 'BNB',
+        otherSymbol: 'ZERO',
+        otherAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
+      },
+      // {
+      //   baseSymbol: 'BNB',
+      //   baseAddress: 'BNB',
+      //   otherSymbol: 'BUSD',
+      //   otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      // },
+      
+      // https://bscscan.com/tx/0x11e8e1766788581dd7597c5eae53a4ebb0709f45b22850822f54c553e9eaca8c
+      {
+        baseSymbol: 'ZERO',
+        baseAddress: '0x1f534d2b1ee2933f1fdf8e4b63a44b2249d77eaf',
+        otherSymbol: 'BUSD',
+        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      },
+    ]
+  };
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()
