@@ -1,4 +1,4 @@
-import { REWARDS_DURATION_DAYS, STAKING_GENESIS } from '../../state/stake/hooks'
+import { REWARDS_DURATION_DAYS_CHAINS, STAKING_GENESIS_CHAINS } from '../../state/stake/hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { ChainId } from '@zeroexchange/sdk'
@@ -9,13 +9,20 @@ import { CHAIN_LABELS } from '../../constants'
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS
+let REWARDS_DURATION = 0;
+let STAKING_GENESIS = 0;
+
 
 export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const { chainId } = useActiveWeb3React()
 
+  if (chainId !== undefined) {
+    REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS_CHAINS[chainId];
+    STAKING_GENESIS = STAKING_GENESIS_CHAINS[chainId];
+  }
+
   // get end/beginning times
-  const end = useMemo(() => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) : STAKING_GENESIS + REWARDS_DURATION), [
+  const end = useMemo(() => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) :  + REWARDS_DURATION), [
     exactEnd
   ])
   const begin = useMemo(() => end - REWARDS_DURATION, [end])

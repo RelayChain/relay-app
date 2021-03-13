@@ -7,9 +7,18 @@ import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
-export const STAKING_GENESIS = 1612360800
+export const STAKING_GENESIS_CHAINS = {
+  [ChainId.AVALANCHE]: 1612360800,
+  [ChainId.SMART_CHAIN]: 1615597200,
+};
 
-export const REWARDS_DURATION_DAYS = 45
+export const REWARDS_DURATION_DAYS_CHAINS = {
+  [ChainId.AVALANCHE]: 45,
+  [ChainId.SMART_CHAIN]: 30,
+}
+
+export const STAKING_GENESIS = 1615597200;
+export const REWARDS_DURATION_DAYS = 30;
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
