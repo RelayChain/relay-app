@@ -4,7 +4,7 @@ import Circle from '../../assets/images/circle-grey.svg'
 import CurrencyLogo from '../CurrencyLogo'
 import { CustomLightSpinner } from '../../theme/components'
 import React from 'react'
-import { returnNumberDecimals } from '../../constants';
+import { returnNumberDecimals } from '../../constants'
 import styled from 'styled-components'
 
 const ListItem = styled.div`
@@ -36,48 +36,44 @@ const ListItem = styled.div`
   }
 `
 
-export default function ChainBridgeItem ({ item, children, ...rest }: { item: any, children: any }) {
-
+export default function ChainBridgeItem({ item, children, ...rest }: { item: any; children: any }) {
   const currency = {
     decimals: item.decimals,
     name: item.name,
     address: item.address,
-    symbol: item.assetBase,
-  };
-
+    symbol: item.assetBase
+  }
 
   const message = {
     0: 'Relayers Pending...',
     1: 'Voting started...',
     2: 'Wrapping up...',
     3: 'Transfer Success!',
-    4: 'Transfer Cancelled.',
+    4: 'Transfer Cancelled.'
   }
 
   return (
     <ListItem>
       <CurrencyLogo size="50px" style={{ margin: '1rem 1rem 1.25rem 1rem' }} currency={currency} />
       <p>
-        <span>{ returnNumberDecimals(item?.amount, 6) }</span>
-        { item?.currentSymbol }
+        <span>{returnNumberDecimals(item?.amount, 6)}</span>
+        {item?.currentSymbol}
       </p>
       <ChevronsDown size="30" style={{ marginTop: '1rem', marginBottom: '1rem' }} />
       <p>
-        <span>{ returnNumberDecimals(item?.amount, 6) }</span>
-        { item?.targetSymbol }
+        <span>{returnNumberDecimals(item?.amount, 6)}</span>
+        {item?.targetSymbol}
       </p>
       <div className="status">
-        { message[item?.status]}
+        {message[item?.status]}
 
-        { parseInt(item?.status) < 3  ?
-          <CustomLightSpinner src={Circle} alt="loader" size={'16px'} style={{ marginLeft: '6px'}} /> : ''
-        }
-        { item?.status === '3' &&
-        <CheckCircle size={'16'} style={{ marginLeft: '6px', color: '#27AE60' }} />
-        }
-        { item?.status === '4' &&
-        <XCircle size={'16'} style={{ marginLeft: '6px', color: '#ff007a' }} />
-        }
+        {parseInt(item?.status) < 3 ? (
+          <CustomLightSpinner src={Circle} alt="loader" size={'16px'} style={{ marginLeft: '6px' }} />
+        ) : (
+          ''
+        )}
+        {item?.status === '3' && <CheckCircle size={'16'} style={{ marginLeft: '6px', color: '#27AE60' }} />}
+        {item?.status === '4' && <XCircle size={'16'} style={{ marginLeft: '6px', color: '#ff007a' }} />}
       </div>
     </ListItem>
   )

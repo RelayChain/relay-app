@@ -1,4 +1,4 @@
-import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
@@ -25,9 +25,9 @@ export function useETHBalances(
     () =>
       uncheckedAddresses
         ? uncheckedAddresses
-          .map(isAddress)
-          .filter((a): a is string => a !== false)
-          .sort()
+            .map(isAddress)
+            .filter((a): a is string => a !== false)
+            .sort()
         : [],
     [uncheckedAddresses]
   )
@@ -41,7 +41,7 @@ export function useETHBalances(
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
-        const value = results ?.[i] ?.result ?.[0]
+        const value = results?.[i]?.result?.[0]
         if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()), chainId)
         return memo
       }, {}),
@@ -57,7 +57,7 @@ export function useTokenBalancesWithLoadingIndicator(
   tokens?: (Token | undefined)[]
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
-    () => tokens ?.filter((t?: Token): t is Token => isAddress(t ?.address) !== false) ?? [],
+    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens]
   )
 
@@ -72,13 +72,13 @@ export function useTokenBalancesWithLoadingIndicator(
       () =>
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-            const value = balances ?.[i] ?.result ?.[0]
+              const value = balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
-            if (amount) {
-              memo[token.address] = new TokenAmount(token, amount)
-            }
-            return memo
-          }, {})
+              if (amount) {
+                memo[token.address] = new TokenAmount(token, amount)
+              }
+              return memo
+            }, {})
           : {},
       [address, validatedTokens, balances]
     ),
@@ -103,9 +103,9 @@ export function useTokenBalance(account?: string, token?: Token): TokenAmount | 
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
-  chainId?: (ChainId | undefined)
+  chainId?: ChainId | undefined
 ): (CurrencyAmount | undefined)[] {
-  const tokens = useMemo(() => currencies ?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
+  const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
     currencies
   ])
 
@@ -116,17 +116,21 @@ export function useCurrencyBalances(
 
   return useMemo(
     () =>
-      currencies ?.map(currency => {
+      currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER || currency === AVAX) return ethBalance[account]
+        if (currency === ETHER || currency === AVAX || currency === BNB) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]
   )
 }
 
-export function useCurrencyBalance(account?: string, currency?: Currency, chainId?: ChainId): CurrencyAmount | undefined {
+export function useCurrencyBalance(
+  account?: string,
+  currency?: Currency,
+  chainId?: ChainId
+): CurrencyAmount | undefined {
   return useCurrencyBalances(account, [currency], chainId)[0]
 }
 
@@ -154,8 +158,8 @@ export function useAggregateUniBalance(): TokenAmount | undefined {
   return new TokenAmount(
     uni,
     JSBI.add(
-      JSBI.add(uniBalance ?.raw ?? JSBI.BigInt(0), uniUnclaimed ?.raw ?? JSBI.BigInt(0)),
-      uniUnHarvested ?.raw ?? JSBI.BigInt(0)
+      JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),
+      uniUnHarvested?.raw ?? JSBI.BigInt(0)
     )
   )
 }

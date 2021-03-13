@@ -13,6 +13,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
+import { CHAIN_LABELS, SUPPORTED_CHAINS, ETH_RPCS } from '../../constants'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -63,33 +64,15 @@ import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 
-const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.FUJI]: 'Avalanche',
-  [ChainId.AVALANCHE]: 'Avalanche',
-}
-
-const SUPPORTED_CHAINS = [
-  'Ethereum',
-  'Avalanche',
-  'Polkadot'
-]
-
-const ETH_RPCS = [
-  'Ethereum',
-  'Rinkeby',
-]
-
 const CrossChainLabels = styled.div`
   p {
     display: flex;
     text-align: left;
     font-weight: normal;
-    color: rgba(255,255,255,.5);
-    margin-top: .5rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.5rem;
     margin-bottom: 0;
-    font-size: .9rem;
+    font-size: 0.9rem;
     span {
       margin-left: auto;
       font-weight: bold;
@@ -102,14 +85,15 @@ const ChainBridgePending = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 40px;
-  padding: .25rem 1rem .25rem 1rem;
+  padding: 0.25rem 1rem 0.25rem 1rem;
   border-radius: 12px;
   margin-top: 2rem;
-  color: rgba(255,255,255,.75);
-  transition: all .2s ease-in-out;
+  color: rgba(255, 255, 255, 0.75);
+  transition: all 0.2s ease-in-out;
   background: linear-gradient(45deg, #5496ff, #8739e5);
   position: fixed;
-  top: 68px; right: 1rem;
+  top: 68px;
+  right: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: relative;
     top: auto; right: auto;
@@ -119,11 +103,10 @@ const ChainBridgePending = styled.div`
     filter: brightness(1.2);
   }
   p {
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: bold;
   }
 `
-
 
 export default function Swap() {
   useCrossChain()
@@ -132,7 +115,7 @@ export default function Swap() {
 
   const {
     currentTxID,
-    availableChains,
+    availableChains: allChains,
     availableTokens,
     currentChain,
     currentToken,
@@ -141,12 +124,12 @@ export default function Swap() {
     targetChain,
     targetTokens,
     crosschainTransferStatus,
-    swapDetails,
+    swapDetails
   } = useCrosschainState()
 
-  const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase);
+  const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
-  const {BreakCrosschainSwap} = useCrosschainHooks()
+  const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -165,6 +148,10 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
+
+  const availableChains = useMemo(() => {
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+  }, [allChains])
 
   const theme = useContext(ThemeContext)
 
@@ -205,13 +192,13 @@ export default function Swap() {
 
   const parsedAmounts = showWrap
     ? {
-      [Field.INPUT]: parsedAmount,
-      [Field.OUTPUT]: parsedAmount
-    }
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount
+      }
     : {
-      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-    }
+        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+      }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -219,13 +206,18 @@ export default function Swap() {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // track the input amount, on change, if crosschain, dispatch
-  const [ inputAmountToTrack, setInputAmountToTrack ] = useState('');
-  const handleInputAmountChange = useCallback((amount: string) => {
-    setInputAmountToTrack(amount)
-    dispatch(setTransferAmount({
-      amount: amount
-    }))
-  }, [setInputAmountToTrack, dispatch])
+  const [inputAmountToTrack, setInputAmountToTrack] = useState('')
+  const handleInputAmountChange = useCallback(
+    (amount: string) => {
+      setInputAmountToTrack(amount)
+      dispatch(
+        setTransferAmount({
+          amount: amount
+        })
+      )
+    },
+    [setInputAmountToTrack, dispatch]
+  )
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -301,7 +293,6 @@ export default function Swap() {
     swapCallback()
       .then(hash => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-
       })
       .catch(error => {
         setSwapState({
@@ -347,15 +338,17 @@ export default function Swap() {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
         const newToken = GetTokenByAddress(inputCurrency.address)
-        dispatch(setCurrentToken({
-          token: {
-            name: newToken?.name || '',
-            address: newToken?.address || '',
-            assetBase: newToken?.assetBase || '',
-            symbol: newToken?.symbol || '',
-            decimals: newToken?.decimals || 18
-          }
-        }))
+        dispatch(
+          setCurrentToken({
+            token: {
+              name: newToken?.name || '',
+              address: newToken?.address || '',
+              assetBase: newToken?.assetBase || '',
+              symbol: newToken?.symbol || '',
+              decimals: newToken?.decimals || 18
+            }
+          })
+        )
       }
     },
     [onCurrencySelection, dispatch]
@@ -376,26 +369,27 @@ export default function Swap() {
   const handleOutputSelect = useCallback(
     outputCurrency => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
-    }, [
-    onCurrencySelection
-  ])
+    },
+    [onCurrencySelection]
+  )
 
   // swaps or cross chain
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
   const handleSetIsCrossChain = (bool: boolean) => {
+    setIsCrossChain(bool)
 
-    setIsCrossChain(bool);
-
-    dispatch(setTransferAmount({
-      amount: inputAmountToTrack
-    }))
+    dispatch(
+      setTransferAmount({
+        amount: inputAmountToTrack
+      })
+    )
   }
 
-  const [transferTo, setTransferTo] = useState<string>('');
+  const [transferTo, setTransferTo] = useState<string>('')
   useEffect(() => {
     // change logic when we add polka
     if (chainId) {
-      if (ETH_RPCS.indexOf((CHAIN_LABELS[chainId] || 'Ethereum')) !== -1) {
+      if (ETH_RPCS.indexOf(CHAIN_LABELS[chainId] || 'Ethereum') !== -1) {
         setTransferTo('Avalanche')
       } else {
         setTransferTo('Ethereum')
@@ -407,15 +401,15 @@ export default function Swap() {
     BreakCrosschainSwap()
   }
 
-  const [showChainBridgeModal, setShowChainBridgeModal] = useState(false);
+  const [showChainBridgeModal, setShowChainBridgeModal] = useState(false)
   const hideChainBridgeModal = () => {
     if (swapDetails?.status === ProposalStatus.EXECUTED || swapDetails?.status === ProposalStatus.CANCELLED) {
-      startNewSwap();
+      startNewSwap()
     }
     setShowChainBridgeModal(false)
   }
 
-  const [crossChainModalOpen, setShowCrossChainModal] = useState(false);
+  const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
     // startNewSwap()
@@ -424,7 +418,7 @@ export default function Swap() {
     setShowCrossChainModal(true)
   }
 
-  const [transferChainModalOpen, setShowTransferChainModal] = useState(false);
+  const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
     // startNewSwap()
@@ -433,25 +427,30 @@ export default function Swap() {
     setShowTransferChainModal(true)
   }
   const onSelectTransferChain = (chain: CrosschainChain) => {
-    dispatch(setTargetChain({
-      chain
-    }))
+    dispatch(
+      setTargetChain({
+        chain
+      })
+    )
   }
 
-  const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false);
+  const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false)
   const hideConfirmTransferModal = () => {
-    startNewSwap()    
-    setConfirmTransferModalOpen(false)    
+    startNewSwap()
+    setConfirmTransferModalOpen(false)
   }
   const showConfirmTransferModal = () => {
+    GetAllowance()
     setConfirmTransferModalOpen(true)
   }
 
   // token transfer state
   const onChangeTransferState = (state: ChainTransferState) => {
-    dispatch(setCrosschainTransferStatus({
-      status: state,
-    }))
+    dispatch(
+      setCrosschainTransferStatus({
+        status: state
+      })
+    )
     if (state === ChainTransferState.NotStarted && currentTxID.length) {
       BreakCrosschainSwap()
     }
@@ -466,22 +465,20 @@ export default function Swap() {
 
   const handleChainBridgeButtonClick = () => {
     if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
-      setShowChainBridgeModal(true);
+      setShowChainBridgeModal(true)
     } else {
-      showConfirmTransferModal();
+      showConfirmTransferModal()
     }
   }
 
   return (
     <>
-
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      { chainId !== undefined && account !== undefined &&
-
+      {chainId && account && (
         <AppBody>
           <SwapPoolTabs active={'swap'} />
           <Wrapper id="swap-page">
@@ -511,10 +508,7 @@ export default function Swap() {
               currency={currencies[Field.INPUT]}
               trade={trade}
             />
-            <ChainBridgeModal
-              isOpen={showChainBridgeModal}
-              onDismiss={hideChainBridgeModal}
-            />
+            <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
             <ConfirmSwapModal
               isOpen={showConfirm}
               trade={trade}
@@ -531,17 +525,20 @@ export default function Swap() {
             />
 
             <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} />
-            <div style={{
-              opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
-              pointerEvents: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? 'auto' : 'none',
-              filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)',
-            }}>
-
+            <div
+              style={{
+                opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
+                pointerEvents:
+                  !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? 'auto' : 'none',
+                filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
+              }}
+            >
               <BlockchainSelector
+                onSetTransferTo={setTransferTo}
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
                 blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-                transferTo={isCrossChain? targetChain : transferTo}
+                transferTo={isCrossChain ? targetChain : transferTo}
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
@@ -591,7 +588,7 @@ export default function Swap() {
                   onCurrencySelect={handleOutputSelect}
                   otherCurrency={currencies[Field.INPUT]}
                   isCrossChain={isCrossChain}
-                  disableCurrencySelect={isCrossChain ? true : false}
+                  disableCurrencySelect={isCrossChain}
                   hideBalance={isCrossChain}
                   currentTargetToken={currentTargetToken}
                   id="swap-currency-output"
@@ -611,23 +608,28 @@ export default function Swap() {
                   </>
                 ) : null}
 
-                {
-                  isCrossChain && <>
+                {isCrossChain && (
+                  <>
                     <CrossChainLabels>
-                      <p>Fee: <span>{crosschainFee} {currentChain?.symbol}</span></p>
+                      <p>
+                        Fee:{' '}
+                        <span>
+                          {crosschainFee} {currentChain?.symbol}
+                        </span>
+                      </p>
                     </CrossChainLabels>
                   </>
-                }
+                )}
 
                 {showWrap ? null : (
                   <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                    { !isCrossChain &&
+                    {!isCrossChain && (
                       <AutoColumn gap="4px">
                         {Boolean(trade) && (
                           <RowBetween align="center">
                             <Text fontWeight={500} fontSize={14} color={theme.text2}>
                               Price
-                          </Text>
+                            </Text>
                             <TradePrice
                               price={trade?.executionPrice}
                               showInverted={showInverted}
@@ -639,14 +641,14 @@ export default function Swap() {
                           <RowBetween align="center">
                             <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                               Slippage Tolerance
-                          </ClickableText>
+                            </ClickableText>
                             <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                               {allowedSlippage / 100}%
-                          </ClickableText>
+                            </ClickableText>
                           </RowBetween>
                         )}
                       </AutoColumn>
-                    }
+                    )}
                   </Card>
                 )}
               </AutoColumn>
@@ -684,8 +686,8 @@ export default function Swap() {
                       ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                         'Approved'
                       ) : (
-                            'Approve ' + currencies[Field.INPUT]?.symbol
-                          )}
+                        'Approve ' + currencies[Field.INPUT]?.symbol
+                      )}
                     </ButtonConfirmed>
                     <ButtonError
                       onClick={() => {
@@ -716,33 +718,33 @@ export default function Swap() {
                     </ButtonError>
                   </RowBetween>
                 ) : (
-                            <ButtonError
-                              onClick={() => {
-                                if (isExpertMode) {
-                                  handleSwap()
-                                } else {
-                                  setSwapState({
-                                    tradeToConfirm: trade,
-                                    attemptingTxn: false,
-                                    swapErrorMessage: undefined,
-                                    showConfirm: true,
-                                    txHash: undefined
-                                  })
-                                }
-                              }}
-                              id="swap-button"
-                              disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                              error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                            >
-                              <Text fontSize={20} fontWeight={500}>
-                                {swapInputError
-                                  ? swapInputError
-                                  : priceImpactSeverity > 3 && !isExpertMode
-                                    ? `Price Impact Too High`
-                                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                              </Text>
-                            </ButtonError>
-                          )}
+                  <ButtonError
+                    onClick={() => {
+                      if (isExpertMode) {
+                        handleSwap()
+                      } else {
+                        setSwapState({
+                          tradeToConfirm: trade,
+                          attemptingTxn: false,
+                          swapErrorMessage: undefined,
+                          showConfirm: true,
+                          txHash: undefined
+                        })
+                      }
+                    }}
+                    id="swap-button"
+                    disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                    error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                  >
+                    <Text fontSize={20} fontWeight={500}>
+                      {swapInputError
+                        ? swapInputError
+                        : priceImpactSeverity > 3 && !isExpertMode
+                        ? `Price Impact Too High`
+                        : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    </Text>
+                  </ButtonError>
+                )}
                 {showApproveFlow && (
                   <Column style={{ marginTop: '1rem' }}>
                     <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
@@ -753,28 +755,31 @@ export default function Swap() {
             </div>
           </Wrapper>
         </AppBody>
-      }
-      { (chainId === undefined || account === undefined) &&
-        <CustomLightSpinner src={Circle2} alt="loader" size={'60px'} style={{
-          position: 'fixed',
-          left: '0',
-          right: '0',
-          margin: 'auto',
-          top: '45%',
-        }} />
-      }
-      {
-        crosschainTransferStatus !== ChainTransferState.NotStarted ?
+      )}
+      {(chainId === undefined || account === undefined) && (
+        <CustomLightSpinner
+          src={Circle2}
+          alt="loader"
+          size={'60px'}
+          style={{
+            position: 'fixed',
+            left: '0',
+            right: '0',
+            margin: 'auto',
+            top: '45%'
+          }}
+        />
+      )}
+      {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
         <ChainBridgePending onClick={handleChainBridgeButtonClick}>
-          <p>
-            {`Cross-chain transfer pending`}
-          </p>
-          <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px'}} />
-        </ChainBridgePending> : ''
-      }
+          <p>{`Cross-chain transfer pending`}</p>
+          <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
+        </ChainBridgePending>
+      ) : (
+        ''
+      )}
 
-      { !isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
-
+      {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
     </>
   )
 }

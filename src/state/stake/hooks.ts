@@ -1,15 +1,24 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO} from '../../constants'
+import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, bscBUSD, WBNB } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
-export const STAKING_GENESIS = 1612360800
+export const STAKING_GENESIS_CHAINS = {
+  [ChainId.AVALANCHE]: 1612360800,
+  [ChainId.SMART_CHAIN]: 1615597200,
+};
 
-export const REWARDS_DURATION_DAYS = 45
+export const REWARDS_DURATION_DAYS_CHAINS = {
+  [ChainId.AVALANCHE]: 45,
+  [ChainId.SMART_CHAIN]: 30,
+}
+
+export const STAKING_GENESIS = 1615597200;
+export const REWARDS_DURATION_DAYS = 30;
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -45,6 +54,16 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.FUJI], MOCK1],
       stakingRewardAddress: '0x1F6271FedF344724DBd489ee4963f05AF8a0970c'
     }
+  ],
+  [ChainId.SMART_CHAIN]: [
+    {
+      tokens: [bscZERO, bscBUSD],
+      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e',
+    },
+    {
+      tokens: [WBNB, bscZERO],
+      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A',
+    },
   ]
 }
 

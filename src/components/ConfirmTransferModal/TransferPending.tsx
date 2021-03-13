@@ -15,11 +15,13 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 10px 0 40px 0;
 `
 
-export default function TransferPending ({ changeTransferState }: {
-  changeTransferState: (state: ChainTransferState) => void;
+export default function TransferPending({
+  changeTransferState
+}: {
+  changeTransferState: (state: ChainTransferState) => void
 }) {
-  const {crosschainTransferStatus} = useCrosschainState()
-  useEffect(()=>{
+  const { crosschainTransferStatus } = useCrosschainState()
+  useEffect(() => {
     if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
       changeTransferState(ChainTransferState.TransferComplete)
     }

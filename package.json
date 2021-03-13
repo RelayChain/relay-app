@@ -136,7 +136,7 @@
   "dependencies": {
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/yup": "^0.29.11",
-    "@zeroexchange/sdk": "^3.1.9",
+    "@zeroexchange/sdk": "3.2.2",
     "node-sass": "4.14.1",
     "react-copy-to-clipboard": "^5.0.3",
     "react-virtualized": "^9.22.3",

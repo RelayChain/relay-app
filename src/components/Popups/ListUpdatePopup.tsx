@@ -35,7 +35,7 @@ export default function ListUpdatePopup({
   const dispatch = useDispatch<AppDispatch>()
 
   const handleAcceptUpdate = useCallback(() => {
-    if (auto) return    
+    if (auto) return
     dispatch(acceptListUpdate(listUrl))
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])

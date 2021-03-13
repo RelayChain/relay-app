@@ -19,7 +19,7 @@ import { useCallback, useMemo } from 'react'
 import flatMap from 'lodash.flatmap'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -241,9 +241,8 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
-
       if (tokenA?.chainId !== tokenB.chainId) {
-        return {};
+        return {}
       }
 
       const sorted = tokenA.sortsBefore(tokenB)

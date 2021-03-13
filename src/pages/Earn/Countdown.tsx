@@ -1,20 +1,28 @@
-import { REWARDS_DURATION_DAYS, STAKING_GENESIS } from '../../state/stake/hooks'
+import { REWARDS_DURATION_DAYS_CHAINS, STAKING_GENESIS_CHAINS } from '../../state/stake/hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { ChainId } from '@zeroexchange/sdk';
+import { ChainId } from '@zeroexchange/sdk'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
+import { CHAIN_LABELS } from '../../constants'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS
+let REWARDS_DURATION = 0;
+let STAKING_GENESIS = 0;
+
 
 export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const { chainId } = useActiveWeb3React()
 
+  if (chainId !== undefined) {
+    REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS_CHAINS[chainId];
+    STAKING_GENESIS = STAKING_GENESIS_CHAINS[chainId];
+  }
+
   // get end/beginning times
-  const end = useMemo(() => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) : STAKING_GENESIS + REWARDS_DURATION), [
+  const end = useMemo(() => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) :  + REWARDS_DURATION), [
     exactEnd
   ])
   const begin = useMemo(() => end - REWARDS_DURATION, [end])
@@ -37,15 +45,15 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   let timeRemaining: number
   let message: string
   if (timeUntilGenesis >= 0) {
-    message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts open in`
+    message = `${chainId && CHAIN_LABELS[chainId]} lifts open in`
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
     if (ongoing) {
-      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts close in`
+      message = `${chainId && CHAIN_LABELS[chainId]} lifts close in`
       timeRemaining = timeUntilEnd
     } else {
-      message = `${ chainId && chainId === ChainId.MAINNET ? 'Ethereum' : 'Avalanche'} lifts are closed!`
+      message = `${chainId && CHAIN_LABELS[chainId]} lifts are closed!`
       timeRemaining = Infinity
     }
   }

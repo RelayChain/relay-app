@@ -1,5 +1,5 @@
-import { AVAX, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -44,7 +44,7 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  useCrossChain();
+  useCrossChain()
 
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -118,8 +118,22 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], chainId === ChainId.MAINNET ? ETH_ROUTER_ADDRESS : AVAX_ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_A],
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+      ? ETH_ROUTER_ADDRESS
+      : chainId === ChainId.SMART_CHAIN
+      ? SMART_CHAIN_ROUTER_ADDRESS
+      : AVAX_ROUTER_ADDRESS
+  )
+  const [approvalB, approveBCallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_B],
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+      ? ETH_ROUTER_ADDRESS
+      : chainId === ChainId.SMART_CHAIN
+      ? SMART_CHAIN_ROUTER_ADDRESS
+      : AVAX_ROUTER_ADDRESS
+  )
 
   const addTransaction = useTransactionAdder()
 
@@ -142,8 +156,15 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER || currencyA === AVAX || currencyB === AVAX) {
-      const tokenBIsETH = (currencyB === ETHER || currencyB === AVAX)
+    if (
+      currencyA === ETHER ||
+      currencyB === ETHER ||
+      currencyB === BNB ||
+      currencyA === AVAX ||
+      currencyB === AVAX ||
+      currencyB === BNB
+    ) {
+      const tokenBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -173,16 +194,15 @@ export default function AddLiquidity({
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
-      .then((estimatedGasLimit) => {
-
+      .then(estimatedGasLimit => {
         // hardcode gas for avalanche
-        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(350000) : estimatedGasLimit
+        const gas =
+          chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN ? BigNumber.from(350000) : estimatedGasLimit
 
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(gas)
         }).then(response => {
-
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -198,7 +218,6 @@ export default function AddLiquidity({
           })
 
           setTxHash(response.hash)
-
         })
       })
       .catch(error => {

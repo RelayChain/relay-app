@@ -1,5 +1,6 @@
 import {
   AVAX,
+  BNB,
   BigintIsh,
   Currency,
   CurrencyAmount,
@@ -29,7 +30,7 @@ export function useV1ExchangeAddress(tokenAddress?: string): string | undefined 
   const contract = useV1FactoryContract()
 
   const inputs = useMemo(() => [tokenAddress], [tokenAddress])
-  return useSingleCallResult(contract, 'getExchange', inputs) ?.result ?.[0]
+  return useSingleCallResult(contract, 'getExchange', inputs)?.result?.[0]
 }
 
 export class MockV1Pair extends Pair {
@@ -42,15 +43,15 @@ function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
   const token = inputCurrency instanceof Token ? inputCurrency : undefined
 
   const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token ?.address)
+  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
-
-  return useMemo(
-    () =>
-      token && tokenBalance && ETHBalance && inputCurrency ? new MockV1Pair(ETHBalance.raw, tokenBalance) : undefined,
-    [ETHBalance, inputCurrency, token, tokenBalance]
-  )
+  return useMemo(() => {
+    if (token && tokenBalance && ETHBalance && inputCurrency) {
+      return new MockV1Pair(ETHBalance.raw, tokenBalance)
+    }
+    return undefined
+  }, [ETHBalance, inputCurrency, token, tokenBalance])
 }
 
 // returns all v1 exchange addresses in the user's token list
@@ -63,8 +64,8 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 
   return useMemo(
     () =>
-      data ?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
-        if (result ?.[0] && result[0] !== AddressZero) {
+      data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
+        if (result?.[0] && result[0] !== AddressZero) {
           memo[result[0]] = allTokens[args[ix][0]]
         }
         return memo
@@ -90,7 +91,7 @@ export function useUserHasLiquidityInAllTokens(): boolean | undefined {
   return useMemo(
     () =>
       Object.keys(balances).some(tokenAddress => {
-        const b = balances[tokenAddress] ?.raw
+        const b = balances[tokenAddress]?.raw
         return b && JSBI.greaterThan(b, JSBI.BigInt(0))
       }),
     [balances]
@@ -109,9 +110,8 @@ export function useV1Trade(
   // get the mock v1 pairs
   const inputPair = useMockV1Pair(inputCurrency)
   const outputPair = useMockV1Pair(outputCurrency)
-
-  const inputIsETH = (inputCurrency === ETHER || inputCurrency === AVAX)
-  const outputIsETH = (outputCurrency === ETHER || inputCurrency === AVAX)
+  const inputIsETH = inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
+  const outputIsETH = outputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
 
   // construct a direct or through ETH v1 route
   let pairs: Pair[] = []
@@ -139,7 +139,7 @@ export function useV1Trade(
 }
 
 export function getTradeVersion(trade?: Trade): Version | undefined {
-  const isV1 = trade ?.route ?.pairs ?.some(pair => pair instanceof MockV1Pair)
+  const isV1 = trade?.route?.pairs?.some(pair => pair instanceof MockV1Pair)
   if (isV1) return Version.v1
   if (isV1 === false) return Version.v2
   return undefined
@@ -154,8 +154,8 @@ export function useV1TradeExchangeAddress(trade: Trade | undefined): string | un
     return trade.inputAmount instanceof TokenAmount
       ? trade.inputAmount.token.address
       : trade.outputAmount instanceof TokenAmount
-        ? trade.outputAmount.token.address
-        : undefined
+      ? trade.outputAmount.token.address
+      : undefined
   }, [trade])
   return useV1ExchangeAddress(tokenAddress)
 }

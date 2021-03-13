@@ -1,4 +1,4 @@
-import { AVAX, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -34,17 +34,10 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
-
-  const zeroToken = new Token(
-    1,
-    '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
-    18,
-    'ZERO',
-    'Zero'
-  )
-  let array: any = chainId ? SUGGESTED_BASES[chainId] : [];
+  const zeroToken = new Token(1, '0xF0939011a9bb95c3B791f0cb546377Ed2693a574', 18, 'ZERO', 'Zero')
+  const array: any = chainId ? SUGGESTED_BASES[chainId] : []
   if (chainId && chainId === 1 && !array.find((x: any) => x.address === '0xF0939011a9bb95c3B791f0cb546377Ed2693a574')) {
-    array.unshift(zeroToken);
+    array.unshift(zeroToken)
   }
 
   return (
@@ -56,37 +49,52 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-      { chainId && chainId === ChainId.MAINNET &&
-        <BaseWrapper
-          onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
-            }
-          }}
-          disable={selectedCurrency === ETHER}
-        >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
-            ETH
-          </Text>
-        </BaseWrapper>
-      }
-      { chainId && chainId === ChainId.AVALANCHE &&
-        <BaseWrapper
-          onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
-              onSelect(AVAX)
-            }
-          }}
-          disable={selectedCurrency === AVAX}
-        >
-          <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
-            AVAX
-          </Text>
-        </BaseWrapper>
-      }
-        {(array).map((token: Token) => {
+        {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && (
+          <BaseWrapper
+            onClick={() => {
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
+                onSelect(ETHER)
+              }
+            }}
+            disable={selectedCurrency === ETHER}
+          >
+            <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+              ETH
+            </Text>
+          </BaseWrapper>
+        )}
+        {chainId && chainId === ChainId.AVALANCHE && (
+          <BaseWrapper
+            onClick={() => {
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
+                onSelect(AVAX)
+              }
+            }}
+            disable={selectedCurrency === AVAX}
+          >
+            <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+              AVAX
+            </Text>
+          </BaseWrapper>
+        )}
+        {chainId && chainId === ChainId.SMART_CHAIN && (
+          <BaseWrapper
+            onClick={() => {
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, BNB)) {
+                onSelect(BNB)
+              }
+            }}
+            disable={selectedCurrency === BNB}
+          >
+            <CurrencyLogo currency={BNB} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+              BNB
+            </Text>
+          </BaseWrapper>
+        )}
+        {array.map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>

@@ -23,7 +23,15 @@ const InfoLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text1};
 `
 
-function TradeSummary({ trade, allowedSlippage, chainId }: { trade: Trade; allowedSlippage: number, chainId?: ChainId }) {
+function TradeSummary({
+  trade,
+  allowedSlippage,
+  chainId
+}: {
+  trade: Trade
+  allowedSlippage: number
+  chainId?: ChainId
+}) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade, chainId)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
@@ -76,8 +84,8 @@ function TradeSummary({ trade, allowedSlippage, chainId }: { trade: Trade; allow
 }
 
 export interface AdvancedSwapDetailsProps {
-  trade?: Trade,
-  chainId?: ChainId,
+  trade?: Trade
+  chainId?: ChainId
 }
 
 export function AdvancedSwapDetails({ trade, chainId }: AdvancedSwapDetailsProps) {

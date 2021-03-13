@@ -132,6 +132,7 @@ export function BlockchainSearch({
 
   const selectedListInfo = useSelectedListInfo()
 
+
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn gap="14px">

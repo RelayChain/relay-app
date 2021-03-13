@@ -14,7 +14,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { Text } from 'rebass'
 import { currencyId } from '../../utils/currencyId'
 import { darken } from 'polished'
-import { returnNumberDecimals } from '../../constants';
+import { returnNumberDecimals } from '../../constants'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -137,13 +137,12 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   '-'
                 )}
               </FixedHeightRow>
-                <StyledInternalLink to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
-                  <ButtonPrimary
-                    style={{ marginTop: '1rem'}}
-                    >
-                    Remove Liquidity
-                  </ButtonPrimary>
-                </StyledInternalLink>
+              <StyledInternalLink
+                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                style={{ width: '100%' }}
+              >
+                <ButtonPrimary style={{ marginTop: '1rem' }}>Remove Liquidity</ButtonPrimary>
+              </StyledInternalLink>
             </AutoColumn>
           </AutoColumn>
         </GreyCard>
@@ -153,8 +152,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <span role="img" aria-label="wizard-icon">
               ⭐️
             </span>{' '}
-            By adding liquidity you&apos;ll earn a share of the liquidity pool.
-            If fees are added to the protocol by ZERO token holders, they will accrue to your share by withdrawing your liquidity.
+            By adding liquidity you&apos;ll earn a share of the liquidity pool. If fees are added to the protocol by
+            ZERO token holders, they will accrue to your share by withdrawing your liquidity.
           </TYPE.subHeader>
         </LightCard>
       )}
@@ -181,7 +180,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
 
-  let [token0Deposited, token1Deposited] =
+  const [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
@@ -195,20 +194,20 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   // fix eth balances =================
   const transformBalance = (x: any) => {
-    if (!x) return;
-    const num = x.length - 18;
-    const y = x.substring((x.length - 18), 18);
-    let z = x.substring(0, num);
-    z = z.replace('.', '');
-    return `${z}.${y}`;
+    if (!x) return
+    const num = x.length - 18
+    const y = x.substring(x.length - 18, 18)
+    let z = x.substring(0, num)
+    z = z.replace('.', '')
+    return `${z}.${y}`
   }
 
-  const t0 = pair?.token0;
-  const t1 = pair?.token1;
+  const t0 = pair?.token0
+  const t1 = pair?.token1
 
-  const t0symbol = t0?.symbol;
-  const t1symbol = t1?.symbol;
-  let t0Deposited: any, t1Deposited: any;
+  const t0symbol = t0?.symbol
+  const t1symbol = t1?.symbol
+  let t0Deposited: any, t1Deposited: any
   if (t0symbol?.includes('ETH')) {
     t0Deposited = transformBalance(token0Deposited?.raw?.toString())
   } else {
@@ -236,12 +235,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           </AutoRow>
 
           <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="170px"
-              onClick={() => setShowMore(!showMore)}
-            >
+            <ButtonEmpty padding="6px 8px" borderRadius="12px" width="170px" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <>
                   Hide Stats

@@ -1,4 +1,14 @@
-import { AVAX, CurrencyAmount, ETHER, SwapParameters, Token, Trade, TradeOptionsDeadline, TradeType } from '@zeroexchange/sdk'
+import {
+  AVAX,
+  BNB,
+  CurrencyAmount,
+  ETHER,
+  SwapParameters,
+  Token,
+  Trade,
+  TradeOptionsDeadline,
+  TradeType
+} from '@zeroexchange/sdk'
 
 import { MaxUint256 } from '@ethersproject/constants'
 import { Version } from '../hooks/useToggledVersion'
@@ -24,8 +34,10 @@ export default function v1SwapArguments(
     throw new Error('too many pairs')
   }
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const inputETH = (trade.inputAmount.currency === ETHER || trade.inputAmount.currency === AVAX)
-  const outputETH = (trade.outputAmount.currency === ETHER || trade.outputAmount.currency === AVAX)
+  const inputETH =
+    trade.inputAmount.currency === ETHER || trade.inputAmount.currency === AVAX || trade.inputAmount.currency === BNB
+  const outputETH =
+    trade.outputAmount.currency === ETHER || trade.outputAmount.currency === AVAX || trade.outputAmount.currency === BNB
   if (inputETH && outputETH) throw new Error('ETHER to ETHER')
   const minimumAmountOut = toHex(trade.minimumAmountOut(options.allowedSlippage))
   const maximumAmountIn = toHex(trade.maximumAmountIn(options.allowedSlippage))

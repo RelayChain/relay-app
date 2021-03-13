@@ -1,4 +1,4 @@
-import { AVAX, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -13,7 +13,7 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { isTokenOnList } from '../../utils'
-import { returnBalanceNum } from '../../constants';
+import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -21,13 +21,15 @@ import { useIsUserAddedToken } from '../../hooks/Tokens'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
-    return currency.address;
+    return currency.address
   } else if (currency === ETHER) {
-    return 'ETHER';
+    return 'ETHER'
   } else if (currency === AVAX) {
-    return 'AVAX';
+    return 'AVAX'
+  } else if (currency === BNB) {
+    return 'BNB'
   } else {
-    return '';
+    return ''
   }
 }
 
@@ -53,7 +55,11 @@ const Tag = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' })}</StyledBalanceText>
+  return (
+    <StyledBalanceText title={balance.toExact()}>
+      {balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' })}
+    </StyledBalanceText>
+  )
 }
 
 const TagContainer = styled.div`
@@ -115,8 +121,7 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ?
-                      true : false
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   // only show add or remove buttons if not on selected list
 
   return (
@@ -147,7 +152,7 @@ function CurrencyRow({
             </TYPE.main>
           ) : null}
           {/* Fix this so (Add) works for Avax support */}
-          {!isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE ? (
+          {!isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE && chainId !== ChainId.SMART_CHAIN ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
@@ -187,11 +192,15 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
 }) {
-
   const { chainId } = useActiveWeb3React()
 
-  const nativeToken = chainId === ChainId.MAINNET ? Currency.ETHER : Currency.AVAX
-  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [currencies, showETH, nativeToken])
+  const nativeToken =
+    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? Currency.ETHER : chainId === ChainId.SMART_CHAIN ? Currency.BNB : Currency.AVAX
+  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
+    currencies,
+    showETH,
+    nativeToken
+  ])
 
   const Row = useCallback(
     ({ data, index, style }) => {

@@ -54,7 +54,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
   const unclaimedUni = useTokenBalance(useMerkleDistributorContract()?.address, uni)
   const circulation: TokenAmount | undefined = useMemo(
     () =>
-      blockTimestamp && uni && chainId === ChainId.MAINNET
+      blockTimestamp && uni && chainId === (ChainId.MAINNET || chainId === ChainId.RINKEBY)
         ? computeUniCirculation(uni, blockTimestamp, unclaimedUni)
         : totalSupply,
     [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
@@ -116,7 +116,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <TYPE.white color="white">Total Supply</TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
-            {uni && uni.chainId === ChainId.MAINNET ? (
+            {uni && (uni.chainId === ChainId.MAINNET || uni.chainId === ChainId.RINKEBY) ? (
               <ExternalLink href={`https://uniswap.info/token/${uni.address}`}>View UNI Analytics</ExternalLink>
             ) : null}
           </AutoColumn>

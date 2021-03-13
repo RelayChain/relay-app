@@ -27,7 +27,7 @@ export function getNetworkLibrary(): Web3Provider {
 
 // add 43114 for AVAX
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 43113, 43114]
+  supportedChainIds: [1, 3, 4, 5, 42, 43113, 43114, 97, 56]
 })
 
 // mainnet only

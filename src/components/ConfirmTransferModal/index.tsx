@@ -6,7 +6,7 @@ import { ChainTransferState } from '../../state/crosschain/actions'
 import { CloseIcon } from '../../theme/components'
 import { Currency } from '@zeroexchange/sdk'
 import Modal from '../Modal'
-import NotStarted from './NotStarted';
+import NotStarted from './NotStarted'
 import { RowBetween } from '../Row'
 import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
@@ -15,15 +15,15 @@ import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 
 interface ConfirmTransferProps {
-  isOpen: boolean;
-  onDismiss: () => void;
-  activeChain?: string;
-  transferTo?: string;
-  currency?: Currency | null;
-  value?: string;
+  isOpen: boolean
+  onDismiss: () => void
+  activeChain?: string
+  transferTo?: string
+  currency?: Currency | null
+  value?: string
   trade?: Trade
-  changeTransferState: (state: ChainTransferState) => void;
-  tokenTransferState: ChainTransferState;
+  changeTransferState: (state: ChainTransferState) => void
+  tokenTransferState: ChainTransferState
 }
 
 const ModalContainer = styled.div`
@@ -51,79 +51,72 @@ export default function ConfirmTransferModal({
   value,
   trade,
   changeTransferState,
-  tokenTransferState,
+  tokenTransferState
 }: ConfirmTransferProps) {
+  const { currentToken, transferAmount } = useCrosschainState()
 
-  const { currentToken, transferAmount } = useCrosschainState();
-
-  const [ title, setTitle ] = useState('');
+  const [title, setTitle] = useState('')
   useEffect(() => {
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
-      setTitle('Approve Your Transfer');
-      break;
+        setTitle('Approve Your Transfer')
+        break
       case ChainTransferState.ApprovalPending:
-      setTitle('Approval Pending');
-      break;
+        setTitle('Approval Pending')
+        break
       case ChainTransferState.ApprovalComplete:
-      setTitle('Approved! Now Start Transfer');
-      break;
+        setTitle('Approved! Now Start Transfer')
+        break
       case ChainTransferState.TransferPending:
-      setTitle('Transfer Pending');
-      break;
+        setTitle('Transfer Pending')
+        break
       case ChainTransferState.TransferComplete:
-      setTitle('Transfer Complete');
-      break;
+        setTitle('Transfer Complete')
+        break
       default:
     }
-  }, [tokenTransferState]);
+  }, [tokenTransferState])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
-      <RowBetween>
-        <div />
-        <CloseIcon onClick={onDismiss} />
-      </RowBetween>
-      <h5>{title}</h5>
+        <RowBetween>
+          <div />
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        <h5>{title}</h5>
 
-      {tokenTransferState === ChainTransferState.NotStarted &&
-        <NotStarted
-          activeChain={activeChain}
-          transferTo={transferTo}
-          currency={currency}
-          value={value}
-          trade={trade}
-          changeTransferState={changeTransferState}
-          tokenTransferState={tokenTransferState}
-        />
-      }
+        {tokenTransferState === ChainTransferState.NotStarted && (
+          <NotStarted
+            activeChain={activeChain}
+            transferTo={transferTo}
+            currency={currency}
+            value={value}
+            trade={trade}
+            changeTransferState={changeTransferState}
+            tokenTransferState={tokenTransferState}
+          />
+        )}
 
-      { tokenTransferState === ChainTransferState.ApprovalPending &&
-        <ApprovalPending />
-      }
+        {tokenTransferState === ChainTransferState.ApprovalPending && <ApprovalPending />}
 
-      { tokenTransferState === ChainTransferState.ApprovalComplete &&
-        <ApprovalComplete
-          changeTransferState={changeTransferState}
-        />
-      }
+        {tokenTransferState === ChainTransferState.ApprovalComplete && (
+          <ApprovalComplete changeTransferState={changeTransferState} />
+        )}
 
-      { tokenTransferState === ChainTransferState.TransferPending &&
-        <TransferPending
-          changeTransferState={changeTransferState}
-        />
-      }
+        {tokenTransferState === ChainTransferState.TransferPending && (
+          <TransferPending changeTransferState={changeTransferState} />
+        )}
 
-      { tokenTransferState === ChainTransferState.TransferComplete &&
-        <TransferComplete
-          activeChain={activeChain}
-          transferTo={transferTo}
-          onDismiss={onDismiss}
-          currentToken={currentToken}
-          transferAmount={transferAmount}
-        />
-      }
+        {tokenTransferState === ChainTransferState.TransferComplete && (
+          <TransferComplete
+            activeChain={activeChain}
+            transferTo={transferTo}
+            onDismiss={onDismiss}
+            currentToken={currentToken}
+            transferAmount={transferAmount}
+          />
+        )}
       </ModalContainer>
     </Modal>
   )

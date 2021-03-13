@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { CHAIN_LABELS } from '../../constants'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme }) => transparentize(0.6, theme.bg3)};
@@ -47,7 +48,7 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
   const allTokens = useAllTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
-    if (!token || !chainId) return false
+    if (!token || chainId == undefined) return false
 
     return Object.keys(allTokens).some(tokenAddress => {
       const userToken = allTokens[tokenAddress]
@@ -73,9 +74,11 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
               ? `${token.name} (${token.symbol})`
               : token.name || token.symbol}{' '}
           </TYPE.main>
-          {chainId && (
+          {chainId !== null || (
             <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
-              <TYPE.blue title={token.address}>{shortenAddress(token.address)} ({ chainId && chainId === ChainId.MAINNET ? 'View on Etherscan' : 'View on Avalanche'})</TYPE.blue>
+              <TYPE.blue title={token.address}>
+                {shortenAddress(token.address)} ({chainId && `View on ${CHAIN_LABELS[chainId]}`}
+              </TYPE.blue>
             </ExternalLink>
           )}
         </AutoColumn>
