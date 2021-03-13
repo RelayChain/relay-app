@@ -109,7 +109,8 @@ export default function Earn() {
       // https://bscscan.com/tx/0x11e8e1766788581dd7597c5eae53a4ebb0709f45b22850822f54c553e9eaca8c
       {
         baseSymbol: 'BNB',
-        baseAddress: 'BNB',
+        // baseAddress: 'BNB',
+        baseAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
         otherSymbol: 'ZERO',
         otherAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
       },
