@@ -111,16 +111,10 @@ export default function Earn() {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
         otherSymbol: 'BNB',
-        otherAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        otherAddress: 'BNB',
       },
-      // {
-      //   baseSymbol: 'BNB',
-      //   baseAddress: 'BNB',
-      //   otherSymbol: 'BUSD',
-      //   otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-      // },
-      
-      // https://bscscan.com/tx/0x11e8e1766788581dd7597c5eae53a4ebb0709f45b22850822f54c553e9eaca8c
+
+      // https://bscscan.com/tx/0x6381904de3ac1427174a93df631423632b8e70c45ce3aeb6ecf67c77de7a2d8b
       {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2b1ee2933f1fdf8e4b63a44b2249d77eaf',
