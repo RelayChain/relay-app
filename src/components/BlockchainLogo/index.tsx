@@ -41,3 +41,4 @@ export default function BlockchainLogo({
 
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
 }
+
