@@ -388,14 +388,14 @@ export const crosschainConfig: ChainbridgeConfig = {
         }
       ]
     },
-  ]
+ ]
 
   // rinkeby - FUJI
   // chains: [
   //   {
-  //     chainId: 0,
+  //     chainId: 4,
   //     networkId: 4,
-  //     name: "Ethereum",
+  //     name: "Rinkeby",
   //     bridgeAddress: "0x06E4d0FCd55eacb617dFCd0C5e75D8b005894bD2",
   //     erc20HandlerAddress: "0x754977d76601b473474Ba8FBac0Fa2A20Aa84694",
   //     rpcUrl: "https://rinkeby.infura.io/v3/45174a29359d4b07ade01676259bc47a",
@@ -413,7 +413,7 @@ export const crosschainConfig: ChainbridgeConfig = {
   //           "0x00000000000000000000006Cfe8eA9cb32dcf1Cd7188fA68366c099a8FfC7E00",
   //       },
   //       {
-  //         address: "0x86D646e76806DCD652a5aFA7AaA20D428B76A356",
+  //         address: "0x86d646e76806dcd652a5afa7aaa20d428b76a356",
   //         name: "USDT",
   //         symbol: "USDT",
   //         assetBase: 'USDT',
@@ -442,7 +442,7 @@ export const crosschainConfig: ChainbridgeConfig = {
   //     ],
   //   },
   //   {
-  //     chainId: 1,
+  //     chainId: 5,
   //     networkId: 43113,
   //     name: "Avalanche",
   //     bridgeAddress: "0xeef5d5C87cDD5F1c2ec89AC6c7B86EeB76299603",
@@ -475,7 +475,7 @@ export const crosschainConfig: ChainbridgeConfig = {
   //         address: "0xBdc570Df37814c873C3a9bCF3751E52A36758d2f",
   //         name: "zBTC",
   //         symbol: "zBTC",
-  //         assetBase: 'zBTC',
+  //         assetBase: 'BTC',
   //         decimals: 18,
   //         resourceId:
   //           "0x0000000000000000000000Bdc570Df37814c873C3a9bCF3751E52A36758d2f01",
@@ -484,7 +484,7 @@ export const crosschainConfig: ChainbridgeConfig = {
   //         address: "0x961b714a7d2c4B263fcB91b26a5CFd6268b874ec",
   //         name: "zUSDC",
   //         symbol: "zUSDC",
-  //         assetBase: 'zUSDC',
+  //         assetBase: 'USDC',
   //         decimals: 18,
   //         resourceId:
   //           "0x0000000000000000000000961b714a7d2c4B263fcB91b26a5CFd6268b874ec01",
