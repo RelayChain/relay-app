@@ -388,7 +388,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         }
       ]
     },
- ]
+  ]
 
   // rinkeby - FUJI
   // chains: [
