@@ -1,9 +1,7 @@
 import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER
-    ? WETH[chainId]
-    : (chainId && currency === AVAX) || (chainId && currency === BNB)
+  return chainId && (currency === ETHER || currency === AVAX || currency === BNB)
     ? WETH[chainId]
     : currency instanceof Token
     ? currency
