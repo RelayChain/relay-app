@@ -105,7 +105,7 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const isAVAX = currencyId?.toUpperCase() === 'AVAX'
   const isBNB = currencyId?.toUpperCase() === 'BNB'
-  const token = useToken(isETH || isAVAX ? undefined : currencyId)
+  const token = useToken(isETH || isAVAX || isBNB ? undefined : currencyId)
 
   if (isETH) {
     return ETHER
