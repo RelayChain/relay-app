@@ -158,6 +158,7 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   return result
 }
 
+
 function GetChainNameById(chainID: number): string {
   if (chainID === ChainId.MAINNET) {
     return 'Ethereum'
@@ -395,13 +396,17 @@ export function useCrosschainHooks() {
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
+    const usdtAddress = crosschainState.availableTokens.find(token => token.symbol === 'USDT')?.address ??
+      '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
-    const ABI = currentToken.address === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? USDTTokenABI : TokenABI
+    const isUsdt = currentToken.address === usdtAddress
+    const ABI = isUsdt ? USDTTokenABI : TokenABI
+    const transferAmount = isUsdt ? String(Number.MAX_SAFE_INTEGER) : crosschainState.transferAmount
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
       .approve(
         currentChain.erc20HandlerAddress,
-        WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
+        WithDecimalsHexString(transferAmount, currentToken.decimals),
         {
           gasLimit: '50000',
           gasPrice: gasPriceFromChain,
@@ -530,16 +535,17 @@ export function useCrossChain() {
     )
 
     const newTargetCain = chains.length
-      ? chains[0]
+      ? targetChain
       : {
-          name: '',
-          chainID: ''
-        }
+        name: '',
+        chainID: ''
+      }
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(
       setAvailableTokens({
+
         tokens: tokens.length ? tokens : []
       })
     )
