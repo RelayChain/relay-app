@@ -7,7 +7,7 @@ import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/images/logo-zero-512.png'
+import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import { NavLink } from 'react-router-dom'
 import React from 'react'
@@ -286,7 +286,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'64px'} src={isDark ? LogoDark : Logo} alt="logo" />
+            <img width={'54px'} style={{ marginLeft: '1.5rem', marginRight: '1.5rem'}} src={isDark ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>

@@ -49,8 +49,9 @@ flex-direction: column;
 `};
 `
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(28, 176, 249, .1) 0%, #000000 100%);
   overflow: hidden;
+  border: 2px solid rgba(28, 176, 249, .45);
 `
 
 // const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -138,8 +139,6 @@ export default function Earn() {
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteCard>
-        <CardBGImage />
-        <CardNoise />
         <CardSection>
           <AutoColumn gap="md">
             <RowBetween>
@@ -177,8 +176,6 @@ export default function Earn() {
             </div>
           </AutoColumn>
         </CardSection>
-        <CardBGImage />
-        <CardNoise />
       </VoteCard>
 
       <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>

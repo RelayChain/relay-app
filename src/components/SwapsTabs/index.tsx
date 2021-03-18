@@ -28,7 +28,7 @@ const Tab = styled.div<{ active?: boolean }>`
   transition: all .2s ease-in-out;
   &:hover {
     cursor: pointer;
-    background: ${({ active, theme }) => (active ? theme.primary1 : 'rgba(38, 98, 255, .25)')};
+    background: ${({ active, theme }) => (active ? theme.primary1 : 'rgba(103, 82, 247, .25)')};
   }
 `
 const SwapsTabs = ({
