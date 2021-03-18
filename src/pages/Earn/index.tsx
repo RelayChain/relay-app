@@ -208,7 +208,7 @@ export default function Earn() {
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://zero.exchange/learn-more"
+                href="https://0.exchange/learn-more"
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>Learn more about ZERO</TYPE.white>

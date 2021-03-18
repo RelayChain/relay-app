@@ -98,11 +98,11 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://zero.exchange">
+          <MenuItem id="link" href="https://0.exchange">
             <Info size={14} />
             Home
           </MenuItem>
-          <MenuItem id="link" href="https://blog.zero.exchange">
+          <MenuItem id="link" href="https://blog.0.exchange">
             <BookOpen size={14} />
             Blog
           </MenuItem>

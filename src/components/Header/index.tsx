@@ -298,11 +298,11 @@ export default function Header() {
             <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Earn')}
           </StyledNavLink>
-          <HeaderExternalLink href={`https://buy.zero.exchange`}>
+          <HeaderExternalLink href={`https://buy.0.exchange`}>
             <CreditCard size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
             Buy Zero
           </HeaderExternalLink>
-          <HeaderExternalLink href={`https://charts.zero.exchange`}>
+          <HeaderExternalLink href={`https://charts.0.exchange`}>
             <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
             Charts
           </HeaderExternalLink>
