@@ -49,7 +49,7 @@ flex-direction: column;
 `};
 `
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(28, 176, 249, .1) 0%, #000000 100%);
+  background: #111;
   overflow: hidden;
   border: 2px solid rgba(28, 176, 249, .45);
 `

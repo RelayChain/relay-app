@@ -24,7 +24,7 @@ export const DataCard = styled(AutoColumn) <{ disabled?: boolean }>`
 `
 
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
-  background: black;
+  background: #111;
   width: 1000px;
   height: 600px;
   position: absolute;
@@ -39,7 +39,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
-  background: black;
+  background: #111;
   width: 1200px;
   height: 1200px;
   position: absolute;
@@ -53,7 +53,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardNoise = styled.span`
-  background: black;
+  background: #111;
   mix-blend-mode: overlay;
   border-radius: 12px;
   width: 100%;
