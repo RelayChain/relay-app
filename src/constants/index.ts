@@ -63,6 +63,14 @@ export const WBNB = new Token(
 
 export const bscZERO = new Token(ChainId.SMART_CHAIN, '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf', 18, 'ZERO', 'ZERO')
 export const bscBUSD = new Token(ChainId.SMART_CHAIN, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
+export const bscWBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'WBNB');
+export const bscUSDC = new Token(ChainId.SMART_CHAIN, '0x4022AfEB287052e6e587d39bA99f79cAFC47B570', 6, 'zUSDC', 'zUSDC');
+export const bscUSDT = new Token(ChainId.SMART_CHAIN, '0xBF7e0761417F49b3FAFae564C842823f5f79DB15', 6, 'zUSDT', 'zUSDT');
+export const bscBTC = new Token(ChainId.SMART_CHAIN, '0xB6D5487b00e53e7009E6560189EB8B8c22e11Bf3', 8, 'zBTC', 'zBTC');
+export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88192450CF3ed4150C', 18, 'zUNI', 'zUNI');
+export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc', 18, 'zSUSHI', 'zSUSHI');
+export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI');
+
 
 export const MOCK1 = new Token(
   ChainId.FUJI,
