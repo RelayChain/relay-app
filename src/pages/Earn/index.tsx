@@ -150,31 +150,33 @@ export default function Earn() {
                 {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
               </TYPE.white>
             </RowBetween>
-            <div style={{ display: 'block', width: '100%' }}>
-              <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
-              {chainId &&
-                pools[chainId] &&
-                pools[chainId].map((pool: any, index: number) => (
-                  <>
-                    <ButtonUNIGradient
-                      key={index}
-                      id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
-                      as={Link}
-                      to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
-                      style={{
-                        margin: '1rem .5rem',
-                        display: 'inline-flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Text fontWeight={500} fontSize={14}>
-                        {`${pool.baseSymbol}/${pool.otherSymbol}`}
-                      </Text>
-                    </ButtonUNIGradient>
-                  </>
-                ))}
-            </div>
+            {/*
+              <div style={{ display: 'block', width: '100%' }}>
+                <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
+                {chainId &&
+                  pools[chainId] &&
+                  pools[chainId].map((pool: any, index: number) => (
+                    <>
+                      <ButtonUNIGradient
+                        key={index}
+                        id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
+                        as={Link}
+                        to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
+                        style={{
+                          margin: '1rem .5rem',
+                          display: 'inline-flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Text fontWeight={500} fontSize={14}>
+                          {`${pool.baseSymbol}/${pool.otherSymbol}`}
+                        </Text>
+                      </ButtonUNIGradient>
+                    </>
+                  ))}
+              </div>
+            */}
           </AutoColumn>
         </CardSection>
         <CardBGImage />
