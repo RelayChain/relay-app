@@ -35,7 +35,7 @@ export const returnBalanceNum = (obj?: any, decimals?: number) => {
 
 export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USDC')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
@@ -46,7 +46,7 @@ export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a
 export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche');
 export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange');
 export const zDAI = new Token(ChainId.AVALANCHE, '0x12f108E6138d4A9c58511e042399cF8f90D5673f', 18, 'zDAI', 'Dai Stablecoin')
-export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'USD//C')
+export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'zUSDC')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
 export const zUSDT = new Token(ChainId.AVALANCHE, '0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7', 6, 'zUSDT', 'zUSDT');
 export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D056871125452', 8, 'zBTC', 'zBTC');
