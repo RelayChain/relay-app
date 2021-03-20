@@ -1,9 +1,34 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { 
-    ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, WBNB, USDC, 
-    USDT, WBTC, SUSHI, DAI, zUSDT, zBTC, zUNI, zSUSHI, zDAI,
-    bscWBNB, bscUSDC, bscUSDT, bscBTC, bscUNI, bscSUSHI, bscBUSD, bscDAI } from '../../constants'
+import {
+  ZERO,
+  MOCK1,
+  UNI,
+  zETH,
+  zUSDC,
+  WAVAX,
+  zZERO,
+  bscZERO,
+  WBNB,
+  USDC,
+  USDT,
+  WBTC,
+  SUSHI,
+  DAI,
+  zUSDT,
+  zBTC,
+  zUNI,
+  zSUSHI,
+  zDAI,
+  bscWBNB,
+  bscUSDC,
+  bscUSDT,
+  bscBTC,
+  bscUNI,
+  bscSUSHI,
+  bscBUSD,
+  bscDAI
+} from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -12,16 +37,16 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
 export const STAKING_GENESIS_CHAINS = {
   [ChainId.AVALANCHE]: 1612360800,
-  [ChainId.SMART_CHAIN]: 1615597200,
-};
+  [ChainId.SMART_CHAIN]: 1615597200
+}
 
 export const REWARDS_DURATION_DAYS_CHAINS = {
   [ChainId.AVALANCHE]: 45,
-  [ChainId.SMART_CHAIN]: 30,
+  [ChainId.SMART_CHAIN]: 30
 }
 
-export const STAKING_GENESIS = 1615597200;
-export const REWARDS_DURATION_DAYS = 30;
+export const STAKING_GENESIS = 1615597200
+export const REWARDS_DURATION_DAYS = 30
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -41,24 +66,24 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [USDT, ZERO],
-      stakingRewardAddress: '0xe5cFc90521477f9DeA4784Cc96f0230bFFe82108',
+      stakingRewardAddress: '0xe5cFc90521477f9DeA4784Cc96f0230bFFe82108'
     },
     {
       tokens: [WBTC, ZERO],
-      stakingRewardAddress: '0x3C775c9f57e614b11263441968Fac2d70673301a',
+      stakingRewardAddress: '0x3C775c9f57e614b11263441968Fac2d70673301a'
     },
     {
       tokens: [UNI[ChainId.MAINNET], ZERO],
-      stakingRewardAddress: '0x8161fBcc80a2526BCf5E5207ED18b2A26dF6807D',
+      stakingRewardAddress: '0x8161fBcc80a2526BCf5E5207ED18b2A26dF6807D'
     },
     {
       tokens: [SUSHI, ZERO],
-      stakingRewardAddress: '0xDF085d8c554018540Bbfc3123FbD8BaaC620c2Fa',
+      stakingRewardAddress: '0xDF085d8c554018540Bbfc3123FbD8BaaC620c2Fa'
     },
     {
       tokens: [DAI, ZERO],
-      stakingRewardAddress: '0x8995fcD45B13BF75f9FA65BbBC6A75066E4E9Cbf',
-    },
+      stakingRewardAddress: '0x8995fcD45B13BF75f9FA65BbBC6A75066E4E9Cbf'
+    }
   ],
   [ChainId.AVALANCHE]: [
     {
@@ -82,36 +107,36 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WAVAX, zUSDC],
-      stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526',
+      stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526'
     },
     {
       tokens: [zZERO, zETH],
-      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C',
+      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
     },
-    { 
-      tokens: [zZERO, zUSDC], 
-      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b', 
+    {
+      tokens: [zZERO, zUSDC],
+      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
     },
-    { 
-      tokens: [zZERO, zUSDT], 
-      stakingRewardAddress: '0xA8AA762a6529d7A875d0195FAd8572aAd5c697bC', 
+    {
+      tokens: [zZERO, zUSDT],
+      stakingRewardAddress: '0xA8AA762a6529d7A875d0195FAd8572aAd5c697bC'
     },
-    { 
-      tokens: [zZERO, zBTC], 
-      stakingRewardAddress: '0x1CD4C57f93784a4aba52B86a01E5d821B352BA73', 
+    {
+      tokens: [zZERO, zBTC],
+      stakingRewardAddress: '0x1CD4C57f93784a4aba52B86a01E5d821B352BA73'
     },
-    { 
-      tokens: [zZERO, zUNI], 
-      stakingRewardAddress: '0xcE64d9454246e690e005AC6371aF9FeD88134425', 
+    {
+      tokens: [zZERO, zUNI],
+      stakingRewardAddress: '0xcE64d9454246e690e005AC6371aF9FeD88134425'
     },
-    { 
-      tokens: [zZERO, zSUSHI], 
-      stakingRewardAddress: '0x46609d1A08fAd26A52f4D84bB58523C6598352a5', 
+    {
+      tokens: [zZERO, zSUSHI],
+      stakingRewardAddress: '0x46609d1A08fAd26A52f4D84bB58523C6598352a5'
     },
-    { 
-      tokens: [zZERO, zDAI], 
-      stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De', 
-    },
+    {
+      tokens: [zZERO, zDAI],
+      stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De'
+    }
   ],
   [ChainId.FUJI]: [
     {
@@ -122,44 +147,44 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.SMART_CHAIN]: [
     {
       tokens: [bscZERO, bscBUSD],
-      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e',
+      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e'
     },
     {
       tokens: [WBNB, bscZERO],
-      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A',
+      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
     },
-    // { 
-    //   tokens: [bscZERO, bscWBNB], 
+    // {
+    //   tokens: [bscZERO, bscWBNB],
     //   stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A',
     // },
-    { 
-        tokens: [bscZERO, bscUSDC], 
-        stakingRewardAddress: '0x0Ff36b5F7B87Bb61BE8305F9b47c83910560DF95',
-    },
-    { 
-        tokens: [bscZERO, bscUSDT], 
-        stakingRewardAddress: '0xacE237D2cC182E8c1E3866509b800Fe35e192108',
+    {
+      tokens: [bscZERO, bscUSDC],
+      stakingRewardAddress: '0x0Ff36b5F7B87Bb61BE8305F9b47c83910560DF95'
     },
     {
-        tokens: [bscZERO, bscBTC], 
-        stakingRewardAddress: '0x9c13B95F92F4b35DC725c5d4D5e3ffa467e58091',
+      tokens: [bscZERO, bscUSDT],
+      stakingRewardAddress: '0xacE237D2cC182E8c1E3866509b800Fe35e192108'
     },
-    { 
-        tokens: [bscZERO, bscUNI], 
-        stakingRewardAddress: '0x300b7ae70C9a8AA3643d4b9Ac90145c8dbd5a961',
+    {
+      tokens: [bscZERO, bscBTC],
+      stakingRewardAddress: '0x9c13B95F92F4b35DC725c5d4D5e3ffa467e58091'
     },
-    { 
-        tokens: [bscZERO, bscSUSHI], 
-        stakingRewardAddress: '0x8C0e0d72b29e51518034536fd509c9c1F5306B2d',
+    {
+      tokens: [bscZERO, bscUNI],
+      stakingRewardAddress: '0x300b7ae70C9a8AA3643d4b9Ac90145c8dbd5a961'
     },
-    // { 
-    //     tokens: [bscZERO, bscBUSD], 
+    {
+      tokens: [bscZERO, bscSUSHI],
+      stakingRewardAddress: '0x8C0e0d72b29e51518034536fd509c9c1F5306B2d'
+    },
+    // {
+    //     tokens: [bscZERO, bscBUSD],
     //     stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e',
     // },
-    { 
-        tokens: [bscZERO, bscDAI], 
-        stakingRewardAddress: '0xa8630279dBFb97a92a7C477c17FF4466b619A3d2',
-    },
+    {
+      tokens: [bscZERO, bscDAI],
+      stakingRewardAddress: '0xa8630279dBFb97a92a7C477c17FF4466b619A3d2'
+    }
   ]
 }
 
