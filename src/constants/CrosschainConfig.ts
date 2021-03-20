@@ -283,6 +283,14 @@ export const crosschainConfig: ChainbridgeConfig = {
       nativeTokenSymbol: 'BNB',
       tokens: [
         {
+          address: '0xBF7e0761417F49b3FAFae564C842823f5f79DB15',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000BF7e0761417F49b3FAFae564C842823f5f79DB1503'
+        },
+        {
           address: '0x4022AfEB287052e6e587d39bA99f79cAFC47B570',
           name: 'zUSDC',
           symbol: 'zUSDC',
