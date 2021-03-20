@@ -41,8 +41,8 @@ export const STAKING_GENESIS_CHAINS = {
 }
 
 export const REWARDS_DURATION_DAYS_CHAINS = {
-  [ChainId.AVALANCHE]: 45,
-  [ChainId.SMART_CHAIN]: 30
+  [ChainId.AVALANCHE]: 60,
+  [ChainId.SMART_CHAIN]: 60
 }
 
 export const STAKING_GENESIS = 1615597200
