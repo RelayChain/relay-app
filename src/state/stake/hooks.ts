@@ -78,10 +78,10 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WAVAX, zUSDC],
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526',
     },
-    { 
-      tokens: [zZERO, WAVAX], 
-      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77', 
-    },
+    // { 
+    //   tokens: [zZERO, WAVAX], 
+    //   stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77', 
+    // },
     { 
       tokens: [zZERO, zUSDC], 
       stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b', 
