@@ -131,7 +131,13 @@ export default function Earn() {
    * @todo only account for this if rewards are inactive
    */
   const stakingInfosWithBalance = stakingInfos
-
+  let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
+  stakingInfos.map(item => {
+    const period = item ? item.periodFinish : timeToStakingFinish
+    if (period && item.active && timeToStakingFinish && timeToStakingFinish < period) {
+      timeToStakingFinish = period
+    }
+  });
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
@@ -225,7 +231,7 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+          <Countdown exactEnd={timeToStakingFinish} />
         </DataRow>
 
         <PoolSection>
@@ -236,11 +242,11 @@ export default function Earn() {
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : (
-            stakingInfosWithBalance?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-            })
-          )}
+                  stakingInfosWithBalance?.map(stakingInfo => {
+                    // need to sort by added liquidity here
+                    return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                  })
+                )}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>
