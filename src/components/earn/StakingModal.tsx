@@ -21,7 +21,6 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -162,12 +161,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     ]
     const message = {
       owner: account,
-      spender:
-        chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-          ? ETH_ROUTER_ADDRESS
-          : chainId === ChainId.SMART_CHAIN
-          ? SMART_CHAIN_ROUTER_ADDRESS
-          : AVAX_ROUTER_ADDRESS,
+      spender: stakingInfo.stakingRewardAddress,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
