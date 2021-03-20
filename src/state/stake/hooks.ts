@@ -1,6 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, bscBUSD, WBNB, USDC, USDT, WBTC, SUSHI, DAI } from '../../constants'
+import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, bscBUSD, WBNB, USDC, USDT, WBTC, SUSHI, DAI, zUSDT, zBTC, zUNI, zSUSHI, zDAI } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -76,8 +76,36 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WAVAX, zUSDC],
-      stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526'
-    }
+      stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526',
+    },
+    { 
+      tokens: [zZERO, WAVAX], 
+      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77', 
+    },
+    { 
+      tokens: [zZERO, zUSDC], 
+      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b', 
+    },
+    { 
+      tokens: [zZERO, zUSDT], 
+      stakingRewardAddress: '0xA8AA762a6529d7A875d0195FAd8572aAd5c697bC', 
+    },
+    { 
+      tokens: [zZERO, zBTC], 
+      stakingRewardAddress: '0x1CD4C57f93784a4aba52B86a01E5d821B352BA73', 
+    },
+    { 
+      tokens: [zZERO, zUNI], 
+      stakingRewardAddress: '0xcE64d9454246e690e005AC6371aF9FeD88134425', 
+    },
+    { 
+      tokens: [zZERO, zSUSHI], 
+      stakingRewardAddress: '0x46609d1A08fAd26A52f4D84bB58523C6598352a5', 
+    },
+    { 
+      tokens: [zZERO, zDAI], 
+      stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De', 
+    },
   ],
   [ChainId.FUJI]: [
     {
