@@ -1,6 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
 import { useMemo } from 'react'
-import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, bscBUSD, WBNB } from '../../constants'
+import { ZERO, MOCK1, UNI, zETH, zUSDC, WAVAX, zZERO, bscZERO, bscBUSD, WBNB, USDC, USDT, WBTC, SUSHI, DAI } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -27,6 +27,36 @@ export const STAKING_REWARDS_INFO: {
     stakingRewardAddress: string
   }[]
 } = {
+  [ChainId.MAINNET]: [
+    {
+      tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x5D250245FEDAa768e11320F8E71Bf2C057Dff68B'
+    },
+    {
+      tokens: [USDC, ZERO],
+      stakingRewardAddress: '0x46bEcD7c25a7D036c20352Cc8d062c5141EE3345'
+    },
+    {
+      tokens: [USDT, ZERO],
+      stakingRewardAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+    },
+    {
+      tokens: [WBTC, ZERO],
+      stakingRewardAddress: '0xCcFC511762a5347eD3dCe3D91967d3e93e4C55FD',
+    },
+    {
+      tokens: [UNI[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x4Ce7912A97EDFB0EB4b0A9bD51397E7dFe84B285',
+    },
+    {
+      tokens: [SUSHI, ZERO],
+      stakingRewardAddress: '0x70404cedfFed90b3752E9ed297f0eAECC7b256ed',
+    },
+    {
+      tokens: [DAI, ZERO],
+      stakingRewardAddress: '0x204152985643801Ace41609345442a7cB9Acd9f4',
+    },
+  ],
   [ChainId.AVALANCHE]: [
     {
       tokens: [zZERO, zETH],
