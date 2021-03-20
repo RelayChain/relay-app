@@ -30,31 +30,31 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
-      stakingRewardAddress: '0x5D250245FEDAa768e11320F8E71Bf2C057Dff68B'
+      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
     },
     {
       tokens: [USDC, ZERO],
-      stakingRewardAddress: '0x46bEcD7c25a7D036c20352Cc8d062c5141EE3345'
+      stakingRewardAddress: '0xdAD63CBa8c4b42255e7b7055FC48435316c55E25'
     },
     {
       tokens: [USDT, ZERO],
-      stakingRewardAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+      stakingRewardAddress: '0xe5cFc90521477f9DeA4784Cc96f0230bFFe82108',
     },
     {
       tokens: [WBTC, ZERO],
-      stakingRewardAddress: '0xCcFC511762a5347eD3dCe3D91967d3e93e4C55FD',
+      stakingRewardAddress: '0x3C775c9f57e614b11263441968Fac2d70673301a',
     },
     {
       tokens: [UNI[ChainId.MAINNET], ZERO],
-      stakingRewardAddress: '0x4Ce7912A97EDFB0EB4b0A9bD51397E7dFe84B285',
+      stakingRewardAddress: '0x8161fBcc80a2526BCf5E5207ED18b2A26dF6807D',
     },
     {
       tokens: [SUSHI, ZERO],
-      stakingRewardAddress: '0x70404cedfFed90b3752E9ed297f0eAECC7b256ed',
+      stakingRewardAddress: '0xDF085d8c554018540Bbfc3123FbD8BaaC620c2Fa',
     },
     {
       tokens: [DAI, ZERO],
-      stakingRewardAddress: '0x204152985643801Ace41609345442a7cB9Acd9f4',
+      stakingRewardAddress: '0x8995fcD45B13BF75f9FA65BbBC6A75066E4E9Cbf',
     },
   ],
   [ChainId.AVALANCHE]: [
@@ -68,7 +68,10 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [zZERO, WAVAX],
+      // old one, expires soon, to be replaced:
       stakingRewardAddress: '0x60F19487bdA9c2F8336784110dc5c4d66425402d'
+      // new one:
+      // stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
     },
     {
       tokens: [WAVAX, zETH],
@@ -78,10 +81,6 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WAVAX, zUSDC],
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526',
     },
-    // { 
-    //   tokens: [zZERO, WAVAX], 
-    //   stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77', 
-    // },
     { 
       tokens: [zZERO, zUSDC], 
       stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b', 
