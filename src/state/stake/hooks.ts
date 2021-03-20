@@ -84,6 +84,10 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WAVAX, zUSDC],
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526',
     },
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C',
+    },
     { 
       tokens: [zZERO, zUSDC], 
       stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b', 
@@ -136,7 +140,7 @@ export const STAKING_REWARDS_INFO: {
         tokens: [bscZERO, bscUSDT], 
         stakingRewardAddress: '0xacE237D2cC182E8c1E3866509b800Fe35e192108',
     },
-    { 
+    {
         tokens: [bscZERO, bscBTC], 
         stakingRewardAddress: '0x9c13B95F92F4b35DC725c5d4D5e3ffa467e58091',
     },
