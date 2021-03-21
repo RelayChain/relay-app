@@ -129,7 +129,7 @@ export default function Earn() {
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
-   */
+  */
   const stakingInfosWithBalance = stakingInfos
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {

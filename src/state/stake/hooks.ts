@@ -1,39 +1,40 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
+import { ChainId, CurrencyAmount, JSBI, Pair, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 import {
-  ZERO,
+  DAI,
   MOCK1,
+  SUSHI,
   UNI,
-  zETH,
-  zUSDC,
-  WAVAX,
-  zZERO,
-  bscZERO,
-  WBNB,
   USDC,
   USDT,
+  WAVAX,
+  WBNB,
   WBTC,
-  SUSHI,
-  DAI,
-  zUSDT,
-  zBTC,
-  zUNI,
-  zSUSHI,
-  zDAI,
-  bscWBNB,
+  ZERO,
+  bscBTC,
+  bscBUSD,
+  bscDAI,
+  bscSUSHI,
+  bscUNI,
   bscUSDC,
   bscUSDT,
-  bscBTC,
-  bscUNI,
-  bscSUSHI,
-  bscBUSD,
-  bscDAI
+  bscWBNB,
+  bscZERO,
+  zBTC,
+  zDAI,
+  zETH,
+  zSUSHI,
+  zUNI,
+  zUSDC,
+  zUSDT,
+  zZERO
 } from '../../constants'
-import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
-import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
+
+import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { tryParseAmount } from '../swap/hooks'
+import { useActiveWeb3React } from '../../hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { useMemo } from 'react'
 
 export const STAKING_GENESIS_CHAINS = {
   [ChainId.AVALANCHE]: 1612360800,
@@ -92,6 +93,10 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [zZERO, zUSDC],
+      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
+    },
+    {
+      tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0xfA2c38470aD0a970240cF1afD35Cd04d9e994e76'
     },
     {
@@ -114,10 +119,6 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
     },
     {
-      tokens: [zZERO, zUSDC],
-      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
-    },
-    {
       tokens: [zZERO, zUSDT],
       stakingRewardAddress: '0xA8AA762a6529d7A875d0195FAd8572aAd5c697bC'
     },
@@ -136,7 +137,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zDAI],
       stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De'
-    }
+    },
   ],
   [ChainId.FUJI]: [
     {
@@ -226,15 +227,15 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const info = useMemo(
     () =>
       chainId
-        ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+        ? STAKING_REWARDS_INFO[chainId] ?.filter(stakingRewardInfo =>
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
-        : [],
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
+            : [],
     [chainId, pairToFilterBy]
   )
 
@@ -280,22 +281,22 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
       if (
         // these may be undefined if not logged in
-        !balanceState?.loading &&
-        !earnedAmountState?.loading &&
-        // always need these
-        totalSupplyState &&
-        !totalSupplyState.loading &&
-        rewardRateState &&
-        !rewardRateState.loading &&
-        periodFinishState &&
-        !periodFinishState.loading
+        !balanceState ?.loading &&
+          !earnedAmountState ?.loading &&
+          // always need these
+          totalSupplyState &&
+          !totalSupplyState.loading &&
+          rewardRateState &&
+          !rewardRateState.loading &&
+          periodFinishState &&
+          !periodFinishState.loading
       ) {
         if (
-          balanceState?.error ||
-          earnedAmountState?.error ||
-          totalSupplyState.error ||
-          rewardRateState.error ||
-          periodFinishState.error
+          balanceState ?.error ||
+            earnedAmountState ?.error ||
+            totalSupplyState.error ||
+            rewardRateState.error ||
+            periodFinishState.error
         ) {
           console.error('Failed to load staking rewards info')
           return memo
@@ -307,9 +308,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // check for account, if no account set to 0
 
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
-        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
+        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState ?.result ?.[0] ?? 0))
+        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result ?.[0]))
+        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result ?.[0]))
 
         const getHypotheticalRewardRate = (
           stakedAmount: TokenAmount,
@@ -326,7 +327,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
-        const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
+        const periodFinishSeconds = periodFinishState.result ?.[0] ?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
 
         // compare period end timestamp vs current block timestamp (in seconds)
@@ -337,7 +338,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState ?.result ?.[0] ?? 0)),
           rewardRate: individualRewardRate,
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
@@ -349,17 +350,17 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       return memo
     }, [])
   }, [
-    balances,
-    chainId,
-    currentBlockTimestamp,
-    earnedAmounts,
-    info,
-    periodFinishes,
-    rewardRates,
-    rewardsAddresses,
-    totalSupplies,
-    uni
-  ])
+      balances,
+      chainId,
+      currentBlockTimestamp,
+      earnedAmounts,
+      info,
+      periodFinishes,
+      rewardRates,
+      rewardsAddresses,
+      totalSupplies,
+      uni
+    ])
 }
 
 export function useTotalUniEarned(): TokenAmount | undefined {
@@ -370,7 +371,7 @@ export function useTotalUniEarned(): TokenAmount | undefined {
   return useMemo(() => {
     if (!uni) return undefined
     return (
-      stakingInfos?.reduce(
+      stakingInfos ?.reduce(
         (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount),
         new TokenAmount(uni, '0')
       ) ?? new TokenAmount(uni, '0')
@@ -384,9 +385,9 @@ export function useDerivedStakeInfo(
   stakingToken: Token,
   userLiquidityUnstaked: TokenAmount | undefined
 ): {
-  parsedAmount?: CurrencyAmount
-  error?: string
-} {
+    parsedAmount?: CurrencyAmount
+    error?: string
+  } {
   const { account } = useActiveWeb3React()
 
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingToken)
@@ -415,9 +416,9 @@ export function useDerivedUnstakeInfo(
   typedValue: string,
   stakingAmount: TokenAmount
 ): {
-  parsedAmount?: CurrencyAmount
-  error?: string
-} {
+    parsedAmount?: CurrencyAmount
+    error?: string
+  } {
   const { account } = useActiveWeb3React()
 
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingAmount.token)

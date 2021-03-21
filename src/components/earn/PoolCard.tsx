@@ -1,4 +1,4 @@
-import { AVAX, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { Break, CardBGImage, CardNoise } from './styled'
 import { ButtonPrimary, ButtonWhiteBg } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
@@ -75,6 +75,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
+
   const { chainId, account } = useActiveWeb3React()
 
   const token0 = stakingInfoTop.tokens[0]
@@ -89,7 +90,8 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  const baseStakingInfo = useStakingInfo(stakingTokenPair);
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress);
   const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
   // detect existing unstaked LP position to show add button if none found
@@ -104,8 +106,8 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER || currencyA === AVAX ? tokenB : tokenA
-  const WETH = currencyA === ETHER || currencyA === AVAX ? tokenA : tokenB
+  const token = currencyA === ETHER || currencyA === AVAX || currencyA === BNB ? tokenB : tokenA
+  const WETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -162,7 +164,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           style={{ width: '100%', paddingLeft: '10px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
-            {isStaking ? 'Manage' : 'Deposit'}
+            Select
           </ButtonPrimary>
         </StyledInternalLink>
       </TopSection>
@@ -197,7 +199,6 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
             <TYPE.black color={'white'} fontWeight={500}>
               <span>Your rate</span>
             </TYPE.black>
-
             <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
