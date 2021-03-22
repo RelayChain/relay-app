@@ -1,26 +1,27 @@
-import { Currency, ETHER, Token } from '@zeroexchange/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useSelectedListInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import { isAddress } from '../../utils'
+import { Currency, ETHER, Token } from '@zeroexchange/sdk'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
+import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import Row, { RowBetween } from '../Row'
+import { useAllTokens, useToken } from '../../hooks/Tokens'
+
+import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
 import Column from '../Column'
-import ListLogo from '../ListLogo'
-import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from './filtering'
+import { FixedSizeList } from 'react-window'
+import ListLogo from '../ListLogo'
+import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
+import { filterTokens } from './filtering'
+import { isAddress } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import { useTranslation } from 'react-i18next'
 
 interface BlockchainSearchProps {
   isOpen: boolean
@@ -176,6 +177,7 @@ export function BlockchainSearch({
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
+              searchQuery={searchQuery}
             />
           )}
         </AutoSizer>

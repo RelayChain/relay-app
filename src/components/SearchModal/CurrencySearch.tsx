@@ -202,6 +202,7 @@ export function CurrencySearch({
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
+              searchQuery={searchQuery}
             />
           )}
         </AutoSizer>
