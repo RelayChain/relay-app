@@ -107,6 +107,13 @@ export const STAKING_REWARDS_INFO: {
       // stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
     },
     {
+      tokens: [zZERO, WAVAX],
+      // old one, expires soon, to be replaced:
+      // stakingRewardAddress: '0x60F19487bdA9c2F8336784110dc5c4d66425402d'
+      // new one:
+      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
+    },
+    {
       tokens: [WAVAX, zETH],
       stakingRewardAddress: '0xD3694aeB35db0d73a4d1e83Ffe8f462E8202eD0f'
     },
