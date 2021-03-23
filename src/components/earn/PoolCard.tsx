@@ -92,6 +92,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const baseStakingInfo = useStakingInfo(stakingTokenPair);
   const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress);
+  const stakingRewardAddress = stakingInfoTop.stakingRewardAddress;
   const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
   // detect existing unstaked LP position to show add button if none found
@@ -160,7 +161,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
         )}
 
         <StyledInternalLink
-          to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`}
+          to={{ pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`, state: { stakingRewardAddress }}}
           style={{ width: '100%', paddingLeft: '10px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
