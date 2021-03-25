@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
+import { AVAX, ChainId, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -41,7 +41,8 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
-export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
+export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'SUSHI')
+export const eAVAX = new Token(ChainId.MAINNET, '0x743864B0562754F47f91CD400Ac8d4356a8fc720', 18, 'AVAX', 'Avalanche')
 
 export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche');
 export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange');
@@ -70,6 +71,7 @@ export const bscBTC = new Token(ChainId.SMART_CHAIN, '0xB6D5487b00e53e7009E65601
 export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88192450CF3ed4150C', 18, 'zUNI', 'zUNI');
 export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc', 18, 'zSUSHI', 'zSUSHI');
 export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI');
+export const bscAVAX = new Token(ChainId.SMART_CHAIN, '0xaC532d2FC81a077C9F93Be7ea698E2f1d224Ec04', 18, 'zAVAX', 'zAVAX');
 
 
 export const MOCK1 = new Token(
@@ -136,9 +138,10 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, ZERO, eAVAX],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2],
-  [ChainId.SMART_CHAIN]: [...WETH_ONLY[ChainId.SMART_CHAIN], WBNB, bscZERO, bscBUSD]
+  [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], WAVAX, zZERO, zDAI],
+  [ChainId.SMART_CHAIN]: [...WETH_ONLY[ChainId.SMART_CHAIN], WBNB, bscZERO, bscBUSD, bscDAI, bscAVAX]
 }
 
 /**
@@ -158,9 +161,9 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.AVALANCHE]: [],
-  [ChainId.SMART_CHAIN]: [],
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USDC, USDT, DAI],
+  [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], zZERO, zUSDC, zUSDT, zDAI],
+  [ChainId.SMART_CHAIN]: [WBNB, bscZERO, bscUSDC, bscUSDT, bscDAI],
   [ChainId.SMART_CHAIN_TEST]: [],
   [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
