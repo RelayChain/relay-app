@@ -42,12 +42,16 @@ export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB }
   },
-  history
+  history,
+  ...props
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   useCrossChain()
 
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const locationState: any = props?.location?.state;
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)

@@ -130,9 +130,15 @@ export default function Earn() {
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
-   */
+  */
   const stakingInfosWithBalance = stakingInfos
-
+  let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
+  stakingInfos.map(item => {
+    const period = item ? item.periodFinish : timeToStakingFinish
+    if (period && item.active && timeToStakingFinish && timeToStakingFinish < period) {
+      timeToStakingFinish = period
+    }
+  });
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
@@ -149,31 +155,33 @@ export default function Earn() {
                 {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
               </TYPE.white>
             </RowBetween>
-            <div style={{ display: 'block', width: '100%' }}>
-              <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
-              {chainId &&
-                pools[chainId] &&
-                pools[chainId].map((pool: any, index: number) => (
-                  <>
-                    <ButtonUNIGradient
-                      key={index}
-                      id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
-                      as={Link}
-                      to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
-                      style={{
-                        margin: '1rem .5rem',
-                        display: 'inline-flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Text fontWeight={500} fontSize={14}>
-                        {`${pool.baseSymbol}/${pool.otherSymbol}`}
-                      </Text>
-                    </ButtonUNIGradient>
-                  </>
-                ))}
-            </div>
+            {/*
+              <div style={{ display: 'block', width: '100%' }}>
+                <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
+                {chainId &&
+                  pools[chainId] &&
+                  pools[chainId].map((pool: any, index: number) => (
+                    <>
+                      <ButtonUNIGradient
+                        key={index}
+                        id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
+                        as={Link}
+                        to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
+                        style={{
+                          margin: '1rem .5rem',
+                          display: 'inline-flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Text fontWeight={500} fontSize={14}>
+                          {`${pool.baseSymbol}/${pool.otherSymbol}`}
+                        </Text>
+                      </ButtonUNIGradient>
+                    </>
+                  ))}
+              </div>
+            */}
           </AutoColumn>
         </CardSection>
       </VoteCard>
@@ -220,7 +228,7 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+          <Countdown exactEnd={timeToStakingFinish} />
         </DataRow>
 
         <PoolSection>
@@ -231,11 +239,11 @@ export default function Earn() {
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : (
-            stakingInfosWithBalance?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-            })
-          )}
+                  stakingInfosWithBalance?.map(stakingInfo => {
+                    // need to sort by added liquidity here
+                    return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                  })
+                )}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>

@@ -220,6 +220,7 @@ export default function CurrencyInputPanel({
   crossChainBalance,
   currentTargetToken
 }: CurrencyInputPanelProps) {
+
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -232,7 +233,13 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const hasABalance = !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 0.0000001)
+  const hasABalance = !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
+
+  // hack to fix AWAX
+  let altCurrency = currency;
+  if (altCurrency?.symbol.includes('AWAX')) {
+    altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX');
+  }
 
   return (
     <>
@@ -269,7 +276,7 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && !!currency && selectedCurrencyBalance && hasABalance
+                    {!hideBalance && !!altCurrency && selectedCurrencyBalance && hasABalance
                       ? (customBalanceText ?? 'Balance: ') +
                         `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
@@ -290,14 +297,14 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                 />
-                {account && currency && showMaxButton && hasABalance && label !== 'To' && (
+                {account && altCurrency && showMaxButton && hasABalance && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
                 )}
               </>
             )}
             <CurrencySelect
-              style={{ opacity: `${isCrossChain && label === 'To' && !currency?.symbol ? '0' : '1'}` }}
-              selected={!!currency}
+              style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
+              selected={!!altCurrency}
               className="open-currency-select-button"
               onClick={() => {
                 if (!disableCurrencySelect) {
@@ -308,25 +315,25 @@ export default function CurrencyInputPanel({
               <Aligner>
                 {pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                ) : currency ? (
-                  <CurrencyLogo currency={currency} size={'24px'} />
+                ) : altCurrency ? (
+                  <CurrencyLogo currency={altCurrency} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                  <StyledTokenName className="token-symbol-container" active={Boolean(altCurrency && altCurrency.symbol)}>
                     {isCrossChain && label === 'To'
                       ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
-                      : (currency && currency.symbol && currency.symbol.length > 20
-                          ? currency.symbol.slice(0, 4) +
+                      : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
+                          ? altCurrency.symbol.slice(0, 4) +
                             '...' +
-                            currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                          : currency?.symbol) || t('selectToken')}
+                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                          : altCurrency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}
-                {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!currency} />}
+                {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
               </Aligner>
             </CurrencySelect>
           </InputRow>
@@ -336,7 +343,7 @@ export default function CurrencyInputPanel({
             isOpen={modalOpen}
             onDismiss={handleDismissSearch}
             onCurrencySelect={onCurrencySelect}
-            selectedCurrency={currency}
+            selectedCurrency={altCurrency}
             otherSelectedCurrency={otherCurrency}
             showCommonBases={!isCrossChain}
             isCrossChain={isCrossChain}
@@ -347,15 +354,15 @@ export default function CurrencyInputPanel({
             isOpen={modal2Open}
             onDismiss={handleDismissSearch}
             onCurrencySelect={onBlockchainSelect}
-            selectedCurrency={currency}
+            selectedCurrency={altCurrency}
             otherSelectedCurrency={otherCurrency}
             showCommonBases={showCommonBases}
           />
         )}
       </InputPanel>
-      {currency && currency?.address && (
+      {altCurrency && altCurrency?.address && (
         <CopyRow>
-          <CopyToClipboard text={currency?.address}>
+          <CopyToClipboard text={altCurrency?.address}>
             <p>
               <span className="active">address</span>
               <Copy className="active" size={'14'} />

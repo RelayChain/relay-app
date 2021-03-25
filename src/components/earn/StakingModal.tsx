@@ -2,7 +2,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { ButtonConfirmed, ButtonError } from '../Button'
 import { CloseIcon, TYPE } from '../../theme'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { Pair, TokenAmount } from '@zeroexchange/sdk'
+import { ChainId, Pair, TokenAmount } from '@zeroexchange/sdk'
 import React, { useCallback, useState } from 'react'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
@@ -145,7 +145,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'ZERO-LP-Token',
+      name: `${
+        chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
+      }`,
       version: '1',
       chainId: chainId,
       verifyingContract: pairContract.address

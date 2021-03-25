@@ -85,6 +85,8 @@ export default function CurrencyLogo({
   if (
     currency?.symbol === 'AVAX' ||
     currency?.symbol === 'WAVAX' ||
+    currency?.symbol === 'AWAX' ||
+    currency?.symbol === 'zAWAX' ||
     currency?.symbol === 'wAVAX' ||
     currency?.symbol === 'AVA' ||
     currency?.symbol === 'zAVAX' ||

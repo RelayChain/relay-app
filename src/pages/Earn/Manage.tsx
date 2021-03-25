@@ -136,19 +136,28 @@ const DataRow = styled(RowBetween)`
 export default function Manage({
   match: {
     params: { currencyIdA, currencyIdB }
-  }
+  },
+  ...props
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
+  const history = useHistory()
+
+  const locationState: any = props?.location?.state;
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
+
+  if (!stakingRewardAddress) {
+    history.push('/earn');
+  }
 
   const theme = useContext(ThemeContext)
-  const history = useHistory()
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  const baseStakingInfo = useStakingInfo(stakingTokenPair)
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress);
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -309,7 +318,7 @@ export default function Manage({
                 borderRadius="8px"
                 width={'fit-content'}
                 as={Link}
-                to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+                to={{ pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`, state: { stakingRewardAddress }}}
               >
                 {`Add ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
               </ButtonPrimary>
