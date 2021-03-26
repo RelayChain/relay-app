@@ -478,7 +478,7 @@ export default function Swap() {
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      {chainId && account && (
+      {chainId && (
         <AppBody>
           <SwapPoolTabs active={'swap'} />
           <Wrapper id="swap-page">
