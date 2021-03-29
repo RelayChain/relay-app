@@ -51,8 +51,6 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
 const BlockchainSelector = ({
   blockchain,
   transferTo,
-  onSetTransferTo,
-  supportedChains,
   isCrossChain,
   onShowCrossChainModal,
   onShowTransferChainModal
@@ -62,13 +60,8 @@ const BlockchainSelector = ({
   isCrossChain?: boolean
   supportedChains: string[]
   onShowCrossChainModal: () => void
-  onSetTransferTo: (name: string) => void
   onShowTransferChainModal: () => void
 }) => {
-  useEffect(() => {
-    onSetTransferTo(transferTo?.name)
-  }, [transferTo])
-
   const openChangeChainInfo = () => {
     onShowCrossChainModal()
   }

@@ -385,17 +385,15 @@ export default function Swap() {
     )
   }
 
-  const [transferTo, setTransferTo] = useState<string>('')
   useEffect(() => {
-    // change logic when we add polka
-    if (chainId) {
-      if (ETH_RPCS.indexOf(CHAIN_LABELS[chainId] || 'Ethereum') !== -1) {
-        setTransferTo('Avalanche')
-      } else {
-        setTransferTo('Ethereum')
-      }
+    if (chainId && availableChains) {
+      dispatch(
+        setTargetChain({
+          chain: availableChains.filter(i => i.name !== CHAIN_LABELS[chainId])[0]
+        })
+      )
     }
-  }, [chainId, currentChain])
+  }, [chainId, availableChains])
 
   const startNewSwap = () => {
     BreakCrosschainSwap()
@@ -427,6 +425,7 @@ export default function Swap() {
     setShowTransferChainModal(true)
   }
   const onSelectTransferChain = (chain: CrosschainChain) => {
+    console.log('chain', chain)
     dispatch(
       setTargetChain({
         chain
@@ -500,7 +499,7 @@ export default function Swap() {
             <ConfirmTransferModal
               isOpen={confirmTransferModalOpen}
               onDismiss={hideConfirmTransferModal}
-              transferTo={transferTo}
+              transferTo={targetChain}
               activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
               changeTransferState={onChangeTransferState}
               tokenTransferState={crosschainTransferStatus}
@@ -534,11 +533,11 @@ export default function Swap() {
               }}
             >
               <BlockchainSelector
-                onSetTransferTo={setTransferTo}
+                // onSetTransferTo={setTransferTo}
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
                 blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-                transferTo={isCrossChain ? targetChain : transferTo}
+                transferTo={targetChain}
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
@@ -656,7 +655,7 @@ export default function Swap() {
                 {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
                   <>
                     <ButtonPrimary onClick={showConfirmTransferModal}>
-                      Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
+                      Transfer {currencies[Field.INPUT]?.symbol} Tokens to {targetChain.name}
                     </ButtonPrimary>
                   </>
                 ) : !account ? (
