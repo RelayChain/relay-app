@@ -102,7 +102,7 @@ export default function Menu() {
             <Info size={14} />
             Home
           </MenuItem>
-          <MenuItem id="link" href="https://blog.0.exchange">
+          <MenuItem id="link" href="https://medium.com/@OfficialZeroDex/">
             <BookOpen size={14} />
             Blog
           </MenuItem>
