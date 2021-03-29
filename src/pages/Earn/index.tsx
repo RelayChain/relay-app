@@ -131,7 +131,9 @@ export default function Earn() {
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
   */
-  const stakingInfosWithBalance = stakingInfos
+  const stakingInfosWithBalance = stakingInfos.filter(x => x.active);
+  const finishedPools = stakingInfos.filter(x => !x.active);
+
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
     const period = item ? item.periodFinish : timeToStakingFinish
@@ -245,6 +247,18 @@ export default function Earn() {
                   })
                 )}
         </PoolSection>
+
+        { finishedPools?.length > 0 &&
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
+          </DataRow>
+        }
+        { finishedPools?.length > 0 &&
+          finishedPools.map(stakingInfo => {
+            return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+          })
+        }
+
       </AutoColumn>
     </PageWrapper>
   )
