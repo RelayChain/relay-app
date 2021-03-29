@@ -6,7 +6,7 @@
   pointer-events: none;
   opacity: .25;
   z-index: 0;
-  background: url('../assets/images/space-bg.png') no-repeat;
+  background: url('../assets/images/space-background.jpg') no-repeat center center;
   background-size: cover;
   opacity: .5;
 }
@@ -18,7 +18,7 @@
   left: 0; top: 0;
   pointer-events: none;
   background: black;
-  opacity: .25;
+  opacity: 1;
 }
 
 .mountain, .mountain-two, .mountain-three {

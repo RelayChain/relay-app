@@ -65,8 +65,7 @@ const MenuFlyout = styled.span`
   z-index: 100;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: auto;
-    bottom: 3rem;
+    top: -17.25rem;
   `};
 `
 
@@ -103,7 +102,7 @@ export default function Menu() {
             <Info size={14} />
             Home
           </MenuItem>
-          <MenuItem id="link" href="https://medium.com/@OfficialZeroDex/">
+          <MenuItem id="link" href="https://blog.0.exchange">
             <BookOpen size={14} />
             Blog
           </MenuItem>
