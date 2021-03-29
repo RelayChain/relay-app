@@ -27,7 +27,7 @@ import {
   bscUNI,
   bscSUSHI,
   bscBUSD,
-  bscDAI
+  bscDAI, bscETH
 } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -86,10 +86,10 @@ export const STAKING_REWARDS_INFO: {
     }
   ],
   [ChainId.AVALANCHE]: [
-    {
-      tokens: [zZERO, zETH],
-      stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
-    },
+    // {
+    //   tokens: [zZERO, zETH],
+    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
+    // },
     {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0xfA2c38470aD0a970240cF1afD35Cd04d9e994e76'
@@ -110,12 +110,12 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526'
     },
     {
-      tokens: [zZERO, zETH],
-      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
-    },
-    {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
+    },
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x869bE5d543226e0Cda93416aaC093b472c99c3A8'
     },
     {
       tokens: [zZERO, zUSDT],
@@ -152,6 +152,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WBNB, bscZERO],
       stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
+    },
+    {
+      tokens: [bscZERO, bscETH],
+      stakingRewardAddress: '0x28EE88457DcfC66B6e2A661Ed5C10866e3615BB9'
     },
     // {
     //   tokens: [bscZERO, bscWBNB],
