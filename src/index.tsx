@@ -1,24 +1,30 @@
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
-import React, { StrictMode } from 'react'
-import { isMobile } from 'react-device-detect'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
-import Blocklist from './components/Blocklist'
-import { NetworkContextName } from './constants'
 import './i18n'
+
+import React, { StrictMode } from 'react'
+import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
+import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
+
 import App from './pages/App'
-import store from './state'
 import ApplicationUpdater from './state/application/updater'
+import Blocklist from './components/Blocklist'
+import { HashRouter } from 'react-router-dom'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
+import { NetworkContextName } from './constants'
+import { Provider } from 'react-redux'
+import ReactDOM from 'react-dom'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
-import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import { isMobile } from 'react-device-detect'
+import store from './state'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+
+if (window.location.hostname.includes('zero')) {
+  window.location.href = window.location.href.replace('zero', '0');
+}
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
