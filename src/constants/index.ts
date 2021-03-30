@@ -72,6 +72,7 @@ export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88
 export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc', 18, 'zSUSHI', 'zSUSHI');
 export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI');
 export const bscAVAX = new Token(ChainId.SMART_CHAIN, '0xaC532d2FC81a077C9F93Be7ea698E2f1d224Ec04', 18, 'zAVAX', 'zAVAX');
+export const bscETH = new Token(ChainId.SMART_CHAIN, '0x7c815BBc21FED2B97CA163552991A5C30d6a2336', 18, 'zETH', 'zETH');
 
 
 export const MOCK1 = new Token(
