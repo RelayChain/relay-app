@@ -120,7 +120,7 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS
@@ -128,7 +128,7 @@ export default function AddLiquidity({
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN
       ? SMART_CHAIN_ROUTER_ADDRESS
@@ -193,40 +193,34 @@ export default function AddLiquidity({
     }
 
     setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit => {
-        // hardcode gas for avalanche
-        const gas =
-          chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN ? BigNumber.from(350000) : estimatedGasLimit
-
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(gas)
-        }).then(response => {
-          setAttemptingTxn(false)
-
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
-          })
-
-          setTxHash(response.hash)
-        })
+    try {
+      const estimatedGasLimit = await estimate(...args, value ? { value } : {})
+      const response = await method(...args, {
+        ...(value ? { value } : {}),
+        gasLimit: calculateGasMargin(estimatedGasLimit)
       })
-      .catch(error => {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        if (error?.code !== 4001) {
-          console.error(error)
-        }
+      setAttemptingTxn(false)
+
+      addTransaction(response, {
+        summary:
+          'Add ' +
+          parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_A]?.symbol +
+          ' and ' +
+          parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_B]?.symbol
       })
+
+      setTxHash(response.hash)
+    } catch (error) {
+      setAttemptingTxn(false)
+      // we only care if the error is something _other_ than the user rejected the tx
+      if (error?.code !== 4001) {
+        console.error(error)
+      }
+    }
   }
 
   const modalHeader = () => {
