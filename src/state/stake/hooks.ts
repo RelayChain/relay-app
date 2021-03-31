@@ -88,10 +88,10 @@ export const STAKING_REWARDS_INFO: {
     }
   ],
   [ChainId.AVALANCHE]: [
-    // {
-    //   tokens: [zZERO, zETH],
-    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
-    // },
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
+    },
     {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
