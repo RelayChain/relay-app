@@ -1,5 +1,6 @@
 import { ButtonSecondary, ButtonUNIGradient } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
@@ -13,8 +14,8 @@ import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
-import { TYPE } from '../../theme'
 import { Text } from 'rebass'
+import { Zap } from 'react-feather';
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -189,11 +190,19 @@ export default function Earn() {
       </VoteCard>
 
       <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
+        <ExternalLink
+          href="https://0.exchange/partners"
+          target="_blank"
+          style={{ width: '100%', textDecoration: 'none', color: '#C571F4', paddingRight: '1rem', position: 'relative' }}
+        >
+          Launch your token on ZERO
+          <Zap style={{ position: 'absolute' }} size={'20'} />
+        </ExternalLink>
         <ResponsiveButtonSecondary
           as={Link}
           padding="6px 8px"
           to={`create/${(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
-          style={{ margin: '5px 5px 5px auto' }}
+          style={{ margin: '5px 5px 5px auto', minWidth: '186px' }}
         >
           Create New Pool Pair
         </ResponsiveButtonSecondary>
