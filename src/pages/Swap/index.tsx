@@ -478,7 +478,6 @@ export default function Swap() {
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      {chainId && account && (
         <AppBody>
           <SwapPoolTabs active={'swap'} />
           <Wrapper id="swap-page">
@@ -755,7 +754,6 @@ export default function Swap() {
             </div>
           </Wrapper>
         </AppBody>
-      )}
       {(chainId === undefined || account === undefined) && (
         <CustomLightSpinner
           src={Circle2}
