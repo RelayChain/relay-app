@@ -17,7 +17,7 @@ import ZETHLogo from '../../assets/images/crosschain/zETH.png'
 import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
 import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
 import ZeroLogo from '../../assets/images/logo-zero-124.png'
-import { crosschainConfig } from 'constants/CrosschainConfig'
+import { crosschainConfig } from 'constants/CrosschainConfigTestnet'
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
 

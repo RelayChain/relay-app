@@ -121,9 +121,9 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
   return getContract(
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
-        ? SMART_CHAIN_ROUTER_ADDRESS
-        : AVAX_ROUTER_ADDRESS,
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+      ? SMART_CHAIN_ROUTER_ADDRESS
+      : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,
     account
@@ -138,5 +138,5 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
   if (currency === ETHER) return true
   if (currency === AVAX) return true
   if (currency === BNB) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId] ?.[currency.address])
+  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

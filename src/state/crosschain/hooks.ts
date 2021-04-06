@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers'
-import { BridgeConfig, TokenConfig, crosschainConfig } from '../../constants/CrosschainConfig'
+import { BridgeConfig, TokenConfig, crosschainConfig } from '../../constants/CrosschainConfigTestnet'
 import {
   ChainTransferState,
   CrosschainChain,

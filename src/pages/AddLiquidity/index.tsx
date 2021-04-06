@@ -50,8 +50,8 @@ export default function AddLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const locationState: any = props?.location?.state;
-  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
+  const locationState: any = props?.location?.state
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -124,17 +124,17 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
@@ -199,9 +199,9 @@ export default function AddLiquidity({
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit => {
-        // hardcode gas for avalanche
+        // hardcode gas for other chains
         const gas =
-          chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN ? BigNumber.from(350000) : estimatedGasLimit
+          chainId === ChainId.AVALANCHE || ChainId.FUJI || chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST ? BigNumber.from(350000) : estimatedGasLimit
 
         method(...args, {
           ...(value ? { value } : {}),
