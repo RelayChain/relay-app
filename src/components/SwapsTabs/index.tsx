@@ -40,11 +40,11 @@ const SwapsTabs = ({
 }) => {
   return (
     <TabsContainer>
-      <Tab active={isCrossChain ? false : true} onClick={() => onSetIsCrossChain(false)}>
+      <Tab active={!isCrossChain} onClick={() => onSetIsCrossChain(false)}>
         Swaps
         <RefreshCcw size="14" style={{ marginLeft: '4px' }} />
       </Tab>
-      <Tab active={isCrossChain ? true : false} onClick={() => onSetIsCrossChain(true)}>
+      <Tab active={isCrossChain} onClick={() => onSetIsCrossChain(true)}>
         Cross-Chain Transfer
         <ChevronsRight size="14" style={{ marginLeft: '4px' }} />
       </Tab>
