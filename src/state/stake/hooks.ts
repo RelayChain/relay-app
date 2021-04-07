@@ -13,6 +13,7 @@ import {
   bscBTC,
   bscBUSD,
   bscDAI,
+  bscETH,
   bscSUSHI,
   bscUNI,
   bscUSDC,
@@ -101,13 +102,13 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [zZERO, WAVAX],
-      // old one, expires soon, to be replaced:
-      stakingRewardAddress: '0x60F19487bdA9c2F8336784110dc5c4d66425402d'
+      // new one:
+      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
     },
     {
       tokens: [zZERO, WAVAX],
-      // new one:
-      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
+      // old one, expires soon, to be replaced:
+      stakingRewardAddress: '0x60F19487bdA9c2F8336784110dc5c4d66425402d'
     },
     {
       tokens: [WAVAX, zETH],
@@ -119,7 +120,7 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [zZERO, zETH],
-      stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
+      stakingRewardAddress: '0x869bE5d543226e0Cda93416aaC093b472c99c3A8'
     },
     {
       tokens: [zZERO, zUSDT],
@@ -140,7 +141,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zDAI],
       stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De'
-    },
+    }
   ],
   [ChainId.FUJI]: [
     {
@@ -156,6 +157,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WBNB, bscZERO],
       stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
+    },
+    {
+      tokens: [bscZERO, bscETH],
+      stakingRewardAddress: '0x28EE88457DcfC66B6e2A661Ed5C10866e3615BB9'
     },
     // {
     //   tokens: [bscZERO, bscWBNB],

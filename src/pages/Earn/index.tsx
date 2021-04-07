@@ -1,5 +1,6 @@
 import { ButtonSecondary, ButtonUNIGradient } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
@@ -13,8 +14,8 @@ import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
-import { TYPE } from '../../theme'
 import { Text } from 'rebass'
+import { Zap } from 'react-feather';
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -49,8 +50,9 @@ flex-direction: column;
 `};
 `
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  background: #111;
   overflow: hidden;
+  border: 2px solid rgba(28, 176, 249, .45);
 `
 
 // const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -130,7 +132,9 @@ export default function Earn() {
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
   */
-  const stakingInfosWithBalance = stakingInfos
+  const stakingInfosWithBalance = stakingInfos.filter(x => x.active);
+  const finishedPools = stakingInfos.filter(x => !x.active);
+
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
     const period = item ? item.periodFinish : timeToStakingFinish
@@ -144,8 +148,6 @@ export default function Earn() {
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteCard>
-        <CardBGImage />
-        <CardNoise />
         <CardSection>
           <AutoColumn gap="md">
             <RowBetween>
@@ -185,16 +187,22 @@ export default function Earn() {
             */}
           </AutoColumn>
         </CardSection>
-        <CardBGImage />
-        <CardNoise />
       </VoteCard>
 
       <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
+        <ExternalLink
+          href="https://0.exchange/partners"
+          target="_blank"
+          style={{ width: '100%', textDecoration: 'none', color: '#C571F4', paddingRight: '1rem', position: 'relative' }}
+        >
+          Launch your token on ZERO
+          <Zap style={{ position: 'absolute' }} size={'20'} />
+        </ExternalLink>
         <ResponsiveButtonSecondary
           as={Link}
           padding="6px 8px"
           to={`create/${(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
-          style={{ margin: '5px 5px 5px auto' }}
+          style={{ margin: '5px 5px 5px auto', minWidth: '186px' }}
         >
           Create New Pool Pair
         </ResponsiveButtonSecondary>
@@ -216,7 +224,7 @@ export default function Earn() {
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://zero.exchange/learn-more"
+                href="https://0.exchange/learn-more"
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>Learn more about ZERO</TYPE.white>
@@ -248,6 +256,18 @@ export default function Earn() {
                   })
                 )}
         </PoolSection>
+
+        { finishedPools?.length > 0 &&
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
+          </DataRow>
+        }
+        { finishedPools?.length > 0 &&
+          finishedPools.map(stakingInfo => {
+            return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+          })
+        }
+
       </AutoColumn>
     </PageWrapper>
   )

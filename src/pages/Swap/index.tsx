@@ -2,6 +2,7 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { CHAIN_LABELS, ETH_RPCS, SUPPORTED_CHAINS } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
@@ -13,7 +14,6 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import { CHAIN_LABELS, SUPPORTED_CHAINS, ETH_RPCS } from '../../constants'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -478,7 +478,6 @@ export default function Swap() {
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      {chainId && account && (
         <AppBody>
           <SwapPoolTabs active={'swap'} />
           <Wrapper id="swap-page">
@@ -755,7 +754,6 @@ export default function Swap() {
             </div>
           </Wrapper>
         </AppBody>
-      )}
       {(chainId === undefined || account === undefined) && (
         <CustomLightSpinner
           src={Circle2}

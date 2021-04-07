@@ -1,9 +1,11 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { animated, useTransition, useSpring } from 'react-spring'
-import { DialogOverlay, DialogContent } from '@reach/dialog'
-import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
+
+import { DialogContent, DialogOverlay } from '@reach/dialog'
+import { animated, useSpring, useTransition } from 'react-spring'
+import styled, { css } from 'styled-components'
+
+import React from 'react'
+import { isMobile } from 'react-device-detect'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
@@ -35,8 +37,8 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
+    background-color: #111;
+    box-shadow: 0 8px 16px 0 ${({ theme }) => transparentize(0.95, theme.text1)};
     padding: 0px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};

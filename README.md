@@ -1,4 +1,4 @@
-# Zero.Exchange App
+# Zero Exchange App
 
 [![Lint](https://github.com/zeroexchange/app/workflows/Lint/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ALint)
 [![Tests](https://github.com/zeroexchange/app/workflows/Tests/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ATests)
@@ -6,13 +6,13 @@
 
 An open source interface for Zero Exchange -- a fork of uniswap providing cross chain liquidity from Ethereum to Avalanche.
 
-- Website: [zero.exchange](https://zero.exchange/)
-- App: [app.zero.exchange](https://app.zero.exchange)
-- Blog: [blog.zero.exchange/](https://blog.zero.exchange/)
+- Website: [0.exchange](https://0.exchange/)
+- App: [app.0.exchange](https://app.0.exchange)
+- Blog: [blog.0.exchange/](https://blog.0.exchange/)
 - Twitter: [@OfficialZeroDEX](https://twitter.com/OfficialZeroDEX)
-- Email: [hello@zero.exchange](mailto:hello@zero.exchange)
+- Email: [hello@0.exchange](mailto:hello@0.exchange)
 - Discord: [Zero Exchange](https://discord.com/invite/5xwKdqrtDu)
-- Learn More: [Learn More](https://zero.exchange/learn-more)
+- Learn More: [Learn More](https://0.exchange/learn-more)
 
 ## Development
 

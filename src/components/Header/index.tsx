@@ -7,7 +7,7 @@ import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/images/logo-zero-512.png'
+import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import { NavLink } from 'react-router-dom'
 import React from 'react'
@@ -286,7 +286,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'64px'} src={isDark ? LogoDark : Logo} alt="logo" />
+            <img width={'54px'} style={{ marginLeft: '1.5rem', marginRight: '1.5rem'}} src={isDark ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
@@ -298,11 +298,11 @@ export default function Header() {
             <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
             {t('Earn')}
           </StyledNavLink>
-          <HeaderExternalLink href={`https://buy.zero.exchange`}>
+          <HeaderExternalLink href={`https://buy.0.exchange`}>
             <CreditCard size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
-            Buy Zero
+            Buy
           </HeaderExternalLink>
-          <HeaderExternalLink href={`https://charts.zero.exchange`}>
+          <HeaderExternalLink href={`https://charts.0.exchange`}>
             <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
             Charts
           </HeaderExternalLink>
