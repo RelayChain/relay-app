@@ -487,7 +487,7 @@ export default function Swap() {
             isOpen={crossChainModalOpen}
             onDismiss={hideCrossChainModal}
             supportedChains={availableChains}
-            selectTransferChain={() => ''}
+            selectTransferChain={onSelectTransferChain}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
           />
           <CrossChainModal

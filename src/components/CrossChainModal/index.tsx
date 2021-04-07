@@ -1,10 +1,10 @@
 import BlockchainLogo from '../BlockchainLogo'
-import { CHAIN_LABELS } from '../../constants'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import Modal from '../Modal'
 import React from 'react'
 import styled from 'styled-components'
-
+import { crosschainConfig } from 'constants/CrosschainConfig'
+import { useActiveWeb3React } from 'hooks'
 interface CrossChainModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -16,6 +16,7 @@ interface CrossChainModalProps {
 
 const ModalContainer = styled.div`
   padding: 1.5rem;
+  width: 100%;
   h5 {
     font-weight: bold;
     margin-bottom: 1rem;
@@ -63,6 +64,10 @@ const ModalContainer = styled.div`
           right: 8px;
         }
       }
+      &:not(.active):hover {
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+      }
       &.disabled {
         opacity: 0.35;
         pointer-events: none;
@@ -74,12 +79,13 @@ const ModalContainer = styled.div`
           border-radius: 12px;
           background: rgba(255, 255, 255, 0.1);
         }
-      }
+      }      
       img {
         margin-right: 0.5rem;
       }
       span {
       }
+     
     }
   }
 `
@@ -91,6 +97,38 @@ export default function CrossChainModal({
   isTransfer,
   selectTransferChain
 }: CrossChainModalProps) {
+  const switchChain = async (chain: CrosschainChain) => {
+    let { ethereum } = window;
+    if (ethereum) {
+      let chainsConfig = null
+      for (const item of crosschainConfig.chains) {
+        if (item.chainId === +chain.chainID) {
+          chainsConfig = item
+        }
+      }
+      if (chainsConfig) {
+        const hexChainId = "0x" + Number(chainsConfig.networkId).toString(16);
+        const data = [{
+          chainId: hexChainId,
+          chainName: chainsConfig.name,
+          nativeCurrency:
+          {
+            name: chainsConfig.nativeTokenSymbol,
+            symbol: chainsConfig.nativeTokenSymbol,
+            decimals: 18
+          },
+          rpcUrls: [chainsConfig.rpcUrl],
+          blockExplorerUrls: [chainsConfig.blockExplorer],
+        }]
+        /* eslint-disable */
+        const tx = (ethereum && ethereum.request) ? await ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
+
+        if (tx) {
+          console.log(tx)
+        }
+      }
+    }
+  }
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
@@ -108,6 +146,11 @@ export default function CrossChainModal({
                 if (isTransfer) {
                   selectTransferChain(chain)
                   onDismiss()
+                } else if (+chain.chainID === 1) {
+                  alert('To see your token assets on the Ethereum chain, you must' +
+                    'configure the Network RPC of your connected wallet.');
+                } else {
+                  switchChain(chain)
                 }
               }}
               className={`
@@ -121,17 +164,7 @@ export default function CrossChainModal({
             </li>
           ))}
         </ul>
-        <p>
-          To see your token assets on the correct chain, you must
-          <a
-            href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            configure the Network RPC
-          </a>
-          of your connected wallet.
-        </p>
+
       </ModalContainer>
     </Modal>
   )
