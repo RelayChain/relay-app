@@ -28,7 +28,7 @@ const Tab = styled.div<{ active?: boolean }>`
   transition: all .2s ease-in-out;
   &:hover {
     cursor: pointer;
-    background: ${({ active, theme }) => (active ? theme.primary1 : 'rgba(38, 98, 255, .25)')};
+    background: ${({ active, theme }) => (active ? theme.primary1 : 'rgba(103, 82, 247, .25)')};
   }
 `
 const SwapsTabs = ({
@@ -45,7 +45,7 @@ const SwapsTabs = ({
         <RefreshCcw size="14" style={{ marginLeft: '4px' }} />
       </Tab>
       <Tab active={isCrossChain} onClick={() => onSetIsCrossChain(true)}>
-        Cross-Chain Transfer
+        Cross-Chain
         <ChevronsRight size="14" style={{ marginLeft: '4px' }} />
       </Tab>
       {/*<Tab active={isCrossChain ? true : false} style={{ opacity: '.5', pointerEvents: 'none' }}>
