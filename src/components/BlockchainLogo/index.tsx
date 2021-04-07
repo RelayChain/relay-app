@@ -35,7 +35,7 @@ export default function BlockchainLogo({
     return <StyledEthereumLogo src={PolkadotLogo} size={size} style={style} />
   }
 
-  if (blockchain === 'Smart Chain' || blockchain === 'BNB') {
+  if (blockchain === 'Smart Chain' || blockchain === 'BNB' || blockchain === 'SmartChain') {
     return <StyledEthereumLogo src={BSCLogo} alt="BNB" size={size} style={style} />
   }
 
