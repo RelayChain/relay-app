@@ -83,16 +83,12 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   const currency0 = unwrappedToken(token0, chainId)
   const currency1 = unwrappedToken(token1, chainId)
 
-  console.log('currency0', currency0)
-  console.log('currency1', currency1)
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyId(currency0)), useCurrency(currencyId(currency1))]
-  console.log('currencyA', currencyA)
-  console.log('currencyB', currencyB)
+
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
-  console.log('tokenA===', tokenA)
-  console.log('tokenB===', tokenB)
+
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const baseStakingInfo = useStakingInfo(stakingTokenPair)
   const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress)
