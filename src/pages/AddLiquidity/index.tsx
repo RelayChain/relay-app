@@ -197,40 +197,40 @@ export default function AddLiquidity({
     }
 
     setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit => {
-        // hardcode gas for other chains
-        const gas =
-          chainId === ChainId.AVALANCHE || ChainId.FUJI || chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST ? BigNumber.from(350000) : estimatedGasLimit
 
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(gas)
-        }).then(response => {
-          setAttemptingTxn(false)
-
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
-          })
-
-          setTxHash(response.hash)
-        })
+    try {
+      let gas
+      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN) {
+        gas = BigNumber.from(350000)
+      } else {
+        gas = await estimate(...args, value ? { value } : {})
+      }
+      const response = await method(...args, {
+        ...(value ? { value } : {}),
+        gasLimit: calculateGasMargin(gas)
       })
-      .catch(error => {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        if (error?.code !== 4001) {
-          console.error(error)
-        }
+      setAttemptingTxn(false)
+
+      addTransaction(response, {
+        summary:
+          'Add ' +
+          parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_A]?.symbol +
+          ' and ' +
+          parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_B]?.symbol
       })
+
+      setTxHash(response.hash)
+    } catch (error) {
+      setAttemptingTxn(false)
+      // we only care if the error is something _other_ than the user rejected the tx
+      if (error?.code !== 4001) {
+        console.error(error)
+      }
+    }
   }
 
   const modalHeader = () => {
