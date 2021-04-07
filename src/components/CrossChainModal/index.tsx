@@ -2,8 +2,8 @@ import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import Modal from '../Modal'
 import React from 'react'
-import styled from 'styled-components'
 import { crosschainConfig } from 'constants/CrosschainConfig'
+import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
 interface CrossChainModalProps {
   isOpen: boolean
@@ -79,13 +79,13 @@ const ModalContainer = styled.div`
           border-radius: 12px;
           background: rgba(255, 255, 255, 0.1);
         }
-      }      
+      }
       img {
         margin-right: 0.5rem;
       }
       span {
       }
-     
+
     }
   }
 `
@@ -132,7 +132,7 @@ export default function CrossChainModal({
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
-        {!isTransfer && <h5>Supported Blockchains:</h5>}
+        {!isTransfer && <h5>Change Blockchains:</h5>}
         {isTransfer && <h5>Transfer tokens to:</h5>}
         <ul>
           <li className={!isTransfer ? 'active' : 'disabled'}>
@@ -147,10 +147,10 @@ export default function CrossChainModal({
                   selectTransferChain(chain)
                   onDismiss()
                 } else if (+chain.chainID === 1) {
-                  alert('To see your token assets on the Ethereum chain, you must' +
-                    'configure the Network RPC of your connected wallet.');
+                  alert('To switch back to Ethereum, please change your RPC inside your wallet.');
                 } else {
                   switchChain(chain)
+                  onDismiss()
                 }
               }}
               className={`
