@@ -103,9 +103,9 @@ export default function RemoveLiquidity({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
@@ -131,7 +131,9 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${chainId && (chainId === ChainId.MAINNET  || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'}`,
+      name: `${
+        chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
+      }`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -146,9 +148,9 @@ export default function RemoveLiquidity({
     const message = {
       owner: account,
       spender:
-        (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)
+        chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
           ? ETH_ROUTER_ADDRESS
-          : chainId === ChainId.SMART_CHAIN
+          : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
           ? SMART_CHAIN_ROUTER_ADDRESS
           : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
@@ -384,7 +386,12 @@ export default function RemoveLiquidity({
   }
 
   function modalBottom() {
-    const symbolName = (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'UNI ' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX '
+    const symbolName =
+      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+        ? 'UNI '
+        : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+        ? 'BNB'
+        : 'AVAX '
     return (
       <>
         <RowBetween>
@@ -589,8 +596,8 @@ export default function RemoveLiquidity({
                             }`}
                           >
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
-                            {chainId && chainId === ChainId.AVALANCHE && 'Receive WAVAX'}
-                            {chainId && chainId === ChainId.SMART_CHAIN && 'Receive WBNB'}
+                            {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
+                            {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -599,8 +606,8 @@ export default function RemoveLiquidity({
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
-                            {chainId && chainId === ChainId.AVALANCHE && 'Receive AVAX'}
-                            {chainId && chainId === ChainId.SMART_CHAIN && 'Receive BNB'}
+                            {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
+                            {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

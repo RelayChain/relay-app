@@ -34,10 +34,17 @@ export default function useWrapCallback(
 
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
-
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
-
-    if ((inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB) && currencyEquals(WETH[chainId], outputCurrency)) {
+    // console.log('WETH[chainId]', WETH[chainId])
+    // console.log('outputCurrency', outputCurrency)
+    // console.log('outputCurrency', inputCurrency)
+    // console.log('currencyEquals outputCurrency=', currencyEquals(WETH[chainId], outputCurrency))
+    // console.log('currencyEquals inputCurrency=', currencyEquals(WETH[chainId], inputCurrency))
+    // console.log('asdasdasd=', inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB)
+    if (
+      (inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB) &&
+      currencyEquals(WETH[chainId], outputCurrency)
+    ) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -53,7 +60,10 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient balance'
       }
-    } else if (currencyEquals(WETH[chainId], inputCurrency) && (outputCurrency === ETHER || outputCurrency === AVAX || outputCurrency === BNB)) {
+    } else if (
+      currencyEquals(WETH[chainId], inputCurrency) &&
+      (outputCurrency === ETHER || outputCurrency === AVAX || outputCurrency === BNB)
+    ) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

@@ -37,13 +37,13 @@ const StatContainer = styled.div`
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
-  border: 2px solid rgba(103, 82, 247, .45);
+  border: 2px solid rgba(103, 82, 247, 0.45);
   margin-bottom: 1rem;
   width: 100%;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: #0F0F0F;
+  background: #0f0f0f;
 
   ${({ showBackground }) =>
     showBackground &&
@@ -75,7 +75,6 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
-
   const { chainId, account } = useActiveWeb3React()
 
   const token0 = stakingInfoTop.tokens[0]
@@ -86,13 +85,14 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyId(currency0)), useCurrency(currencyId(currency1))]
+
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const baseStakingInfo = useStakingInfo(stakingTokenPair);
-  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress);
-  const stakingRewardAddress = stakingInfoTop.stakingRewardAddress;
+  const baseStakingInfo = useStakingInfo(stakingTokenPair)
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress)
+  const stakingRewardAddress = stakingInfoTop.stakingRewardAddress
   const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
   // detect existing unstaked LP position to show add button if none found
@@ -146,7 +146,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        {(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? (
+        {chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY ? (
           <ExternalLink
             href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
             target="_blank"
@@ -161,7 +161,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
         )}
 
         <StyledInternalLink
-          to={{ pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`, state: { stakingRewardAddress }}}
+          to={{ pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`, state: { stakingRewardAddress } }}
           style={{ width: '100%', paddingLeft: '10px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">

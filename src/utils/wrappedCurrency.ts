@@ -18,7 +18,8 @@ export function wrappedCurrencyAmount(
 
 export function unwrappedToken(token: Token, chainId?: ChainId): Currency {
   if (token.equals(WETH[token.chainId]) && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY)) return ETHER
-  if (token.equals(WETH[token.chainId]) && chainId === ChainId.AVALANCHE) return AVAX
-  if (token.equals(WETH[token.chainId]) && chainId === ChainId.SMART_CHAIN) return BNB
+  if ((token.equals(WETH[token.chainId]) && chainId === ChainId.AVALANCHE) || chainId === ChainId.FUJI) return AVAX
+  if ((token.equals(WETH[token.chainId]) && chainId === ChainId.SMART_CHAIN) || chainId === ChainId.SMART_CHAIN_TEST)
+    return BNB
   return token
 }

@@ -64,22 +64,23 @@ export default function CommonBases({
             </Text>
           </BaseWrapper>
         )}
-        {chainId && chainId === ChainId.AVALANCHE && (
-          <BaseWrapper
-            onClick={() => {
-              if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
-                onSelect(AVAX)
-              }
-            }}
-            disable={selectedCurrency === AVAX}
-          >
-            <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
-            <Text fontWeight={500} fontSize={16}>
-              AVAX
-            </Text>
-          </BaseWrapper>
-        )}
-        {chainId && chainId === ChainId.SMART_CHAIN && (
+        {(chainId && chainId === ChainId.AVALANCHE) ||
+          (chainId === ChainId.FUJI && (
+            <BaseWrapper
+              onClick={() => {
+                if (!selectedCurrency || !currencyEquals(selectedCurrency, AVAX)) {
+                  onSelect(AVAX)
+                }
+              }}
+              disable={selectedCurrency === AVAX}
+            >
+              <CurrencyLogo currency={AVAX} style={{ marginRight: 8 }} />
+              <Text fontWeight={500} fontSize={16}>
+                AVAX
+              </Text>
+            </BaseWrapper>
+          ))}
+        {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && (
           <BaseWrapper
             onClick={() => {
               if (!selectedCurrency || !currencyEquals(selectedCurrency, BNB)) {
