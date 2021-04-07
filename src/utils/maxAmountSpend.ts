@@ -9,20 +9,18 @@ import { MIN_ETH } from '../constants'
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
   if (currencyAmount.currency === ETHER || currencyAmount.currency === AVAX || currencyAmount.currency === BNB) {
-    //mainnet
-    // const chainId =
-    //   currencyAmount?.currency === ETHER
-    //     ? ChainId.MAINNET
-    //     : currencyAmount?.currency === BNB
-    //     ? ChainId.SMART_CHAIN
-    //     : ChainId.AVALANCHE
-    //testnet
-    const chainId =
-      currencyAmount?.currency === ETHER
+    const chainId = process.env.REACT_APP_TESTNET
+      ? currencyAmount?.currency === ETHER
         ? ChainId.RINKEBY
         : currencyAmount?.currency === BNB
         ? ChainId.SMART_CHAIN_TEST
         : ChainId.FUJI
+      : currencyAmount?.currency === ETHER
+      ? ChainId.MAINNET
+      : currencyAmount?.currency === BNB
+      ? ChainId.SMART_CHAIN
+      : ChainId.AVALANCHE
+
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH), chainId)
     } else {

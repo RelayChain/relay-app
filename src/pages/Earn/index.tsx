@@ -111,7 +111,7 @@ export default function Earn() {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
         otherSymbol: 'BNB',
-        otherAddress: 'BNB',
+        otherAddress: 'BNB'
       },
 
       // https://bscscan.com/tx/0x6381904de3ac1427174a93df631423632b8e70c45ce3aeb6ecf67c77de7a2d8b
@@ -119,17 +119,17 @@ export default function Earn() {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2b1ee2933f1fdf8e4b63a44b2249d77eaf',
         otherSymbol: 'BUSD',
-        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-      },
+        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56'
+      }
     ]
-  };
+  }
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
-  */
+   */
   const stakingInfosWithBalance = stakingInfos
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
@@ -137,7 +137,7 @@ export default function Earn() {
     if (period && item.active && timeToStakingFinish && timeToStakingFinish < period) {
       timeToStakingFinish = period
     }
-  });
+  })
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
@@ -193,7 +193,13 @@ export default function Earn() {
         <ResponsiveButtonSecondary
           as={Link}
           padding="6px 8px"
-          to={`create/${(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : (chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST) ? 'BNB' : 'AVAX'}`}
+          to={`create/${
+            chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+              ? 'ETH'
+              : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+              ? 'BNB'
+              : 'AVAX'
+          }`}
           style={{ margin: '5px 5px 5px auto' }}
         >
           Create New Pool Pair
@@ -234,6 +240,7 @@ export default function Earn() {
           <Countdown exactEnd={timeToStakingFinish} />
         </DataRow>
 
+        {/*{stakingInfosWithBalance.forEach(i => i.tokens.forEach(i => ))}*/}
         <PoolSection>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
@@ -242,11 +249,11 @@ export default function Earn() {
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : (
-                  stakingInfosWithBalance?.map(stakingInfo => {
-                    // need to sort by added liquidity here
-                    return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-                  })
-                )}
+            stakingInfosWithBalance?.map(stakingInfo => {
+              // need to sort by added liquidity here
+              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+            })
+          )}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>

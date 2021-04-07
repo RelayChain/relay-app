@@ -17,13 +17,16 @@ import ZETHLogo from '../../assets/images/crosschain/zETH.png'
 import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
 import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
 import ZeroLogo from '../../assets/images/logo-zero-124.png'
-import { crosschainConfig } from 'constants/CrosschainConfigTestnet'
+import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
+import { crosschainConfig as crosschainConfigMainnet } from '../../constants/CrosschainConfig'
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
 
 const getTokenLogoURL = (address: string) => {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
+
+const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};

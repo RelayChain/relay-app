@@ -94,18 +94,17 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
         : CurrencyAmount.ether(
             JSBI.BigInt(typedValueParsed),
-            // mainnet
-            // currency?.symbol === 'ETH'
-            //   ? ChainId.MAINNET
-            //   : currency?.symbol === 'BNB'
-            //   ? ChainId.SMART_CHAIN
-            //   : ChainId.AVALANCHE
-            // testnet
-            currency?.symbol === 'ETH'
-              ? ChainId.RINKEBY
+            process.env.REACT_APP_TESTNET
+              ? currency?.symbol === 'ETH'
+                ? ChainId.RINKEBY
+                : currency?.symbol === 'BNB'
+                ? ChainId.SMART_CHAIN_TEST
+                : ChainId.FUJI
+              : currency?.symbol === 'ETH'
+              ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
-              ? ChainId.SMART_CHAIN_TEST
-              : ChainId.FUJI
+              ? ChainId.SMART_CHAIN
+              : ChainId.AVALANCHE
           )
     }
   } catch (error) {
