@@ -235,15 +235,15 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const info = useMemo(
     () =>
       chainId
-        ? STAKING_REWARDS_INFO[chainId] ?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
+        ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
-            : [],
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
+        : [],
     [chainId, pairToFilterBy]
   )
 
@@ -289,22 +289,22 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
       if (
         // these may be undefined if not logged in
-        !balanceState ?.loading &&
-          !earnedAmountState ?.loading &&
-          // always need these
-          totalSupplyState &&
-          !totalSupplyState.loading &&
-          rewardRateState &&
-          !rewardRateState.loading &&
-          periodFinishState &&
-          !periodFinishState.loading
+        !balanceState?.loading &&
+        !earnedAmountState?.loading &&
+        // always need these
+        totalSupplyState &&
+        !totalSupplyState.loading &&
+        rewardRateState &&
+        !rewardRateState.loading &&
+        periodFinishState &&
+        !periodFinishState.loading
       ) {
         if (
-          balanceState ?.error ||
-            earnedAmountState ?.error ||
-            totalSupplyState.error ||
-            rewardRateState.error ||
-            periodFinishState.error
+          balanceState?.error ||
+          earnedAmountState?.error ||
+          totalSupplyState.error ||
+          rewardRateState.error ||
+          periodFinishState.error
         ) {
           console.error('Failed to load staking rewards info')
           return memo
@@ -316,9 +316,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // check for account, if no account set to 0
 
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState ?.result ?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result ?.[0]))
-        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result ?.[0]))
+        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
           stakedAmount: TokenAmount,
@@ -335,7 +335,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
-        const periodFinishSeconds = periodFinishState.result ?.[0] ?.toNumber()
+        const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
 
         // compare period end timestamp vs current block timestamp (in seconds)
@@ -346,7 +346,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState ?.result ?.[0] ?? 0)),
+          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
           rewardRate: individualRewardRate,
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
@@ -358,17 +358,17 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       return memo
     }, [])
   }, [
-      balances,
-      chainId,
-      currentBlockTimestamp,
-      earnedAmounts,
-      info,
-      periodFinishes,
-      rewardRates,
-      rewardsAddresses,
-      totalSupplies,
-      uni
-    ])
+    balances,
+    chainId,
+    currentBlockTimestamp,
+    earnedAmounts,
+    info,
+    periodFinishes,
+    rewardRates,
+    rewardsAddresses,
+    totalSupplies,
+    uni
+  ])
 }
 
 export function useTotalUniEarned(): TokenAmount | undefined {
@@ -379,7 +379,7 @@ export function useTotalUniEarned(): TokenAmount | undefined {
   return useMemo(() => {
     if (!uni) return undefined
     return (
-      stakingInfos ?.reduce(
+      stakingInfos?.reduce(
         (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount),
         new TokenAmount(uni, '0')
       ) ?? new TokenAmount(uni, '0')
@@ -393,9 +393,9 @@ export function useDerivedStakeInfo(
   stakingToken: Token,
   userLiquidityUnstaked: TokenAmount | undefined
 ): {
-    parsedAmount?: CurrencyAmount
-    error?: string
-  } {
+  parsedAmount?: CurrencyAmount
+  error?: string
+} {
   const { account } = useActiveWeb3React()
 
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingToken)
@@ -424,9 +424,9 @@ export function useDerivedUnstakeInfo(
   typedValue: string,
   stakingAmount: TokenAmount
 ): {
-    parsedAmount?: CurrencyAmount
-    error?: string
-  } {
+  parsedAmount?: CurrencyAmount
+  error?: string
+} {
   const { account } = useActiveWeb3React()
 
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingAmount.token)

@@ -15,7 +15,7 @@ import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
 import { Text } from 'rebass'
-import { Zap } from 'react-feather';
+import { Zap } from 'react-feather'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -52,7 +52,7 @@ flex-direction: column;
 const VoteCard = styled(DataCard)`
   background: #111;
   overflow: hidden;
-  border: 2px solid rgba(28, 176, 249, .45);
+  border: 2px solid rgba(28, 176, 249, 0.45);
 `
 
 // const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -132,8 +132,8 @@ export default function Earn() {
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
    */
-  const stakingInfosWithBalance = stakingInfos.filter(x => x.active);
-  const finishedPools = stakingInfos.filter(x => !x.active);
+  const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
+  const finishedPools = stakingInfos.filter(x => !x.active)
 
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
@@ -193,7 +193,13 @@ export default function Earn() {
         <ExternalLink
           href="https://0.exchange/partners"
           target="_blank"
-          style={{ width: '100%', textDecoration: 'none', color: '#C571F4', paddingRight: '1rem', position: 'relative' }}
+          style={{
+            width: '100%',
+            textDecoration: 'none',
+            color: '#C571F4',
+            paddingRight: '1rem',
+            position: 'relative'
+          }}
         >
           Launch your token on ZERO
           <Zap style={{ position: 'absolute' }} size={'20'} />
@@ -247,8 +253,6 @@ export default function Earn() {
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           <Countdown exactEnd={timeToStakingFinish} />
         </DataRow>
-
-        {/*{stakingInfosWithBalance.forEach(i => i.tokens.forEach(i => ))}*/}
         <PoolSection>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
@@ -264,17 +268,15 @@ export default function Earn() {
           )}
         </PoolSection>
 
-        { finishedPools?.length > 0 &&
+        {finishedPools?.length > 0 && (
           <DataRow style={{ alignItems: 'baseline' }}>
             <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
           </DataRow>
-        }
-        { finishedPools?.length > 0 &&
+        )}
+        {finishedPools?.length > 0 &&
           finishedPools.map(stakingInfo => {
             return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-          })
-        }
-
+          })}
       </AutoColumn>
     </PageWrapper>
   )
