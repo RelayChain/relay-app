@@ -1,37 +1,37 @@
-import React, { useMemo, useState } from 'react'
 import { BarChart, Book, CreditCard, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
-import { NavLink } from 'react-router-dom'
-import { ChainId } from '@zeroexchange/sdk'
-import { Text } from 'rebass'
-import styled from 'styled-components'
-
 import { ExternalLink, TYPE } from '../../theme'
+import React, { useMemo, useState } from 'react'
 import Row, { RowFixed } from '../Row'
 
-// import AvaxLogo from '../../assets/images/avax-logo.png'
-
+import BlockchainLogo from 'components/BlockchainLogo'
+import { CHAIN_LABELS } from '../../constants'
+import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
+import { CrosschainChain } from 'state/crosschain/actions'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
-
+import Modal from 'components/Modal'
+import { NavLink } from 'react-router-dom'
 import Settings from '../Settings'
-
+import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-// import { darken } from 'polished'
-
+import { crosschainConfig } from '../../constants/CrosschainConfig';
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
-import { CrosschainChain } from 'state/crosschain/actions'
-import { crosschainConfig } from '../../constants/CrosschainConfig';
-import Modal from 'components/Modal'
-import { CHAIN_LABELS } from '../../constants'
-import BlockchainLogo from 'components/BlockchainLogo'
-import { useCrosschainState } from 'state/crosschain/hooks'
+
+// import AvaxLogo from '../../assets/images/avax-logo.png'
+
+
+
+// import { darken } from 'polished'
+
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -155,6 +155,7 @@ const HideSmall = styled.span`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
+  transition: all .2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -163,6 +164,10 @@ const NetworkCard = styled(YellowCard)`
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
+  &:hover {
+    filter: brightness(1.2);
+    cursor: pointer;
+  }
 `
 
 const BalanceText = styled(Text)`
@@ -348,8 +353,9 @@ const ModalContainer = styled.div`
           background: rgba(255, 255, 255, 0.1);
         }
       }
-      &:hover {
-        background-color: blue;
+      &:not(.active):hover {
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
       }
       img {
         margin-right: 0.5rem;
