@@ -15,7 +15,7 @@ import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
 import { Text } from 'rebass'
-import { Zap } from 'react-feather';
+import { Zap } from 'react-feather'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -52,7 +52,7 @@ flex-direction: column;
 const VoteCard = styled(DataCard)`
   background: #111;
   overflow: hidden;
-  border: 2px solid rgba(28, 176, 249, .45);
+  border: 2px solid rgba(28, 176, 249, 0.45);
 `
 
 // const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -113,7 +113,7 @@ export default function Earn() {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
         otherSymbol: 'BNB',
-        otherAddress: 'BNB',
+        otherAddress: 'BNB'
       },
 
       // https://bscscan.com/tx/0x6381904de3ac1427174a93df631423632b8e70c45ce3aeb6ecf67c77de7a2d8b
@@ -121,19 +121,19 @@ export default function Earn() {
         baseSymbol: 'ZERO',
         baseAddress: '0x1f534d2b1ee2933f1fdf8e4b63a44b2249d77eaf',
         otherSymbol: 'BUSD',
-        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-      },
+        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56'
+      }
     ]
-  };
+  }
 
   // staking info for connected account
   const stakingInfos = useStakingInfo()
   /**
    * only show staking cards with balance
    * @todo only account for this if rewards are inactive
-  */
-  const stakingInfosWithBalance = stakingInfos.filter(x => x.active);
-  const finishedPools = stakingInfos.filter(x => !x.active);
+   */
+  const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
+  const finishedPools = stakingInfos.filter(x => !x.active)
 
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
@@ -141,7 +141,7 @@ export default function Earn() {
     if (period && item.active && timeToStakingFinish && timeToStakingFinish < period) {
       timeToStakingFinish = period
     }
-  });
+  })
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
@@ -193,7 +193,13 @@ export default function Earn() {
         <ExternalLink
           href="https://0.exchange/partners"
           target="_blank"
-          style={{ width: '100%', textDecoration: 'none', color: '#C571F4', paddingRight: '1rem', position: 'relative' }}
+          style={{
+            width: '100%',
+            textDecoration: 'none',
+            color: '#C571F4',
+            paddingRight: '1rem',
+            position: 'relative'
+          }}
         >
           Launch your token on ZERO
           <Zap style={{ position: 'absolute' }} size={'20'} />
@@ -201,7 +207,13 @@ export default function Earn() {
         <ResponsiveButtonSecondary
           as={Link}
           padding="6px 8px"
-          to={`create/${(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'}`}
+          to={`create/${
+            chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+              ? 'ETH'
+              : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+              ? 'BNB'
+              : 'AVAX'
+          }`}
           style={{ margin: '5px 5px 5px auto', minWidth: '186px' }}
         >
           Create New Pool Pair
@@ -241,7 +253,6 @@ export default function Earn() {
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           <Countdown exactEnd={timeToStakingFinish} />
         </DataRow>
-
         <PoolSection>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
@@ -250,24 +261,22 @@ export default function Earn() {
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : (
-                  stakingInfosWithBalance?.map(stakingInfo => {
-                    // need to sort by added liquidity here
-                    return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-                  })
-                )}
+            stakingInfosWithBalance?.map(stakingInfo => {
+              // need to sort by added liquidity here
+              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+            })
+          )}
         </PoolSection>
 
-        { finishedPools?.length > 0 &&
+        {finishedPools?.length > 0 && (
           <DataRow style={{ alignItems: 'baseline' }}>
             <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
           </DataRow>
-        }
-        { finishedPools?.length > 0 &&
+        )}
+        {finishedPools?.length > 0 &&
           finishedPools.map(stakingInfo => {
             return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-          })
-        }
-
+          })}
       </AutoColumn>
     </PageWrapper>
   )

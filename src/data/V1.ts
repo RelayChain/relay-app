@@ -108,30 +108,31 @@ export function useV1Trade(
   exactAmount?: CurrencyAmount
 ): Trade | undefined {
   // get the mock v1 pairs
-  const inputPair = useMockV1Pair(inputCurrency)
-  const outputPair = useMockV1Pair(outputCurrency)
-  const inputIsETH = inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
-  const outputIsETH = outputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
-
+  // const inputPair = useMockV1Pair(inputCurrency)
+  // const outputPair = useMockV1Pair(outputCurrency)
+  // const inputIsETH = inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
+  // const outputIsETH = outputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB
   // construct a direct or through ETH v1 route
-  let pairs: Pair[] = []
-  if (inputIsETH && outputPair) {
-    pairs = [outputPair]
-  } else if (outputIsETH && inputPair) {
-    pairs = [inputPair]
-  }
-  // if neither are ETH, it's token-to-token (if they both exist)
-  else if (inputPair && outputPair) {
-    pairs = [inputPair, outputPair]
-  }
+  // let pairs: Pair[] = []
+  // if (inputIsETH && outputPair) {
+  //   pairs = [outputPair]
+  // } else if (outputIsETH && inputPair) {
+  //   pairs = [inputPair]
+  // }
+  // // if neither are ETH, it's token-to-token (if they both exist)
+  // else if (inputPair && outputPair) {
+  //   pairs = [inputPair, outputPair]
+  // }
 
-  const route = inputCurrency && pairs && pairs.length > 0 && new Route(pairs, inputCurrency, outputCurrency)
+  // const route = inputCurrency && pairs?.length && new Route(pairs, inputCurrency, outputCurrency)
+
   let v1Trade: Trade | undefined
   try {
-    v1Trade =
-      route && exactAmount
-        ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
-        : undefined
+    // v1Trade =
+    //   route && exactAmount
+    //     ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
+    //     : undefined
+    v1Trade = undefined
   } catch (error) {
     console.debug('Failed to create V1 trade', error)
   }

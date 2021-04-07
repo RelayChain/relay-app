@@ -204,8 +204,8 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
-        // hardcode gas for avalanche
-        const gas = chainId === ChainId.AVALANCHE ? BigNumber.from(350000) : gasEstimate
+        // hardcode gas for other chains
+        const gas = chainId === ChainId.AVALANCHE || ChainId.FUJI || chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST ? BigNumber.from(350000) : gasEstimate
 
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gas),

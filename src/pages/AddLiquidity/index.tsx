@@ -126,7 +126,7 @@ export default function AddLiquidity({
     parsedAmounts[Field.CURRENCY_A],
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
@@ -134,7 +134,7 @@ export default function AddLiquidity({
     parsedAmounts[Field.CURRENCY_B],
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )

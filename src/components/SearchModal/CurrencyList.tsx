@@ -154,7 +154,13 @@ function CurrencyRow({
             </TYPE.main>
           ) : null}
           {/* Fix this so (Add) works for Avax support */}
-          {hasQuery && !isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE && chainId !== ChainId.SMART_CHAIN ? (
+          {hasQuery &&
+          !isOnSelectedList &&
+          !customAdded &&
+          chainId !== ChainId.AVALANCHE &&
+          chainId !== ChainId.FUJI &&
+          chainId !== ChainId.SMART_CHAIN &&
+          chainId !== ChainId.SMART_CHAIN_TEST ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
@@ -199,7 +205,11 @@ export default function CurrencyList({
   const { chainId } = useActiveWeb3React()
 
   const nativeToken =
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? Currency.ETHER : chainId === ChainId.SMART_CHAIN ? Currency.BNB : Currency.AVAX
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+      ? Currency.ETHER
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+      ? Currency.BNB
+      : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,
     showETH,

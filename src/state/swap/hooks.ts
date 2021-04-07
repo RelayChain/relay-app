@@ -94,7 +94,13 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
         : CurrencyAmount.ether(
             JSBI.BigInt(typedValueParsed),
-            currency?.symbol === 'ETH'
+            process.env.REACT_APP_TESTNET
+              ? currency?.symbol === 'ETH'
+                ? ChainId.RINKEBY
+                : currency?.symbol === 'BNB'
+                ? ChainId.SMART_CHAIN_TEST
+                : ChainId.FUJI
+              : currency?.symbol === 'ETH'
               ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
               ? ChainId.SMART_CHAIN
@@ -177,7 +183,8 @@ export function useDerivedSwapInfo(): {
   }
 
   // get link to trade on v1, if a better rate exists
-  const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
+  // const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
+  const v1Trade = undefined
 
   let inputError: string | undefined
   if (!account) {

@@ -3,9 +3,15 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-export const AVAX_ROUTER_ADDRESS = '0x85995d5f8ee9645cA855e92de16FA62D26398060' // mainnet avalanche
-export const SMART_CHAIN_ROUTER_ADDRESS = '0xba79bf6D52934D3b55FE0c14565A083c74FBD224' // mainnet smartChain
-export const ETH_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // mainnet ethereum
+export const AVAX_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
+  ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0'
+  : '0x85995d5f8ee9645cA855e92de16FA62D26398060'
+export const SMART_CHAIN_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
+  ? '0xB3275050341b6E4Cb8D6D80579dB451B89F64EdE'
+  : '0xba79bf6D52934D3b55FE0c14565A083c74FBD224'
+export const ETH_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
+  ? '0x70Ee974E2339E41D582593622c8a653842d9d52d'
+  : '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
@@ -33,7 +39,13 @@ export const returnBalanceNum = (obj?: any, decimals?: number) => {
   }
 }
 
-export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
+export const ZERO = new Token(
+  ChainId.MAINNET,
+  '0xf0939011a9bb95c3b791f0cb546377ed2693a574',
+  18,
+  'ZERO',
+  'Zero Exchange'
+)
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USDC')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -41,17 +53,51 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
-export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
+export const SUSHI = new Token(
+  ChainId.MAINNET,
+  '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
+  18,
+  'SUSHI',
+  'Wrapped BTC'
+)
 
-export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche');
-export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange');
-export const zDAI = new Token(ChainId.AVALANCHE, '0x12f108E6138d4A9c58511e042399cF8f90D5673f', 18, 'zDAI', 'Dai Stablecoin')
+export const rinkebyZERO = new Token(
+  ChainId.RINKEBY,
+  '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a',
+  18,
+  'ZERO',
+  'Zero Exchange'
+)
+
+export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
+
+export const WAVAX = new Token(
+  ChainId.AVALANCHE,
+  '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+  18,
+  'WAVAX',
+  'Avalanche'
+)
+export const zZERO = new Token(
+  ChainId.AVALANCHE,
+  '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+  18,
+  'ZERO',
+  'Zero Exchange'
+)
+export const zDAI = new Token(
+  ChainId.AVALANCHE,
+  '0x12f108E6138d4A9c58511e042399cF8f90D5673f',
+  18,
+  'zDAI',
+  'Dai Stablecoin'
+)
 export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'zUSDC')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
-export const zUSDT = new Token(ChainId.AVALANCHE, '0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7', 6, 'zUSDT', 'zUSDT');
-export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D056871125452', 8, 'zBTC', 'zBTC');
-export const zUNI = new Token(ChainId.AVALANCHE, '0xBa9aF11661520129Af69d233E92d69BD40CD90AF', 18, 'zUNI', 'zUNI');
-export const zSUSHI = new Token(ChainId.AVALANCHE, '0xD4feE2e3F88B9138B74a323B40bC63bcc1A1B9eC', 18, 'zSUSHI', 'zSUSHI');
+export const zUSDT = new Token(ChainId.AVALANCHE, '0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7', 6, 'zUSDT', 'zUSDT')
+export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D056871125452', 8, 'zBTC', 'zBTC')
+export const zUNI = new Token(ChainId.AVALANCHE, '0xBa9aF11661520129Af69d233E92d69BD40CD90AF', 18, 'zUNI', 'zUNI')
+export const zSUSHI = new Token(ChainId.AVALANCHE, '0xD4feE2e3F88B9138B74a323B40bC63bcc1A1B9eC', 18, 'zSUSHI', 'zSUSHI')
 
 export const WBNB = new Token(
   ChainId.SMART_CHAIN,
@@ -61,17 +107,28 @@ export const WBNB = new Token(
   'SMART_CHAIN'
 )
 
-export const bscZERO = new Token(ChainId.SMART_CHAIN, '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf', 18, 'ZERO', 'ZERO Exchange')
+export const bscZERO = new Token(
+  ChainId.SMART_CHAIN,
+  '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
+  18,
+  'ZERO',
+  'ZERO Exchange'
+)
 export const bscBUSD = new Token(ChainId.SMART_CHAIN, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
-export const bscWBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'WBNB');
-export const bscUSDC = new Token(ChainId.SMART_CHAIN, '0x4022AfEB287052e6e587d39bA99f79cAFC47B570', 6, 'zUSDC', 'zUSDC');
-export const bscUSDT = new Token(ChainId.SMART_CHAIN, '0xBF7e0761417F49b3FAFae564C842823f5f79DB15', 6, 'zUSDT', 'zUSDT');
-export const bscBTC = new Token(ChainId.SMART_CHAIN, '0xB6D5487b00e53e7009E6560189EB8B8c22e11Bf3', 8, 'zBTC', 'zBTC');
-export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88192450CF3ed4150C', 18, 'zUNI', 'zUNI');
-export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc', 18, 'zSUSHI', 'zSUSHI');
-export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI');
+export const bscWBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'WBNB')
+export const bscUSDC = new Token(ChainId.SMART_CHAIN, '0x4022AfEB287052e6e587d39bA99f79cAFC47B570', 6, 'zUSDC', 'zUSDC')
+export const bscUSDT = new Token(ChainId.SMART_CHAIN, '0xBF7e0761417F49b3FAFae564C842823f5f79DB15', 6, 'zUSDT', 'zUSDT')
+export const bscBTC = new Token(ChainId.SMART_CHAIN, '0xB6D5487b00e53e7009E6560189EB8B8c22e11Bf3', 8, 'zBTC', 'zBTC')
+export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88192450CF3ed4150C', 18, 'zUNI', 'zUNI')
+export const bscSUSHI = new Token(
+  ChainId.SMART_CHAIN,
+  '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
+  18,
+  'zSUSHI',
+  'zSUSHI'
+)
+export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI')
 export const bscETH = new Token(ChainId.SMART_CHAIN, '0x7c815BBc21FED2B97CA163552991A5C30d6a2336', 18, 'zETH', 'zETH');
-
 
 export const MOCK1 = new Token(
   ChainId.FUJI,
@@ -118,8 +175,8 @@ export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
 
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
-  [ChainId.FUJI]: '0x4e32D543A77Ac8a6e46f0A3E3A2D475e6aE1816c'
+  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  // [ChainId.FUJI]: '0x4e32D543A77Ac8a6e46f0A3E3A2D475e6aE1816c'
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -138,7 +195,8 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, ZERO, COMP, MKR],
-  [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2],
+  [ChainId.RINKEBY]: [...WETH_ONLY[ChainId.RINKEBY], rinkebyZERO, rinkebyUSDC],
+  // [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2],
   [ChainId.SMART_CHAIN]: [...WETH_ONLY[ChainId.SMART_CHAIN], WBNB, bscZERO, bscBUSD, bscUSDC],
   [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], WAVAX, zZERO, zUSDC]
 }
@@ -150,28 +208,29 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-  },
-  [ChainId.FUJI]: {
-    [AMPL.address]: [MOCK1, WETH[ChainId.FUJI]],
-    [AMPL.address]: [MOCK2, WETH[ChainId.FUJI]]
   }
+  // [ChainId.FUJI]: {
+  //   [AMPL.address]: [MOCK1, WETH[ChainId.FUJI]],
+  //   [AMPL.address]: [MOCK2, WETH[ChainId.FUJI]]
+  // }
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.RINKEBY]: [],
   [ChainId.AVALANCHE]: [],
   [ChainId.SMART_CHAIN]: [],
   [ChainId.SMART_CHAIN_TEST]: [],
-  [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
+  [ChainId.FUJI]: []
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], ZERO, DAI, USDC, USDT, MOCK1, MOCK2],
-  [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], ZERO, DAI, USDC, USDT, MOCK1, MOCK2]
+  // [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -183,12 +242,12 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     [MOCK1, MOCK2],
     [USDC, USDT],
     [DAI, USDT]
-  ],
-  [ChainId.FUJI]: [
-    [WETH[ChainId.FUJI], MOCK1],
-    [WETH[ChainId.FUJI], MOCK2],
-    [MOCK1, MOCK2]
   ]
+  // [ChainId.FUJI]: [
+  //   [WETH[ChainId.FUJI], MOCK1],
+  //   [WETH[ChainId.FUJI], MOCK2],
+  //   [MOCK1, MOCK2]
+  // ]
 }
 
 export interface WalletInfo {

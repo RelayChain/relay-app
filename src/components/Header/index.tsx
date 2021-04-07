@@ -264,6 +264,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.FUJI]: 'Avalanche',
   [ChainId.AVALANCHE]: 'Avalanche',
   [ChainId.SMART_CHAIN]: 'SmartChain',
+  [ChainId.SMART_CHAIN_TEST]: 'SmartChain',
   [ChainId.MAINNET]: 'Ethereum'
 }
 
