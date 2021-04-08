@@ -108,6 +108,23 @@ const ChainBridgePending = styled.div`
   }
 `
 
+const Heading = styled.h2`
+  text-align: center;
+`
+
+const Description = styled.p`
+  text-align: center;
+`
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: '1rem';
+`
+
+
 export default function Bridge() {
   useCrossChain()
 
@@ -376,7 +393,7 @@ export default function Bridge() {
   )
 
   // swaps or cross chain
-  const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
+  const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
   const handleSetIsCrossChain = (bool: boolean) => {
     setIsCrossChain(bool)
 
@@ -481,7 +498,7 @@ export default function Bridge() {
         onConfirm={handleConfirmTokenWarning}
       />
       <AppBody>
-        <SwapPoolTabs active={'swap'} />
+        {/* <SwapPoolTabs active={'swap'} /> */}
         <Wrapper id="swap-page">
           <CrossChainModal
             isOpen={crossChainModalOpen}
@@ -525,7 +542,9 @@ export default function Bridge() {
             chainId={chainId}
           />
 
-          <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} />
+          {/* <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} /> */}
+          <Heading>Cross-Chain Bridge</Heading>
+          <Description>Transfer your token from one blockchain to another</Description>
           <div
             style={{
               opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
@@ -534,20 +553,11 @@ export default function Bridge() {
               filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
             }}
           >
-            <BlockchainSelector
-              onSetTransferTo={setTransferTo}
-              isCrossChain={isCrossChain}
-              supportedChains={SUPPORTED_CHAINS}
-              blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-              transferTo={isCrossChain ? targetChain : transferTo}
-              onShowCrossChainModal={showCrossChainModal}
-              onShowTransferChainModal={showTransferChainModal}
-            />
-
             <AutoColumn gap={'md'}>
+              
               <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
-                label={'From'}
+                label={'Choose your assets:'}
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={!atMaxAmountInput}
                 currency={currencies[Field.INPUT]}
@@ -558,27 +568,6 @@ export default function Bridge() {
                 isCrossChain={isCrossChain}
                 id="swap-currency-input"
               />
-              <AutoColumn justify="space-between">
-                <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable>
-                    <ArrowDown
-                      size="24"
-                      onClick={() => {
-                        if (!isCrossChain) {
-                          setApprovalSubmitted(false) // reset 2 step UI for approvals
-                          onSwitchTokens()
-                        }
-                      }}
-                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                    />
-                  </ArrowWrapper>
-                  {recipient === null && !showWrap && isExpertMode ? (
-                    <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + Add a send (optional)
-                    </LinkStyledButton>
-                  ) : null}
-                </AutoRow>
-              </AutoColumn>
               <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
                 value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
@@ -609,6 +598,16 @@ export default function Bridge() {
                 </>
               ) : null}
 
+              <BlockchainSelector
+                onSetTransferTo={setTransferTo}
+                isCrossChain={isCrossChain}
+                supportedChains={SUPPORTED_CHAINS}
+                blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+                transferTo={isCrossChain ? targetChain : transferTo}
+                onShowCrossChainModal={showCrossChainModal}
+                onShowTransferChainModal={showTransferChainModal}
+              />
+              
               {isCrossChain && (
                 <>
                   <CrossChainLabels>
@@ -653,6 +652,9 @@ export default function Bridge() {
                 </Card>
               )}
             </AutoColumn>
+            
+            
+
             <BottomGrouping>
               {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
                 <>
