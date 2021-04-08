@@ -11,7 +11,8 @@ import {
   setCrosschainTransferStatus,
   setCurrentToken,
   setTargetChain,
-  setTransferAmount
+  setTransferAmount,
+  setCrosschainLastTimeSwitched
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
@@ -124,7 +125,8 @@ export default function Swap() {
     targetChain,
     targetTokens,
     crosschainTransferStatus,
-    swapDetails
+    swapDetails,
+    lastTimeSwitched
   } = useCrosschainState()
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
@@ -414,10 +416,15 @@ export default function Swap() {
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
-    // startNewSwap()
   }
   const showCrossChainModal = () => {
-    setShowCrossChainModal(true)
+    const currentTime = ~~(Date.now() / 1000)
+    if(lastTimeSwitched < currentTime) {
+      setShowCrossChainModal(true)
+      dispatch(
+        setCrosschainLastTimeSwitched({})
+      )
+    }
   }
 
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
