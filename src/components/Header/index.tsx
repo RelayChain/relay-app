@@ -3,11 +3,9 @@ import { ExternalLink, TYPE } from '../../theme'
 import React, { useMemo, useState } from 'react'
 import Row, { RowFixed } from '../Row'
 
-import BlockchainLogo from 'components/BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
-import { CrosschainChain } from 'state/crosschain/actions'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/images/0-icon.png'
@@ -288,6 +286,7 @@ function NetworkSwitcher() {
   const { chainId } = useActiveWeb3React()
   const {
     availableChains: allChains,
+    lastTimeSwitched
   } = useCrosschainState()
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
@@ -298,7 +297,10 @@ function NetworkSwitcher() {
     setShowCrossChainModal(false)
   }
   const showCrossChainModal = () => {
-    setShowCrossChainModal(true)
+    const currentTime = ~~(Date.now() / 1000)
+    if(lastTimeSwitched < currentTime) {
+      setShowCrossChainModal(true)
+    }
   }
 
   return (

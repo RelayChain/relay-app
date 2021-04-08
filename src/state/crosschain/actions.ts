@@ -68,3 +68,4 @@ export const setCrosschainTransferStatus = createAction<{ status: ChainTransferS
 export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }>('crosschain/set-deposit-confirmed')
 export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
 export const setPendingTransfer = createAction<{ pendingTransfer: PendingTransfer }>('crosschain/set-pending-transfer')
+export const setCrosschainLastTimeSwitched = createAction<{ }>('crosschain/last-time-switched')
