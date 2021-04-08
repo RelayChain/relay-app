@@ -125,7 +125,7 @@ export default function CrossChainModal({
         const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
 
         if (tx) {
-          console.log('@@@@', tx)
+          console.log(tx)
         }
       }
     }
