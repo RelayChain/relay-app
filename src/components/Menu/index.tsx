@@ -107,6 +107,10 @@ export default function Menu() {
             <BookOpen size={14} />
             Blog
           </MenuItem>
+          <MenuItem id="link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+            <MessageCircle size={14} />
+            Telegram
+          </MenuItem>
           <MenuItem id="link" href="https://discord.gg/XtZTNVTX5T">
             <MessageCircle size={14} />
             Discord
