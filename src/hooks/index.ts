@@ -64,6 +64,14 @@ export function useInactiveListener(suppress = false) {
         })
       }
 
+      const handleNetworkChanged =(network: any) => {
+      console.log("🚀 ~ file: index.ts ~ line 68 ~ handleNetworkChanged ~ network", network)
+        // eat errors
+        activate(injected, undefined, true).catch(error => {
+          console.error('Failed to activate after networkChanged changed', error)
+        })
+      }
+
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
           // eat errors
@@ -74,12 +82,14 @@ export function useInactiveListener(suppress = false) {
       }
 
       ethereum.on('chainChanged', handleChainChanged)
+      ethereum.on('networkChanged', handleNetworkChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('chainChanged', handleChainChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
+          ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
       }
     }

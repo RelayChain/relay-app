@@ -99,6 +99,7 @@ export default function CrossChainModal({
 }: CrossChainModalProps) {
   const switchChain = async (chain: CrosschainChain) => {
     let { ethereum } = window;
+   
     if (ethereum) {
       let chainsConfig = null
       for (const item of crosschainConfig.chains) {
@@ -121,7 +122,7 @@ export default function CrossChainModal({
           blockExplorerUrls: [chainsConfig.blockExplorer],
         }]
         /* eslint-disable */
-        const tx = (ethereum && ethereum.request) ? await ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
+        const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
 
         if (tx) {
           console.log(tx)
@@ -148,6 +149,7 @@ export default function CrossChainModal({
                   onDismiss()
                 } else if (+chain.chainID === 1) {
                   alert('To switch back to Ethereum, please change your RPC inside your wallet.');
+                  onDismiss()
                 } else {
                   switchChain(chain)
                   onDismiss()
