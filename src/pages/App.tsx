@@ -31,6 +31,7 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Swap from './Swap'
+import Bridge from './Bridge'
 import Home from './Home'
 import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
@@ -151,6 +152,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/bridge" component={Bridge}/>
               <Route component={RedirectPathToHomeOnly} />
             </Switch>
           </Web3ReactManager>
