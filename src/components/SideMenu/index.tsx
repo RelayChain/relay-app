@@ -55,10 +55,6 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     color: ${({ theme }) => theme.white};
   }
-  :hover,
-  :focus {
-    color: ${({ theme }) => theme.white};
-  }
 `
 const HeaderExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text2};
@@ -69,7 +65,6 @@ const HeaderExternalLink = styled(ExternalLink)`
   font-weight: 600;
   :hover,
   :focus {
-    color: ${({ theme }) => theme.white};
     text-decoration: none;
   }
 `
@@ -88,20 +83,13 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
   const { width } = useWindowDimensions()
   const history = useHistory()
   const location = useLocation()
-
   const [pathname, setPathname] = useState(location.pathname)
-  history.listen(location => {
-    console.log(location.pathname)
-    setPathname(location.pathname)
-  })
 
-
-  const hanldeSidemenuOpen = () => {
-    if (width < 961) {
-      setOpen()
-    }
-  }
+  history.listen(location =>  setPathname(location.pathname))
+  const hanldeSidemenuOpen = () => width < 961 &&  setOpen()
+     
   if (width < 961 && !open) return null
+
   return (
     <SideMenuWrapper>
       <HeaderLinks>
