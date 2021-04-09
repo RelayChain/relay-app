@@ -8,6 +8,7 @@ import {
   setAvailableChains,
   setAvailableTokens,
   setCrosschainDepositConfirmed,
+  setCrosschainLastTimeSwitched,
   setCrosschainFee,
   setCrosschainRecipient,
   setCrosschainSwapDetails,
@@ -40,6 +41,7 @@ export interface CrosschainState {
   readonly swapDetails: SwapDetails
   readonly depositConfirmed: boolean
   readonly pendingTransfer: PendingTransfer
+  readonly lastTimeSwitched: number
 }
 
 export const initialState: CrosschainState = {
@@ -72,7 +74,8 @@ export const initialState: CrosschainState = {
     voteCount: 0
   },
   depositConfirmed: false,
-  pendingTransfer: {}
+  pendingTransfer: {},
+  lastTimeSwitched: ~~(Date.now() / 1000)
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -181,6 +184,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
       return {
         ...currentState,
         depositConfirmed: confirmed
+      }
+    })
+    .addCase(setCrosschainLastTimeSwitched, (state, {}) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        lastTimeSwitched: ~~(Date.now() / 1000) + 20
       }
     })
 )
