@@ -10,6 +10,10 @@ export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/swap' }} />
 }
 
+export function RedirectPathToHomeOnly({ location }: RouteComponentProps) {
+  return <Redirect to={{ ...location, pathname: '/home' }} />
+}
+
 // Redirects to earn but only replace the pathname
 export function RedirectPathToEarnOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/earn' }} />

@@ -87,5 +87,6 @@
   "forAtLeast": "pentru cel puțin ",
   "brokenToken": "Jetonul selectat nu este compatibil cu Uniswap V1. Depunerea de lichiditate îți va bloca fondurile pe vecie.",
   "toleranceExplanation": "Micșorând această limită, vei reduce riscul de frontrunning. În același timp, devine mai probabil că tranzacția va eșua din cauza variațiilor normale de preț.",
-  "tokenSearchPlaceholder": "Caută nume sau lipește adresă"
+  "tokenSearchPlaceholder": "Caută nume sau lipește adresă",
+  "home": "casa"
 }

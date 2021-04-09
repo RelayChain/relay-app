@@ -175,91 +175,6 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const Title = styled.a`
-  display: flex;
-  align-items: center;
-  pointer-events: auto;
-  justify-self: flex-start;
-  margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
-  :hover {
-    cursor: pointer;
-  }
-`
-
-// const CurrentChain = styled.div`
-//   position: fixed;
-//   left: 0; right: 0; top: 0;
-//   margin: auto;
-//   width: 300px;
-//   background: #212429;
-//   border-bottom-right-radius: 24px;
-//   border-bottom-left-radius: 24px;
-//   text-align: center;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: center;
-//   align-items: center;
-//   height: 50px;
-//   padding-left: 1.5rem;
-//   padding-right: 1.5rem;
-//   transition: all .2s ease-in-out;
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//     bottom: 100px;
-//     top: auto;
-//     border-radius: 24px;
-//   `};
-//   :hover {
-//     cursor: pointer;
-//     filter: brightness(1.1);
-//   }
-//   p {
-//     margin-right: auto;
-//   }
-// `
-
-const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
-  }
-`
-
-const activeClassName = 'ACTIVE'
-
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 16px;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.primary1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => theme.primary1};
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: .85rem;
-    margin: 0 6px;
-`};
-`
-
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -341,35 +256,6 @@ export default function Header() {
   return (
     <HeaderFrame>
       <ClaimModal />
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'54px'} style={{ marginLeft: '1.5rem', marginRight: '1.5rem' }} src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            <RefreshCw size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('Swap')}
-          </StyledNavLink>
-          <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
-            <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('Earn')}
-          </StyledNavLink>
-          <HeaderExternalLink href={`https://buy.0.exchange`}>
-            <CreditCard size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
-            Buy
-          </HeaderExternalLink>
-          <HeaderExternalLink href={`https://charts.0.exchange`}>
-            <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
-            Charts
-          </HeaderExternalLink>
-          <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
-            <Book size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-2px' }} />
-            Guides
-          </HeaderExternalLink>
-        </HeaderLinks>
-      </HeaderRow>
       <HeaderControls>
         <HeaderElement>
           <NetworkSwitcher />

@@ -1,7 +1,7 @@
 import './snow.css'
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import React, { Suspense } from 'react'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectPathToHomeOnly, RedirectToSwap } from './Swap/redirects'
+import React, { Suspense, useState } from 'react'
 import {
   RedirectDuplicateTokenIds,
   RedirectOldAddLiquidityPathStructure,
@@ -16,6 +16,8 @@ import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Earn from './Earn'
 import Guides from './Guides'
+import SideMenu from '../components/SideMenu'
+import MenuBurger from '../components/MenuBurger'
 import Header from '../components/Header'
 import Manage from './Earn/Manage'
 import MigrateV1 from './MigrateV1'
@@ -29,11 +31,15 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Swap from './Swap'
+import Home from './Home'
 import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
+import { useDarkModeManager } from '../state/user/hooks'
+import LogoDark from './../assets/images/0-icon.png'
+import Logo from './../assets/svg/logo.svg'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -72,16 +78,42 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+const Title = styled.a`
+  position: fixed;
+  top: 54px;
+  left: 54px;
+  width: 76px;
+  height: 76px;
+  z-index: 1000;
+  :hover {
+    cursor: pointer;
+  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 46px;
+  height: 46px;
+  top: 34px;
+  left: 22px;
+  `};
+`
+
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
 export default function App() {
+  const [open, setOpen] = useState<boolean>(false)
+  const [isDark] = useDarkModeManager()
   return (
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />
+      <Title href=".">
+        <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
+      </Title>
+      <MenuBurger open={open} setOpen={() => setOpen(!open)} />
+      <SideMenu open={open} setOpen={() => setOpen(!open)} />
       <AppWrapper>
         <div className="snow-bg"></div>
         <div className="bg-darken"></div>
@@ -95,6 +127,7 @@ export default function App() {
           <TopLevelModals />
           <Web3ReactManager>
             <Switch>
+              <Route exact strict path="/home" component={Home} />
               <Route exact strict path="/swap" component={Swap} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
@@ -118,7 +151,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route component={RedirectPathToSwapOnly} />
+              <Route component={RedirectPathToHomeOnly} />
             </Switch>
           </Web3ReactManager>
           <Marginer />
