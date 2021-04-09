@@ -52,7 +52,7 @@ export default function TransferComplete({
       </RowFixed>
       <RowFixed style={{ width: '100%' }}>
         <Text fontSize={17} textAlign="center" style={{ lineHeight: '20px' }}>
-          Santa's reindeer are busy relaying the transaction across the chains, this process can sometimes take up to 15
+          We are busy relaying the transaction across the chains, this process can sometimes take up to 15
           minutes.
         </Text>
       </RowFixed>

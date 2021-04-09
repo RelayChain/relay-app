@@ -1,20 +1,17 @@
-import { ButtonSecondary, ButtonUNIGradient } from '../../components/Button'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ButtonSecondary } from '../../components/Button'
+import { CardSection, DataCard } from '../../components/earn/styled'
 import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
 import { ChainId } from '@zeroexchange/sdk'
-//import { BIG_INT_ZERO } from '../../constants'
 import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
-//import { JSBI } from '@zeroexchange/sdk'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
 import PoolCard from '../../components/earn/PoolCard'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
-import { Text } from 'rebass'
 import { Zap } from 'react-feather'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -22,6 +19,11 @@ import { useActiveWeb3React } from '../../hooks'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  margin-left: 300px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  margin-left: 0;
+  margin-top: 110px
+`};
 `
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
@@ -29,12 +31,6 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
     width: 48%;
   `};
 `
-
-// const TopSection = styled(AutoColumn)`
-//   max-width: 720px;
-//   width: 100%;
-// `
-
 const PoolSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -54,13 +50,6 @@ const VoteCard = styled(DataCard)`
   overflow: hidden;
   border: 2px solid rgba(28, 176, 249, 0.45);
 `
-
-// const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-//   width: fit-content;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     width: 48%;
-//   `};
-// `
 
 export default function Earn() {
   // get chainId
