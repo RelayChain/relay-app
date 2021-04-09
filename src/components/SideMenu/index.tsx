@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -85,9 +85,9 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
   const location = useLocation()
   const [pathname, setPathname] = useState(location.pathname)
 
-  history.listen(location =>  setPathname(location.pathname))
-  const hanldeSidemenuOpen = () => width < 961 &&  setOpen()
-     
+  history.listen(location => setPathname(location.pathname))
+  const hanldeSidemenuOpen = () => width < 961 && setOpen()
+
   if (width < 961 && !open) return null
 
   return (
@@ -95,13 +95,13 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
           <IconLink>
-            <Icon icon="home"  active={pathname == '/home'}/>
+            <Icon icon="home" active={pathname == '/home'} />
           </IconLink>
           {t('Home')}
         </StyledNavLink>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
           <IconLink>
-            <Icon icon="swap"  active={pathname == '/swap'} />
+            <Icon icon="swap" active={pathname == '/swap'} />
           </IconLink>
           {t('Swap')}
         </StyledNavLink>
@@ -114,7 +114,7 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
         <span onClick={hanldeSidemenuOpen}>
           <HeaderExternalLink href={`https://buy.0.exchange`}>
             <IconLink>
-              <Icon icon="market"/>
+              <Icon icon="market" />
             </IconLink>
             Buy
           </HeaderExternalLink>
@@ -122,7 +122,7 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
         <span onClick={hanldeSidemenuOpen}>
           <HeaderExternalLink href={`https://charts.0.exchange`}>
             <IconLink>
-              <Icon icon="charts"/>
+              <Icon icon="charts" />
             </IconLink>
             Charts
           </HeaderExternalLink>
@@ -130,7 +130,7 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
         <span onClick={hanldeSidemenuOpen}>
           <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
             <IconLink>
-              <Icon icon="planet"/>
+              <Icon icon="planet" />
             </IconLink>
             Guides
           </HeaderExternalLink>
