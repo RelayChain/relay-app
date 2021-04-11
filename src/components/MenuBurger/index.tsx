@@ -18,11 +18,8 @@ const StyledBurger = styled.button<{ open?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   display: flex;
   overflow: hidden
-`};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-top: 42px;
-right: 22px;
+  top: 42px;
+  right: 22px;
 `};
 
   &:focus {
