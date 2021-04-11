@@ -1,9 +1,9 @@
-import { ButtonSecondary } from '../../components/Button'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import { AutoColumn } from '../../components/Column'
+import { ButtonSecondary } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk'
 import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
@@ -51,7 +51,7 @@ const VoteCard = styled(DataCard)`
   border: 2px solid rgba(28, 176, 249, 0.45);
 `
 
-export default function Earn() {
+export default function Pools() {
   // get chainId
   const { chainId } = useActiveWeb3React()
 

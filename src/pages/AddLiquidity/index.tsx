@@ -4,7 +4,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots, Wrapper } from '../Legacy_Pool/styleds'
 import React, { useCallback, useContext, useState } from 'react'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'

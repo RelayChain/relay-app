@@ -4,7 +4,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
+import { ClickableText, MaxButton, Wrapper } from '../Legacy_Pool/styleds'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'

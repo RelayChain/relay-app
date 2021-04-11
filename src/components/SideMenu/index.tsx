@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { NavLink } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { ExternalLink } from '../../theme'
-import useWindowDimensions from '../../hooks/useWindowDimensions'
-import Icon from '../Icon'
 import { useHistory, useLocation } from 'react-router-dom'
+
+import { ExternalLink } from '../../theme'
+import Icon from '../Icon'
+import { NavLink } from 'react-router-dom'
+import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
@@ -17,10 +18,11 @@ const SideMenuWrapper = styled.div<{ open?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: rgba(0,0,0, .2);
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 100%;
   z-index: 100;
-  background-color: rgba(0,0,0);
+  background-color: rgba(0,0,0, .8);
   align-items: center;
 `};
 `
@@ -29,7 +31,6 @@ const HeaderLinks = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding-left: 45px;
-  height: 34%;
   margin-bottom: 10px;
   font-weight: 600;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -52,6 +53,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-weight: 600;
   transition: all 0.2s ease-in-out;
   font-family: 'Poppins', sans-serif;
+  margin-bottom: 1.5rem;
   &.${activeClassName} {
     color: ${({ theme }) => theme.white};
   }
@@ -63,6 +65,10 @@ const HeaderExternalLink = styled(ExternalLink)`
   font-size: 13px;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   :hover,
   :focus {
     text-decoration: none;
@@ -105,36 +111,36 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
           </IconLink>
           {t('Swap')}
         </StyledNavLink>
-        <StyledNavLink id={`earn-nav-link`} to={'/earn'} onClick={hanldeSidemenuOpen}>
+        <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
           <IconLink>
-            <Icon icon="earn" active={pathname == '/earn'} />
+            <Icon icon="bridges" active={pathname == '/transfer'} />
           </IconLink>
-          {t('Earn')}
+          Transfer
         </StyledNavLink>
-        <span onClick={hanldeSidemenuOpen}>
-          <HeaderExternalLink href={`https://buy.0.exchange`}>
-            <IconLink>
-              <Icon icon="market" />
-            </IconLink>
-            Buy
-          </HeaderExternalLink>
-        </span>
-        <span onClick={hanldeSidemenuOpen}>
-          <HeaderExternalLink href={`https://charts.0.exchange`}>
-            <IconLink>
-              <Icon icon="charts" />
-            </IconLink>
-            Charts
-          </HeaderExternalLink>
-        </span>
-        <span onClick={hanldeSidemenuOpen}>
-          <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
-            <IconLink>
-              <Icon icon="planet" />
-            </IconLink>
-            Guides
-          </HeaderExternalLink>
-        </span>
+        <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
+          <IconLink>
+            <Icon icon="earn" active={pathname == '/pools'} />
+          </IconLink>
+          {t('Pools')}
+        </StyledNavLink>
+        <HeaderExternalLink href={`https://charts.0.exchange`}>
+          <IconLink>
+            <Icon icon="charts" />
+          </IconLink>
+          Charts
+        </HeaderExternalLink>
+        <HeaderExternalLink href={`https://buy.0.exchange`}>
+          <IconLink>
+            <Icon icon="market" />
+          </IconLink>
+          Buy ZERO
+        </HeaderExternalLink>
+        <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
+          <IconLink>
+            <Icon icon="planet" />
+          </IconLink>
+          Guides
+        </HeaderExternalLink>
       </HeaderLinks>
     </SideMenuWrapper>
   )

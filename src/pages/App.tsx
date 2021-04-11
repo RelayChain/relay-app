@@ -1,6 +1,6 @@
 import './snow.css'
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectPathToHomeOnly, RedirectToSwap } from './Swap/redirects'
+import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToHomeOnly, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import React, { Suspense, useState } from 'react'
 import {
   RedirectDuplicateTokenIds,
@@ -14,33 +14,33 @@ import AddLiquidity from './AddLiquidity'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import Earn from './Earn'
 import Guides from './Guides'
-import SideMenu from '../components/SideMenu'
-import MenuBurger from '../components/MenuBurger'
 import Header from '../components/Header'
-import Manage from './Earn/Manage'
+import Home from './Home'
+import Logo from './../assets/svg/logo.svg'
+import LogoDark from './../assets/images/0-icon.png'
+import Manage from './Pools/Manage'
+import MenuBurger from '../components/MenuBurger'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import Mountains from '../components/Mountains'
 import Polling from '../components/Header/Polling'
 // import Pool from './Pool'
 import PoolFinder from './PoolFinder'
+import Pools from './Pools'
 import Popups from '../components/Popups'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
+import SideMenu from '../components/SideMenu'
 import Swap from './Swap'
-import Bridge from './Bridge'
-import Home from './Home'
+import Transfer from './Transfer'
 import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
 import { useDarkModeManager } from '../state/user/hooks'
-import LogoDark from './../assets/images/0-icon.png'
-import Logo from './../assets/svg/logo.svg'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   z-index: 10;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 16px;
     padding-top: 2rem;
   `};
@@ -81,15 +81,15 @@ const Marginer = styled.div`
 
 const Title = styled.a`
   position: fixed;
-  top: 54px;
-  left: 54px;
-  width: 76px;
-  height: 76px;
+  top: 34px;
+  left: 90px;
+  width: 66px;
+  height: 66px;
   z-index: 1000;
   :hover {
     cursor: pointer;
   }
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 46px;
   height: 46px;
   top: 34px;
@@ -110,7 +110,7 @@ export default function App() {
   return (
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />
-      <Title href=".">
+      <Title href="/">
         <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
       </Title>
       <MenuBurger open={open} setOpen={() => setOpen(!open)} />
@@ -135,7 +135,7 @@ export default function App() {
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
               {/*<Route exact strict path="/pool" component={Pool} />*/}
-              <Route exact strict path="/earn" component={Earn} />
+              <Route exact strict path="/pools" component={Pools} />
               <Route exact strict path="/guides" component={Guides} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
@@ -152,7 +152,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route exact strict path="/bridge" component={Bridge}/>
+              <Route exact strict path="/transfer" component={Transfer}/>
               <Route component={RedirectPathToHomeOnly} />
             </Switch>
           </Web3ReactManager>

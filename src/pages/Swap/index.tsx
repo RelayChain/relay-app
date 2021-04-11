@@ -8,11 +8,11 @@ import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
+  setCrosschainLastTimeSwitched,
   setCrosschainTransferStatus,
   setCurrentToken,
   setTargetChain,
-  setTransferAmount,
-  setCrosschainLastTimeSwitched
+  setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
@@ -41,7 +41,7 @@ import BlockchainSelector from '../../components/BlockchainSelector'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
-import { ClickableText } from '../Pool/styleds'
+import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
@@ -501,9 +501,9 @@ export default function Swap() {
     <SwapWrap>
         <AppBody>
           <SwapPoolTabs active={'swap'} />
-         
+
           <Wrapper id="swap-page">
-        
+
             <CrossChainModal
               isOpen={crossChainModalOpen}
               onDismiss={hideCrossChainModal}
@@ -556,7 +556,6 @@ export default function Swap() {
               }}
             >
               <BlockchainSelector
-                onSetTransferTo={setTransferTo}
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
                 blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
@@ -776,10 +775,10 @@ export default function Swap() {
               </BottomGrouping>
             </div>
           </Wrapper>
-         
-        
+
+
         </AppBody>
-   
+
         </SwapWrap>
       {(chainId === undefined || account === undefined) && (
         <CustomLightSpinner
