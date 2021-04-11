@@ -18,11 +18,13 @@ const SideMenuWrapper = styled.div<{ open?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(0,0,0, .2);
+  background: rgba(0,0,0, .4);
+  border-right: 1px solid rgba(103, 82, 247, .25);
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 100%;
   z-index: 100;
-  background-color: rgba(0,0,0, .8);
+  background: rgba(0,0,0, .8);
+  border-right: 0;
   align-items: center;
 `};
 `
