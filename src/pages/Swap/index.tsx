@@ -8,11 +8,11 @@ import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
+  setCrosschainLastTimeSwitched,
   setCrosschainTransferStatus,
   setCurrentToken,
   setTargetChain,
-  setTransferAmount,
-  setCrosschainLastTimeSwitched
+  setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
@@ -170,7 +170,6 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
