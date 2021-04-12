@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const StyledBurger = styled.button<{ open?: boolean }>`
   display: none;
-  position: fixed;
+  position: absolute;
   top: 5rem;
   right: 2rem;
   flex-direction: column;
