@@ -152,20 +152,16 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.SMART_CHAIN]: [
     {
       tokens: [bscZERO, bscBUSD],
-      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e'
+      stakingRewardAddress: '0xf95F7c701db4866d6C672527db65730E26AA820d'
     },
     {
       tokens: [WBNB, bscZERO],
-      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
+      stakingRewardAddress: '0xE3200B7905559D173eed3E8EBFAd05Ac3E0c438E'
     },
     {
       tokens: [bscZERO, bscETH],
       stakingRewardAddress: '0x28EE88457DcfC66B6e2A661Ed5C10866e3615BB9'
     },
-    // {
-    //   tokens: [bscZERO, bscWBNB],
-    //   stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A',
-    // },
     {
       tokens: [bscZERO, bscUSDC],
       stakingRewardAddress: '0x0Ff36b5F7B87Bb61BE8305F9b47c83910560DF95'
@@ -186,10 +182,6 @@ export const STAKING_REWARDS_INFO: {
       tokens: [bscZERO, bscSUSHI],
       stakingRewardAddress: '0x8C0e0d72b29e51518034536fd509c9c1F5306B2d'
     },
-    // {
-    //     tokens: [bscZERO, bscBUSD],
-    //     stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e',
-    // },
     {
       tokens: [bscZERO, bscDAI],
       stakingRewardAddress: '0xa8630279dBFb97a92a7C477c17FF4466b619A3d2'
