@@ -152,6 +152,14 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.SMART_CHAIN]: [
     {
       tokens: [bscZERO, bscBUSD],
+      stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e'
+    },
+    {
+      tokens: [WBNB, bscZERO],
+      stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
+    },
+    {
+      tokens: [bscZERO, bscBUSD],
       stakingRewardAddress: '0xf95F7c701db4866d6C672527db65730E26AA820d'
     },
     {
