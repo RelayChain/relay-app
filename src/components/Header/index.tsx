@@ -78,7 +78,7 @@ const HeaderControls = styled.div`
     bottom: 0px;
     left: 0px;
     border-radius: 0;
-    min-width: ;
+    min-width: 0;
   `};
 `
 
