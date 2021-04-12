@@ -9,29 +9,23 @@ import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
-  height: 100%;
-  width: 260px;
-  z-index: 10;
-  position: fixed;
-  left: 0;
-  top: 0;
   display: flex;
   flex-direction: column;
+  width: 260px;
   justify-content: center;
-  background-color: rgba(0,0,0, .2);
+  background-color: rgba(0, 0, 0, 0.2);
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  width: 100%;
-  z-index: 100;
   background-color: rgba(0,0,0, .8);
   align-items: center;
 `};
 `
 const HeaderLinks = styled.div`
   display: flex;
+  height: 100%;
+  flex-grow: 1;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   padding-left: 45px;
-  margin-bottom: 10px;
   font-weight: 600;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   padding-left: 0px;

@@ -1,6 +1,11 @@
 import './snow.css'
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToHomeOnly, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import {
+  OpenClaimAddressModalAndRedirectToSwap,
+  RedirectPathToHomeOnly,
+  RedirectPathToSwapOnly,
+  RedirectToSwap
+} from './Swap/redirects'
 import React, { Suspense, useState } from 'react'
 import {
   RedirectDuplicateTokenIds,
@@ -44,22 +49,22 @@ import { useDarkModeManager } from '../state/user/hooks'
 
 const AppWrapper = styled.div`
   display: flex;
-  flex-flow: column;
-  align-items: flex-start;
+  height: 100%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
 `
 
 const HeaderWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
   width: 100%;
-  justify-content: space-between;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100vh;
   padding-top: 2rem;
   align-items: center;
   flex: 1;
@@ -113,16 +118,18 @@ export default function App() {
       <Title href="/">
         <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
       </Title>
-      <MenuBurger open={open} setOpen={() => setOpen(!open)} />
-      <SideMenu open={open} setOpen={() => setOpen(!open)} />
       <AppWrapper>
         <div className="snow-bg"></div>
         <div className="bg-darken"></div>
         <URLWarning />
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
+
+        <MenuBurger open={open} setOpen={() => setOpen(!open)} />
+        <SideMenu open={open} setOpen={() => setOpen(!open)} />
+
         <BodyWrapper>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
           <Popups />
           <Polling />
           <TopLevelModals />
@@ -152,7 +159,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route exact strict path="/transfer" component={Transfer}/>
+              <Route exact strict path="/transfer" component={Transfer} />
               <Route component={RedirectPathToHomeOnly} />
             </Switch>
           </Web3ReactManager>

@@ -7,7 +7,7 @@ import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import Logo from '../../assets/svg/logo.svg'
+import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import Modal from 'components/Modal'
@@ -16,7 +16,7 @@ import Settings from '../Settings'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-import { crosschainConfig } from '../../constants/CrosschainConfig';
+import { crosschainConfig } from '../../constants/CrosschainConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
@@ -27,13 +27,11 @@ import CrossChainModal from 'components/CrossChainModal'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
 
-
-
 // import { darken } from 'polished'
-
 
 const HeaderFrame = styled.div`
   display: grid;
+  padding: 0px 64px;
   grid-template-columns: 1fr 120px;
   align-items: center;
   justify-content: space-between;
@@ -43,20 +41,19 @@ const HeaderFrame = styled.div`
   top: 0;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     padding: 0 1rem;
     width: calc(100%);
     position: relative;
+    padding: 0.5rem 1rem;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
-
+const LogoContainer = styled.div`
+  display: flex;
+  flex-grow: 1;
+`
 const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
@@ -107,7 +104,7 @@ const HeaderExternalLink = styled(ExternalLink)`
   margin: 0 16px;
   font-size: 1rem;
   color: #c3c5cb;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 0 6px;
     font-size: .85rem;
@@ -150,11 +147,15 @@ const HideSmall = styled.span`
     display: none;
   `};
 `
-
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -199,10 +200,7 @@ const NETWORK_SYMBOLS: any = {
 
 function NetworkSwitcher() {
   const { chainId } = useActiveWeb3React()
-  const {
-    availableChains: allChains,
-    lastTimeSwitched
-  } = useCrosschainState()
+  const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
   }, [allChains])
@@ -213,7 +211,7 @@ function NetworkSwitcher() {
   }
   const showCrossChainModal = () => {
     const currentTime = ~~(Date.now() / 1000)
-    if(lastTimeSwitched < currentTime) {
+    if (lastTimeSwitched < currentTime) {
       setShowCrossChainModal(true)
     }
   }
@@ -231,7 +229,7 @@ function NetworkSwitcher() {
           isTransfer={false}
           onDismiss={hideCrossChainModal}
           supportedChains={availableChains}
-          selectTransferChain={() => { }}
+          selectTransferChain={() => {}}
           activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
         />
       </div>
@@ -256,6 +254,12 @@ export default function Header() {
   return (
     <HeaderFrame>
       <ClaimModal />
+      <HideMedium>
+      <LogoContainer>
+        <img src={ZeroLogo} />
+      </LogoContainer>
+      </HideMedium>
+
       <HeaderControls>
         <HeaderElement>
           <NetworkSwitcher />
