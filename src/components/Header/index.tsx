@@ -33,7 +33,7 @@ import BlockchainLogo from '../BlockchainLogo'
 
 const HeaderFrame = styled.div`
   display: grid;
-  grid-template-columns: 1fr 90px;
+  grid-template-columns: 1fr 0px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
