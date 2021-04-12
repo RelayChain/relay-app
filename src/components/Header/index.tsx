@@ -17,6 +17,7 @@ import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import { crosschainConfig } from '../../constants/CrosschainConfig'
+import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
@@ -24,6 +25,7 @@ import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
 import CrossChainModal from 'components/CrossChainModal'
+import BlockchainLogo from '../BlockchainLogo'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
 
@@ -32,13 +34,13 @@ import CrossChainModal from 'components/CrossChainModal'
 const HeaderFrame = styled.div`
   display: grid;
   padding: 0px 64px;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: 1fr 0px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
   width: 100%;
-  top: 0;
+  top: 25px;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   z-index: 2;
@@ -55,26 +57,28 @@ const LogoContainer = styled.div`
   flex-grow: 1;
 `
 const HeaderControls = styled.div`
+  padding: 22px 19px;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-self: flex-end;
+  justify-content: space-between;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
+  height: 76px;
+  min-width: 525px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
-    padding: 1rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
-    width: 100%;
-    z-index: 99;
-    height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    border-radius: 0;
+    min-width: 0;
   `};
 `
 
@@ -128,11 +132,6 @@ const HeaderLinks = styled(Row)`
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
   white-space: nowrap;
   width: 100%;
   cursor: pointer;
@@ -153,9 +152,28 @@ const HideMedium = styled.span`
   `};
 `
 const NetworkCard = styled(YellowCard)`
-  border-radius: 12px;
-  padding: 8px 12px;
+  position: relative;
+  padding-top: 10px;
+  padding-left: 50px;
+  width: 243px;
+  height: 40px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  background: rgba(225, 248, 250, 0.12);
+  border-radius: 54px;
   transition: all 0.2s ease-in-out;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  margin-right: 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  `};
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -171,9 +189,29 @@ const NetworkCard = styled(YellowCard)`
 `
 
 const BalanceText = styled(Text)`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 80%;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-bottom: 5px !important;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
+`
+
+const BlockchainLogoWrap = styled.span`
+  position: absolute;
+  left: 5px;
+  top: 5px;
+`
+
+const ArrowDropWrap = styled.span`
+  position: absolute;
+  right: 5px;
+  top: 5px;
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -221,7 +259,15 @@ function NetworkSwitcher() {
       <div onClick={showCrossChainModal}>
         <HideSmall>
           {chainId && NETWORK_LABELS[chainId] && (
-            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+            <NetworkCard title={NETWORK_LABELS[chainId]}>
+              <BlockchainLogoWrap>
+                <BlockchainLogo size="28px" blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'} />
+              </BlockchainLogoWrap>
+              <span>{NETWORK_LABELS[chainId]}</span>
+              <ArrowDropWrap>
+                <img src={ArrowDropdown} alt="ArrowDropdown" />
+              </ArrowDropWrap>
+            </NetworkCard>
           )}
         </HideSmall>
         <CrossChainModal
@@ -255,9 +301,9 @@ export default function Header() {
     <HeaderFrame>
       <ClaimModal />
       <HideMedium>
-      <LogoContainer>
-        <img src={ZeroLogo} />
-      </LogoContainer>
+        <LogoContainer>
+          <img src={ZeroLogo} />
+        </LogoContainer>
       </HideMedium>
 
       <HeaderControls>
@@ -265,7 +311,7 @@ export default function Header() {
           <NetworkSwitcher />
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <BalanceText>
                 {userEthBalance?.toSignificant(4)} {symbol}
               </BalanceText>
             ) : null}
@@ -274,7 +320,7 @@ export default function Header() {
         </HeaderElement>
         <HeaderElementWrap>
           <Settings />
-          <Menu />
+          {/* <Menu /> */}
         </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>

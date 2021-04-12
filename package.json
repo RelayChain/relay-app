@@ -134,9 +134,12 @@
   "prepare": "npm run build",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@apollo/client": "^3.3.14",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/yup": "^0.29.11",
     "@zeroexchange/sdk": "^3.2.3",
+    "highcharts": "^9.0.1",
+    "highcharts-react-official": "^3.0.0",
     "node-sass": "4.14.1",
     "react-copy-to-clipboard": "^5.0.3",
     "react-virtualized": "^9.22.3",
