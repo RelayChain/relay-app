@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const StyledBurger = styled.button<{ open?: boolean }>`
   display: none;
-  position: fixed;
+  position: absolute;
   top: 5rem;
   right: 2rem;
   flex-direction: column;
@@ -18,11 +18,8 @@ const StyledBurger = styled.button<{ open?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   display: flex;
   overflow: hidden
-`};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-top: 42px;
-right: 22px;
+  top: 42px;
+  right: 22px;
 `};
 
   &:focus {

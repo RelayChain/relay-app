@@ -15,6 +15,7 @@ import {
 import { Route, Switch } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
+import GraphQLProvider from './../graphql'
 import AddLiquidity from './AddLiquidity'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import { ApplicationModal } from '../state/application/actions'
@@ -49,22 +50,22 @@ import { useDarkModeManager } from '../state/user/hooks'
 
 const AppWrapper = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
 `
 
 const HeaderWrapper = styled.div`
-  display: flex;
+  ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
+  justify-content: space-between;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
   padding-top: 2rem;
   align-items: center;
   flex: 1;
@@ -85,7 +86,7 @@ const Marginer = styled.div`
 `
 
 const Title = styled.a`
-  position: fixed;
+  position: absolute;
   top: 34px;
   left: 90px;
   width: 66px;
@@ -97,7 +98,6 @@ const Title = styled.a`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 46px;
   height: 46px;
-  top: 34px;
   left: 22px;
   `};
 `
@@ -118,18 +118,17 @@ export default function App() {
       <Title href="/">
         <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
       </Title>
+
       <AppWrapper>
+      <MenuBurger open={open} setOpen={() => setOpen(!open)} />
+      <SideMenu open={open} setOpen={() => setOpen(!open)} />
         <div className="snow-bg"></div>
         <div className="bg-darken"></div>
         <URLWarning />
-
-        <MenuBurger open={open} setOpen={() => setOpen(!open)} />
-        <SideMenu open={open} setOpen={() => setOpen(!open)} />
-
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
         <BodyWrapper>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
           <Popups />
           <Polling />
           <TopLevelModals />
