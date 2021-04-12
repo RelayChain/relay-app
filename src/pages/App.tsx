@@ -1,6 +1,11 @@
 import './snow.css'
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToHomeOnly, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import {
+  OpenClaimAddressModalAndRedirectToSwap,
+  RedirectPathToHomeOnly,
+  RedirectPathToSwapOnly,
+  RedirectToSwap
+} from './Swap/redirects'
 import React, { Suspense, useState } from 'react'
 import {
   RedirectDuplicateTokenIds,
@@ -10,6 +15,7 @@ import {
 import { Route, Switch } from 'react-router-dom'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
+import GraphQLProvider from './../graphql'
 import AddLiquidity from './AddLiquidity'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import { ApplicationModal } from '../state/application/actions'
@@ -108,57 +114,61 @@ export default function App() {
   const [open, setOpen] = useState<boolean>(false)
   const [isDark] = useDarkModeManager()
   return (
+  
     <Suspense fallback={null}>
-      <Route component={DarkModeQueryParamReader} />
-      <Title href="/">
-        <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
-      </Title>
-      <MenuBurger open={open} setOpen={() => setOpen(!open)} />
-      <SideMenu open={open} setOpen={() => setOpen(!open)} />
-      <AppWrapper>
-        <div className="snow-bg"></div>
-        <div className="bg-darken"></div>
-        <URLWarning />
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Popups />
-          <Polling />
-          <TopLevelModals />
-          <Web3ReactManager>
-            <Switch>
-              <Route exact strict path="/home" component={Home} />
-              <Route exact strict path="/swap" component={Swap} />
-              <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-              <Route exact strict path="/find" component={PoolFinder} />
-              {/*<Route exact strict path="/pool" component={Pool} />*/}
-              <Route exact strict path="/pools" component={Pools} />
-              <Route exact strict path="/guides" component={Guides} />
-              <Route exact strict path="/vote" component={Vote} />
-              <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-              <Route exact path="/add" component={AddLiquidity} />
-              <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/create" component={AddLiquidity} />
-              <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
-              <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-              <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/migrate/v1" component={MigrateV1} />
-              <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-              <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
-              <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route exact strict path="/transfer" component={Transfer}/>
-              <Route component={RedirectPathToHomeOnly} />
-            </Switch>
-          </Web3ReactManager>
-          <Marginer />
-        </BodyWrapper>
-      </AppWrapper>
+   
+        <Route component={DarkModeQueryParamReader} />
+        <Title href="/">
+          <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
+        </Title>
+        <MenuBurger open={open} setOpen={() => setOpen(!open)} />
+        <SideMenu open={open} setOpen={() => setOpen(!open)} />
+        <AppWrapper>
+          <div className="snow-bg"></div>
+          <div className="bg-darken"></div>
+          <URLWarning />
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Popups />
+            <Polling />
+            <TopLevelModals />
+            <Web3ReactManager>
+              <Switch>
+                <Route exact strict path="/home" component={Home} />
+                <Route exact strict path="/swap" component={Swap} />
+                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
+                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+                <Route exact strict path="/find" component={PoolFinder} />
+                {/*<Route exact strict path="/pool" component={Pool} />*/}
+                <Route exact strict path="/pools" component={Pools} />
+                <Route exact strict path="/guides" component={Guides} />
+                <Route exact strict path="/vote" component={Vote} />
+                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+                <Route exact path="/add" component={AddLiquidity} />
+                <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                <Route exact path="/create" component={AddLiquidity} />
+                <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
+                <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+                <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                <Route exact strict path="/migrate/v1" component={MigrateV1} />
+                <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
+                <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
+                <Route exact strict path="/vote/:id" component={VotePage} />
+                <Route exact strict path="/transfer" component={Transfer} />
+                <Route component={RedirectPathToHomeOnly} />
+              </Switch>
+            </Web3ReactManager>
+            <Marginer />
+          </BodyWrapper>
+        </AppWrapper>
+     
     </Suspense>
+  
   )
 }
