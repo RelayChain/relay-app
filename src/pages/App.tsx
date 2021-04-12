@@ -66,7 +66,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 2rem;
+  padding-top: 0px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -120,15 +120,16 @@ export default function App() {
       </Title>
 
       <AppWrapper>
-      <MenuBurger open={open} setOpen={() => setOpen(!open)} />
-      <SideMenu open={open} setOpen={() => setOpen(!open)} />
+        <MenuBurger open={open} setOpen={() => setOpen(!open)} />
+        <SideMenu open={open} setOpen={() => setOpen(!open)} />
         <div className="snow-bg"></div>
         <div className="bg-darken"></div>
         <URLWarning />
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
+
         <BodyWrapper>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
           <Popups />
           <Polling />
           <TopLevelModals />
