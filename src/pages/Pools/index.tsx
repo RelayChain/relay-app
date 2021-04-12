@@ -1,4 +1,4 @@
-import { CardSection, DataCard } from '../../components/earn/styled'
+import { DataCard } from '../../components/earn/styled'
 import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
@@ -9,21 +9,32 @@ import { Countdown } from './Countdown'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
+import PoolRow from '../../components/earn/PoolRow'
 import PoolCard from '../../components/earn/PoolCard'
+
 import React from 'react'
 import { RowBetween } from '../../components/Row'
 import { Zap } from 'react-feather'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
-const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+const PageWrapper = styled.div`
+  padding: 0px 64px;
   width: 100%;
-  margin-left: 300px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-left: 0;
-  margin-top: 110px
-`};
+`
+const Title = styled.h1`
+  margin-bottom: 70px;
+`
+const Wrapper = styled.div`
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
+  margin-bottom: 1rem;
+  padding: 30px 45px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 `
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
@@ -55,66 +66,6 @@ export default function Pools() {
   // get chainId
   const { chainId } = useActiveWeb3React()
 
-  const pools = {
-    [ChainId.MAINNET]: [
-      {
-        baseSymbol: 'ETH',
-        baseAddress: 'ETH',
-        otherSymbol: 'ZERO',
-        otherAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574'
-      }
-    ],
-    [ChainId.AVALANCHE]: [
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-        otherSymbol: 'zETH',
-        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
-      },
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-        otherSymbol: 'USDC',
-        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
-      },
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-        otherSymbol: 'AVAX',
-        otherAddress: 'AVAX'
-      },
-      {
-        baseSymbol: 'AVAX',
-        baseAddress: 'AVAX',
-        otherSymbol: 'USDC',
-        otherAddress: '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb'
-      },
-      {
-        baseSymbol: 'AVAX',
-        baseAddress: 'AVAX',
-        otherSymbol: 'zETH',
-        otherAddress: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183'
-      }
-    ],
-    [ChainId.SMART_CHAIN]: [
-      // https://bscscan.com/tx/0x11e8e1766788581dd7597c5eae53a4ebb0709f45b22850822f54c553e9eaca8c
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
-        otherSymbol: 'BNB',
-        otherAddress: 'BNB'
-      },
-
-      // https://bscscan.com/tx/0x6381904de3ac1427174a93df631423632b8e70c45ce3aeb6ecf67c77de7a2d8b
-      {
-        baseSymbol: 'ZERO',
-        baseAddress: '0x1f534d2b1ee2933f1fdf8e4b63a44b2249d77eaf',
-        otherSymbol: 'BUSD',
-        otherAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56'
-      }
-    ]
-  }
-
   // staking info for connected account
   const stakingInfos = useStakingInfo()
   /**
@@ -135,138 +86,75 @@ export default function Pools() {
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <VoteCard>
-        <CardSection>
-          <AutoColumn gap="md">
-            <RowBetween>
-              <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
-            </RowBetween>
-            <RowBetween>
-              <TYPE.white fontSize={14}>
-                {`Liquidity providers earn a rewards proportional to their share of the pool. Fees can be added in the future by governance token holders, and would accrue based on your LP token percentage.`}
-              </TYPE.white>
-            </RowBetween>
-            {/*
-              <div style={{ display: 'block', width: '100%' }}>
-                <h3 style={{ marginBottom: '.5rem' }}>Add Liquidity:</h3>
-                {chainId &&
-                  pools[chainId] &&
-                  pools[chainId].map((pool: any, index: number) => (
-                    <>
-                      <ButtonUNIGradient
-                        key={index}
-                        id={`join-pool-button-${pool.baseSymbol}${pool.otherSymbol}`}
-                        as={Link}
-                        to={`/add/${pool.baseAddress}/${pool.otherAddress}`}
-                        style={{
-                          margin: '1rem .5rem',
-                          display: 'inline-flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Text fontWeight={500} fontSize={14}>
-                          {`${pool.baseSymbol}/${pool.otherSymbol}`}
-                        </Text>
-                      </ButtonUNIGradient>
-                    </>
-                  ))}
-              </div>
-            */}
-          </AutoColumn>
-        </CardSection>
-      </VoteCard>
-
-      <RowBetween /**style={{ opacity: '.5', pointerEvents: 'none'}}*/>
-        <ExternalLink
-          href="https://0.exchange/partners"
-          target="_blank"
-          style={{
-            width: '100%',
-            textDecoration: 'none',
-            color: '#C571F4',
-            paddingRight: '1rem',
-            position: 'relative'
-          }}
-        >
-          Launch your token on ZERO
-          <Zap style={{ position: 'absolute' }} size={'20'} />
-        </ExternalLink>
-        <ResponsiveButtonSecondary
-          as={Link}
-          padding="6px 8px"
-          to={`create/${
-            chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-              ? 'ETH'
-              : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
-              ? 'BNB'
-              : 'AVAX'
-          }`}
-          style={{ margin: '5px 5px 5px auto', minWidth: '186px' }}
-        >
-          Create New Pool Pair
-        </ResponsiveButtonSecondary>
-      </RowBetween>
-
-      {/*<TopSection gap="md">
-        <DataCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Zero liquidity mining</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive ZERO, the Zero.Exchange protocol governance token.
-                </TYPE.white>
-              </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://0.exchange/learn-more"
-                target="_blank"
-              >
-                <TYPE.white fontSize={14}>Learn more about ZERO</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </DataCard>
-      </TopSection>*/}
-
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={timeToStakingFinish} />
-        </DataRow>
-        <PoolSection>
+    <>
+      <PageWrapper>
+      <Title>POOL</Title>
+        <Wrapper>
+          <table style={{ width: '100%' }}>
+            <thead>
+              <tr>
+                <th>
+                  <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left' }}>
+                    Type
+                  </TYPE.main>
+                </th>
+                <th>
+                  <TYPE.main fontWeight={600} fontSize={12}>
+                    Earned
+                  </TYPE.main>
+                </th>
+                <th>
+                  <TYPE.main fontWeight={600} fontSize={12}>
+                    APR
+                  </TYPE.main>
+                </th>
+                <th>
+                  <TYPE.main fontWeight={600} fontSize={12}>
+                    Liquidity
+                  </TYPE.main>
+                </th>
+                <th>
+                  <TYPE.main fontWeight={600} fontSize={12}>
+                    Multiplier
+                  </TYPE.main>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {stakingInfosWithBalance?.map(stakingInfo => {
+                // need to sort by added liquidity here
+                return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+              })}
+            </tbody>
+          </table>
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : !stakingRewardsExist ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
-          ) : (
-            stakingInfosWithBalance?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-            })
-          )}
-        </PoolSection>
+          ) : null}
+        </Wrapper>
 
-        {finishedPools?.length > 0 && (
+        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
+            <Countdown exactEnd={timeToStakingFinish} />
           </DataRow>
-        )}
-        {finishedPools?.length > 0 &&
-          finishedPools.map(stakingInfo => {
-            return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-          })}
-      </AutoColumn>
-    </PageWrapper>
+          <PoolSection></PoolSection>
+
+          {finishedPools?.length > 0 && (
+            <DataRow style={{ alignItems: 'baseline' }}>
+              <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Closed pools:</TYPE.mediumHeader>
+            </DataRow>
+          )}
+          {finishedPools?.length > 0 &&
+            finishedPools.map(stakingInfo => {
+              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+            })}
+        </AutoColumn>
+      </PageWrapper>
+    </>
   )
 }

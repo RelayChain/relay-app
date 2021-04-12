@@ -7,7 +7,7 @@ import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import Logo from '../../assets/svg/logo.svg'
+import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import Modal from 'components/Modal'
@@ -33,6 +33,7 @@ import BlockchainLogo from '../BlockchainLogo'
 
 const HeaderFrame = styled.div`
   display: grid;
+  padding: 0px 64px;
   grid-template-columns: 1fr 0px;
   align-items: center;
   justify-content: space-between;
@@ -42,20 +43,19 @@ const HeaderFrame = styled.div`
   top: 25px;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     padding: 0 1rem;
     width: calc(100%);
     position: relative;
+    padding: 0.5rem 1rem;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
-
+const LogoContainer = styled.div`
+  display: flex;
+  flex-grow: 1;
+`
 const HeaderControls = styled.div`
   padding: 22px 19px;
   display: flex;
@@ -146,7 +146,11 @@ const HideSmall = styled.span`
     display: none;
   `};
 `
-
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
 const NetworkCard = styled(YellowCard)`
   position: relative;
   padding-top: 10px;
@@ -296,6 +300,12 @@ export default function Header() {
   return (
     <HeaderFrame>
       <ClaimModal />
+      <HideMedium>
+        <LogoContainer>
+          <img src={ZeroLogo} />
+        </LogoContainer>
+      </HideMedium>
+
       <HeaderControls>
         <HeaderElement>
           <NetworkSwitcher />
