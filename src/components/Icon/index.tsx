@@ -9,14 +9,15 @@ const StyledSpan = styled.span`
 export interface IconProps {
   icon: string
   active?: boolean
+  color?: string
 }
 
-const Icon = ({ icon, active = false  }: IconProps) => {
+const Icon = ({ icon, active = false, color  }: IconProps) => {
   const IconPath = Icons[icon]
   return (
     <StyledSpan>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <IconPath color={active ? 'white' : '#A7B1F4'} />
+        <IconPath color={color ? color : active ? 'white' : '#A7B1F4'} />
       </svg>
     </StyledSpan>
   )
