@@ -213,6 +213,13 @@ html {
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
 
 }
+h1,h2,h3,h4,h5{
+  margin: 0px;
+}
+h1{
+  font-weight: 900;
+  font-size: 80px;
+}
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`
