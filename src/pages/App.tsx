@@ -1,6 +1,11 @@
 import './snow.css'
 
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToHomeOnly, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import {
+  OpenClaimAddressModalAndRedirectToSwap,
+  RedirectPathToHomeOnly,
+  RedirectPathToSwapOnly,
+  RedirectToSwap
+} from './Swap/redirects'
 import React, { Suspense, useState } from 'react'
 import {
   RedirectDuplicateTokenIds,
@@ -80,7 +85,7 @@ const Marginer = styled.div`
 `
 
 const Title = styled.a`
-  position: fixed;
+  position: absolute;
   top: 34px;
   left: 90px;
   width: 66px;
@@ -92,7 +97,6 @@ const Title = styled.a`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 46px;
   height: 46px;
-  top: 34px;
   left: 22px;
   `};
 `
@@ -152,7 +156,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route exact strict path="/transfer" component={Transfer}/>
+              <Route exact strict path="/transfer" component={Transfer} />
               <Route component={RedirectPathToHomeOnly} />
             </Switch>
           </Web3ReactManager>

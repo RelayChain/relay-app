@@ -84,19 +84,23 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+const Web3StatusConnected = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 19px;
+  letter-spacing: 0.05em;
+  color: #a7b1f4;
+  opacity: 0.56;
   font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg2))};
+`
 
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg3))};
-    }
-  }
+const StatusIconWrap = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 60px;
 `
 
 const Text = styled.p`
@@ -104,7 +108,7 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
+  margin: 0;
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
@@ -180,18 +184,22 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
         {hasPendingTransactions ? (
-          <RowBetween>
+          <>
             <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
-          </RowBetween>
+          </>
         ) : (
           <>
             {hasSocks ? SOCK : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-        {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
+        {!hasPendingTransactions && connector && (
+          <StatusIconWrap>
+            <StatusIcon connector={connector} />
+          </StatusIconWrap>
+        )}
       </Web3StatusConnected>
     )
   } else if (error) {
