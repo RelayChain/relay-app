@@ -86,7 +86,7 @@ const Marginer = styled.div`
 `
 
 const Title = styled.a`
-  position: fixed;
+  position: absolute;
   top: 34px;
   left: 90px;
   width: 66px;
@@ -98,7 +98,6 @@ const Title = styled.a`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 46px;
   height: 46px;
-  top: 34px;
   left: 22px;
   `};
 `
@@ -116,7 +115,6 @@ export default function App() {
   return (
   
     <Suspense fallback={null}>
-   
         <Route component={DarkModeQueryParamReader} />
         <Title href="/">
           <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
@@ -167,8 +165,6 @@ export default function App() {
             <Marginer />
           </BodyWrapper>
         </AppWrapper>
-     
-    </Suspense>
-  
+    </Suspense>  
   )
 }
