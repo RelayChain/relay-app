@@ -12,7 +12,6 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
   width: 260px;
-  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,6 +80,11 @@ const IconLink = styled.span`
   display: inline-block;
   margin-right: 20px;
 `
+const MoreLink = styled.span`
+display: inline-block;
+cursor: pointer;
+color: ${({ theme }) => theme.text2};
+`
 export interface SideMenuProps {
   open: boolean
   setOpen: () => void
@@ -135,12 +139,12 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
             </IconLink>
             Charts
           </HeaderExternalLink>
-          <StyledNavLink to={'/more'} onClick={() => setIsOpenModal(true)}>
+          <MoreLink  onClick={() => setIsOpenModal(true)}>
             <IconLink>
               <Icon icon="planet" />
             </IconLink>
             {t('More')}
-          </StyledNavLink>
+          </MoreLink>
         </HeaderLinks>
       </SideMenuWrapper>
     </>

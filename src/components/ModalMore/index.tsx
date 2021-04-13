@@ -14,7 +14,8 @@ const ModalContainer = styled.div`
   position: relative;
   padding: 2.5rem;
   width: 100%;
-  background-color: #111;
+  z-index: 10;
+  border-radius: 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,7 +43,7 @@ const MenuItem = styled(ExternalLink)`
     content: '';
     position: absolute;
     height: 1px;
-    background-color: #a7b1f4;
+    background-color: rgba(255, 255, 255, 0.25);
     width: 100%;
     top: 35px;
     left: 0;
@@ -58,21 +59,22 @@ const IconLink = styled.span`
 `
 const Cross = styled.div`
   position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 24px;
-  height: 24px;
+  right: 35px;
+  top: 25px;
+  width: 14px;
+  height: 14px;
   opacity: 0.8;
   cursor: pointer;
   :hover {
     opacity: 1;
   }
-  ::before,::after {
+  ::before,
+  ::after {
     position: absolute;
     left: 15px;
     content: ' ';
-    height: 33px;
-    width: 2px;
+    height: 25px;
+    width: 1px;
     background-color: #a7b1f4;
   }
   ::before {
@@ -86,7 +88,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
-        <Cross onClick={onDismiss}/>
+        <Cross onClick={onDismiss} />
         <MenuItem href={`https://buy.0.exchange`}>
           <IconLink>
             <DollarSign size={20} />
