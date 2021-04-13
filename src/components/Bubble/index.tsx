@@ -15,7 +15,6 @@ const BubbleWrap = styled.div`
 `
 const BubbleInnerWrap = styled.div`
   position: relative;
-  z-index: 2;
   padding: 40px;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   padding: 12px 20px;

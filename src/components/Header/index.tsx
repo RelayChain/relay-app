@@ -320,7 +320,6 @@ export default function Header() {
         </HeaderElement>
         <HeaderElementWrap>
           <Settings />
-          {/* <Menu /> */}
         </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>
