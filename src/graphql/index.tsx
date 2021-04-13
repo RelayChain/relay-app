@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
-import { FC } from 'react'
+import React, { FC } from 'react'
 
 const client = new ApolloClient({
   uri: 'https://zero-graph.0.exchange/subgraphs/name/zeroexchange/zerograph',
