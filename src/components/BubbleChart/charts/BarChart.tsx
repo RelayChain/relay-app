@@ -47,7 +47,7 @@ const BarChart = ({ data, onSelectedValue }: BarChartProps) => {
         showInLegend: false
       },
       column: {
-        color: 'purple',
+        color: '#7244D3',
         borderWidth: 0
       }
     },
@@ -68,10 +68,11 @@ const BarChart = ({ data, onSelectedValue }: BarChartProps) => {
       tickColor: 'transparent',
       labels: {
         style: {
-          color: 'grey',
-          fontSize: '14px',
+          color: '#A7B1F4',
+          fontSize: '12px',
+          fontWeight: '600',
           //@ts-ignore
-          fontFamily: theme.fonts.body
+          fontFamily: 'Poppins'
         }
       }
     },

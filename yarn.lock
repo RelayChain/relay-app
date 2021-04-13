@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@apollo/client@^3.3.14":
+"@apollo/client@^3.3.13":
   version "3.3.14"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.14.tgz#b077f42e17941dbf4c62c4f41bf83c0828872d09"
   integrity sha512-z7YwMvF9grmpWUG+26e3gPcBAOA/r/Ci5gwK7JVm3bGYG9kKqG8MF6sMXEbuwTsFseE4duSp0icJ6tdzxJhhlA==
@@ -9567,6 +9567,11 @@ graphql-tag@^2.12.0:
   integrity sha512-5wJMjSvj30yzdciEuk9dPuUBUR56AqDi3xncoYQl1i42pGdSqOJrJsdb/rz5BDoy+qoGvQwABcBeF0xXY3TrKw==
   dependencies:
     tslib "^2.1.0"
+
+graphql@^15.5.0:
+  version "15.5.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.5.0.tgz#39d19494dbe69d1ea719915b578bf920344a69d5"
+  integrity sha512-OmaM7y0kaK31NKG31q4YbD2beNYa6jBBKtMFT6gLYJljHLJr42IqJ8KX08u3Li/0ifzTU5HjmoOOrwa5BRLeDA==
 
 gridplus-sdk@latest:
   version "0.7.2"
