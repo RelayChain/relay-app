@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
+import ModalMore from './../ModalMore'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
 import { NavLink } from 'react-router-dom'
@@ -11,8 +12,6 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
   width: 260px;
-  z-index: 10;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,6 +25,7 @@ const SideMenuWrapper = styled.div<{ open?: boolean }>`
   background: #000;
   border-right: 0;
   align-items: center;
+  z-index: 2
 `};
 `
 const HeaderLinks = styled.div`
@@ -76,10 +76,14 @@ const HeaderExternalLink = styled(ExternalLink)`
     text-decoration: none;
   }
 `
-
 const IconLink = styled.span`
   display: inline-block;
   margin-right: 20px;
+`
+const MoreLink = styled.span`
+display: inline-block;
+cursor: pointer;
+color: ${({ theme }) => theme.text2};
 `
 export interface SideMenuProps {
   open: boolean
@@ -92,58 +96,57 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
   const history = useHistory()
   const location = useLocation()
   const [pathname, setPathname] = useState(location.pathname)
+  const [isOpenModal, setIsOpenModal] = useState(false)
 
   history.listen(location => setPathname(location.pathname))
+
   const hanldeSidemenuOpen = () => width < 961 && setOpen()
 
-  if (width < 961 && !open) return null
+  if (width < 961 && !open) return <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
 
   return (
-    <SideMenuWrapper>
-      <HeaderLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
-          <IconLink>
-            <Icon icon="home" active={pathname == '/home'} />
-          </IconLink>
-          {t('Home')}
-        </StyledNavLink>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
-          <IconLink>
-            <Icon icon="swap" active={pathname == '/swap'} />
-          </IconLink>
-          {t('Swap')}
-        </StyledNavLink>
-        <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
-          <IconLink>
-            <Icon icon="bridges" active={pathname == '/transfer'} />
-          </IconLink>
-          Transfer
-        </StyledNavLink>
-        <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
-          <IconLink>
-            <Icon icon="earn" active={pathname == '/pools'} />
-          </IconLink>
-          {t('Pools')}
-        </StyledNavLink>
-        <HeaderExternalLink href={`https://charts.0.exchange`}>
-          <IconLink>
-            <Icon icon="charts" />
-          </IconLink>
-          Charts
-        </HeaderExternalLink>
-        <HeaderExternalLink href={`https://buy.0.exchange`}>
-          <IconLink>
-            <Icon icon="market" />
-          </IconLink>
-          Buy ZERO
-        </HeaderExternalLink>
-        <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
-          <IconLink>
-            <Icon icon="planet" />
-          </IconLink>
-          Guides
-        </HeaderExternalLink>
-      </HeaderLinks>
-    </SideMenuWrapper>
+    <>
+      <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
+      <SideMenuWrapper>
+        <HeaderLinks>
+          <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
+            <IconLink>
+              <Icon icon="home" active={pathname == '/home'} />
+            </IconLink>
+            {t('Home')}
+          </StyledNavLink>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
+            <IconLink>
+              <Icon icon="swap" active={pathname == '/swap'} />
+            </IconLink>
+            {t('Swap')}
+          </StyledNavLink>
+          <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
+            <IconLink>
+              <Icon icon="bridges" active={pathname == '/transfer'} />
+            </IconLink>
+            Transfer
+          </StyledNavLink>
+          <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
+            <IconLink>
+              <Icon icon="earn" active={pathname == '/pools'} />
+            </IconLink>
+            {t('Pools')}
+          </StyledNavLink>
+          <HeaderExternalLink href={`https://charts.0.exchange`}>
+            <IconLink>
+              <Icon icon="charts" />
+            </IconLink>
+            Charts
+          </HeaderExternalLink>
+          <MoreLink  onClick={() => setIsOpenModal(true)}>
+            <IconLink>
+              <Icon icon="planet" />
+            </IconLink>
+            {t('More')}
+          </MoreLink>
+        </HeaderLinks>
+      </SideMenuWrapper>
+    </>
   )
 }

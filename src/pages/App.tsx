@@ -22,6 +22,7 @@ import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Guides from './Guides'
 import Header from '../components/Header'
+import ModalMore from '../components/ModalMore'
 import Home from './Home'
 import Logo from './../assets/svg/logo.svg'
 import LogoDark from './../assets/images/0-icon.png'
@@ -91,7 +92,7 @@ const Title = styled.a`
   left: 90px;
   width: 66px;
   height: 66px;
-  z-index: 1000;
+  z-index: 2;
   :hover {
     cursor: pointer;
   }
@@ -99,6 +100,7 @@ const Title = styled.a`
   width: 46px;
   height: 46px;
   left: 22px;
+  z-index: 3;
   `};
 `
 
