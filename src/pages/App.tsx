@@ -92,7 +92,7 @@ const Title = styled.a`
   left: 90px;
   width: 66px;
   height: 66px;
-  z-index: 1000;
+  z-index: 2;
   :hover {
     cursor: pointer;
   }
@@ -100,6 +100,7 @@ const Title = styled.a`
   width: 46px;
   height: 46px;
   left: 22px;
+  z-index: 3;
   `};
 `
 
