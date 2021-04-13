@@ -50,7 +50,7 @@ const LineChart = ({ data, onSelectedValue }: LineChartProps) => {
       },
       areaspline: {
         lineWidth: 4,
-        color: 'purple',
+        color: '#7244D3',
         fillColor: {
           //@ts-ignore
           linearGradient: [0, 0, 0, 300],
@@ -82,10 +82,11 @@ const LineChart = ({ data, onSelectedValue }: LineChartProps) => {
       tickColor: 'transparent',
       labels: {
         style: {
-          color: 'grey',
-          fontSize: '14px',
+          color: '#A7B1F4',
+          fontSize: '12px',
+          fontWeight: '600',
           //@ts-ignore
-          fontFamily: theme.fonts.body,
+          fontFamily: 'Poppins'
         },
       },
     },

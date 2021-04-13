@@ -4,39 +4,26 @@ import { useQuery } from '@apollo/client'
 import { CustomLightSpinner } from '../../theme'
 import Circle from '../../assets/images/blue-loader.svg'
 import Bubble from './../../components/Bubble'
-import Logo from './../../assets/svg/logo_zero.svg'
 import BubbleChart from './../../components/BubbleChart'
 import transactions from '../../graphql/queries/transactions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const HomeWrap = styled.div`
+  padding: 0px 64px;
   width: 100%;
-  padding-left: 350px;
-  padding-right: 100px;
-  font-family: Poppins;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding-left: 0px;
-  padding-right: 0px;
-`};
 `
-const TitleWrap = styled.div`
+const Title = styled.h1`
+  margin-bottom: 70px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-top: 50px;
   text-align: center;
-`};
-`
-const Title = styled.h2`
-  margin: 0;
-  font-weight: 900;
-  font-size: 80px;
-  line-height: 80px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
   font-size: 49px;
+  margin-top: 70px;
 `};
 `
-const WalletsWrap = styled.div`
+const WalletsWrap = styled.div<{ isColumn: boolean }>`
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${({ isColumn }) => (isColumn  ? 'center' : 'flex-end')};
   margin-top: 15px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   margin-top: 45px;
@@ -50,17 +37,30 @@ const BubbleMarginWrap = styled.div`
   margin-right: 5px;
 `};
 `
-
-const Flex = styled.div`
+const Flex = styled.div<{ isColumn: boolean }>`
   margin: 60px auto 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({ isColumn }) => (isColumn  ? 'center' : 'space-between')};
+  flex-wrap: wrap;
+  gap: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+  align-items: center;
+`};
+`
+const CenterWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `
 
 export default function Home() {
   const [pagination, setPagination] = useState<number>(0)
-  // const zeroData = useQuery(zeroDayDatas)
- 
+  const zeroData = useQuery(zeroDayDatas)
+  const { width } = useWindowDimensions()
+
+  const isColumn = width < 1500;
+
   const onClickPrevPage = () => {
     setPagination(pagination - 1)
   }
@@ -70,11 +70,8 @@ export default function Home() {
   }
   return (
     <HomeWrap>
-      <TitleWrap>
-        <img src={Logo} alt="Logo" />
-        <Title>Exchange</Title>
-      </TitleWrap>
-      <WalletsWrap>
+      <Title>Exchange</Title>
+      <WalletsWrap isColumn={isColumn}>
         <BubbleMarginWrap>
           <Bubble variant="green" color="#A7B1F4" icon="wallet">
             580 725
@@ -84,16 +81,18 @@ export default function Home() {
           850.94
         </Bubble>
       </WalletsWrap>
-      {/* <Flex>
-        {zeroData.loading ? (
-          <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+      <Flex isColumn={isColumn}>
+        {true ? (
+          <CenterWrap>
+            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+          </CenterWrap>
         ) : (
           <>
             <BubbleChart type="line" data={zeroData.data} title="Liquidity" value={3156943} percentage={-34.66} />
             <BubbleChart type="bar" data={zeroData.data} title="Volume(24h)" value={4078912} percentage={3.66} />
           </>
         )}
-      </Flex> */}
+      </Flex>
     </HomeWrap>
   )
 }

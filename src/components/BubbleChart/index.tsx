@@ -28,32 +28,42 @@ const BubbleChartWrap = styled.div`
   height: 309px;
   padding-top: 46px;
   position: relative;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  max-width: 546px;
+  width: 100%
+`};
 `
 const Flex = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 `
 const FirstBox = styled.div`
   position: relative;
-  z-ndex: 1;
+  z-index: 1;
+  width: 100%;
   padding: 0 42px;
 `
 const SecondBox = styled.div`
   margin-botoom: 52px;
 `
 const FirstHeading = styled.div`
-  font-weight: bold;
-  font-size: 20px;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: #A7B1F4;
+  opacity: 0.88;
 `
 const SecondHeading = styled.div`
-  font-weight: bold;
-  font-size: 15px;
-  margin-top: 22px;
+  margin-top: 5px;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.01em;
 `
 
-const BubbleChart = ({ title, value, percentage, type, data, date, flipMonthWeek }: BubbleChartProps) => {
+const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
 

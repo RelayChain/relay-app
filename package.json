@@ -4,6 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
+    "@apollo/client": "^3.3.13",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@chainsafe/chainbridge-contracts": "^1.0.3",
@@ -99,6 +100,7 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
+    "graphql": "^15.5.0",
     "use-count-up": "^2.2.5",
     "wcag-contrast": "^3.0.0",
     "yup": "^0.29.3"
@@ -134,7 +136,6 @@
   "prepare": "npm run build",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@apollo/client": "^3.3.14",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/yup": "^0.29.11",
     "@zeroexchange/sdk": "^3.2.3",

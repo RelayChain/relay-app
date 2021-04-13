@@ -8,17 +8,14 @@ export type PercentageProps = {
 }
 
 const Text = styled.span<{ value: number }>`
-    font-size: 22px;
-    font-family: 'Poppins', sans-serif;
-    color: ${({ value }) => value < 0 ? 'red' : 'lime'};
+  margin-left: 10px;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  color: ${({ value }) => (value < 0 ? '#FF574D' : '#57DC19')};
 `
 
 const Percentage = ({ value }: PercentageProps) => {
-  return (
-    <Text value={value}>
-      {`${value > 0 ? '+' : ''}${toPercentage(value)}%`}
-    </Text>
-  )
+  return <Text value={value}>{`${value > 0 ? '+' : ''}${toPercentage(value)}%`}</Text>
 }
 
 export default Percentage
