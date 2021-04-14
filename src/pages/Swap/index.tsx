@@ -49,6 +49,8 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -182,7 +184,6 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
@@ -208,13 +209,13 @@ export default function Swap() {
 
   const parsedAmounts = showWrap
     ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
-      }
+      [Field.INPUT]: parsedAmount,
+      [Field.OUTPUT]: parsedAmount
+    }
     : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-      }
+      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+    }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -433,7 +434,14 @@ export default function Swap() {
     const currentTime = ~~(Date.now() / 1000)
     if (lastTimeSwitched < currentTime) {
       setShowCrossChainModal(true)
-      dispatch(setCrosschainLastTimeSwitched({}))
+      // dispatch(
+      //   setCrosschainLastTimeSwitched({})
+      // )
+    } else {
+      setShowPopupModal(true)
+      setTimeout(() => {
+        hidePopupModal()
+      }, 2000)
     }
   }
 
@@ -480,6 +488,16 @@ export default function Swap() {
       return CHAIN_LABELS[chainId] || ''
     }
     return ''
+  }
+  const popupContent: PopupContent = {
+    simpleAnnounce: {
+      message: 'Please wait 10 seconds to change RPCs again.'
+    }
+  }
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
+
+  const hidePopupModal = () => {
+    setShowPopupModal(false)
   }
 
   const handleChainBridgeButtonClick = () => {
@@ -800,8 +818,8 @@ export default function Swap() {
           <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
         </ChainBridgePending>
       ) : (
-        ''
-      )}
+          ''
+        )}
 
       {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
     </>

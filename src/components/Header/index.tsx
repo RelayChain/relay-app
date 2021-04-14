@@ -3,29 +3,32 @@ import { ExternalLink, TYPE } from '../../theme'
 import React, { useMemo, useState } from 'react'
 import Row, { RowFixed } from '../Row'
 
+import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
+import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
-// import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import ZeroLogo from '../../assets/images/zero-logo-text.png'
+import CrossChainModal from 'components/CrossChainModal'
 import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import Modal from 'components/Modal'
 import { NavLink } from 'react-router-dom'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
+import PopupItem from 'components/Popups/PopupItem'
 import Settings from '../Settings'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
+// import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { crosschainConfig } from '../../constants/CrosschainConfig'
-import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
-import CrossChainModal from 'components/CrossChainModal'
-import BlockchainLogo from '../BlockchainLogo'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
 
@@ -235,7 +238,11 @@ const NETWORK_SYMBOLS: any = {
   Avalanche: 'AVAX',
   SmartChain: 'BNB'
 }
-
+const popupContent: PopupContent = {
+  simpleAnnounce: {
+    message: 'please wait to change RPCs'
+  }
+}
 function NetworkSwitcher() {
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
@@ -244,19 +251,31 @@ function NetworkSwitcher() {
   }, [allChains])
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
   }
+
+  const hidePopupModal = () => {
+    setShowPopupModal(false)
+  }
+
   const showCrossChainModal = () => {
     const currentTime = ~~(Date.now() / 1000)
     if (lastTimeSwitched < currentTime) {
       setShowCrossChainModal(true)
+    } else {
+      setShowPopupModal(true)
+      setTimeout(() => {
+        hidePopupModal()
+      }, 2000)
     }
   }
 
   return (
     <>
       <div onClick={showCrossChainModal}>
+
         <HideSmall>
           {chainId && NETWORK_LABELS[chainId] && (
             <NetworkCard title={NETWORK_LABELS[chainId]}>
@@ -278,7 +297,9 @@ function NetworkSwitcher() {
           selectTransferChain={() => {}}
           activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
         />
+        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
       </div>
+
     </>
   )
 }
@@ -307,7 +328,9 @@ export default function Header() {
       </HideMedium>
 
       <HeaderControls>
+
         <HeaderElement>
+
           <NetworkSwitcher />
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
