@@ -24,6 +24,9 @@ import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
 import CrossChainModal from 'components/CrossChainModal'
+import PopupItem from 'components/Popups/PopupItem'
+import { PopupContent } from 'state/application/actions'
+import PlainPopup from 'components/Popups/PlainPopup'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
 
@@ -281,7 +284,11 @@ const NETWORK_SYMBOLS: any = {
   Avalanche: 'AVAX',
   SmartChain: 'BNB'
 }
-
+const popupContent: PopupContent = {
+  simpleAnnounce: {
+    message: 'please wait to change RPCs'
+  }
+}
 function NetworkSwitcher() {
   const { chainId } = useActiveWeb3React()
   const {
@@ -293,19 +300,31 @@ function NetworkSwitcher() {
   }, [allChains])
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
   }
+
+  const hidePopupModal = () => {
+    setShowPopupModal(false)
+  }
+
   const showCrossChainModal = () => {
     const currentTime = ~~(Date.now() / 1000)
-    if(lastTimeSwitched < currentTime) {
+    if (lastTimeSwitched < currentTime) {
       setShowCrossChainModal(true)
+    } else {
+      setShowPopupModal(true)
+      setTimeout(() => {
+        hidePopupModal()
+      }, 2000)
     }
   }
 
   return (
     <>
       <div onClick={showCrossChainModal}>
+
         <HideSmall>
           {chainId && NETWORK_LABELS[chainId] && (
             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
@@ -319,7 +338,9 @@ function NetworkSwitcher() {
           selectTransferChain={() => { }}
           activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
         />
+        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
       </div>
+
     </>
   )
 }
@@ -370,8 +391,11 @@ export default function Header() {
           </HeaderExternalLink>
         </HeaderLinks>
       </HeaderRow>
+
       <HeaderControls>
+
         <HeaderElement>
+
           <NetworkSwitcher />
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (

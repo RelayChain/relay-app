@@ -1,10 +1,14 @@
-import BlockchainLogo from '../BlockchainLogo'
-import { CrosschainChain } from '../../state/crosschain/actions'
-import Modal from '../Modal'
+import { useDispatch } from 'react-redux'
 import React from 'react'
+import BlockchainLogo from '../BlockchainLogo'
+import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
+import Modal from '../Modal'
 import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
+import { AppDispatch } from 'state'
+
+
 interface CrossChainModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -89,6 +93,9 @@ const ModalContainer = styled.div`
     }
   }
 `
+
+
+
 export default function CrossChainModal({
   isOpen,
   onDismiss,
@@ -97,7 +104,9 @@ export default function CrossChainModal({
   isTransfer,
   selectTransferChain
 }: CrossChainModalProps) {
+  const dispatch = useDispatch<AppDispatch>()
   const switchChain = async (chain: CrosschainChain) => {
+    
     let { ethereum } = window;
    
     if (ethereum) {
@@ -123,7 +132,9 @@ export default function CrossChainModal({
         }]
         /* eslint-disable */
         const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
-
+        dispatch(
+          setCrosschainLastTimeSwitched({})
+        )
         if (tx) {
           console.log(tx)
         }
