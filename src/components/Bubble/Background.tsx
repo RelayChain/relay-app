@@ -16,8 +16,8 @@ export interface BackgroundProps {
 export default function Background({ variant = 'green' }: BackgroundProps) {
   const { width } = useWindowDimensions()
 
-  const widthSize = width < 500 ? 156 : 261
-  const heightSize = width < 500 ? 97 : 162
+  const widthSize = width < 500 ? 165 : 261
+  const heightSize = width < 500 ? 100 : 162
   return (
     <BackgroundWrap>
       {variant === 'green' ? (

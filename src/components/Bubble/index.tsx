@@ -9,8 +9,8 @@ const BubbleWrap = styled.div`
   width: 261px;
   height: 162px;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  width: 156px;
-  height: 97px;
+  width: 165px;
+  height: 100px;
 `};
 `
 const BubbleInnerWrap = styled.div`
