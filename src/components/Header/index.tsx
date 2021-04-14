@@ -240,8 +240,8 @@ const NETWORK_SYMBOLS: any = {
 }
 const popupContent: PopupContent = {
   simpleAnnounce: {
-    message: 'please wait to change RPCs'
-  }
+    message: 'Please wait 10 seconds to change RPCs again.'
+  },
 }
 function NetworkSwitcher() {
   const { chainId } = useActiveWeb3React()
