@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useEffect } from 'react'
-import { X } from 'react-feather'
-import { useSpring } from 'react-spring/web'
 import styled, { ThemeContext } from 'styled-components'
-import { animated } from 'react-spring'
-import { PopupContent } from '../../state/application/actions'
-import { useRemovePopup } from '../../state/application/hooks'
+
 import ListUpdatePopup from './ListUpdatePopup'
+import { PopupContent } from '../../state/application/actions'
 import TransactionPopup from './TransactionPopup'
+import { X } from 'react-feather'
+import { animated } from 'react-spring'
+import { useRemovePopup } from '../../state/application/hooks'
+import { useSpring } from 'react-spring/web'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -49,11 +50,13 @@ const AnimatedFader = animated(Fader)
 export default function PopupItem({
   removeAfterMs,
   content,
-  popKey
+  popKey,
+  hideClose
 }: {
   removeAfterMs: number | null
   content: PopupContent
   popKey: string
+  hideClose?: boolean | undefined
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
@@ -95,7 +98,7 @@ export default function PopupItem({
 
   return (
     <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
+      { !hideClose && <StyledClose color={theme.text2} onClick={removeThisPopup} /> }
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>

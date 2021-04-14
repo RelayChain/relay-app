@@ -426,25 +426,6 @@ export default function Swap() {
     setShowChainBridgeModal(false)
   }
 
-  const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
-  const hideCrossChainModal = () => {
-    setShowCrossChainModal(false)
-  }
-  const showCrossChainModal = () => {
-    const currentTime = ~~(Date.now() / 1000)
-    if (lastTimeSwitched < currentTime) {
-      setShowCrossChainModal(true)
-      // dispatch(
-      //   setCrosschainLastTimeSwitched({})
-      // )
-    } else {
-      setShowPopupModal(true)
-      setTimeout(() => {
-        hidePopupModal()
-      }, 2000)
-    }
-  }
-
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
@@ -489,16 +470,6 @@ export default function Swap() {
     }
     return ''
   }
-  const popupContent: PopupContent = {
-    simpleAnnounce: {
-      message: 'Please wait 10 seconds to change RPCs again.'
-    }
-  }
-  const [crossPopupOpen, setShowPopupModal] = useState(false)
-
-  const hidePopupModal = () => {
-    setShowPopupModal(false)
-  }
 
   const handleChainBridgeButtonClick = () => {
     if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
@@ -522,21 +493,6 @@ export default function Swap() {
 
           <Wrapper id="swap-page">
 
-            <CrossChainModal
-              isOpen={crossChainModalOpen}
-              onDismiss={hideCrossChainModal}
-              supportedChains={availableChains}
-              selectTransferChain={onSelectTransferChain}
-              activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-            />
-            <CrossChainModal
-              isOpen={transferChainModalOpen}
-              onDismiss={hideTransferChainModal}
-              supportedChains={availableChains}
-              isTransfer={true}
-              selectTransferChain={onSelectTransferChain}
-              activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-            />
             <ConfirmTransferModal
               isOpen={confirmTransferModalOpen}
               onDismiss={hideConfirmTransferModal}
@@ -563,25 +519,6 @@ export default function Swap() {
               onDismiss={handleConfirmDismiss}
               chainId={chainId}
             />
-
-            <SwapsTabs isCrossChain={isCrossChain} onSetIsCrossChain={handleSetIsCrossChain} />
-            <div
-              style={{
-                opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
-                pointerEvents:
-                  !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? 'auto' : 'none',
-                filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
-              }}
-            >
-              <BlockchainSelector
-                isCrossChain={isCrossChain}
-                supportedChains={SUPPORTED_CHAINS}
-                blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-                transferTo={isCrossChain ? targetChain : transferTo}
-                onShowCrossChainModal={showCrossChainModal}
-                onShowTransferChainModal={showTransferChainModal}
-              />
-
               <AutoColumn gap={'md'}>
                 <CurrencyInputPanel
                   blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -791,7 +728,6 @@ export default function Swap() {
                 )}
                 {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
               </BottomGrouping>
-            </div>
           </Wrapper>
 
 

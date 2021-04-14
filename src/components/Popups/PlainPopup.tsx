@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from 'react'
+
 import Modal from 'components/Modal'
-import PopupItem from 'components/Popups/PopupItem'
 import { PopupContent } from 'state/application/actions'
+import PopupItem from 'components/Popups/PopupItem'
 
 const popupContent: PopupContent = {
     simpleAnnounce: {
-      message: 'please wait to change RPCs'
-    }
-  } 
+      message: 'Please wait 10 seconds to change RPCs again.'
+    },
+  }
 
 
 interface PlainPopupProps {
@@ -15,14 +16,16 @@ interface PlainPopupProps {
     onDismiss: () => void
     content: PopupContent
     removeAfterMs: number
+    hideClose?: boolean | undefined
   }
-export default function PlainPopup( { 
+export default function PlainPopup( {
     isOpen,
     onDismiss,
     content,
     removeAfterMs,
+    hideClose,
   }: PlainPopupProps)  {
-   
+
 
   return (
     <>
@@ -30,7 +33,7 @@ export default function PlainPopup( {
           (
             <>
               <Modal isOpen={isOpen} onDismiss={onDismiss}>
-                <PopupItem key={''} content={content} popKey={''} removeAfterMs={removeAfterMs} />
+                <PopupItem key={''} content={content} popKey={''} removeAfterMs={removeAfterMs} hideClose={true} />
               </Modal>
             </>
 
@@ -40,4 +43,3 @@ export default function PlainPopup( {
     </>
   )
 }
- 
