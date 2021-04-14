@@ -25,7 +25,7 @@ const Title = styled.h1`
   margin-bottom: 70px;
 `
 const Wrapper = styled.div`
-  background: rgba(47, 53, 115, 0.32);
+  background: rgba(47, 53, 115, 0.52);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
   border-radius: 44px;
