@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
-import ModalMore from './../ModalMore'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
+import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -81,8 +81,9 @@ const IconLink = styled.span`
   margin-right: 20px;
 `
 const MoreLink = styled.span`
-display: inline-block;
+display: flex;
 cursor: pointer;
+margin-top: 3rem;
 color: ${({ theme }) => theme.text2};
 `
 export interface SideMenuProps {
@@ -125,7 +126,7 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
             <IconLink>
               <Icon icon="bridges" active={pathname == '/transfer'} />
             </IconLink>
-            Transfer
+            {t('Transfer')}
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
             <IconLink>
@@ -137,13 +138,13 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
             <IconLink>
               <Icon icon="charts" />
             </IconLink>
-            Charts
+            {t('Charts')}
           </HeaderExternalLink>
           <MoreLink  onClick={() => setIsOpenModal(true)}>
             <IconLink>
               <Icon icon="planet" />
             </IconLink>
-            {t('More')}
+            {t('More ...')}
           </MoreLink>
         </HeaderLinks>
       </SideMenuWrapper>

@@ -1,9 +1,10 @@
+import { Book, BookOpen, DollarSign, Info, MessageCircle } from 'react-feather'
+
+import { ExternalLink } from '../../theme'
+import Icon from '../Icon'
 import Modal from '../Modal'
 import React from 'react'
 import styled from 'styled-components'
-import { BookOpen, Info, MessageCircle, Book, DollarSign } from 'react-feather'
-import { ExternalLink } from '../../theme'
-import Icon from '../Icon'
 
 interface ModalMoreProps {
   isOpen: boolean
@@ -12,7 +13,7 @@ interface ModalMoreProps {
 
 const ModalContainer = styled.div`
   position: relative;
-  padding: 2.5rem;
+  padding: 3.5rem;
   width: 100%;
   z-index: 10;
   border-radius: 44px;
@@ -34,16 +35,20 @@ const MenuItem = styled(ExternalLink)`
   flex-direction: row;
   align-items: center;
   position: relative;
-  :hover,
-  :focus {
+  border-bottom: 0;
+  :hover {
     color: white;
+    text-decoration: none;
+  }
+  :focus {
+    color: ${({ theme }) => theme.text2};
     text-decoration: none;
   }
   &::after {
     content: '';
     position: absolute;
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.1);
     width: 100%;
     top: 35px;
     left: 0;
@@ -61,8 +66,8 @@ const Cross = styled.div`
   position: absolute;
   right: 35px;
   top: 25px;
-  width: 14px;
-  height: 14px;
+  width: 34px;
+  height: 34px;
   opacity: 0.8;
   cursor: pointer;
   :hover {

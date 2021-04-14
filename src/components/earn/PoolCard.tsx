@@ -25,7 +25,7 @@ import { wrappedCurrency } from '../../utils/wrappedCurrency'
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   border: 2px solid;
   border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
-  background: rgba(47, 53, 115, 0.32);
+  background: rgba(47, 53, 115, 0.52);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
   border-radius: 44px;
