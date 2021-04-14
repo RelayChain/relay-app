@@ -4,10 +4,12 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { LiquidityVolumeList } from '../../../graphql/types'
 import getPercentageValues from './../../../utils/getPercentageValues'
+import useWindowDimensions from './../../../hooks/useWindowDimensions'
 
 type LineChartProps = {
   data: LiquidityVolumeList
   onSelectedValue(value?: number, perc?: number): void
+  lineChartWidth: number
 }
 
 const Box = styled.div`
@@ -15,8 +17,7 @@ const Box = styled.div`
   padding-bottom: 54px;
 `
 
-
-const LineChart = ({ data, onSelectedValue }: LineChartProps) => {
+const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
   const series = data.zeroDayDatas.map(a => Number(a.totalLiquidityUSD))
 
   const options: Highcharts.Options = {
@@ -68,7 +69,7 @@ const LineChart = ({ data, onSelectedValue }: LineChartProps) => {
     chart: {
       backgroundColor: 'transparent',
       height: 181,
-      width: 472,
+      width: lineChartWidth,
       spacingBottom: 0,
       spacingLeft: 5,
     },
