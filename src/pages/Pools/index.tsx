@@ -1,4 +1,3 @@
-import { DataCard } from '../../components/earn/styled'
 import { ExternalLink, TYPE } from '../../theme'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
@@ -6,12 +5,12 @@ import { AutoColumn } from '../../components/Column'
 import { ButtonSecondary } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk'
 import { Countdown } from './Countdown'
+import { DataCard } from '../../components/earn/styled'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
-import PoolRow from '../../components/earn/PoolRow'
 import PoolCard from '../../components/earn/PoolCard'
-
+import PoolRow from '../../components/earn/PoolRow'
 import React from 'react'
 import { RowBetween } from '../../components/Row'
 import { Zap } from 'react-feather'
@@ -88,7 +87,7 @@ export default function Pools() {
   return (
     <>
       <PageWrapper>
-      <Title>POOL</Title>
+      <Title>POOLS</Title>
         <Wrapper>
           <table style={{ width: '100%' }}>
             <thead>
