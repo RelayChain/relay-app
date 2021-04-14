@@ -7,6 +7,7 @@ import { LiquidityVolumeList } from './../../graphql/types'
 import toCurrency from './../../utils/toCurrency'
 import BarChart from './charts/BarChart'
 import LineChart from './charts/LineChart'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 type DateBoxType = {
   date: Date
@@ -66,6 +67,16 @@ const SecondHeading = styled.div`
 const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
+  const { width } = useWindowDimensions()
+
+  let lineChartWidth = 472;
+  
+  if (width < 500) {
+    lineChartWidth = 380
+  }
+  if (width < 400) {
+    lineChartWidth = 320
+  }
 
   const onSelectedValue = (selectedValue?: number, selectedPerc?: number) => {
     if (!selectedValue || !selectedPerc) {
@@ -89,10 +100,10 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
           </SecondHeading>
         </FirstBox>
         {type === 'line' ? (
-            <LineChart onSelectedValue={onSelectedValue} data={data} />
+            <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={lineChartWidth}/>
           ) : (
             <SecondBox>
-              <BarChart onSelectedValue={onSelectedValue} data={data} />
+              <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={lineChartWidth}/>
             </SecondBox>
           )}
       </Flex>
