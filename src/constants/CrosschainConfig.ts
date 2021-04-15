@@ -148,6 +148,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
+        },
+        {
+          address: '0x433d86336dB759855A66cCAbe4338313a8A7fc77',
+          name: 'zINDA',
+          symbol: 'zINDA',
+          assetBase: 'zINDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000433d86336dB759855A66cCAbe4338313a8A7fc7701'
         }
       ]
     },
@@ -266,6 +274,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x0000000000000000000000D94f76f8DD5c3832dd798621c0d673bBae9D946b02'
+        },
+        {
+          address: '0xaad259Bd29E922F9AC976b92fda938455E89e4c8',
+          name: 'zINDA',
+          symbol: 'zINDA',
+          assetBase: 'zINDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000aad259Bd29E922F9AC976b92fda938455E89e4c802'
         }
       ]
     },
@@ -393,6 +409,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'BUSD',
           decimals: 18,
           resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
+        },
+        {
+          address: '0x3d12A21104fCA9912F94C24b739e322e6d797fac',
+          name: 'zINDA',
+          symbol: 'zINDA',
+          assetBase: 'zINDA',
+          decimals: 2,
+          resourceId: '0x00000000000000000000003d12A21104fCA9912F94C24b739e322e6d797fac03'
         }
       ]
     },
