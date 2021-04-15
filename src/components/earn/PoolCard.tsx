@@ -1,4 +1,4 @@
-import { AVAX, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { Break, CardBGImage, CardNoise } from './styled'
 import { ButtonPrimary, ButtonWhiteBg } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
@@ -37,13 +37,13 @@ const StatContainer = styled.div`
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 12px;
+  border: 2px solid rgba(103, 82, 247, 0.45);
+  margin-bottom: 1rem;
   width: 100%;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
-  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+  background: #0f0f0f;
 
   ${({ showBackground }) =>
     showBackground &&
@@ -85,11 +85,14 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyId(currency0)), useCurrency(currencyId(currency1))]
+
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  const baseStakingInfo = useStakingInfo(stakingTokenPair)
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress)
+  const stakingRewardAddress = stakingInfoTop.stakingRewardAddress
   const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
   // detect existing unstaked LP position to show add button if none found
@@ -104,8 +107,8 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER || currencyA === AVAX ? tokenB : tokenA
-  const WETH = currencyA === ETHER || currencyA === AVAX ? tokenA : tokenB
+  const token = currencyA === ETHER || currencyA === AVAX || currencyA === BNB ? tokenB : tokenA
+  const WETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -143,7 +146,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        {(chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? (
+        {chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY ? (
           <ExternalLink
             href="https://info.uniswap.org/pair/0x40F0e70a7d565985b967BCDB0BA5801994FC2E80"
             target="_blank"
@@ -158,11 +161,11 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
         )}
 
         <StyledInternalLink
-          to={`/zero/${currencyId(currency0)}/${currencyId(currency1)}`}
+          to={{ pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`, state: { stakingRewardAddress } }}
           style={{ width: '100%', paddingLeft: '10px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
-            {isStaking ? 'Manage' : 'Deposit'}
+            Select
           </ButtonPrimary>
         </StyledInternalLink>
       </TopSection>
@@ -197,7 +200,6 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
             <TYPE.black color={'white'} fontWeight={500}>
               <span>Your rate</span>
             </TYPE.black>
-
             <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡

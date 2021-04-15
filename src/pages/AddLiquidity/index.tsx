@@ -42,12 +42,16 @@ export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB }
   },
-  history
+  history,
+  ...props
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   useCrossChain()
 
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const locationState: any = props?.location?.state
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -122,7 +126,7 @@ export default function AddLiquidity({
     parsedAmounts[Field.CURRENCY_A],
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
@@ -130,7 +134,7 @@ export default function AddLiquidity({
     parsedAmounts[Field.CURRENCY_B],
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
@@ -193,11 +197,17 @@ export default function AddLiquidity({
     }
 
     setAttemptingTxn(true)
+
     try {
-      const estimatedGasLimit = await estimate(...args, value ? { value } : {})
+      let gas
+      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN) {
+        gas = BigNumber.from(350000)
+      } else {
+        gas = await estimate(...args, value ? { value } : {})
+      }
       const response = await method(...args, {
         ...(value ? { value } : {}),
-        gasLimit: calculateGasMargin(estimatedGasLimit)
+        gasLimit: calculateGasMargin(gas)
       })
       setAttemptingTxn(false)
 

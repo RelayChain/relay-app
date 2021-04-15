@@ -1,39 +1,41 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@zeroexchange/sdk'
-import { useMemo } from 'react'
+import { ChainId, CurrencyAmount, JSBI, Pair, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 import {
-  ZERO,
+  DAI,
   MOCK1,
+  SUSHI,
   UNI,
-  zETH,
-  zUSDC,
-  WAVAX,
-  zZERO,
-  bscZERO,
-  WBNB,
   USDC,
   USDT,
+  WAVAX,
+  WBNB,
   WBTC,
-  SUSHI,
-  DAI,
-  zUSDT,
-  zBTC,
-  zUNI,
-  zSUSHI,
-  zDAI,
-  bscWBNB,
+  ZERO,
+  bscBTC,
+  bscBUSD,
+  bscDAI,
+  bscETH,
+  bscSUSHI,
+  bscUNI,
   bscUSDC,
   bscUSDT,
-  bscBTC,
-  bscUNI,
-  bscSUSHI,
-  bscBUSD,
-  bscDAI, bscETH
+  bscWBNB,
+  bscZERO,
+  zBTC,
+  zDAI,
+  zETH,
+  zSUSHI,
+  zUNI,
+  zUSDC,
+  zUSDT,
+  zZERO
 } from '../../constants'
-import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
-import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
+
+import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { tryParseAmount } from '../swap/hooks'
+import { useActiveWeb3React } from '../../hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { useMemo } from 'react'
 
 export const STAKING_GENESIS_CHAINS = {
   [ChainId.AVALANCHE]: 1612360800,
@@ -86,20 +88,27 @@ export const STAKING_REWARDS_INFO: {
     }
   ],
   [ChainId.AVALANCHE]: [
-    // {
-    //   tokens: [zZERO, zETH],
-    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
-    // },
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
+    },
+    {
+      tokens: [zZERO, zUSDC],
+      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
+    },
     {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0xfA2c38470aD0a970240cF1afD35Cd04d9e994e76'
     },
     {
       tokens: [zZERO, WAVAX],
+      // new one:
+      stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
+    },
+    {
+      tokens: [zZERO, WAVAX],
       // old one, expires soon, to be replaced:
       stakingRewardAddress: '0x60F19487bdA9c2F8336784110dc5c4d66425402d'
-      // new one:
-      // stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
     },
     {
       tokens: [WAVAX, zETH],
@@ -108,10 +117,6 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WAVAX, zUSDC],
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526'
-    },
-    {
-      tokens: [zZERO, zUSDC],
-      stakingRewardAddress: '0x617EE464d13F871FAdd6d3BE428cf452299F7a3b'
     },
     {
       tokens: [zZERO, zETH],

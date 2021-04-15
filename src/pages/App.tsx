@@ -83,8 +83,8 @@ export default function App() {
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
-        <div className="snow-bg snow"></div>
-        <Mountains />
+        <div className="snow-bg"></div>
+        <div className="bg-darken"></div>
         <URLWarning />
         <HeaderWrapper>
           <Header />

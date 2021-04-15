@@ -1,5 +1,5 @@
 {
-  "short_name": "Zero",
+  "short_name": "0",
   "name": "Zero Exchange App",
   "icons": [
     {
@@ -17,6 +17,6 @@
   ],
   "orientation": "portrait",
   "display": "standalone",
-  "theme_color": "#ff007a",
-  "background_color": "#fff"
+  "theme_color": "#6752F7",
+  "background_color": "#111"
 }

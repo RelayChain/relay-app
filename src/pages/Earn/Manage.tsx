@@ -84,11 +84,10 @@ const GreenButton = styled.div`
 `
 
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #6752F7 100%);
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};
+  background: #111;
 `
 
 const StyledBottomCard = styled(DataCard)<{ dim: any }>`
@@ -118,8 +117,10 @@ const EmptyProposals = styled.div`
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  background: #111;
   overflow: hidden;
+  border: 2px solid rgba(103, 82, 247, .45);
+  border-radius: 12px;
 `
 
 const DataRow = styled(RowBetween)`
@@ -135,19 +136,28 @@ const DataRow = styled(RowBetween)`
 export default function Manage({
   match: {
     params: { currencyIdA, currencyIdB }
-  }
+  },
+  ...props
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
+  const history = useHistory()
+
+  const locationState: any = props?.location?.state;
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
+
+  if (!stakingRewardAddress) {
+    history.push('/earn');
+  }
 
   const theme = useContext(ThemeContext)
-  const history = useHistory()
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  const baseStakingInfo = useStakingInfo(stakingTokenPair)
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress);
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -293,8 +303,6 @@ export default function Manage({
 
       {showAddLiquidityButton && (
         <VoteCard>
-          <CardBGImage />
-          <CardNoise />
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
@@ -310,14 +318,12 @@ export default function Manage({
                 borderRadius="8px"
                 width={'fit-content'}
                 as={Link}
-                to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+                to={{ pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`, state: { stakingRewardAddress }}}
               >
                 {`Add ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
-          <CardBGImage />
-          <CardNoise />
         </VoteCard>
       )}
 
@@ -358,8 +364,6 @@ export default function Manage({
         <BottomSection gap="lg" justify="center">
           <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
             <CardSection>
-              <CardBGImage desaturate />
-              <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
@@ -376,8 +380,6 @@ export default function Manage({
             </CardSection>
           </StyledDataCard>
           <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
-            <CardBGImage desaturate />
-            <CardNoise />
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>

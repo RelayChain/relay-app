@@ -9,7 +9,8 @@ import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { DEFAULT_TOKEN_LIST } from '../../constants/DefaultTokenList'
+import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
+import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
 import { FixedSizeList } from 'react-window'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
@@ -35,6 +36,8 @@ interface CurrencySearchProps {
   onChangeList: () => void
   isCrossChain?: boolean
 }
+
+const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
 
 export function CurrencySearch({
   selectedCurrency,
@@ -202,6 +205,7 @@ export function CurrencySearch({
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
+              searchQuery={searchQuery}
             />
           )}
         </AutoSizer>

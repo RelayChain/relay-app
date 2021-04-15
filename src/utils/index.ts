@@ -14,8 +14,7 @@ export function isAddress(value: any): string | false {
   if (value) {
     try {
       return getAddress(value)
-    } catch(e) {
-      console.log('e==========', e)
+    } catch (e) {
       return false
     }
   }
@@ -122,7 +121,7 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
   return getContract(
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
-      : chainId === ChainId.SMART_CHAIN
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,

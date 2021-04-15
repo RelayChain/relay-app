@@ -1,5 +1,10 @@
 import { BigNumber, ethers, utils } from 'ethers'
-import { BridgeConfig, TokenConfig, crosschainConfig } from '../../constants/CrosschainConfig'
+import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
+import {
+  BridgeConfig,
+  TokenConfig,
+  crosschainConfig as crosschainConfigMainnet
+} from '../../constants/CrosschainConfig'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -37,6 +42,8 @@ const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
+
+const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
 let dispatch: AppDispatch
 let web3React: any
@@ -157,7 +164,6 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   }
   return result
 }
-
 
 function GetChainNameById(chainID: number): string {
   if (chainID === ChainId.MAINNET) {
@@ -542,7 +548,6 @@ export function useCrossChain() {
     const targetTokens = GetAvailableTokens(newTargetCain?.name)
     dispatch(
       setAvailableTokens({
-
         tokens: tokens.length ? tokens : []
       })
     )

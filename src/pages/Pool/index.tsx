@@ -144,7 +144,7 @@ export default function Pool() {
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
-                href="https://docs.zero.exchange/docs/v2/core-concepts/pools/"
+                href="https://docs.0.exchange/docs/v2/core-concepts/pools/"
               >
                 <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
               </ExternalLink>
@@ -167,7 +167,7 @@ export default function Pool() {
                   as={Link}
                   padding="6px 8px"
                   to={`create/${
-                    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : chainId === ChainId.SMART_CHAIN ? 'BNB' : 'AVAX'
+                    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : (chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST) ? 'BNB' : 'AVAX'
                   }`}
                   style={{ margin: '10px' }}
                 >

@@ -1,9 +1,8 @@
-import styled from 'styled-components'
 import { AutoColumn } from '../Column'
-
+import noise from '../../assets/images/noise.png'
+import styled from 'styled-components'
 import uImage from '../../assets/images/mountain_wide.png'
 import xlUnicorn from '../../assets/images/mountain.png'
-import noise from '../../assets/images/noise.png'
 
 export const TextBox = styled.div`
   display: flex;
@@ -16,8 +15,8 @@ export const TextBox = styled.div`
   justify-self: flex-end;
 `
 
-export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #C6D2E6 0%, #07327B 100%);
+export const DataCard = styled(AutoColumn) <{ disabled?: boolean }>`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(103, 82, 247, .1) 0%, rgb1(103, 82, 247, .3) 100%);
   border-radius: 12px;
   width: 100%;
   position: relative;
@@ -25,7 +24,7 @@ export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
 `
 
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
-  background: url(${uImage});
+  background: #111;
   width: 1000px;
   height: 600px;
   position: absolute;
@@ -40,7 +39,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
-  background: url(${xlUnicorn});
+  background: #111;
   width: 1200px;
   height: 1200px;
   position: absolute;
@@ -54,8 +53,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
 `
 
 export const CardNoise = styled.span`
-  background: url(${noise});
-  background-size: cover;
+  background: #111;
   mix-blend-mode: overlay;
   border-radius: 12px;
   width: 100%;
@@ -67,7 +65,7 @@ export const CardNoise = styled.span`
   user-select: none;
 `
 
-export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
+export const CardSection = styled(AutoColumn) <{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};

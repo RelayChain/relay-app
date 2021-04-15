@@ -102,7 +102,8 @@ function CurrencyRow({
   isSelected,
   otherSelected,
   style,
-  isEnd
+  isEnd,
+  hasQuery
 }: {
   currency: Currency
   onSelect: () => void
@@ -110,6 +111,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
   isEnd: boolean
+  hasQuery: any
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -152,7 +154,13 @@ function CurrencyRow({
             </TYPE.main>
           ) : null}
           {/* Fix this so (Add) works for Avax support */}
-          {!isOnSelectedList && !customAdded && chainId !== ChainId.AVALANCHE && chainId !== ChainId.SMART_CHAIN ? (
+          {hasQuery &&
+          !isOnSelectedList &&
+          !customAdded &&
+          chainId !== ChainId.AVALANCHE &&
+          chainId !== ChainId.FUJI &&
+          chainId !== ChainId.SMART_CHAIN &&
+          chainId !== ChainId.SMART_CHAIN_TEST ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
@@ -182,7 +190,8 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showETH
+  showETH,
+  searchQuery
 }: {
   height: number
   currencies: Currency[]
@@ -191,11 +200,16 @@ export default function CurrencyList({
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
+  searchQuery: string | undefined
 }) {
   const { chainId } = useActiveWeb3React()
 
   const nativeToken =
-    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? Currency.ETHER : chainId === ChainId.SMART_CHAIN ? Currency.BNB : Currency.AVAX
+    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+      ? Currency.ETHER
+      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+      ? Currency.BNB
+      : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,
     showETH,
@@ -216,10 +230,11 @@ export default function CurrencyList({
           onSelect={handleSelect}
           otherSelected={otherSelected}
           isEnd={index === data.length - 1}
+          hasQuery={searchQuery && searchQuery.length > 0}
         />
       )
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency]
+    [onCurrencySelect, otherCurrency, selectedCurrency, searchQuery]
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])

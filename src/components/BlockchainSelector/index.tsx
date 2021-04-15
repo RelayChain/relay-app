@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  border: 1px dashed rgba(38, 98, 255, 0.5);
+  border: 1px dashed rgba(103, 82, 247, 0.5);
   border-radius: 14px;
   margin-bottom: 1.5rem;
   margin-top: 0.5rem;
@@ -20,7 +20,7 @@ const Container = styled.div`
     margin-left: auto;
     padding: 0.5rem 0.25rem;
     border-radius: 12px;
-    background: rgba(38, 98, 255, 0.25);
+    background: rgba(103, 82, 247, 0.25);
     transition: all 0.2s ease-in-out;
     font-size: 0.85rem;
     span {
@@ -28,7 +28,7 @@ const Container = styled.div`
       margin-right: 4px;
     }
     &:hover {
-      background: rgba(38, 98, 255, 0.75);
+      background: rgba(103, 82, 247, 0.75);
       cursor: pointer;
     }
     &.crosschain {
@@ -45,7 +45,7 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
   align-items: center;
   justify-content: center;
   padding: ${({ isCrossChain }) => (!isCrossChain ? '0 1rem 0 1rem' : '1rem')};
-  border-bottom: ${({ borderBottom }) => (borderBottom ? '1px dashed rgba(38, 98, 255, .5)' : 'none')};
+  border-bottom: ${({ borderBottom }) => (borderBottom ? '1px dashed rgba(103, 82, 247, .5)' : 'none')};
 `
 
 const BlockchainSelector = ({

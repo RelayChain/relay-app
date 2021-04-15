@@ -1,8 +1,9 @@
-import { useState, useLayoutEffect } from 'react'
-import { shade } from 'polished'
+import { ChainId, Token } from '@zeroexchange/sdk'
+import { useLayoutEffect, useState } from 'react'
+
 import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
-import { Token, ChainId } from '@zeroexchange/sdk'
+import { shade } from 'polished'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
@@ -10,7 +11,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   }
   let path
   if (token.address === '0xF0939011a9bb95c3B791f0cb546377Ed2693a574') {
-    path = `../../assets/images/logo-zero-124.png`
+    path = `../../assets/images/0-icon.png`
   } else {
     path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
   }
@@ -18,7 +19,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   return Vibrant.from(path)
     .getPalette()
     .then(palette => {
-      if (palette?.Vibrant) {
+      if (palette ?.Vibrant) {
         let detectedHex = palette.Vibrant.hex
         let AAscore = hex(detectedHex, '#FFF')
         while (AAscore < 3) {
