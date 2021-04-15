@@ -9,9 +9,10 @@ const BubbleBaseWrap = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 0;
+  z-index: -1;
   width: 100%;
   height: 100%;
+  filter: brightness(.65);
 `
 
 const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
@@ -34,7 +35,7 @@ const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
             height="100%"
             rx={44}
             fill={mode === 'normal' ? '#2F3573' : '#121538'}
-            fillOpacity={mode === 'normal' ? 0.72 : 0.64}
+            fillOpacity={mode === 'normal' ? 0.72 : 0.54}
           />
           <rect
             x={1}

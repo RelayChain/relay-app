@@ -14,15 +14,15 @@ const SideMenuWrapper = styled.div<{ open?: boolean }>`
   width: 260px;
   display: flex;
   flex-direction: column;
+  background: rgba(0,0,0,.35);
   justify-content: center;
-  border-right: 1px solid rgba(103, 82, 247, 0.25);
   ${({ theme }) => theme.mediaWidth.upToMedium`
   position: fixed;
+  background: rgba(0,0,0,.95);
   left: 0;
   top: 0;
   width: 100%;
   z-index: 100;
-  background: #000;
   border-right: 0;
   align-items: center;
   z-index: 2
