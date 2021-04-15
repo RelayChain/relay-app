@@ -33,10 +33,10 @@ import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import AppBody from '../AppBody'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
+import BubbleBase from '../../components/BubbleBase';
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
@@ -94,10 +94,39 @@ const ChainBridgePending = styled.div`
 
 const Heading = styled.h2`
   text-align: center;
+  font-family: 'Poppins', sans-serif;
 `
 
 const Description = styled.p`
   text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-top: .25rem;
+  margin-bottom: 1.5rem;
+`
+
+const Title = styled.h1`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  text-align: center;
+  font-size: 49px;
+  margin-top: 40px;
+  margin-bottom: 0px;
+`};
+`
+const TransferWrap = styled.div`
+  padding: 0px 64px;
+  width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding: 0;
+`};
+`
+
+const TransferBodyWrapper = styled.div`
+  width: 100%;
+  margin-top: 3rem;
+  max-width: 600px;
+  position: relative;
+  padding: 2rem;
+  margin-left: auto; margin-right: auto;
 `
 
 export default function Transfer() {
@@ -119,7 +148,6 @@ export default function Transfer() {
   } = useCrosschainState()
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
-
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -149,15 +177,8 @@ export default function Transfer() {
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
-  // for expert mode
-  const toggleSettings = useToggleSettingsMenu()
-  const [isExpertMode] = useExpertModeManager()
-
-  // get custom setting values for user
-  const [allowedSlippage] = useUserSlippageTolerance()
-
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue } = useSwapState()
   const {
     v2Trade,
     currencyBalances,
@@ -166,12 +187,6 @@ export default function Transfer() {
     inputError: swapInputError
   } = useDerivedSwapInfo()
 
-  const { address: recipientAddress } = useENSAddress(recipient)
-  // const toggledVersion = useToggledVersion()
-  // const tradesByVersion = {
-  //   [Version.v1]: v1Trade,
-  //   [Version.v2]: v2Trade
-  // }
   const trade = v2Trade;
 
   const parsedAmounts = {
@@ -346,21 +361,11 @@ export default function Transfer() {
   }
 
   return (
-    <>
-      <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
-        onConfirm={handleConfirmTokenWarning}
-      />
-      <AppBody>
-        {/* <SwapPoolTabs active={'swap'} /> */}
-        <Wrapper id="swap-page">
-          <CrossChainModal
-            isOpen={crossChainModalOpen}
-            onDismiss={hideCrossChainModal}
-            supportedChains={availableChains}
-            selectTransferChain={onSelectTransferChain}
-            activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+    <TransferWrap>
+          <TokenWarningModal
+            isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+            tokens={urlLoadedTokens}
+            onConfirm={handleConfirmTokenWarning}
           />
           <CrossChainModal
             isOpen={transferChainModalOpen}
@@ -383,9 +388,12 @@ export default function Transfer() {
           />
 
           <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
+          <Title>Transfer</Title>
 
+          <TransferBodyWrapper>
+          <BubbleBase />
           <Heading>Cross-Chain Bridge</Heading>
-          <Description>Transfer your token from one blockchain to another</Description>
+          <Description>Transfer your tokens from one blockchain to another</Description>
           <div
             style={{
               opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
@@ -398,7 +406,7 @@ export default function Transfer() {
 
               <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
-                label={'Choose your assets:'}
+                label={'Enter amount:'}
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={!atMaxAmountInput}
                 currency={currencies[Field.INPUT]}
@@ -423,7 +431,7 @@ export default function Transfer() {
             <RowBetween>
               <span>You will receive ≈ </span>
               <BottomGrouping>
-                {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
+                {isCrossChain && transferAmount.length && transferAmount !== '0' && currentTargetToken ? (
                   <>
                     <ButtonPrimary onClick={showConfirmTransferModal}>
                       Transfer
@@ -432,16 +440,15 @@ export default function Transfer() {
                 ) : !account ? (
                   <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
                 ) : (
-                  <GreyCard style={{ textAlign: 'center', minWidth: '230px', borderRadius: '100px', height: '58px' }}>
-                    <TYPE.main mb="4px">Enter An Amount</TYPE.main>
+                  <GreyCard style={{ textAlign: 'center', minWidth: '230px', borderRadius: '100px', height: '58px', paddingTop: 0, paddingBottom: 0 }}>
+                    <TYPE.main mb="4px" style={{ lineHeight: '58px'}}>Enter An Amount</TYPE.main>
                   </GreyCard>
                 )}
               </BottomGrouping>
             </RowBetween>
 
           </div>
-        </Wrapper>
-      </AppBody>
+          </TransferBodyWrapper>
       {(chainId === undefined || account === undefined) && (
         <CustomLightSpinner
           src={Circle2}
@@ -466,6 +473,6 @@ export default function Transfer() {
       )}
 
       {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
-    </>
+    </TransferWrap>
   )
 }

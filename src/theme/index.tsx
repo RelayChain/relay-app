@@ -79,7 +79,11 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#B368FC',
-    blue1: '#6752F7'
+    blue1: '#6752F7',
+    zeroBlue: '#1CB0F9',
+    zeroGreen: '#1EF7E7',
+    zeroPink: '#B368FC',
+    zeroPurple: '#6752F7',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -177,12 +181,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Poppins', sans-serif;
   font-display: fallback !important;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif !important;
+    font-family: 'Poppins', sans-serif;
   }
 }
 
@@ -215,6 +219,7 @@ html {
 }
 h1,h2,h3,h4,h5{
   margin: 0px;
+  font-family: 'Poppins', sans-serif;
 }
 h1{
   font-weight: 900;
