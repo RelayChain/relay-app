@@ -32,6 +32,8 @@ import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/applica
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
+import BubbleBase from '../../components/BubbleBase'
+import Icon from '../../components/Icon'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import AppBody from '../AppBody'
@@ -39,6 +41,8 @@ import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
+import CustomArrowDown from '../../components/ArrowDown'
+import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
 import { ClickableText } from '../Legacy_Pool/styleds'
@@ -61,8 +65,10 @@ import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getTradeVersion } from '../../data/V1'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
+import toEllipsis from '../../utils/toEllipsis'
 import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -82,18 +88,78 @@ const CrossChainLabels = styled.div`
     }
   }
 `
-
-const SwapWrap = styled.div`
-max-width: 420px;
-width: 100%;
-${({ theme }) => theme.mediaWidth.upToMedium`
-margin-top: 200px
-`};
-${({ theme }) => theme.mediaWidth.upToSmall`
-margin-top: 90px
-`};
+const StyledEthereumLogo = styled.img`
+  width: 48px;
+  height: 48px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
+  border-radius: 24px;
 `
 
+const SwapOuterWrap = styled.div`
+  padding: 0px 64px;
+  width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+padding: 0;
+`};
+`
+const Title = styled.h1`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  text-align: center;
+  font-size: 49px;
+  margin-top: 40px;
+  margin-bottom: 0px;
+`};
+`
+const SubTitle = styled.h2`
+  font-size: 32px;
+  margin-bottom: 45px;
+`
+const SwapFlexRow = styled.div`
+  flex: 1;
+  width: 100%;
+`
+const SwapWrap = styled.div`
+  font-family: Poppins;
+  position: relative;
+  width: 534px;
+  padding: 48px 34px 44px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 587px;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  margin-top: 20px
+`};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+width: 100%;
+`};
+`
+const SwapFlex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+  align-items: center;
+`};
+`
+const TextBalance = styled.h3`
+  font-size: 32px;
+  white-space: nowrap;
+  margin-bottom: 40px;
+`
+const BalanceRow = styled.div<{ isColumn?: boolean }>`
+  flex: 1;
+  width: 100%;
+  display: ${({ isColumn }) => (isColumn ? 'flex' : 'block')};
+  flex-direction: ${({ isColumn }) => (isColumn ? 'column' : 'row')};
+  align-items: ${({ isColumn }) => (isColumn ? 'center' : '')};
+`
 const ChainBridgePending = styled.div`
   display: flex;
   flex-direction: row;
@@ -122,7 +188,69 @@ const ChainBridgePending = styled.div`
     font-weight: bold;
   }
 `
+const BottomGroupingSwap = styled(BottomGrouping)`
+  padding: 14px, 30px, 14px, 30px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
 
+margin-top: 20px;
+`};
+`
+const SwapText = styled.h3`
+  font-size: 17px;
+  color: #a7b1f4;
+  opacity: 0.88;
+`
+const Flex = styled(RowBetween)`
+  align-items: center;
+  margin-top: 1rem;
+`
+const IconWrap = styled.div`
+  margin-left: 25px;
+`
+const BalanceCard = styled.div`
+  margin-bottom: 20px;
+  position: relative;
+  height: 118px;
+  width: 500px;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 34px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 100%;
+  `};
+`
+const Box = styled.div`
+  margin-left: 24px;
+`
+
+const CrossChain = styled.div`
+  font-weight: 600;
+  font-size: 13px;
+
+  span {
+    margin-left: 10px;
+    color: #929ad6;
+    opacity: 0.8;
+  }
+`
+const AdressWallet = styled.div`
+  font-size: 17px;
+  color: #b97cd6;
+  opacity: 0.88;
+`
+const BoxFlex = styled.div`
+  display: flex;
+`
+const CopyImage = styled.div`
+cursor: pointer`
 export default function Swap() {
   useCrossChain()
 
@@ -142,6 +270,13 @@ export default function Swap() {
     swapDetails,
     lastTimeSwitched
   } = useCrosschainState()
+
+  const { width } = useWindowDimensions()
+
+  let isColumn = false
+  if (width < 1350) {
+    isColumn = true
+  }
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
@@ -183,13 +318,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const {
-    v2Trade,
-    currencyBalances,
-    parsedAmount,
-    currencies,
-    inputError: swapInputError
-  } = useDerivedSwapInfo()
+  const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -209,13 +338,13 @@ export default function Swap() {
 
   const parsedAmounts = showWrap
     ? {
-      [Field.INPUT]: parsedAmount,
-      [Field.OUTPUT]: parsedAmount
-    }
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount
+      }
     : {
-      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-    }
+        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+      }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -480,45 +609,48 @@ export default function Swap() {
   }
 
   return (
-    <>
+    <SwapOuterWrap>
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
+      <Title>Trade</Title>
+      <SwapFlex>
+        <SwapFlexRow>
+          <SwapWrap>
+            <BubbleBase />
 
-    <SwapWrap>
-        <AppBody>
-          <SwapPoolTabs active={'swap'} />
+            <SwapPoolTabs active={'swap'} />
 
-          <Wrapper id="swap-page">
-
-            <ConfirmTransferModal
-              isOpen={confirmTransferModalOpen}
-              onDismiss={hideConfirmTransferModal}
-              transferTo={transferTo}
-              activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-              changeTransferState={onChangeTransferState}
-              tokenTransferState={crosschainTransferStatus}
-              value={formattedAmounts[Field.INPUT]}
-              currency={currencies[Field.INPUT]}
-              trade={trade}
-            />
-            <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
-            <ConfirmSwapModal
-              isOpen={showConfirm}
-              trade={trade}
-              originalTrade={tradeToConfirm}
-              onAcceptChanges={handleAcceptChanges}
-              attemptingTxn={attemptingTxn}
-              txHash={txHash}
-              recipient={recipient}
-              allowedSlippage={allowedSlippage}
-              onConfirm={handleSwap}
-              swapErrorMessage={swapErrorMessage}
-              onDismiss={handleConfirmDismiss}
-              chainId={chainId}
-            />
+            <Wrapper id="swap-page">
+              <ConfirmTransferModal
+                isOpen={confirmTransferModalOpen}
+                onDismiss={hideConfirmTransferModal}
+                transferTo={transferTo}
+                activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+                changeTransferState={onChangeTransferState}
+                tokenTransferState={crosschainTransferStatus}
+                value={formattedAmounts[Field.INPUT]}
+                currency={currencies[Field.INPUT]}
+                trade={trade}
+              />
+              <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
+              <ConfirmSwapModal
+                isOpen={showConfirm}
+                trade={trade}
+                originalTrade={tradeToConfirm}
+                onAcceptChanges={handleAcceptChanges}
+                attemptingTxn={attemptingTxn}
+                txHash={txHash}
+                recipient={recipient}
+                allowedSlippage={allowedSlippage}
+                onConfirm={handleSwap}
+                swapErrorMessage={swapErrorMessage}
+                onDismiss={handleConfirmDismiss}
+                chainId={chainId}
+              />
+              <SubTitle>Swap</SubTitle>
               <AutoColumn gap={'md'}>
                 <CurrencyInputPanel
                   blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -535,16 +667,20 @@ export default function Swap() {
                 />
                 <AutoColumn justify="space-between">
                   <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper clickable>
-                      <ArrowDown
-                        size="24"
-                        onClick={() => {
-                          if (!isCrossChain) {
-                            setApprovalSubmitted(false) // reset 2 step UI for approvals
-                            onSwitchTokens()
-                          }
-                        }}
-                        color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                    <ArrowWrapper
+                      clickable
+                      onClick={() => {
+                        if (!isCrossChain) {
+                          setApprovalSubmitted(false) // reset 2 step UI for approvals
+                          onSwitchTokens()
+                        }
+                      }}
+                    >
+                      <CustomArrowDown
+                        conditionInput={currencies[Field.INPUT]}
+                        conditionOutput={currencies[Field.OUTPUT]}
+                        defaultColor={theme.primary1}
+                        activeColor={theme.text2}
                       />
                     </ArrowWrapper>
                     {recipient === null && !showWrap && isExpertMode ? (
@@ -628,44 +764,75 @@ export default function Swap() {
                   </Card>
                 )}
               </AutoColumn>
-              <BottomGrouping>
-                {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
-                  <>
-                    <ButtonPrimary onClick={showConfirmTransferModal}>
-                      Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
+              <Flex>
+                <BottomGroupingSwap>
+                  {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
+                    <>
+                      <ButtonPrimary onClick={showConfirmTransferModal}>
+                        Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
+                      </ButtonPrimary>
+                    </>
+                  ) : !account ? (
+                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                  ) : showWrap ? (
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ??
+                        (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                     </ButtonPrimary>
-                  </>
-                ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                    {wrapInputError ??
-                      (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                  </ButtonPrimary>
-                ) : noRoute && userHasSpecifiedInputOutput ? (
-                  <GreyCard style={{ textAlign: 'center' }}>
-                    <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                  </GreyCard>
-                ) : showApproveFlow ? (
-                  <RowBetween>
-                    <ButtonConfirmed
-                      onClick={approveCallback}
-                      disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                      width="48%"
-                      altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={approval === ApprovalState.APPROVED}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <AutoRow gap="6px" justify="center">
-                          Approving <Loader stroke="white" />
-                        </AutoRow>
-                      ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                        'Approved'
-                      ) : (
-                        'Approve ' + currencies[Field.INPUT]?.symbol
-                      )}
-                    </ButtonConfirmed>
+                  ) : noRoute && userHasSpecifiedInputOutput ? (
+                    <GreyCard style={{ textAlign: 'center' }}>
+                      <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                    </GreyCard>
+                  ) : showApproveFlow ? (
+                    <RowBetween>
+                      <ButtonConfirmed
+                        onClick={approveCallback}
+                        disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                        width="48%"
+                        altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                        confirmed={approval === ApprovalState.APPROVED}
+                      >
+                        {approval === ApprovalState.PENDING ? (
+                          <AutoRow gap="6px" justify="center">
+                            Approving <Loader stroke="white" />
+                          </AutoRow>
+                        ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                          'Approved'
+                        ) : (
+                          'Approve ' + currencies[Field.INPUT]?.symbol
+                        )}
+                      </ButtonConfirmed>
+                      <ButtonError
+                        onClick={() => {
+                          if (isExpertMode) {
+                            handleSwap()
+                          } else {
+                            setSwapState({
+                              tradeToConfirm: trade,
+                              attemptingTxn: false,
+                              swapErrorMessage: undefined,
+                              showConfirm: true,
+                              txHash: undefined
+                            })
+                          }
+                        }}
+                        width="48%"
+                        id="swap-button"
+                        disabled={
+                          !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                        }
+                        error={isValid && priceImpactSeverity > 2}
+                      >
+                        <Text fontSize={16} fontWeight={500}>
+                          {priceImpactSeverity > 3 && !isExpertMode
+                            ? `Price Impact High`
+                            : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                        </Text>
+                      </ButtonError>
+                    </RowBetween>
+                  ) : (
                     <ButtonError
+                      isPointer
                       onClick={() => {
                         if (isExpertMode) {
                           handleSwap()
@@ -679,61 +846,53 @@ export default function Swap() {
                           })
                         }
                       }}
-                      width="48%"
                       id="swap-button"
-                      disabled={
-                        !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
-                      }
-                      error={isValid && priceImpactSeverity > 2}
+                      disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                      error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                     >
-                      <Text fontSize={16} fontWeight={500}>
-                        {priceImpactSeverity > 3 && !isExpertMode
-                          ? `Price Impact High`
+                      <Text fontSize={14} fontWeight={500}>
+                        {swapInputError
+                          ? swapInputError
+                          : priceImpactSeverity > 3 && !isExpertMode
+                          ? `Price Impact Too High`
                           : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                       </Text>
+                      <IconWrap>
+                        <Icon icon="swap" color="white" />
+                      </IconWrap>
                     </ButtonError>
-                  </RowBetween>
-                ) : (
-                  <ButtonError
-                    onClick={() => {
-                      if (isExpertMode) {
-                        handleSwap()
-                      } else {
-                        setSwapState({
-                          tradeToConfirm: trade,
-                          attemptingTxn: false,
-                          swapErrorMessage: undefined,
-                          showConfirm: true,
-                          txHash: undefined
-                        })
-                      }
-                    }}
-                    id="swap-button"
-                    disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                    error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                  >
-                    <Text fontSize={20} fontWeight={500}>
-                      {swapInputError
-                        ? swapInputError
-                        : priceImpactSeverity > 3 && !isExpertMode
-                        ? `Price Impact Too High`
-                        : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                    </Text>
-                  </ButtonError>
-                )}
-                {showApproveFlow && (
-                  <Column style={{ marginTop: '1rem' }}>
-                    <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                  </Column>
-                )}
-                {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-              </BottomGrouping>
-          </Wrapper>
-
-
-        </AppBody>
-
-        </SwapWrap>
+                  )}
+                  {showApproveFlow && (
+                    <Column style={{ marginTop: '1rem' }}>
+                      <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
+                    </Column>
+                  )}
+                  {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                </BottomGroupingSwap>
+              </Flex>
+            </Wrapper>
+          </SwapWrap>
+        </SwapFlexRow>
+        <BalanceRow isColumn={isColumn}>
+          <TextBalance>Your Balances</TextBalance>
+          <BalanceCard>
+            <BubbleBase />
+            <BoxFlex>
+              <StyledEthereumLogo src={EthereumLogo} />
+              <Box>
+                <CrossChain>
+                  ETH
+                  <span>Ether</span>
+                </CrossChain>
+                <AdressWallet>30.662</AdressWallet>
+              </Box>
+            </BoxFlex>
+            <CopyImage>
+              <Icon icon="copyClipboard" />
+            </CopyImage>
+          </BalanceCard>
+        </BalanceRow>
+      </SwapFlex>
       {(chainId === undefined || account === undefined) && (
         <CustomLightSpinner
           src={Circle2}
@@ -754,10 +913,10 @@ export default function Swap() {
           <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
         </ChainBridgePending>
       ) : (
-          ''
-        )}
+        ''
+      )}
 
-      {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
-    </>
+      {/* {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />} */}
+    </SwapOuterWrap>
   )
 }
