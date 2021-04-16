@@ -525,7 +525,18 @@ export function useCrossChain() {
 
 
   const chainId = library?._network?.chainId || chainIdFromWeb3React
-
+  
+  useEffect(() => {
+    if (library?._network?.chainId && chainIdFromWeb3React && library?._network?.chainId !== chainIdFromWeb3React) {
+      // from https://docs.metamask.io/guide/ethereum-provider.html#chainchanged
+      /* The MetaMask provider emits this event when the currently connected chain changes.
+      All RPC requests are submitted to the currently connected chain.
+      Therefore, it's critical to keep track of the current chain ID by listening for this event.
+      We strongly recommend reloading the page on chain changes, unless you have good reason not to.
+      */
+      window.location.reload()
+    }
+  }, [library?._network?.chainId, chainIdFromWeb3React])
 
   const initAll = () => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
@@ -572,17 +583,7 @@ export function useCrossChain() {
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
   }
-  useEffect(() => {
-    if (library?._network?.chainId && chainIdFromWeb3React && library?._network?.chainId !== chainIdFromWeb3React) {
-      // from https://docs.metamask.io/guide/ethereum-provider.html#chainchanged
-      /* The MetaMask provider emits this event when the currently connected chain changes.
-      All RPC requests are submitted to the currently connected chain.
-      Therefore, it's critical to keep track of the current chain ID by listening for this event.
-      We strongly recommend reloading the page on chain changes, unless you have good reason not to.
-      */
-      window.location.reload()
-    }
-  }, [library?._network?.chainId, chainIdFromWeb3React])
+  
 
   useEffect(initAll, [])
   useEffect(initAll, [chainId, library])
