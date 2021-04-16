@@ -9,7 +9,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown-white-select.svg'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
@@ -23,6 +23,9 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+`};
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
@@ -32,21 +35,29 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   font-weight: 500;
   background: rgba(225, 248, 250, 0.12);
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 100px;
+  border-radius: 54px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
+  margin-left: 20px;
   user-select: none;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   border: none;
   padding: 0 0.5rem;
+  width: 186px;
+  height: 40px;
   :focus,
   :hover {
     background: rgba(225, 248, 250, 0.16);
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 100%;
+  margin-top: 30px;
+`};
 `
 
 const LabelRow = styled.div`
+  position: relative;
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   color: ${({ theme }) => theme.text1};
@@ -61,31 +72,48 @@ const LabelRow = styled.div`
 
 const Aligner = styled.span`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: relative;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  justify-content: flex-start;
+
+`};
 `
 const SectionLabel = styled.span`
   display: flex;
   color: #a7b1f4 !important;
   font-weight: bold;
   cursor: auto;
+  opacity: 0.56;
+  font-size: 13px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+`};
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
-  height: 35%;
 
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-    stroke-width: 1.5px;
+    stroke-width: 3.5px;
   }
+  position: absolute;
+  height: 100%;
+  right: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  right: 10px;
+`};
 `
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme }) => theme.bg1};
+  background: rgba(18, 21, 56, 0.24);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
   z-index: 1;
 `
 
@@ -133,8 +161,6 @@ const CopyRow = styled.div`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: rgba(0,0,0,.2);
   padding: 1rem 1.5rem;
 `
 
@@ -153,12 +179,12 @@ const StyledBalanceMax = styled.button`
   cursor: pointer;
   margin-right: 1rem;
   color: #fff;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   border: 0;
   padding-left: 10px;
   padding-right: 10px;
   :hover {
-    opacity: .9;
+    opacity: 0.9;
   }
   :focus {
     outline: none;
@@ -216,7 +242,6 @@ export default function CurrencyInputPanel({
   crossChainBalance,
   currentTargetToken
 }: CurrencyInputPanelProps) {
-
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -225,6 +250,7 @@ export default function CurrencyInputPanel({
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, chainId)
   const theme = useContext(ThemeContext)
 
+  console.log(account)
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
@@ -232,9 +258,9 @@ export default function CurrencyInputPanel({
   const hasABalance = !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
 
   // hack to fix AWAX
-  let altCurrency = currency;
+  let altCurrency = currency
   if (altCurrency?.symbol.includes('AWAX')) {
-    altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX');
+    altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX')
   }
 
   return (
@@ -242,11 +268,9 @@ export default function CurrencyInputPanel({
       <InputPanel id={id}>
         <Container hideInput={hideInput}>
           {!hideInput && (
-            <LabelRow style={{ marginBottom: '1rem'}}>
+            <LabelRow style={{ marginBottom: '1rem' }}>
               <RowBetween>
-                <SectionLabel>
-                  {label}
-                </SectionLabel>
+                <SectionLabel>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
                     onClick={hasABalance ? onMax : () => {}}
@@ -260,7 +284,7 @@ export default function CurrencyInputPanel({
                         `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
                         })}`
-                      : '-'}
+                      : ''}
                   </TYPE.body>
                 )}
               </RowBetween>
@@ -272,6 +296,7 @@ export default function CurrencyInputPanel({
                 <NumericalInput
                   className="token-amount-input"
                   value={value}
+                  fontSize="32px"
                   onUserInput={val => {
                     onUserInput(val)
                   }}
@@ -293,16 +318,19 @@ export default function CurrencyInputPanel({
             >
               <Aligner>
                 {pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
                 ) : altCurrency ? (
-                  <CurrencyLogo currency={altCurrency} size={'24px'} />
+                  <CurrencyLogo currency={altCurrency} size={'32px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(altCurrency && altCurrency.symbol)}>
+                  <StyledTokenName
+                    className="token-symbol-container"
+                    active={Boolean(altCurrency && altCurrency.symbol)}
+                  >
                     {isCrossChain && label === 'To'
                       ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                       : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
