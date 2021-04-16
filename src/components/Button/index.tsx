@@ -38,7 +38,7 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)`
+export const ButtonPrimary = styled(Base)<{isPointer?: boolean}>`
   background-color: ${({ theme }) => theme.primary1};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
@@ -57,9 +57,9 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : theme.bg3)};
-    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
-    cursor: auto;
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : '#6752F7')};
+    color: ${({ theme }) => theme.text1};
+    cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
@@ -319,11 +319,11 @@ export function ButtonConfirmed({
   }
 }
 
-export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+export function ButtonError({ error, isPointer, ...rest }: { error?: boolean, isPointer?: boolean } & ButtonProps) {
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest} />
+    return <ButtonPrimary isPointer={isPointer} {...rest} />
   }
 }
 
