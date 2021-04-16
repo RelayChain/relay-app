@@ -8,7 +8,6 @@ import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
-  setCrosschainLastTimeSwitched,
   setCrosschainTransferStatus,
   setCurrentToken,
   setTargetChain,
@@ -422,9 +421,6 @@ export default function Swap() {
     const currentTime = ~~(Date.now() / 1000)
     if (lastTimeSwitched < currentTime) {
       setShowCrossChainModal(true)
-      // dispatch(
-      //   setCrosschainLastTimeSwitched({})
-      // )
     } else {
       setShowPopupModal(true)
       setTimeout(() => {
