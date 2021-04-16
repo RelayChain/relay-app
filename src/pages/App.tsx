@@ -166,7 +166,6 @@ export default function App() {
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
             </Web3ReactManager>
-            <Marginer />
           </BodyWrapper>
         </AppWrapper>
       </GraphQLProvider>
