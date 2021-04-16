@@ -49,10 +49,9 @@ const HeaderFrame = styled.div`
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0;
     width: calc(100%);
     position: relative;
-    padding: 0.5rem 1rem;
   `};
 `
 const LogoContainer = styled.div`

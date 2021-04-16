@@ -22,23 +22,37 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
-const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any }>``
+const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: boolean }>`
+  cursor: pointer;
+  border-bottom: 0px solid rgba(167, 177, 244, 0.1);
+  border-bottom-width: ${({ showDetails }) => (showDetails ? `0` : `1`)}px;
+  &:last-of-type {
+    border-bottom-width: 0px;
+  }
+`
 
 const Details = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 34px;
   width: 100;
+  border-bottom: 1px solid rgba(167, 177, 244, 0.1);
+  padding-bottom: 16px;
+`
+const Cell = styled.td`
+  display: table-cell;
+  padding: 16px 0px;
 `
 const DetailsBox = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 34px;
-  background: rgba(18, 21, 56, 0.24);
+  background: rgba(18, 21, 56, 0.4);
   border-radius: 44px;
 `
 export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
   const { chainId, account } = useActiveWeb3React()
+  const [showDetails, setShowDetails] = useState(false)
   const token0 = stakingInfoTop.tokens[0]
   const token1 = stakingInfoTop.tokens[1]
 
@@ -90,6 +104,9 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
     )
   }
 
+  const toggleDetails = () => {
+    setShowDetails(!showDetails)
+  }
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
@@ -99,8 +116,8 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
 
   return (
     <>
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-        <td style={{ display: 'inline' }}>
+      <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
+        <Cell>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
 
@@ -108,65 +125,66 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
               {currency0.symbol}-{currency1.symbol}
             </TYPE.main>
           </div>
-        </td>
-        <td>
+        </Cell>
+        <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             0
           </TYPE.main>
-        </td>
-        <td>
+        </Cell>
+        <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             80.1%
           </TYPE.main>
-        </td>
-        <td>
+        </Cell>
+        <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             $855.069.231
           </TYPE.main>
-        </td>
-        <td>
+        </Cell>
+        <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             40x
           </TYPE.main>
-        </td>
-        <td>
+        </Cell>
+        <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
             Details
           </TYPE.main>
-        </td>
+        </Cell>
       </Wrapper>
-      <tr>
-        <td colSpan={6}>
-          <Details>
-            <DetailsBox>
-              <TYPE.main fontWeight={500} fontSize={15}>
-                Earned
-              </TYPE.main>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ display: 'flex', flexGrow: 1 }}>
-                  <TYPE.white fontWeight={600} fontSize={32}>
-                    0.784980
-                  </TYPE.white>
+      {showDetails && (
+        <tr>
+          <td colSpan={6}>
+            <Details>
+              <DetailsBox>
+                <TYPE.main fontWeight={500} fontSize={15}>
+                  Earned
+                </TYPE.main>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', flexGrow: 1 }}>
+                    <TYPE.white fontWeight={600} fontSize={32}>
+                      0.784980
+                    </TYPE.white>
+                  </div>
+                  <div style={{ display: 'flex', flexGrow: 0 }}>
+                    <ButtonPrimary padding="8px" borderRadius="8px">
+                      Harvest
+                    </ButtonPrimary>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', flexGrow: 0 }}>
-                <ButtonPrimary padding="8px" borderRadius="8px">
-                  Harvest
-                </ButtonPrimary>
-                </div>
-
-              </div>
-            </DetailsBox>
-            <DetailsBox>
-              <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-                Start Farming
-              </TYPE.white>
-              <ButtonOutlined padding="8px" borderRadius="8px">
-                Select
-              </ButtonOutlined>
-            </DetailsBox>
-          </Details>
-        </td>
-      </tr>
+              </DetailsBox>
+              <DetailsBox>
+                <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+                  Start Farming
+                </TYPE.white>
+                <ButtonOutlined padding="8px" borderRadius="8px">
+                  Select
+                </ButtonOutlined>
+              </DetailsBox>
+            </Details>
+          </td>
+        </tr>
+      )}
     </>
   )
 }

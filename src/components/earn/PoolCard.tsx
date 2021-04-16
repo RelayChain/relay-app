@@ -36,6 +36,7 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 300px;
 `
 
 const Row = styled.div`
@@ -124,7 +125,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
         {currency0.symbol}-{currency1.symbol}
       </TYPE.main>
       <Row>
-        <TYPE.main fontWeight={600} fontSize={12} style={{display: 'flex', flexGrow: 1 }}>
+        <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
           APR
         </TYPE.main>
         <TYPE.main fontWeight={500} fontSize={15}>
@@ -158,7 +159,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
       </DetailsBox>
       <DetailsBox>
         <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-          Start Farming
+          Staked
         </TYPE.white>
         <ButtonOutlined padding="8px" borderRadius="8px">
           Select
