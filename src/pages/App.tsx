@@ -27,7 +27,6 @@ import Home from './Home'
 import Logo from './../assets/svg/logo.svg'
 import LogoDark from './../assets/images/0-icon.png'
 import Manage from './Pools/Manage'
-import MenuBurger from '../components/MenuBurger'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import Mountains from '../components/Mountains'
@@ -55,6 +54,9 @@ const AppWrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+`};
 `
 
 const HeaderWrapper = styled.div`
@@ -76,7 +78,6 @@ const BodyWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 16px;
-    padding-top: 2rem;
   `};
 
   z-index: 1;
@@ -118,13 +119,10 @@ export default function App() {
     <Suspense fallback={null}>
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
-        <Title href="/">
-          <img width={'100%'} src={isDark ? LogoDark : Logo} alt="logo" />
-        </Title>
+
 
         <AppWrapper>
-          <MenuBurger open={open} setOpen={() => setOpen(!open)} />
-          <SideMenu open={open} setOpen={() => setOpen(!open)} />
+          <SideMenu />
           <div className="snow-bg"></div>
           <div className="bg-darken"></div>
           <URLWarning />

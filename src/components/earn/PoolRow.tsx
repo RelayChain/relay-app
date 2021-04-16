@@ -40,7 +40,7 @@ const Details = styled.div`
   padding-bottom: 16px;
 `
 const Cell = styled.td`
-display: table-cell;
+  display: table-cell;
   padding: 16px 0px;
 `
 const DetailsBox = styled.div`
