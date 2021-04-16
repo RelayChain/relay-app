@@ -235,6 +235,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #0E1130;
+  background: #2C3168;
+  background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
 }
 `
