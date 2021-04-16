@@ -8,25 +8,31 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import MenuBurger from './../MenuBurger'
+import LogoDark from './../../assets/images/0-icon.png'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
   width: 260px;
   display: flex;
   flex-direction: column;
-  background: rgba(0,0,0,.35);
+  background: rgba(0, 0, 0, 0.35);
   justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  position: fixed;
-  background: rgba(0,0,0,.95);
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  border-right: 0;
-  align-items: center;
-  z-index: 2
-`};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium<{ open?: boolean }>`
+    display: ${({ open }) => {
+      return open ? 'flex' : 'none'
+    }};
+    position: fixed;
+    background: rgba(0,0,0,.95);
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1000000;
+    border-right: 0;
+    align-items: center;
+    z-index: 2
+  `};
 `
 const HeaderLinks = styled.div`
   display: flex;
@@ -81,34 +87,48 @@ const IconLink = styled.span`
   margin-right: 20px;
 `
 const MoreLink = styled.span`
-display: flex;
-cursor: pointer;
-margin-top: 3rem;
-color: ${({ theme }) => theme.text2};
+  display: flex;
+  cursor: pointer;
+  margin-top: 3rem;
+  color: ${({ theme }) => theme.text2};
 `
-export interface SideMenuProps {
-  open: boolean
-  setOpen: () => void
-}
+const Title = styled.a`
+  position: absolute;
+  top: 32px;
+  left: 97px;
+  width: 66px;
+  height: 66px;
+  cursor: pointer;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  display: none;
+  `};
+`
 
-export default function SideMenu({ open, setOpen }: SideMenuProps) {
+export default function SideMenu() {
   const { t } = useTranslation()
   const { width } = useWindowDimensions()
   const history = useHistory()
   const location = useLocation()
   const [pathname, setPathname] = useState(location.pathname)
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   history.listen(location => setPathname(location.pathname))
-
-  const hanldeSidemenuOpen = () => width < 961 && setOpen()
-
-  if (width < 961 && !open) return <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
+  const toggleOpen = () => {
+    setOpen(!open)
+    console.log(!open)
+  }
+  const hanldeSidemenuOpen = () => width < 961 && setOpen(!open)
 
   return (
     <>
+      <MenuBurger open={open} setOpen={toggleOpen} />
+
       <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
-      <SideMenuWrapper>
+      <SideMenuWrapper open={open}>
+        <Title href="/">
+          <img width={'100%'} src={LogoDark} alt="logo" />
+        </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
             <IconLink>
@@ -140,7 +160,7 @@ export default function SideMenu({ open, setOpen }: SideMenuProps) {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
-          <MoreLink  onClick={() => setIsOpenModal(true)}>
+          <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink>
               <Icon icon="planet" />
             </IconLink>

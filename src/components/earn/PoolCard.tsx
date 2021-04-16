@@ -36,6 +36,7 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 300px;
 `
 
 const Row = styled.div`
