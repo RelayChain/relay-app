@@ -7,6 +7,8 @@ const BackgroundWrap = styled.div`
   position: absolute;
   bottom: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
 `
 
 export interface BackgroundProps {
@@ -16,8 +18,8 @@ export interface BackgroundProps {
 export default function Background({ variant = 'green' }: BackgroundProps) {
   const { width } = useWindowDimensions()
 
-  const widthSize = width < 500 ? 165 : 261
-  const heightSize = width < 500 ? 100 : 162
+  const widthSize = '100%'
+  const heightSize = '100%'
   return (
     <BackgroundWrap>
       {variant === 'green' ? (

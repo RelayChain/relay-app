@@ -8,8 +8,8 @@ export type PercentageProps = {
 }
 
 const Text = styled.span<{ value: number }>`
-  margin-left: 10px;
-  font-size: 12px;
+  margin-left: 8px;
+  font-size: 17px;
   font-family: 'Poppins', sans-serif;
   color: ${({ value }) => (value < 0 ? '#FF574D' : '#57DC19')};
 `
