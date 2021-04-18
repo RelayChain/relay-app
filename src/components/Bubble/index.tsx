@@ -6,18 +6,22 @@ import Icon from './../Icon'
 
 const BubbleWrap = styled.div`
   position: relative;
-  width: 261px;
-  height: 162px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  width: 165px;
-  height: 100px;
+  flex: 1;
+  height: auto;
+  width: 255px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  width: 100%;
 `};
 `
 const BubbleInnerWrap = styled.div`
   position: relative;
-  padding: 40px;
+  padding: 45px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding: 25px;
+  text-align: center;
+`};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  padding: 12px 20px;
+padding: 25px 10px;
 `};
 `
 const Title = styled.div<{ color: string }>`
@@ -25,13 +29,16 @@ const Title = styled.div<{ color: string }>`
   font-size: 17px;
   color: ${({ color }) => color};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  font-size: 13px;
+  font-size: 12px;
 `};
 `
 const Flex = styled.div`
   display: flex;
   align-items: center;
   margin-top: 30px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  justify-content:center;
+`};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   margin-top: 15px;
 `};
@@ -54,6 +61,12 @@ const Heading = styled.div`
   font-weight: bold;
   font-size: 32px;
   letter-spacing: -0.02em;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  font-size: 30px;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  font-size: 26px;
+`};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   font-size: 16px;
 `};

@@ -14,6 +14,8 @@ type BarChartProps = {
 const Box = styled.div`
   position: relative;
   padding-bottom: 54px;
+  display: flex;
+  justify-content: center;
 `
 
 const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
 import BubbleBase from './../BubbleBase'
@@ -7,7 +7,7 @@ import { LiquidityVolumeList } from './../../graphql/types'
 import toCurrency from './../../utils/toCurrency'
 import BarChart from './charts/BarChart'
 import LineChart from './charts/LineChart'
-import useWindowDimensions from './../../hooks/useWindowDimensions'
+import useResize from './../../hooks/widthComponent'
 
 type DateBoxType = {
   date: Date
@@ -30,8 +30,8 @@ const BubbleChartWrap = styled.div`
   padding-top: 46px;
   position: relative;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  max-width: 546px;
-  width: 100%
+  width: 100%;
+  height: auto
 `};
 `
 const Flex = styled.div`
@@ -48,11 +48,12 @@ const FirstBox = styled.div`
   padding: 0 42px;
 `
 const SecondBox = styled.div`
-  margin-botoom: 52px;
+  margin-bottom: 52px;
+  width: 100%;
 `
 const FirstHeading = styled.div`
   font-weight: 500;
-  font-size: 12px;
+  font-size: 17px;
   letter-spacing: -0.01em;
   color: #A7B1F4;
   opacity: 0.88;
@@ -60,24 +61,17 @@ const FirstHeading = styled.div`
 const SecondHeading = styled.div`
   margin-top: 5px;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 22px;
   letter-spacing: -0.01em;
+  ::first-letter {
+    font-size: 17px;
+  }
 `
 
 const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
-  const { width } = useWindowDimensions()
-
-  let lineChartWidth = 472;
   
-  if (width < 500) {
-    lineChartWidth = 380
-  }
-  if (width < 400) {
-    lineChartWidth = 320
-  }
-
   const onSelectedValue = (selectedValue?: number, selectedPerc?: number) => {
     if (!selectedValue || !selectedPerc) {
       setSelectedValue(value)
@@ -88,10 +82,16 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
     setCurrentPercentage(selectedPerc)
   }
 
+  const componentRef = useRef()
+
+  const { width, height } = useResize(componentRef)
+ 
+
   return (
     <BubbleChartWrap>
       <BubbleBase />
-      <Flex>
+      {/* @ts-ignore */}
+      <Flex ref={componentRef}>
         <FirstBox>
           <FirstHeading>{title}</FirstHeading>
           <SecondHeading>
@@ -100,10 +100,10 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
           </SecondHeading>
         </FirstBox>
         {type === 'line' ? (
-            <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={lineChartWidth}/>
+            <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width}/>
           ) : (
             <SecondBox>
-              <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={lineChartWidth}/>
+              <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width}/>
             </SecondBox>
           )}
       </Flex>

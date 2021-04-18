@@ -37,10 +37,15 @@ const WalletsWrap = styled.div<{ isColumn: boolean }>`
 `};
 `
 const BubbleMarginWrap = styled.div`
-  margin-right: 24px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  padding: 2px;
-  margin-right: 5px;
+  display: flex;
+  gap: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+ width: 100%;
+  justify-content: space-between;
+`};
+${({ theme }) => theme.mediaWidth.upToExtraSmall`
+ width: 100%;
+ gap: 0.1rem;
 `};
 `
 const Flex = styled.div<{ isColumn: boolean }>`
@@ -117,10 +122,11 @@ export default function Home() {
           <Bubble variant="green" color="#A7B1F4" icon="wallet">
             580 725
           </Bubble>
-        </BubbleMarginWrap>
+      
         <Bubble variant="blue" color="#A7B1F4" prefix="$" suffix="B" icon="alien">
           850.94
         </Bubble>
+        </BubbleMarginWrap>
       </WalletsWrap>
       <Flex isColumn={isColumn}>
         {zeroData.loading ? (
