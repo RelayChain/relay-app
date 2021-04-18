@@ -9,6 +9,7 @@ import { DataCard } from '../../components/earn/styled'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import { OutlineCard } from '../../components/Card'
+import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/earn/PoolCard'
 import PoolControls from '../../components/earn/PoolControls'
 import PoolRow from '../../components/earn/PoolRow'
@@ -28,7 +29,6 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 const PageWrapper = styled.div`
   flex-direction: column;
   display: flex;
-  padding: 0px 64px;
   width: 100%;
   flex-grow: 1;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -38,6 +38,11 @@ const PageWrapper = styled.div`
 const Title = styled.h1`
   line-height: 80px;
   margin-bottom: 32px;
+  width: 100%;
+  padding: 0 64px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding:0px;
+`};
 `
 const Wrapper = styled.div`
   background: rgba(47, 53, 115, 0.32);
@@ -139,93 +144,95 @@ export default function Pools() {
 
   return (
     <>
-      <PageWrapper>
-        <Title>Pools</Title>
-        {account !== null && <PoolControls displayMode={displayMode} setDisplayMode={setDisplayMode}/>}
-        {account !== null &&
-          stakingInfos?.length > 0 &&
-          (displayMode === 'table' ? (
-            <Wrapper>
-              <PoolsTable style={{ width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th>
-                      <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left' }}>
-                        Type
-                      </TYPE.main>
-                    </th>
-                    <th>
-                      <TYPE.main fontWeight={600} fontSize={12}>
-                        Earned
-                      </TYPE.main>
-                    </th>
-                    <th>
-                      <TYPE.main fontWeight={600} fontSize={12}>
-                        APR
-                      </TYPE.main>
-                    </th>
-                    <th>
-                      <TYPE.main fontWeight={600} fontSize={12}>
-                        Liquidity
-                      </TYPE.main>
-                    </th>
-                    <th>
-                      <TYPE.main fontWeight={600} fontSize={12}>
-                        Multiplier
-                      </TYPE.main>
-                    </th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stakingInfosWithBalance?.map(stakingInfo => {
-                    // need to sort by added liquidity here
-                    return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-                  })}
-                </tbody>
-              </PoolsTable>
-              {/* : !stakingRewardsExist ? (
+      <Title>Pools</Title>
+      <PageContainer>
+        <PageWrapper>
+          {account !== null && <PoolControls displayMode={displayMode} setDisplayMode={setDisplayMode} />}
+          {account !== null &&
+            stakingInfos?.length > 0 &&
+            (displayMode === 'table' ? (
+              <Wrapper>
+                <PoolsTable style={{ width: '100%' }}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left' }}>
+                          Type
+                        </TYPE.main>
+                      </th>
+                      <th>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          Earned
+                        </TYPE.main>
+                      </th>
+                      <th>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          APR
+                        </TYPE.main>
+                      </th>
+                      <th>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          Liquidity
+                        </TYPE.main>
+                      </th>
+                      <th>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          Multiplier
+                        </TYPE.main>
+                      </th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stakingInfosWithBalance?.map(stakingInfo => {
+                      // need to sort by added liquidity here
+                      return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                    })}
+                  </tbody>
+                </PoolsTable>
+                {/* : !stakingRewardsExist ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : null} */}
-            </Wrapper>
-          ) : (
-            <GridContainer>
-              {stakingInfosWithBalance?.map(stakingInfo => {
-                return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-              })}
-            </GridContainer>
-          ))}
-        {account !== null && stakingRewardsExist && stakingInfos?.length === 0 && (
-          <EmptyData>
-            <Spinner src={ZeroIcon} />
-          </EmptyData>
-        )}
-        {account === null && (
-          <EmptyData>
-            <NoAccount src={WalletMissing} />
-            <Message>
-              <TYPE.main fontWeight={600} fontSize={24} style={{ textAlign: 'center' }}>
-                No Wallet Connected!
-              </TYPE.main>
-            </Message>
-            <div style={{ display: 'flex', flexGrow: 0 }}>
-              <ButtonPrimary padding="8px" borderRadius="8px" onClick={toggleWalletModal}>
-                Connect a Wallet
-              </ButtonPrimary>
-            </div>
-            {/* <NoAccount src={NoResults} /> */}
-          </EmptyData>
-        )}
+              </Wrapper>
+            ) : (
+              <GridContainer>
+                {stakingInfosWithBalance?.map(stakingInfo => {
+                  return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                })}
+              </GridContainer>
+            ))}
+          {account !== null && stakingRewardsExist && stakingInfos?.length === 0 && (
+            <EmptyData>
+              <Spinner src={ZeroIcon} />
+            </EmptyData>
+          )}
+          {account === null && (
+            <EmptyData>
+              <NoAccount src={WalletMissing} />
+              <Message>
+                <TYPE.main fontWeight={600} fontSize={24} style={{ textAlign: 'center' }}>
+                  No Wallet Connected!
+                </TYPE.main>
+              </Message>
+              <div style={{ display: 'flex', flexGrow: 0 }}>
+                <ButtonPrimary padding="8px" borderRadius="8px" onClick={toggleWalletModal}>
+                  Connect a Wallet
+                </ButtonPrimary>
+              </div>
+              {/* <NoAccount src={NoResults} /> */}
+            </EmptyData>
+          )}
 
-        {/* <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+          {/* <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           {finishedPools?.length > 0 &&
             finishedPools.map(stakingInfo => {
               return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
             })}
         </AutoColumn> */}
-      </PageWrapper>
+        </PageWrapper>
+      </PageContainer>
     </>
   )
 }
