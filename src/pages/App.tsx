@@ -134,7 +134,6 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Web3ReactManager>
-              <PageContainer>
               <Switch>
                 <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/swap" component={Swap} />
@@ -163,7 +162,6 @@ export default function App() {
                 <Route exact strict path="/transfer" component={Transfer} />
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
-              </PageContainer>
             </Web3ReactManager>
           </BodyWrapper>
         </AppWrapper>

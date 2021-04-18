@@ -5,14 +5,12 @@ import { CustomLightSpinner } from '../../theme'
 import Circle from '../../assets/images/blue-loader.svg'
 import Bubble from './../../components/Bubble'
 import Transactions from './../../components/Transactions'
+import PageContainer from './../../components/PageContainer'
 import BubbleChart from './../../components/BubbleChart'
 import transactions from '../../graphql/queries/transactions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
-const HomeWrap = styled.div`
-  width: 100%;
-`
 const Title = styled.h1`
   width: 100%;
   padding: 0px 64px;
@@ -118,8 +116,7 @@ export default function Home() {
   return (
     <>
     <Title>Exchange</Title>
-    <HomeWrap>
-      
+    <PageContainer>
       <WalletsWrap isColumn={isColumn}>
         <BubbleMarginWrap>
           <Bubble variant="green" color="#A7B1F4" icon="wallet">
@@ -156,7 +153,7 @@ export default function Home() {
           </FlexButtons>
         </>
       )}
-    </HomeWrap>
+    </PageContainer>
     </>
   )
 }
