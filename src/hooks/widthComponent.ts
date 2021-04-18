@@ -9,7 +9,8 @@ const useResize = (myRef: any) => {
         setWidth(myRef.current.offsetWidth - 50)
         setHeight(myRef.current.offsetHeight)
       }
-  
+      handleResize()
+
       window.addEventListener('resize', handleResize)
   
       return () => {
