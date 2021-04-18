@@ -23,6 +23,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Guides from './Guides'
 import Header from '../components/Header'
 import ModalMore from '../components/ModalMore'
+import PageContainer from '../components/PageContainer'
 import Home from './Home'
 import Logo from './../assets/svg/logo.svg'
 import LogoDark from './../assets/images/0-icon.png'
@@ -119,8 +120,6 @@ export default function App() {
     <Suspense fallback={null}>
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
-
-
         <AppWrapper>
           <SideMenu />
           <div className="snow-bg"></div>
@@ -135,6 +134,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Web3ReactManager>
+              <PageContainer>
               <Switch>
                 <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/swap" component={Swap} />
@@ -163,6 +163,7 @@ export default function App() {
                 <Route exact strict path="/transfer" component={Transfer} />
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
+              </PageContainer>
             </Web3ReactManager>
           </BodyWrapper>
         </AppWrapper>
