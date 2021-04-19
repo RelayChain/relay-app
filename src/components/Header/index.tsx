@@ -162,6 +162,8 @@ const NotConnectedWrap = styled.div`
   min-width: 0px;
   height: 0px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
+    position: relative;
+    top: -10px;
     margin: 0 auto;
   `};
 `
