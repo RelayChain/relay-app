@@ -25,6 +25,7 @@ import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useToken } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
+import { useUserAddedTokens } from '../../state/user/hooks'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -56,7 +57,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
-
+  const userAddedTokens = useUserAddedTokens()
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
@@ -95,7 +96,9 @@ export function CurrencySearch({
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(
-      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY ? defaultTokenList : availableTokensArray,
+      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+        ? [...defaultTokenList, ...userAddedTokens]
+        : [...availableTokensArray, ...userAddedTokens],
       searchQuery
     )
   }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
