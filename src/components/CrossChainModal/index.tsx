@@ -108,7 +108,7 @@ export default function CrossChainModal({
   const switchChain = async (chain: CrosschainChain) => {
     
     let { ethereum } = window;
-   
+
     if (ethereum) {
       let chainsConfig = null
       for (const item of crosschainConfig.chains) {
@@ -135,8 +135,13 @@ export default function CrossChainModal({
         dispatch(
           setCrosschainLastTimeSwitched({})
         )
-        if (tx) {
-          console.log(tx)
+        
+        if (tx !== '') { 
+          tx
+          .then(t => {
+            console.log(t)
+            window.location.reload()
+          })
         }
       }
     }
