@@ -21,6 +21,7 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import DropdownArrow from '../../assets/svg/DropdownArrow'
 
 const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: boolean }>`
   cursor: pointer;
@@ -33,15 +34,46 @@ const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: 
 
 const Details = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   column-gap: 34px;
-  width: 100;
+  row-gap: 16px;
   border-bottom: 1px solid rgba(167, 177, 244, 0.1);
   padding-bottom: 16px;
 `
-const Cell = styled.td`
+const Logo = styled(DoubleCurrencyLogo)`
+  margin-bottom: 20px;
+`
+const Cell = styled.td<{ mobile?: boolean }>`
   display: table-cell;
-  padding: 16px 0px;
+  padding: 16px 8px;
+  ${({ theme, mobile = true }) =>
+    !mobile &&
+    theme.mediaWidth.upToMedium`
+      display: none;
+  `};
+`
+const TitleCell = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+const DetailsCell = styled.div<{ showDetails?: boolean }>`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  ${({ theme }) =>
+    theme.mediaWidth.upToMedium`
+      div{
+        display: none;
+      }
+  `}
+  svg {
+    ${({ showDetails }) => showDetails && `transform: rotate(180deg);`}
+    margin-left: 8px;
+    g {
+      fill: #727bba;
+    }
+  }
 `
 const DetailsBox = styled.div`
   flex: 1;
@@ -118,13 +150,12 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
     <>
       <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
         <Cell>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-
-            <TYPE.main fontWeight={500} fontSize={15} style={{ display: 'inline', marginLeft: '11px' }}>
+          <TitleCell>
+            <Logo currency0={currency0} currency1={currency1} size={24} style={{marginRight: '8px'}} />
+            <TYPE.main fontWeight={500} fontSize={15} style={{ display: 'inline' }}>
               {currency0.symbol}-{currency1.symbol}
             </TYPE.main>
-          </div>
+          </TitleCell>
         </Cell>
         <Cell>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
@@ -136,20 +167,23 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
             80.1%
           </TYPE.main>
         </Cell>
-        <Cell>
+        <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             $855.069.231
           </TYPE.main>
         </Cell>
-        <Cell>
+        <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             40x
           </TYPE.main>
         </Cell>
         <Cell>
-          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
-            Details
-          </TYPE.main>
+          <DetailsCell showDetails={showDetails}>
+            <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
+              Details
+            </TYPE.main>
+            <DropdownArrow />
+          </DetailsCell>
         </Cell>
       </Wrapper>
       {showDetails && (
@@ -167,9 +201,7 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
                     </TYPE.white>
                   </div>
                   <div style={{ display: 'flex', flexGrow: 0 }}>
-                    <ButtonPrimary padding="8px" borderRadius="8px">
-                      Harvest
-                    </ButtonPrimary>
+                    <ButtonPrimary>Harvest</ButtonPrimary>
                   </div>
                 </div>
               </DetailsBox>
@@ -177,9 +209,7 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
                 <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
                   Start Farming
                 </TYPE.white>
-                <ButtonOutlined padding="8px" borderRadius="8px">
-                  Select
-                </ButtonOutlined>
+                <ButtonOutlined>Select</ButtonOutlined>
               </DetailsBox>
             </Details>
           </td>

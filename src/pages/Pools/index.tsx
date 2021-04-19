@@ -54,6 +54,10 @@ const Wrapper = styled.div`
   width: 100%;
   overflow: hidden;
   position: relative;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  border-radius: 16px;
+  padding: 16px 16px;
+`};
 `
 const PoolsTable = styled.table`
   border-collapse: collapse;
@@ -67,6 +71,15 @@ const PoolsTable = styled.table`
   td[colspan='6'] {
     width: 100%;
   }
+
+`
+
+const HeaderCell = styled.th<{ mobile?: boolean }>`
+  ${({ theme, mobile = true }) =>
+    !mobile &&
+    theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `
 
 const EmptyData = styled.div`
@@ -88,13 +101,13 @@ const rotate = keyframes`
 `
 
 const opacity = keyframes`
-from {
-  opacity:.8;
-}
-50%  {  opacity: 0.3;}
-to {
-  opacity: .8;
-}
+  from {
+    opacity:.8;
+  }
+  50%  {  opacity: 0.3;}
+  to {
+    opacity: .8;
+  }
 `
 
 // Here we create a component that will rotate everything we pass in over two seconds
@@ -114,14 +127,8 @@ const Message = styled.div`
 `
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 34px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 1fr 1fr;
-  `};
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  column-gap: 28px;
 `
 export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
@@ -155,32 +162,32 @@ export default function Pools() {
                 <PoolsTable style={{ width: '100%' }}>
                   <thead>
                     <tr>
-                      <th>
+                      <HeaderCell>
                         <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left' }}>
                           Type
                         </TYPE.main>
-                      </th>
-                      <th>
+                      </HeaderCell>
+                      <HeaderCell>
                         <TYPE.main fontWeight={600} fontSize={12}>
                           Earned
                         </TYPE.main>
-                      </th>
-                      <th>
+                      </HeaderCell>
+                      <HeaderCell>
                         <TYPE.main fontWeight={600} fontSize={12}>
                           APR
                         </TYPE.main>
-                      </th>
-                      <th>
+                      </HeaderCell>
+                      <HeaderCell mobile={false}>
                         <TYPE.main fontWeight={600} fontSize={12}>
                           Liquidity
                         </TYPE.main>
-                      </th>
-                      <th>
+                      </HeaderCell>
+                      <HeaderCell mobile={false}>
                         <TYPE.main fontWeight={600} fontSize={12}>
                           Multiplier
                         </TYPE.main>
-                      </th>
-                      <th></th>
+                      </HeaderCell>
+                      <HeaderCell></HeaderCell>
                     </tr>
                   </thead>
                   <tbody>
