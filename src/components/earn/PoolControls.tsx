@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { TYPE } from '../../theme'
 
 import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
-import Select from '../../components/Select'
 import SearchBar from '../../components/SearchBar'
+import Select from '../../components/Select'
+import { TYPE } from '../../theme'
+import styled from 'styled-components'
 
 const Controls = styled.div`
   display: flex;
@@ -58,7 +58,7 @@ const InputContainer = styled.div`
   height: 48px;
   padding: 0px 8px;
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
 `
@@ -155,20 +155,20 @@ function PoolControls({ displayMode, setDisplayMode }: PoolControlsProps) {
           </ControlLabel>
           <InputContainer>
             <Button
-              isSelected={displayMode === 'table'}
-              onClick={() => {
-                setDisplayMode('table')
-              }}
-            >
-              <ListMode />
-            </Button>
-            <Button
               isSelected={displayMode === 'grid'}
               onClick={() => {
                 setDisplayMode('grid')
               }}
             >
               <CardMode />
+            </Button>
+            <Button
+              isSelected={displayMode === 'table'}
+              onClick={() => {
+                setDisplayMode('table')
+              }}
+            >
+              <ListMode />
             </Button>
           </InputContainer>
         </ControlGroup>

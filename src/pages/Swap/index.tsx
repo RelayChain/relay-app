@@ -130,7 +130,7 @@ const SwapWrap = styled.div`
   margin-right: auto;
   min-height: 587px;
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -220,7 +220,7 @@ const BalanceCard = styled.div`
   height: 118px;
   width: 500px;
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   display: flex;
@@ -628,8 +628,6 @@ export default function Swap() {
             <SwapFlexRow>
               <SwapWrap>
                 <BubbleBase />
-
-                <SwapPoolTabs active={'swap'} />
 
                 <Wrapper id="swap-page">
                   <ConfirmTransferModal

@@ -40,7 +40,7 @@ const Base = styled(RebassButton)<{
 
 export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
   background-color: ${({ theme }) => theme.primary1};
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   color: white;
   &:focus {

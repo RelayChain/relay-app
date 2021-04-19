@@ -12,7 +12,7 @@ const BubbleBaseWrap = styled.div`
   z-index: -1;
   width: 100%;
   height: 100%;
-  filter: brightness(.65);
+  filter: brightness(.75);
 `
 
 const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {

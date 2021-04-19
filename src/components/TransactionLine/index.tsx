@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+
 import { TransactionTypes } from './../../graphql/types'
+import styled from 'styled-components'
 import toEllipsis from './../../utils/toEllipsis'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
@@ -23,7 +24,7 @@ const Text = styled.div`
 `};
 `
 const TextTransition = styled(Text)`
-  color: #b97cd6;
+  color: #1EF7E7;
 `
 const TextValue = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToSmall`

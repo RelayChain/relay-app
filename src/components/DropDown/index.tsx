@@ -22,7 +22,7 @@ const Select = styled.select`
   -moz-appearance: none;
   appearance: none;
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   padding-left: 24px;
   border-radius: 44px;

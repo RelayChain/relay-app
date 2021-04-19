@@ -1,6 +1,6 @@
 import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { Break, CardNoise } from './styled'
-import { ButtonPrimary, ButtonOutlined } from '../Button'
+import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import React, { useState } from 'react'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -8,6 +8,7 @@ import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../sta
 import { AutoColumn } from '../Column'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import DropdownArrow from '../../assets/svg/DropdownArrow'
 import { RowBetween } from '../Row'
 import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
@@ -21,13 +22,12 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import DropdownArrow from '../../assets/svg/DropdownArrow'
 
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   border: 2px solid;
   border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   padding: 32px 16px;
@@ -78,7 +78,7 @@ const DetailsBox = styled.div`
   width: 100%;
   flex-direction: column;
   padding: 34px;
-  background: rgba(18, 21, 56, 0.24);
+  background: rgba(18, 21, 56, 0.54);
   border-radius: 44px;
 `
 const Multiplier = styled.div`

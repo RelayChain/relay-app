@@ -110,8 +110,8 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  background: rgba(18, 21, 56, 0.24);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  background: rgba(18, 21, 56, 0.54);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   z-index: 1;

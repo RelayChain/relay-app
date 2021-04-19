@@ -1,5 +1,8 @@
+import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { ExternalLink, TYPE } from '../../theme'
+import React, { useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import styled, { keyframes } from 'styled-components'
 
 import { AutoColumn } from '../../components/Column'
 import { ButtonSecondary } from '../../components/Button'
@@ -8,22 +11,17 @@ import { Countdown } from './Countdown'
 import { DataCard } from '../../components/earn/styled'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
+import NoResults from '../../assets/svg/no_results.svg'
 import { OutlineCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/earn/PoolCard'
 import PoolControls from '../../components/earn/PoolControls'
 import PoolRow from '../../components/earn/PoolRow'
-import React, { useState } from 'react'
 import { RowBetween } from '../../components/Row'
-import { Zap } from 'react-feather'
-import styled, { keyframes } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-
-import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import WalletMissing from '../../assets/svg/wallet_missing.svg'
-import NoResults from '../../assets/svg/no_results.svg'
-import { ButtonPrimary, ButtonOutlined } from '../../components/Button'
-
+import { Zap } from 'react-feather'
+import ZeroIcon from '../../assets/svg/zero_icon.svg'
+import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 
 const PageWrapper = styled.div`
@@ -36,17 +34,19 @@ const PageWrapper = styled.div`
 `};
 `
 const Title = styled.h1`
-  line-height: 80px;
-  margin-bottom: 32px;
   width: 100%;
-  padding: 0 64px;
+  padding: 0px 64px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding:0px;
+  padding: 0;
+  text-align: center;
+  font-size: 49px;
+  margin-top: 40px;
+  margin-bottom: 0px;
 `};
 `
 const Wrapper = styled.div`
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   margin-bottom: 1rem;
@@ -134,7 +134,7 @@ export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState('table')
+  const [displayMode, setDisplayMode] = useState('grid')
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)

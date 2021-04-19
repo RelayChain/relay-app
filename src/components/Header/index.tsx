@@ -1,30 +1,27 @@
 // External libraries
 import React, { useMemo, useState } from 'react'
-import { ChainId } from '@zeroexchange/sdk'
 import styled, { css } from 'styled-components'
-import { Text } from 'rebass'
-
-// Tools
-import { PopupContent } from 'state/application/actions'
-import { CHAIN_LABELS } from '../../constants'
-
-// Hooks
-import { useCrosschainState } from 'state/crosschain/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../hooks'
-
-// Components
-import CrossChainModal from 'components/CrossChainModal'
-import PlainPopup from 'components/Popups/PlainPopup'
-import ClaimModal from '../claim/ClaimModal'
-import Web3Status from '../Web3Status'
-import { YellowCard } from '../Card'
-import Settings from '../Settings'
 
 // Logotypes
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
-import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import BlockchainLogo from '../BlockchainLogo'
+import { CHAIN_LABELS } from '../../constants'
+import { ChainId } from '@zeroexchange/sdk'
+import ClaimModal from '../claim/ClaimModal'
+// Components
+import CrossChainModal from 'components/CrossChainModal'
+import PlainPopup from 'components/Popups/PlainPopup'
+// Tools
+import { PopupContent } from 'state/application/actions'
+import Settings from '../Settings'
+import { Text } from 'rebass'
+import Web3Status from '../Web3Status'
+import { YellowCard } from '../Card'
+import ZeroLogo from '../../assets/images/zero-logo-text.png'
+import { useActiveWeb3React } from '../../hooks'
+// Hooks
+import { useCrosschainState } from 'state/crosschain/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -63,7 +60,7 @@ const HeaderControls = styled.div`
   justify-self: flex-end;
   justify-content: space-between;
   background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   height: 76px;
