@@ -29,6 +29,7 @@ const Base = styled(RebassButton)<{
   cursor: pointer;
   position: relative;
   z-index: 1;
+  transition: all .2s ease-in-out;
   &:disabled {
     cursor: auto;
   }

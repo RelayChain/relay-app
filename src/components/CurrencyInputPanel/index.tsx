@@ -172,15 +172,15 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 35px;
-  background-color: ${({ theme }) => theme.primary1};
+  border: 2px solid #1EF7E7;
+  background: transparent;
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  margin-right: 1rem;
-  color: #fff;
+  margin-right: .5rem;
+  color: #1EF7E7;
   transition: all 0.2s ease-in-out;
-  border: 0;
   padding-left: 10px;
   padding-right: 10px;
   :hover {

@@ -32,17 +32,14 @@ import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/applica
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
-import BubbleBase from '../../components/BubbleBase'
-import Icon from '../../components/Icon'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import AppBody from '../AppBody'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
+import BubbleBase from '../../components/BubbleBase'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
-import CustomArrowDown from '../../components/ArrowDown'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
 import { ClickableText } from '../Legacy_Pool/styleds'
@@ -50,8 +47,11 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CustomArrowDown from '../../components/ArrowDown'
 import { CustomLightSpinner } from '../../theme/components'
+import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
 import PlainPopup from 'components/Popups/PlainPopup'
@@ -66,13 +66,13 @@ import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getTradeVersion } from '../../data/V1'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import useWindowDimensions from './../../hooks/useWindowDimensions'
+import toEllipsis from '../../utils/toEllipsis'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import toEllipsis from '../../utils/toEllipsis'
 import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const CrossChainLabels = styled.div`
   p {
@@ -211,7 +211,8 @@ const Flex = styled(RowBetween)`
   margin-top: 1rem;
 `
 const IconWrap = styled.div`
-  margin-left: 25px;
+  margin-left: 1.5rem;
+  margin-top: 8px;
 `
 const BalanceCard = styled.div`
   margin-bottom: 20px;
@@ -783,15 +784,24 @@ export default function Swap() {
                   </AutoColumn>
                   <Flex>
                     <BottomGroupingSwap>
-                      {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
-                        <>
-                          <ButtonPrimary onClick={showConfirmTransferModal}>
-                            Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
-                          </ButtonPrimary>
-                        </>
-                      ) : !account ? (
+                      { !account ? (
                         <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                      ) : showWrap ? (
+                      ) : !trade ? (
+                        <GreyCard
+                          style={{
+                            textAlign: 'center',
+                            minWidth: '230px',
+                            borderRadius: '100px',
+                            height: '58px',
+                            paddingTop: 0,
+                            paddingBottom: 0
+                          }}
+                        >
+                          <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
+                            Enter A Trade
+                          </TYPE.main>
+                        </GreyCard>
+                      ): showWrap ? (
                         <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                           {wrapInputError ??
                             (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
@@ -869,7 +879,7 @@ export default function Swap() {
                           disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                           error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                         >
-                          <Text fontSize={14} fontWeight={500}>
+                          <Text fontSize={18} fontWeight={600}>
                             {swapInputError
                               ? swapInputError
                               : priceImpactSeverity > 3 && !isExpertMode
