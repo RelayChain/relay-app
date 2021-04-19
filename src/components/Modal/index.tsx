@@ -42,7 +42,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(28px);
     border-radius: 44px;
-    padding: 0px;
+    padding: 10px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
     overflow-x: auto;
