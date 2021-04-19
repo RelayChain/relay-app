@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useQuery } from '@apollo/client'
-import { CustomLightSpinner } from '../../theme'
-import Circle from '../../assets/images/blue-loader.svg'
+
 import Bubble from './../../components/Bubble'
-import Transactions from './../../components/Transactions'
-import PageContainer from './../../components/PageContainer'
 import BubbleChart from './../../components/BubbleChart'
+import Circle from '../../assets/images/blue-loader.svg'
+import { CustomLightSpinner } from '../../theme'
+import PageContainer from './../../components/PageContainer'
+import Transactions from './../../components/Transactions'
+import styled from 'styled-components'
 import transactions from '../../graphql/queries/transactions'
-import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
+import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
+import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 
 const Title = styled.h1`
   width: 100%;
@@ -119,13 +120,12 @@ export default function Home() {
     <PageContainer>
       <WalletsWrap isColumn={isColumn}>
         <BubbleMarginWrap>
-          <Bubble variant="green" color="#A7B1F4" icon="wallet">
-            580 725
+          <Bubble variant="green" color="#A7B1F4" title="Wallet Holders">
+            580,725
           </Bubble>
-      
-        <Bubble variant="blue" color="#A7B1F4" prefix="$" suffix="B" icon="alien">
-          850.94
-        </Bubble>
+          <Bubble variant="blue" color="#A7B1F4" prefix="$" suffix="B" title="Total Value Locked">
+            850.94
+          </Bubble>
         </BubbleMarginWrap>
       </WalletsWrap>
       <Flex isColumn={isColumn}>

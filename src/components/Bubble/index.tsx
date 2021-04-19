@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react'
-import styled from 'styled-components'
 
 import Background from './Background'
 import Icon from './../Icon'
+import styled from 'styled-components'
 
 const BubbleWrap = styled.div`
   position: relative;
@@ -75,18 +75,19 @@ const Heading = styled.div`
 export interface BubbleProps {
   variant: string
   color: string
+  title: string
   icon?: string
   children?: ReactNode
   prefix?: string
   suffix?: string
 }
 
-export default function Bubble({ variant, color, icon, children, prefix, suffix }: BubbleProps) {
+export default function Bubble({ variant, color, title, icon, children, prefix, suffix }: BubbleProps) {
   return (
     <BubbleWrap>
       <Background variant={variant} />
       <BubbleInnerWrap>
-        <Title color={color}>Wallet Holders</Title>
+        <Title color={color}>{title}</Title>
         <Flex>
           {icon && <Icon icon={icon} color={color} />}
           <FlexAmount>
