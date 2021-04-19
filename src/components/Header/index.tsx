@@ -1,47 +1,36 @@
-import { BarChart, Book, CreditCard, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
-import { ExternalLink, TYPE } from '../../theme'
+// External libraries
 import React, { useMemo, useState } from 'react'
-import Row, { RowFixed } from '../Row'
-
-import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
-import BlockchainLogo from '../BlockchainLogo'
-import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
-import ClaimModal from '../claim/ClaimModal'
-import CrossChainModal from 'components/CrossChainModal'
-import LogoDark from '../../assets/images/0-icon.png'
-import Menu from '../Menu'
-import Modal from 'components/Modal'
-import { NavLink } from 'react-router-dom'
-import PlainPopup from 'components/Popups/PlainPopup'
-import { PopupContent } from 'state/application/actions'
-import PopupItem from 'components/Popups/PopupItem'
-import Settings from '../Settings'
+import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
+
+// Tools
+import { PopupContent } from 'state/application/actions'
+import { CHAIN_LABELS } from '../../constants'
+
+// Hooks
+import { useCrosschainState } from 'state/crosschain/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
+import { useActiveWeb3React } from '../../hooks'
+
+// Components
+import CrossChainModal from 'components/CrossChainModal'
+import PlainPopup from 'components/Popups/PlainPopup'
+import ClaimModal from '../claim/ClaimModal'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-// import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import Settings from '../Settings'
+
+// Logotypes
+import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
-import { crosschainConfig } from '../../constants/CrosschainConfig'
-import styled from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { useCrosschainState } from 'state/crosschain/hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
-import { useTranslation } from 'react-i18next'
-
-// import AvaxLogo from '../../assets/images/avax-logo.png'
-
-// import { darken } from 'polished'
+import BlockchainLogo from '../BlockchainLogo'
 
 const HeaderFrame = styled.div`
   display: grid;
   padding: 0px 64px;
   grid-template-columns: 1fr 0px;
   align-items: center;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
   width: 100%;
   top: 25px;
   position: relative;
@@ -51,7 +40,16 @@ const HeaderFrame = styled.div`
     grid-template-columns: 1fr;
     padding: 0;
     width: calc(100%);
-    position: relative;
+  `};
+`
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
+const HideSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
   `};
 `
 const LogoContainer = styled.div`
@@ -72,8 +70,6 @@ const HeaderControls = styled.div`
   min-width: 525px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
     justify-self: center;
     width: 100%;
     position: fixed;
@@ -83,75 +79,22 @@ const HeaderControls = styled.div`
     min-width: 0;
   `};
 `
-
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
-    align-items: center;
+    flex-direction: row-reverse;
   `};
 `
-
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
-`
-
-const HeaderExternalLink = styled(ExternalLink)`
-  margin: 0 16px;
-  font-size: 1rem;
-  color: #c3c5cb;
-  transition: all 0.2s ease-in-out;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 0 6px;
-    font-size: .85rem;
-  `};
-  :hover,
-  :focus {
-    color: ${({ theme }) => theme.primary1};
-    text-decoration: none;
-  }
-`
-
-const HeaderLinks = styled(Row)`
-  justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: .5rem 0 .5rem .5rem;
-    justify-content: flex-end;
-    svg {
-      display: none;
-    }
-`};
-`
-
 const AccountElement = styled.div<{ active: boolean }>`
-  white-space: nowrap;
   width: 100%;
+  white-space: nowrap;
   cursor: pointer;
-
   :focus {
     border: 1px solid blue;
   }
-`
-
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-const HideMedium = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `};
 `
 const NetworkCard = styled(YellowCard)`
   position: relative;
@@ -165,7 +108,6 @@ const NetworkCard = styled(YellowCard)`
   border-radius: 54px;
   transition: all 0.2s ease-in-out;
   font-family: Poppins;
-  font-style: normal;
   font-weight: 600;
   font-size: 13px;
   margin-right: 20px;
@@ -189,10 +131,8 @@ const NetworkCard = styled(YellowCard)`
     cursor: pointer;
   }
 `
-
 const BalanceText = styled(Text)`
   font-family: Poppins;
-  font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 80%;
@@ -203,17 +143,27 @@ const BalanceText = styled(Text)`
     display: none;
   `};
 `
-
 const BlockchainLogoWrap = styled.span`
   position: absolute;
   left: 5px;
   top: 5px;
 `
-
 const ArrowDropWrap = styled.span`
   position: absolute;
   right: 5px;
   top: 5px;
+`
+const NotConnectedWrap = styled.div`
+  padding: 22px 19px;
+  display: flex;
+  align-items: center;
+  justify-self: flex-end;
+  justify-content: space-between;
+  min-width: 0px;
+  height: 0px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: 0 auto;
+  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -237,12 +187,14 @@ const NETWORK_SYMBOLS: any = {
   Avalanche: 'AVAX',
   SmartChain: 'BNB'
 }
+
 const popupContent: PopupContent = {
   simpleAnnounce: {
     message: 'Please wait 10 seconds to change RPCs again.'
-  },
+  }
 }
-function NetworkSwitcher() {
+
+const NetworkSwitcher = () => {
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
   const availableChains = useMemo(() => {
@@ -251,13 +203,9 @@ function NetworkSwitcher() {
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const [crossPopupOpen, setShowPopupModal] = useState(false)
-  const hideCrossChainModal = () => {
-    setShowCrossChainModal(false)
-  }
 
-  const hidePopupModal = () => {
-    setShowPopupModal(false)
-  }
+  const hidePopupModal = () => setShowPopupModal(false)
+  const hideCrossChainModal = () => setShowCrossChainModal(false)
 
   const showCrossChainModal = () => {
     const currentTime = ~~(Date.now() / 1000)
@@ -272,46 +220,39 @@ function NetworkSwitcher() {
   }
 
   return (
-    <>
-      <div onClick={showCrossChainModal}>
-
-        <HideSmall>
-          {chainId && NETWORK_LABELS[chainId] && (
-            <NetworkCard title={NETWORK_LABELS[chainId]}>
-              <BlockchainLogoWrap>
-                <BlockchainLogo size="28px" blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'} />
-              </BlockchainLogoWrap>
-              <span>{NETWORK_LABELS[chainId]}</span>
-              <ArrowDropWrap>
-                <img src={ArrowDropdown} alt="ArrowDropdown" />
-              </ArrowDropWrap>
-            </NetworkCard>
-          )}
-        </HideSmall>
-        <CrossChainModal
-          isOpen={crossChainModalOpen}
-          isTransfer={false}
-          onDismiss={hideCrossChainModal}
-          supportedChains={availableChains}
-          selectTransferChain={() => {}}
-          activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
-        />
-        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
-      </div>
-
-    </>
+    <div onClick={showCrossChainModal}>
+      <HideSmall>
+        {chainId && NETWORK_LABELS[chainId] && (
+          <NetworkCard title={NETWORK_LABELS[chainId]}>
+            <BlockchainLogoWrap>
+              <BlockchainLogo size="28px" blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'} />
+            </BlockchainLogoWrap>
+            <span>{NETWORK_LABELS[chainId]}</span>
+            <ArrowDropWrap>
+              <img src={ArrowDropdown} alt="ArrowDropdown" />
+            </ArrowDropWrap>
+          </NetworkCard>
+        )}
+      </HideSmall>
+      <CrossChainModal
+        isOpen={crossChainModalOpen}
+        isTransfer={false}
+        onDismiss={hideCrossChainModal}
+        supportedChains={availableChains}
+        selectTransferChain={() => {}}
+        activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
+      />
+      <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
+    </div>
   )
 }
 
-export default function Header() {
+const Header = () => {
   const { account, chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
-
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
-  const [isDark] = useDarkModeManager()
-
   let label,
     symbol = ''
+
   if (chainId) {
     label = NETWORK_LABELS[chainId]
     symbol = NETWORK_SYMBOLS[label || 'Ethereum']
@@ -322,28 +263,29 @@ export default function Header() {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <img src={ZeroLogo} />
+          <img src={ZeroLogo} alt="Zero logotype" />
         </LogoContainer>
       </HideMedium>
-
-      <HeaderControls>
-
-        <HeaderElement>
-
-          <NetworkSwitcher />
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
+      {account && userEthBalance ? (
+        <HeaderControls>
+          <HeaderElement>
+            <NetworkSwitcher />
+            <AccountElement active={!!account}>
               <BalanceText>
                 {userEthBalance?.toSignificant(4)} {symbol}
               </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-        </HeaderElement>
-        <HeaderElementWrap>
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
           <Settings />
-        </HeaderElementWrap>
-      </HeaderControls>
+        </HeaderControls>
+      ) : (
+        <NotConnectedWrap>
+          <Web3Status />
+        </NotConnectedWrap>
+      )}
     </HeaderFrame>
   )
 }
+
+export default Header
