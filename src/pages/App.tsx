@@ -33,6 +33,7 @@ import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
+import Wsb from './Wsb'
 import styled from 'styled-components'
 
 const AppWrapper = styled.div`
@@ -104,6 +105,7 @@ export default function App() {
               <Route exact strict path="/earn" component={Earn} />
               <Route exact strict path="/guides" component={Guides} />
               <Route exact strict path="/vote" component={Vote} />
+              <Route exact strict path="/wsb-sale" component={Wsb} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
               <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
