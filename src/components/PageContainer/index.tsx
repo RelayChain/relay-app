@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react'
+
 import styled from 'styled-components'
 
 const PageWrapper = styled.div`
-  max-width: 1688px;
+  max-width: 1240px;
   width: 100%;
-  padding: 0 64px;
+  padding: 0 24px;
   margin: 0 auto;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   padding: 0;
