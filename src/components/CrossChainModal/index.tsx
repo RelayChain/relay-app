@@ -1,9 +1,13 @@
-import BlockchainLogo from '../BlockchainLogo'
-import { CHAIN_LABELS } from '../../constants'
-import { CrosschainChain } from '../../state/crosschain/actions'
-import Modal from '../Modal'
+import { useDispatch } from 'react-redux'
 import React from 'react'
+import BlockchainLogo from '../BlockchainLogo'
+import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
+import Modal from '../Modal'
+import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
+import { useActiveWeb3React } from 'hooks'
+import { AppDispatch } from 'state'
+
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -16,6 +20,7 @@ interface CrossChainModalProps {
 
 const ModalContainer = styled.div`
   padding: 1.5rem;
+  width: 100%;
   h5 {
     font-weight: bold;
     margin-bottom: 1rem;
@@ -63,6 +68,10 @@ const ModalContainer = styled.div`
           right: 8px;
         }
       }
+      &:not(.active):hover {
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+      }
       &.disabled {
         opacity: 0.35;
         pointer-events: none;
@@ -80,9 +89,13 @@ const ModalContainer = styled.div`
       }
       span {
       }
+
     }
   }
 `
+
+
+
 export default function CrossChainModal({
   isOpen,
   onDismiss,
@@ -91,10 +104,47 @@ export default function CrossChainModal({
   isTransfer,
   selectTransferChain
 }: CrossChainModalProps) {
+  const dispatch = useDispatch<AppDispatch>()
+  const switchChain = async (chain: CrosschainChain) => {
+    
+    let { ethereum } = window;
+   
+    if (ethereum) {
+      let chainsConfig = null
+      for (const item of crosschainConfig.chains) {
+        if (item.chainId === +chain.chainID) {
+          chainsConfig = item
+        }
+      }
+      if (chainsConfig) {
+        const hexChainId = "0x" + Number(chainsConfig.networkId).toString(16);
+        const data = [{
+          chainId: hexChainId,
+          chainName: chainsConfig.name,
+          nativeCurrency:
+          {
+            name: chainsConfig.nativeTokenSymbol,
+            symbol: chainsConfig.nativeTokenSymbol,
+            decimals: 18
+          },
+          rpcUrls: [chainsConfig.rpcUrl],
+          blockExplorerUrls: [chainsConfig.blockExplorer],
+        }]
+        /* eslint-disable */
+        const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
+        dispatch(
+          setCrosschainLastTimeSwitched({})
+        )
+        if (tx) {
+          console.log(tx)
+        }
+      }
+    }
+  }
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
-        {!isTransfer && <h5>Supported Blockchains:</h5>}
+        {!isTransfer && <h5>Change Blockchains:</h5>}
         {isTransfer && <h5>Transfer tokens to:</h5>}
         <ul>
           <li className={!isTransfer ? 'active' : 'disabled'}>
@@ -107,6 +157,12 @@ export default function CrossChainModal({
               onClick={() => {
                 if (isTransfer) {
                   selectTransferChain(chain)
+                  onDismiss()
+                } else if (+chain.chainID === 1) {
+                  alert('To switch back to Ethereum, please change your RPC inside your wallet.');
+                  onDismiss()
+                } else {
+                  switchChain(chain)
                   onDismiss()
                 }
               }}
@@ -121,17 +177,7 @@ export default function CrossChainModal({
             </li>
           ))}
         </ul>
-        <p>
-          To see your token assets on the correct chain, you must
-          <a
-            href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            configure the Network RPC
-          </a>
-          of your connected wallet.
-        </p>
+
       </ModalContainer>
     </Modal>
   )

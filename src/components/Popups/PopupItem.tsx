@@ -82,6 +82,9 @@ export default function PopupItem({
       listUpdate: { listUrl, oldList, newList, auto }
     } = content
     popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
+  } else if ('simpleAnnounce' in content) {
+    const message = content.simpleAnnounce.message
+    popupContent = <strong>{message}</strong>
   }
 
   const faderStyle = useSpring({

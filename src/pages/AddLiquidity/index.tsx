@@ -53,8 +53,17 @@ export default function AddLiquidity({
   const locationState: any = props?.location?.state
   const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
-  const currencyA = useCurrency(currencyIdA)
-  const currencyB = useCurrency(currencyIdB)
+  // hack for BNB / ZERO pool, flip them for staking
+  let curA = currencyIdA;
+  let curB = currencyIdB;
+  if (chainId && chainId === ChainId.SMART_CHAIN &&
+      currencyIdA === 'BNB' &&
+      currencyIdB === '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf') {
+        curA = currencyIdB;
+        curB = currencyIdA;
+  }
+  const currencyA = useCurrency(curA)
+  const currencyB = useCurrency(curB)
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
