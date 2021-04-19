@@ -114,8 +114,6 @@ function TopLevelModals() {
 }
 
 export default function App() {
-  const [open, setOpen] = useState<boolean>(false)
-  const [isDark] = useDarkModeManager()
   return (
     <Suspense fallback={null}>
       <GraphQLProvider>

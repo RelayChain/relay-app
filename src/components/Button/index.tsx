@@ -12,12 +12,11 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '18px')};
+  padding: ${({ padding }) => (padding ? padding : '12px 24px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: 12px;
-  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
+  border-radius: ${({ borderRadius }) => borderRadius ? borderRadius :  '44px'};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -39,12 +38,10 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)<{isPointer?: boolean}>`
+export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
   background-color: ${({ theme }) => theme.primary1};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
-  border-radius: 44px;
-  padding: 18px 40px;
   color: white;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
@@ -115,12 +112,7 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
-  background-color: transparent;
-  font-size: 16px;
-  border-radius: 12px;
-  padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
@@ -170,7 +162,7 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #1CB0F9 0%, #6752F7 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #1cb0f9 0%, #6752f7 100%), #edeef2;
   width: fit-content;
   position: relative;
   cursor: pointer;
@@ -185,8 +177,11 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: transparent;
+  background: rgba(103, 82, 247, 0.18);
+  border: 1px solid #6752f7;
+  box-sizing: border-box;
+  backdrop-filter: blur(4.79167px);
+
   color: ${({ theme }) => theme.text1};
 
   &:focus {
@@ -320,7 +315,7 @@ export function ButtonConfirmed({
   }
 }
 
-export function ButtonError({ error, isPointer, ...rest }: { error?: boolean, isPointer?: boolean } & ButtonProps) {
+export function ButtonError({ error, isPointer, ...rest }: { error?: boolean; isPointer?: boolean } & ButtonProps) {
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {

@@ -21,6 +21,7 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import DropdownArrow from '../../assets/svg/DropdownArrow'
 
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   border: 2px solid;
@@ -31,22 +32,47 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   border-radius: 44px;
   padding: 32px 16px;
   margin-bottom: 1rem;
-  max-width: 450px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 300px;
 `
 
 const Row = styled.div`
   display: flex;
   width: 100%;
-  padding: 16px;
+  padding: 0px 16px;
 `
+
+const Icons = styled(DoubleCurrencyLogo)`
+  padding: 100px;
+`
+
 const Label = styled.div`
+  margin-bottom: 16px;
+`
+const DetailsButton = styled.div<{ showDetails?: boolean }>`
   display: flex;
-  flex-grow: 1;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  svg {
+    ${({ showDetails }) => showDetails && `transform: rotate(180deg);`}
+    margin-left: 8px;
+    g {
+      fill: #727bba;
+    }
+  }
+`
+const Details = styled.div<{ showDetails?: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 16px;
+  margin-top: 16px;
+  ${({ showDetails }) => !showDetails && `display: none;`}
+
 `
 const DetailsBox = styled.div`
   width: 100%;
@@ -55,9 +81,19 @@ const DetailsBox = styled.div`
   background: rgba(18, 21, 56, 0.24);
   border-radius: 44px;
 `
+const Multiplier = styled.div`
+  border: 2px solid #727bba;
+  border-radius: 44px;
+  padding: 4px 16px;
+`
 
 export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
   const { chainId, account } = useActiveWeb3React()
+  const [showDetails, setShowDetails] = useState(true)
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails)
+  }
 
   const token0 = stakingInfoTop.tokens[0]
   const token1 = stakingInfoTop.tokens[1]
@@ -119,11 +155,17 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-      <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={38} />
-
-      <TYPE.main fontWeight={600} fontSize={24} style={{ marginTop: '16px' }}>
-        {currency0.symbol}-{currency1.symbol}
-      </TYPE.main>
+      <Icons currency0={currency0} currency1={currency1} size={38} />
+      <Label>
+        <TYPE.main fontWeight={600} fontSize={18}>
+          {currency0.symbol}-{currency1.symbol}
+        </TYPE.main>
+      </Label>
+      <Multiplier>
+        <TYPE.white fontWeight={400} fontSize={15}>
+          {`Multiplier: 40x`}
+        </TYPE.white>
+      </Multiplier>
       <Row>
         <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
           APR
@@ -140,31 +182,43 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           $15,893,234.34
         </TYPE.main>
       </Row>
-      <DetailsBox>
-        <TYPE.main fontWeight={500} fontSize={15}>
-          Earned
+      {/* <DetailsButton showDetails={showDetails}  onClick={toggleDetails} >
+        <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
+          Details
         </TYPE.main>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexGrow: 1 }}>
-            <TYPE.white fontWeight={600} fontSize={32}>
-              0.784980
-            </TYPE.white>
+        <DropdownArrow />
+      </DetailsButton> */}
+
+      <Details showDetails={showDetails}>
+        <DetailsBox>
+          <TYPE.main fontWeight={500} fontSize={15}>
+            Earned
+          </TYPE.main>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexGrow: 1, marginRight: 16, overflow: 'hidden' }}>
+              <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsize' }}>
+                0.784980
+              </TYPE.white>
+            </div>
+            <div style={{ display: 'flex', flexGrow: 0 }}>
+              <ButtonPrimary width={'fit-content'}>Harvest</ButtonPrimary>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexGrow: 0 }}>
-            <ButtonPrimary borderRadius="8px" width={'fit-content'}>
-              Harvest
-            </ButtonPrimary>
-          </div>
-        </div>
-      </DetailsBox>
-      <DetailsBox>
-        <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-          Staked
-        </TYPE.white>
-        <ButtonOutlined padding="8px" borderRadius="8px">
-          Select
-        </ButtonOutlined>
-      </DetailsBox>
+        </DetailsBox>
+        <DetailsBox>
+          <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+            Staked
+          </TYPE.white>
+          <StyledInternalLink
+            to={{
+              pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`,
+              state: { stakingRewardAddress }
+            }}
+          >
+            <ButtonOutlined>Select</ButtonOutlined>
+          </StyledInternalLink>
+        </DetailsBox>
+      </Details>
     </Wrapper>
   )
 }
