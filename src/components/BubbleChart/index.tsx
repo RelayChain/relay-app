@@ -1,12 +1,12 @@
-import React, { useState, useRef } from 'react'
-import styled from 'styled-components'
+import React, { useRef, useState } from 'react'
 
-import BubbleBase from './../BubbleBase'
-import Percentage from './../Percantage'
-import { LiquidityVolumeList } from './../../graphql/types'
-import toCurrency from './../../utils/toCurrency'
 import BarChart from './charts/BarChart'
+import BubbleBase from './../BubbleBase'
 import LineChart from './charts/LineChart'
+import { LiquidityVolumeList } from './../../graphql/types'
+import Percentage from './../Percantage'
+import styled from 'styled-components'
+import toCurrency from './../../utils/toCurrency'
 import useResize from './../../hooks/widthComponent'
 
 type DateBoxType = {
@@ -25,7 +25,7 @@ export type BubbleChartProps = {
 }
 
 const BubbleChartWrap = styled.div`
-  width: 546px;
+  width: 562px;
   height: 309px;
   padding-top: 46px;
   position: relative;
@@ -71,7 +71,7 @@ const SecondHeading = styled.div`
 const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
-  
+
   const onSelectedValue = (selectedValue?: number, selectedPerc?: number) => {
     if (!selectedValue || !selectedPerc) {
       setSelectedValue(value)
@@ -85,7 +85,7 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
   const componentRef = useRef()
 
   const { width, height } = useResize(componentRef)
- 
+
 
   return (
     <BubbleChartWrap>

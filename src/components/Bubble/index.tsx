@@ -8,7 +8,7 @@ const BubbleWrap = styled.div`
   position: relative;
   flex: 1;
   height: auto;
-  width: 255px;
+  width: 272px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 100%;
 `};

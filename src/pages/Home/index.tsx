@@ -49,7 +49,7 @@ ${({ theme }) => theme.mediaWidth.upToExtraSmall`
 `};
 `
 const Flex = styled.div<{ isColumn: boolean }>`
-  margin: 60px auto 0;
+  margin: 20px auto 0;
   display: flex;
   justify-content: ${({ isColumn }) => (isColumn ? 'center' : 'space-between')};
   flex-wrap: wrap;
@@ -69,28 +69,31 @@ const CenterWrap = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `
 const FlexButtons = styled.div`
   display: flex;
   justify-content: space-around;
   width: 100%;
   margin-top: 50px;
+  margin-bottom: 4rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-justify-content: center;
+  justify-content: center;
 `};
 `
 const Button = styled.div`
   padding: 10px 20px;
   border-radius: 20px;
-  border: 1px solid white;
+  border: 1px solid #1EF7E7;
+  color: #1EF7E7;
   outline: none;
   cursor: pointer;
-  transition: all ease 0.3s;
   margin-left: 20px;
+  transition: all ease 0.3s;
   :hover {
-    background: white;
-    color: #a7b1f4;
-    transition: all ease 0.3s;
+    filter: brightness(.9);
+    color: #1EF7E7;
   }
 `
 
@@ -100,8 +103,8 @@ export default function Home() {
   const zeroData = useQuery(zeroDayDatas)
   const transactionsData = useQuery(transactions, {
     variables: {
-      first: 25,
-      skip: pagination * 25
+      first: 12,
+      skip: pagination * 12
     }
   })
 
@@ -149,7 +152,7 @@ export default function Home() {
           <Transactions transactions={transactionsData.data.transactions} />
           <FlexButtons>
             {pagination > 0 && <Button onClick={onClickPrevPage}>Back</Button>}
-            {transactionsData.data.transactions.length >= 25 && <Button onClick={onClickNextPage}>Next</Button>}
+            {transactionsData.data.transactions.length >= 12 && <Button onClick={onClickNextPage}>Next</Button>}
           </FlexButtons>
         </>
       )}
