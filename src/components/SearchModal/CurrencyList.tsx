@@ -154,13 +154,7 @@ function CurrencyRow({
             </TYPE.main>
           ) : null}
           {/* Fix this so (Add) works for Avax support */}
-          {hasQuery &&
-          !isOnSelectedList &&
-          !customAdded &&
-          chainId !== ChainId.AVALANCHE &&
-          chainId !== ChainId.FUJI &&
-          chainId !== ChainId.SMART_CHAIN &&
-          chainId !== ChainId.SMART_CHAIN_TEST ? (
+          {hasQuery && !isOnSelectedList && !customAdded ? (
             <TYPE.main fontWeight={500}>
               Found by address
               <LinkStyledButton
