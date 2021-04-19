@@ -5,24 +5,23 @@ import { CustomLightSpinner } from '../../theme'
 import Circle from '../../assets/images/blue-loader.svg'
 import Bubble from './../../components/Bubble'
 import Transactions from './../../components/Transactions'
+import PageContainer from './../../components/PageContainer'
 import BubbleChart from './../../components/BubbleChart'
 import transactions from '../../graphql/queries/transactions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
-const HomeWrap = styled.div`
-  padding: 0px 64px;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  padding: 0;
-`};
-`
 const Title = styled.h1`
+  width: 100%;
+  padding: 0px 64px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   text-align: center;
   font-size: 49px;
   margin-top: 40px;
   margin-bottom: 0px;
+`};
+${({ theme }) => theme.mediaWidth.upToSmall`
+padding: 0;
 `};
 `
 const WalletsWrap = styled.div<{ isColumn: boolean }>`
@@ -115,8 +114,9 @@ export default function Home() {
     setPagination(pagination + 1)
   }
   return (
-    <HomeWrap>
-      <Title>Exchange</Title>
+    <>
+    <Title>Exchange</Title>
+    <PageContainer>
       <WalletsWrap isColumn={isColumn}>
         <BubbleMarginWrap>
           <Bubble variant="green" color="#A7B1F4" icon="wallet">
@@ -153,6 +153,7 @@ export default function Home() {
           </FlexButtons>
         </>
       )}
-    </HomeWrap>
+    </PageContainer>
+    </>
   )
 }

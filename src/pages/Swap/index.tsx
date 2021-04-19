@@ -53,6 +53,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
+import PageContainer from './../../components/PageContainer'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -96,14 +97,16 @@ const StyledEthereumLogo = styled.img`
 `
 
 const SwapOuterWrap = styled.div`
-  padding: 0px 64px;
   width: 100%;
   ${({ theme }) => theme.mediaWidth.upToSmall`
 padding: 0;
 `};
 `
 const Title = styled.h1`
+  width: 100%;
+  padding: 0px 64px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 0;
   text-align: center;
   font-size: 49px;
   margin-top: 40px;
@@ -250,7 +253,8 @@ const BoxFlex = styled.div`
   display: flex;
 `
 const CopyImage = styled.div`
-cursor: pointer`
+  cursor: pointer;
+`
 export default function Swap() {
   useCrossChain()
 
@@ -609,314 +613,331 @@ export default function Swap() {
   }
 
   return (
-    <SwapOuterWrap>
-      <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
-        onConfirm={handleConfirmTokenWarning}
-      />
+    <>
       <Title>Trade</Title>
-      <SwapFlex>
-        <SwapFlexRow>
-          <SwapWrap>
-            <BubbleBase />
+      <PageContainer>
+        <SwapOuterWrap>
+          <TokenWarningModal
+            isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+            tokens={urlLoadedTokens}
+            onConfirm={handleConfirmTokenWarning}
+          />
 
-            <SwapPoolTabs active={'swap'} />
+          <SwapFlex>
+            <SwapFlexRow>
+              <SwapWrap>
+                <BubbleBase />
 
-            <Wrapper id="swap-page">
-              <ConfirmTransferModal
-                isOpen={confirmTransferModalOpen}
-                onDismiss={hideConfirmTransferModal}
-                transferTo={transferTo}
-                activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-                changeTransferState={onChangeTransferState}
-                tokenTransferState={crosschainTransferStatus}
-                value={formattedAmounts[Field.INPUT]}
-                currency={currencies[Field.INPUT]}
-                trade={trade}
-              />
-              <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
-              <ConfirmSwapModal
-                isOpen={showConfirm}
-                trade={trade}
-                originalTrade={tradeToConfirm}
-                onAcceptChanges={handleAcceptChanges}
-                attemptingTxn={attemptingTxn}
-                txHash={txHash}
-                recipient={recipient}
-                allowedSlippage={allowedSlippage}
-                onConfirm={handleSwap}
-                swapErrorMessage={swapErrorMessage}
-                onDismiss={handleConfirmDismiss}
-                chainId={chainId}
-              />
-              <SubTitle>Swap</SubTitle>
-              <AutoColumn gap={'md'}>
-                <CurrencyInputPanel
-                  blockchain={isCrossChain ? currentChain.name : getChainName()}
-                  label={'From'}
-                  value={formattedAmounts[Field.INPUT]}
-                  showMaxButton={!atMaxAmountInput}
-                  currency={currencies[Field.INPUT]}
-                  onUserInput={handleTypeInput}
-                  onMax={handleMaxInput}
-                  onCurrencySelect={handleInputSelect}
-                  otherCurrency={currencies[Field.OUTPUT]}
-                  isCrossChain={isCrossChain}
-                  id="swap-currency-input"
-                />
-                <AutoColumn justify="space-between">
-                  <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper
-                      clickable
-                      onClick={() => {
-                        if (!isCrossChain) {
-                          setApprovalSubmitted(false) // reset 2 step UI for approvals
-                          onSwitchTokens()
-                        }
-                      }}
-                    >
-                      <CustomArrowDown
-                        conditionInput={currencies[Field.INPUT]}
-                        conditionOutput={currencies[Field.OUTPUT]}
-                        defaultColor={theme.primary1}
-                        activeColor={theme.text2}
-                      />
-                    </ArrowWrapper>
-                    {recipient === null && !showWrap && isExpertMode ? (
-                      <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                        + Add a send (optional)
-                      </LinkStyledButton>
+                <SwapPoolTabs active={'swap'} />
+
+                <Wrapper id="swap-page">
+                  <ConfirmTransferModal
+                    isOpen={confirmTransferModalOpen}
+                    onDismiss={hideConfirmTransferModal}
+                    transferTo={transferTo}
+                    activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+                    changeTransferState={onChangeTransferState}
+                    tokenTransferState={crosschainTransferStatus}
+                    value={formattedAmounts[Field.INPUT]}
+                    currency={currencies[Field.INPUT]}
+                    trade={trade}
+                  />
+                  <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
+                  <ConfirmSwapModal
+                    isOpen={showConfirm}
+                    trade={trade}
+                    originalTrade={tradeToConfirm}
+                    onAcceptChanges={handleAcceptChanges}
+                    attemptingTxn={attemptingTxn}
+                    txHash={txHash}
+                    recipient={recipient}
+                    allowedSlippage={allowedSlippage}
+                    onConfirm={handleSwap}
+                    swapErrorMessage={swapErrorMessage}
+                    onDismiss={handleConfirmDismiss}
+                    chainId={chainId}
+                  />
+                  <SubTitle>Swap</SubTitle>
+                  <AutoColumn gap={'md'}>
+                    <CurrencyInputPanel
+                      blockchain={isCrossChain ? currentChain.name : getChainName()}
+                      label={'From'}
+                      value={formattedAmounts[Field.INPUT]}
+                      showMaxButton={!atMaxAmountInput}
+                      currency={currencies[Field.INPUT]}
+                      onUserInput={handleTypeInput}
+                      onMax={handleMaxInput}
+                      onCurrencySelect={handleInputSelect}
+                      otherCurrency={currencies[Field.OUTPUT]}
+                      isCrossChain={isCrossChain}
+                      id="swap-currency-input"
+                    />
+                    <AutoColumn justify="space-between">
+                      <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
+                        <ArrowWrapper
+                          clickable
+                          onClick={() => {
+                            if (!isCrossChain) {
+                              setApprovalSubmitted(false) // reset 2 step UI for approvals
+                              onSwitchTokens()
+                            }
+                          }}
+                        >
+                          <CustomArrowDown
+                            conditionInput={currencies[Field.INPUT]}
+                            conditionOutput={currencies[Field.OUTPUT]}
+                            defaultColor={theme.primary1}
+                            activeColor={theme.text2}
+                          />
+                        </ArrowWrapper>
+                        {recipient === null && !showWrap && isExpertMode ? (
+                          <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
+                            + Add a send (optional)
+                          </LinkStyledButton>
+                        ) : null}
+                      </AutoRow>
+                    </AutoColumn>
+                    <CurrencyInputPanel
+                      blockchain={isCrossChain ? currentChain.name : getChainName()}
+                      value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
+                      onUserInput={handleTypeOutput}
+                      label={'To'}
+                      showMaxButton={false}
+                      currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
+                      onCurrencySelect={handleOutputSelect}
+                      otherCurrency={currencies[Field.INPUT]}
+                      isCrossChain={isCrossChain}
+                      disableCurrencySelect={isCrossChain}
+                      hideBalance={isCrossChain}
+                      currentTargetToken={currentTargetToken}
+                      id="swap-currency-output"
+                    />
+
+                    {recipient !== null && !showWrap ? (
+                      <>
+                        <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                          <ArrowWrapper clickable={false}>
+                            <ArrowDown size="16" color={theme.text2} />
+                          </ArrowWrapper>
+                          <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                            - Remove send
+                          </LinkStyledButton>
+                        </AutoRow>
+                        <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                      </>
                     ) : null}
-                  </AutoRow>
-                </AutoColumn>
-                <CurrencyInputPanel
-                  blockchain={isCrossChain ? currentChain.name : getChainName()}
-                  value={isCrossChain ? formattedAmounts[Field.INPUT] : formattedAmounts[Field.OUTPUT]}
-                  onUserInput={handleTypeOutput}
-                  label={'To'}
-                  showMaxButton={false}
-                  currency={isCrossChain ? currencies[Field.INPUT] : currencies[Field.OUTPUT]}
-                  onCurrencySelect={handleOutputSelect}
-                  otherCurrency={currencies[Field.INPUT]}
-                  isCrossChain={isCrossChain}
-                  disableCurrencySelect={isCrossChain}
-                  hideBalance={isCrossChain}
-                  currentTargetToken={currentTargetToken}
-                  id="swap-currency-output"
-                />
 
-                {recipient !== null && !showWrap ? (
-                  <>
-                    <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                      <ArrowWrapper clickable={false}>
-                        <ArrowDown size="16" color={theme.text2} />
-                      </ArrowWrapper>
-                      <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                        - Remove send
-                      </LinkStyledButton>
-                    </AutoRow>
-                    <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                  </>
-                ) : null}
-
-                {isCrossChain && (
-                  <>
-                    <CrossChainLabels>
-                      <p>
-                        Fee:{' '}
-                        <span>
-                          {crosschainFee} {currentChain?.symbol}
-                        </span>
-                      </p>
-                    </CrossChainLabels>
-                  </>
-                )}
-
-                {showWrap ? null : (
-                  <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                    {!isCrossChain && (
-                      <AutoColumn gap="4px">
-                        {Boolean(trade) && (
-                          <RowBetween align="center">
-                            <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                              Price
-                            </Text>
-                            <TradePrice
-                              price={trade?.executionPrice}
-                              showInverted={showInverted}
-                              setShowInverted={setShowInverted}
-                            />
-                          </RowBetween>
-                        )}
-                        {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                          <RowBetween align="center">
-                            <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                              Slippage Tolerance
-                            </ClickableText>
-                            <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                              {allowedSlippage / 100}%
-                            </ClickableText>
-                          </RowBetween>
-                        )}
-                      </AutoColumn>
+                    {isCrossChain && (
+                      <>
+                        <CrossChainLabels>
+                          <p>
+                            Fee:{' '}
+                            <span>
+                              {crosschainFee} {currentChain?.symbol}
+                            </span>
+                          </p>
+                        </CrossChainLabels>
+                      </>
                     )}
-                  </Card>
-                )}
-              </AutoColumn>
-              <Flex>
-                <BottomGroupingSwap>
-                  {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
-                    <>
-                      <ButtonPrimary onClick={showConfirmTransferModal}>
-                        Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
-                      </ButtonPrimary>
-                    </>
-                  ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                  ) : showWrap ? (
-                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                      {wrapInputError ??
-                        (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                    </ButtonPrimary>
-                  ) : noRoute && userHasSpecifiedInputOutput ? (
-                    <GreyCard style={{ textAlign: 'center' }}>
-                      <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                    </GreyCard>
-                  ) : showApproveFlow ? (
-                    <RowBetween>
-                      <ButtonConfirmed
-                        onClick={approveCallback}
-                        disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                        width="48%"
-                        altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                        confirmed={approval === ApprovalState.APPROVED}
-                      >
-                        {approval === ApprovalState.PENDING ? (
-                          <AutoRow gap="6px" justify="center">
-                            Approving <Loader stroke="white" />
-                          </AutoRow>
-                        ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                          'Approved'
-                        ) : (
-                          'Approve ' + currencies[Field.INPUT]?.symbol
-                        )}
-                      </ButtonConfirmed>
-                      <ButtonError
-                        onClick={() => {
-                          if (isExpertMode) {
-                            handleSwap()
-                          } else {
-                            setSwapState({
-                              tradeToConfirm: trade,
-                              attemptingTxn: false,
-                              swapErrorMessage: undefined,
-                              showConfirm: true,
-                              txHash: undefined
-                            })
-                          }
-                        }}
-                        width="48%"
-                        id="swap-button"
-                        disabled={
-                          !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
-                        }
-                        error={isValid && priceImpactSeverity > 2}
-                      >
-                        <Text fontSize={16} fontWeight={500}>
-                          {priceImpactSeverity > 3 && !isExpertMode
-                            ? `Price Impact High`
-                            : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                        </Text>
-                      </ButtonError>
-                    </RowBetween>
-                  ) : (
-                    <ButtonError
-                      isPointer
-                      onClick={() => {
-                        if (isExpertMode) {
-                          handleSwap()
-                        } else {
-                          setSwapState({
-                            tradeToConfirm: trade,
-                            attemptingTxn: false,
-                            swapErrorMessage: undefined,
-                            showConfirm: true,
-                            txHash: undefined
-                          })
-                        }
-                      }}
-                      id="swap-button"
-                      disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                      error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                    >
-                      <Text fontSize={14} fontWeight={500}>
-                        {swapInputError
-                          ? swapInputError
-                          : priceImpactSeverity > 3 && !isExpertMode
-                          ? `Price Impact Too High`
-                          : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                      </Text>
-                      <IconWrap>
-                        <Icon icon="swap" color="white" />
-                      </IconWrap>
-                    </ButtonError>
-                  )}
-                  {showApproveFlow && (
-                    <Column style={{ marginTop: '1rem' }}>
-                      <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                    </Column>
-                  )}
-                  {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                </BottomGroupingSwap>
-              </Flex>
-            </Wrapper>
-          </SwapWrap>
-        </SwapFlexRow>
-        <BalanceRow isColumn={isColumn}>
-          <TextBalance>Your Balances</TextBalance>
-          <BalanceCard>
-            <BubbleBase />
-            <BoxFlex>
-              <StyledEthereumLogo src={EthereumLogo} />
-              <Box>
-                <CrossChain>
-                  ETH
-                  <span>Ether</span>
-                </CrossChain>
-                <AdressWallet>30.662</AdressWallet>
-              </Box>
-            </BoxFlex>
-            <CopyImage>
-              <Icon icon="copyClipboard" />
-            </CopyImage>
-          </BalanceCard>
-        </BalanceRow>
-      </SwapFlex>
-      {(chainId === undefined || account === undefined) && (
-        <CustomLightSpinner
-          src={Circle2}
-          alt="loader"
-          size={'60px'}
-          style={{
-            position: 'fixed',
-            left: '0',
-            right: '0',
-            margin: 'auto',
-            top: '45%'
-          }}
-        />
-      )}
-      {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
-        <ChainBridgePending onClick={handleChainBridgeButtonClick}>
-          <p>{`Cross-chain transfer pending`}</p>
-          <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
-        </ChainBridgePending>
-      ) : (
-        ''
-      )}
 
-      {/* {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />} */}
-    </SwapOuterWrap>
+                    {showWrap ? null : (
+                      <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+                        {!isCrossChain && (
+                          <AutoColumn gap="4px">
+                            {Boolean(trade) && (
+                              <RowBetween align="center">
+                                <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                                  Price
+                                </Text>
+                                <TradePrice
+                                  price={trade?.executionPrice}
+                                  showInverted={showInverted}
+                                  setShowInverted={setShowInverted}
+                                />
+                              </RowBetween>
+                            )}
+                            {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                              <RowBetween align="center">
+                                <ClickableText
+                                  fontWeight={500}
+                                  fontSize={14}
+                                  color={theme.text2}
+                                  onClick={toggleSettings}
+                                >
+                                  Slippage Tolerance
+                                </ClickableText>
+                                <ClickableText
+                                  fontWeight={500}
+                                  fontSize={14}
+                                  color={theme.text2}
+                                  onClick={toggleSettings}
+                                >
+                                  {allowedSlippage / 100}%
+                                </ClickableText>
+                              </RowBetween>
+                            )}
+                          </AutoColumn>
+                        )}
+                      </Card>
+                    )}
+                  </AutoColumn>
+                  <Flex>
+                    <BottomGroupingSwap>
+                      {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
+                        <>
+                          <ButtonPrimary onClick={showConfirmTransferModal}>
+                            Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
+                          </ButtonPrimary>
+                        </>
+                      ) : !account ? (
+                        <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                      ) : showWrap ? (
+                        <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                          {wrapInputError ??
+                            (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                        </ButtonPrimary>
+                      ) : noRoute && userHasSpecifiedInputOutput ? (
+                        <GreyCard style={{ textAlign: 'center' }}>
+                          <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                        </GreyCard>
+                      ) : showApproveFlow ? (
+                        <RowBetween>
+                          <ButtonConfirmed
+                            onClick={approveCallback}
+                            disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                            width="48%"
+                            altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                            confirmed={approval === ApprovalState.APPROVED}
+                          >
+                            {approval === ApprovalState.PENDING ? (
+                              <AutoRow gap="6px" justify="center">
+                                Approving <Loader stroke="white" />
+                              </AutoRow>
+                            ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                              'Approved'
+                            ) : (
+                              'Approve ' + currencies[Field.INPUT]?.symbol
+                            )}
+                          </ButtonConfirmed>
+                          <ButtonError
+                            onClick={() => {
+                              if (isExpertMode) {
+                                handleSwap()
+                              } else {
+                                setSwapState({
+                                  tradeToConfirm: trade,
+                                  attemptingTxn: false,
+                                  swapErrorMessage: undefined,
+                                  showConfirm: true,
+                                  txHash: undefined
+                                })
+                              }
+                            }}
+                            width="48%"
+                            id="swap-button"
+                            disabled={
+                              !isValid ||
+                              approval !== ApprovalState.APPROVED ||
+                              (priceImpactSeverity > 3 && !isExpertMode)
+                            }
+                            error={isValid && priceImpactSeverity > 2}
+                          >
+                            <Text fontSize={16} fontWeight={500}>
+                              {priceImpactSeverity > 3 && !isExpertMode
+                                ? `Price Impact High`
+                                : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                            </Text>
+                          </ButtonError>
+                        </RowBetween>
+                      ) : (
+                        <ButtonError
+                          isPointer
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleSwap()
+                            } else {
+                              setSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                swapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
+                          }}
+                          id="swap-button"
+                          disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                          error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                        >
+                          <Text fontSize={14} fontWeight={500}>
+                            {swapInputError
+                              ? swapInputError
+                              : priceImpactSeverity > 3 && !isExpertMode
+                              ? `Price Impact Too High`
+                              : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                          </Text>
+                          <IconWrap>
+                            <Icon icon="swap" color="white" />
+                          </IconWrap>
+                        </ButtonError>
+                      )}
+                      {showApproveFlow && (
+                        <Column style={{ marginTop: '1rem' }}>
+                          <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
+                        </Column>
+                      )}
+                      {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                    </BottomGroupingSwap>
+                  </Flex>
+                </Wrapper>
+              </SwapWrap>
+            </SwapFlexRow>
+            <BalanceRow isColumn={isColumn}>
+              <TextBalance>Your Balances</TextBalance>
+              <BalanceCard>
+                <BubbleBase />
+                <BoxFlex>
+                  <StyledEthereumLogo src={EthereumLogo} />
+                  <Box>
+                    <CrossChain>
+                      ETH
+                      <span>Ether</span>
+                    </CrossChain>
+                    <AdressWallet>30.662</AdressWallet>
+                  </Box>
+                </BoxFlex>
+                <CopyImage>
+                  <Icon icon="copyClipboard" />
+                </CopyImage>
+              </BalanceCard>
+            </BalanceRow>
+          </SwapFlex>
+          {(chainId === undefined || account === undefined) && (
+            <CustomLightSpinner
+              src={Circle2}
+              alt="loader"
+              size={'60px'}
+              style={{
+                position: 'fixed',
+                left: '0',
+                right: '0',
+                margin: 'auto',
+                top: '45%'
+              }}
+            />
+          )}
+          {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
+            <ChainBridgePending onClick={handleChainBridgeButtonClick}>
+              <p>{`Cross-chain transfer pending`}</p>
+              <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
+            </ChainBridgePending>
+          ) : (
+            ''
+          )}
+
+          {/* {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />} */}
+        </SwapOuterWrap>
+      </PageContainer>
+    </>
   )
 }

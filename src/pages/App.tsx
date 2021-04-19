@@ -23,6 +23,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Guides from './Guides'
 import Header from '../components/Header'
 import ModalMore from '../components/ModalMore'
+import PageContainer from '../components/PageContainer'
 import Home from './Home'
 import Logo from './../assets/svg/logo.svg'
 import LogoDark from './../assets/images/0-icon.png'
@@ -119,8 +120,6 @@ export default function App() {
     <Suspense fallback={null}>
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
-
-
         <AppWrapper>
           <SideMenu />
           <div className="snow-bg"></div>

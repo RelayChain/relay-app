@@ -116,7 +116,6 @@ export default function SideMenu() {
   history.listen(location => setPathname(location.pathname))
   const toggleOpen = () => {
     setOpen(!open)
-    console.log(!open)
   }
   const hanldeSidemenuOpen = () => width < 961 && setOpen(!open)
 

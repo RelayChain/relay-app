@@ -19,7 +19,6 @@ const Box = styled.div`
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
   const series = data.zeroDayDatas.map(a => Number(a.totalLiquidityUSD))
-  console.log(lineChartWidth)
   const options: Highcharts.Options = {
     title: {
       text: '',
