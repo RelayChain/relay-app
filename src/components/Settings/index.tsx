@@ -5,6 +5,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 
+import SettingIcon from './SettingIcon'
 import { ApplicationModal } from '../../state/application/actions'
 import { AutoColumn } from '../Column'
 import { ButtonError } from '../Button'
@@ -78,29 +79,29 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  min-width: 21.125rem;
+  background: rgba(47,53,115,0.72);
+  backdrop-filter: blur(100px);
+  border-radius: 44px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
+  font-size: 2rem;
   position: absolute;
   top: 4rem;
   right: 0rem;
   z-index: 100;
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -6px;
-  `};
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 18.125rem;
     top: auto;
-    bottom: 3.5rem;
+    top: 3.5rem;
   `};
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    min-width: 18.125rem;
+    right: -6px;
+`};
 `
 
 const Break = styled.div`
@@ -114,8 +115,7 @@ const ModalContentWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  border-radius: 44px;
 `
 
 export default function SettingsTab() {
@@ -176,7 +176,7 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+      <SettingIcon/>
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">

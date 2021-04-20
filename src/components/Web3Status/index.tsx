@@ -107,7 +107,7 @@ const StatusIconWrap = styled.div`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 60px;
+  right: 30px;
 `
 
 const Text = styled.p`

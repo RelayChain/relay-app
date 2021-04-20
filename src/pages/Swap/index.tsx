@@ -31,7 +31,7 @@ import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-
+import Settings from '../../components/Settings'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import AppBody from '../AppBody'
@@ -115,7 +115,6 @@ const Title = styled.h1`
 `
 const SubTitle = styled.h2`
   font-size: 32px;
-  margin-bottom: 45px;
 `
 const SwapFlexRow = styled.div`
   flex: 1;
@@ -256,6 +255,13 @@ const BoxFlex = styled.div`
 const CopyImage = styled.div`
   cursor: pointer;
 `
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 45px;
+`
+
 export default function Swap() {
   useCrossChain()
 
@@ -628,7 +634,6 @@ export default function Swap() {
             <SwapFlexRow>
               <SwapWrap>
                 <BubbleBase />
-
                 <Wrapper id="swap-page">
                   <ConfirmTransferModal
                     isOpen={confirmTransferModalOpen}
@@ -656,7 +661,10 @@ export default function Swap() {
                     onDismiss={handleConfirmDismiss}
                     chainId={chainId}
                   />
-                  <SubTitle>Swap</SubTitle>
+                  <Header>
+                    <SubTitle>Swap</SubTitle>
+                    <Settings />
+                  </Header>
                   <AutoColumn gap={'md'}>
                     <CurrencyInputPanel
                       blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -782,7 +790,7 @@ export default function Swap() {
                   </AutoColumn>
                   <Flex>
                     <BottomGroupingSwap>
-                      { !account ? (
+                      {!account ? (
                         <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
                       ) : !trade ? (
                         <GreyCard
@@ -799,7 +807,7 @@ export default function Swap() {
                             Enter A Trade
                           </TYPE.main>
                         </GreyCard>
-                      ): showWrap ? (
+                      ) : showWrap ? (
                         <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                           {wrapInputError ??
                             (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
@@ -898,6 +906,7 @@ export default function Swap() {
                     </BottomGroupingSwap>
                   </Flex>
                 </Wrapper>
+                {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
               </SwapWrap>
             </SwapFlexRow>
             <BalanceRow isColumn={isColumn}>
@@ -919,6 +928,7 @@ export default function Swap() {
                 </CopyImage>
               </BalanceCard>
             </BalanceRow>
+          
           </SwapFlex>
           {(chainId === undefined || account === undefined) && (
             <CustomLightSpinner
@@ -943,7 +953,7 @@ export default function Swap() {
             ''
           )}
 
-          {/* {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />} */}
+        
         </SwapOuterWrap>
       </PageContainer>
     </>
