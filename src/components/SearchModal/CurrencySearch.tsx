@@ -22,7 +22,7 @@ import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
-import { useToken } from '../../hooks/Tokens'
+import { useToken, useAllTokens } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 import { useUserAddedTokens } from '../../state/user/hooks'
@@ -61,6 +61,8 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+  const allTokens = useAllTokens()
+  console.log(allTokens)
 
   // cross chain
   const { availableTokens } = useCrosschainState()
@@ -97,8 +99,8 @@ export function CurrencySearch({
     if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? [...defaultTokenList, ...userAddedTokens]
-        : [...availableTokensArray, ...userAddedTokens],
+        ? [...defaultTokenList, ...Object.values(allTokens), ...userAddedTokens]
+        : [...availableTokensArray, ...Object.values(allTokens), ...userAddedTokens],
       searchQuery
     )
   }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
