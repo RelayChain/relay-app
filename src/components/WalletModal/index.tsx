@@ -16,6 +16,7 @@ import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
+import ChainSwitcherContent from './ChainSwitcherContent'
 import Option from './Option'
 import PendingView from './PendingView'
 
@@ -280,7 +281,7 @@ export default function WalletModal({
         )
       )
     })
-  }
+  }  
 
   function getModalContent() {
     if (error) {
@@ -356,7 +357,7 @@ export default function WalletModal({
 
   return (
     <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-      <Wrapper>{getModalContent()}</Wrapper>
+      <ChainSwitcherContent />
     </Modal>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
@@ -12,7 +12,7 @@ import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-import { NetworkContextName } from '../../constants'
+import { CHAIN_LABELS, NetworkContextName } from '../../constants'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import { RowBetween } from '../Row'
 import { TransactionDetails } from '../../state/transactions/reducer'
@@ -23,6 +23,14 @@ import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useTranslation } from 'react-i18next'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import CrossChainModal from 'components/CrossChainModal'
+import { useActiveWeb3React } from 'hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
+import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
+import usePrevious from '../../hooks/usePrevious'
+import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -57,7 +65,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
+const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
@@ -84,7 +92,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
@@ -128,6 +136,8 @@ const SOCK = (
   </span>
 )
 
+
+
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
   if (connector === injected) {
@@ -161,11 +171,20 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
+  const {
+    availableChains: allChains,
+  } = useCrosschainState()
+  const dispatch = useDispatch<AppDispatch>()
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
   const { ENSName } = useENSName(account ?? undefined)
 
   const allTransactions = useAllTransactions()
+  const { chainId } = useActiveWeb3React()
+
+  const availableChains = useMemo(() => {
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+  }, [allChains])
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -177,6 +196,55 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
+  const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
+  const hideCrossChainModal = () => {
+    setShowCrossChainModal(false)
+  }
+
+  const [chainIdError, setChainIdError] = useState({} as UnsupportedChainIdError)
+  const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
+
+  useEffect(() => {
+    console.log('207chainIdError:>> ', chainIdError);
+    chainIdErrorPrev.current = (chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}') ?
+      chainIdErrorPrev.current = chainIdError : chainIdErrorPrev.current
+  }, [chainIdError])
+
+  const checkCrossChainId = useCallback(() => {
+    console.log('213chainIdErrorPrev.current = chainIdError :>> ', chainIdErrorPrev.current, chainIdError);
+    if (chainIdErrorPrev.current !== chainIdError) {
+      setShowCrossChainModal(true)
+      chainIdErrorPrev.current = chainIdError
+
+      return (
+        <CrossChainModal
+          isOpen={crossChainModalOpen}
+          onDismiss={hideCrossChainModal}
+          supportedChains={availableChains}
+          selectTransferChain={onSelectTransferChain}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+        />
+      )
+    } else {
+      return (
+        <CrossChainModal
+          isOpen={crossChainModalOpen}
+          onDismiss={hideCrossChainModal}
+          supportedChains={availableChains}
+          selectTransferChain={onSelectTransferChain}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+        />
+      )
+    }
+
+  }, [chainIdErrorPrev])
+  const onSelectTransferChain = (chain: CrosschainChain) => {
+    dispatch(
+      setTargetChain({
+        chain
+      })
+    )
+  }
 
   if (account) {
     return (
@@ -186,26 +254,26 @@ function Web3StatusInner() {
             <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
           </RowBetween>
         ) : (
-          <>
-            {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
-          </>
-        )}
+            <>
+              {hasSocks ? SOCK : null}
+              <Text>{ENSName || shortenAddress(account)}</Text>
+            </>
+          )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
       </Web3StatusConnected>
     )
-  } else if (error) {
+  }
+  else if (error instanceof UnsupportedChainIdError) {
+    return (<ChainSwitcherContent />)
+  }
+  else {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-      </Web3StatusError>
-    )
-  } else {
-    return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect to a wallet')}</Text>
-      </Web3StatusConnect>
+      <>
+        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+          <Text>{t('Connect to a wallet')}</Text>
+        </Web3StatusConnect>
+        <ChainSwitcherContent />
+      </>
     )
   }
 }
