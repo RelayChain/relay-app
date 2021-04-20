@@ -95,14 +95,16 @@ const ChainBridgePending = styled.div`
 
 const Heading = styled.h2`
   text-align: center;
-  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
 `
 
 const Description = styled.p`
   text-align: center;
-  font-family: 'Poppins', sans-serif;
   margin-top: 0.25rem;
   margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
 `
 
 const Title = styled.h1`
@@ -124,6 +126,9 @@ const TransferBodyWrapper = styled.div`
   padding: 2rem;
   margin-left: auto;
   margin-right: auto;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-bottom: 50px;
+`};
 `
 
 export default function Transfer() {
@@ -397,7 +402,7 @@ export default function Transfer() {
             <AutoColumn gap={'md'}>
               <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
-                label={'Enter amount:'}
+                label={'Choose your asset:'}
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={!atMaxAmountInput}
                 currency={currencies[Field.INPUT]}
@@ -406,6 +411,7 @@ export default function Transfer() {
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 isCrossChain={isCrossChain}
+                transferPage
                 id="swap-currency-input"
               />
 
@@ -440,7 +446,7 @@ export default function Transfer() {
                     }}
                   >
                     <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
-                      Enter An Amount
+                      Transfer
                     </TYPE.main>
                   </GreyCard>
                 )}

@@ -592,7 +592,7 @@ export default function Swap() {
     setConfirmTransferModalOpen(true)
   }
 
-  // token transfer state
+  // token transfer state 
   const onChangeTransferState = (state: ChainTransferState) => {
     dispatch(
       setCrosschainTransferStatus({
@@ -906,7 +906,7 @@ export default function Swap() {
                     </BottomGroupingSwap>
                   </Flex>
                 </Wrapper>
-                {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
+                {!isCrossChain && (+formattedAmounts[Field.INPUT] > 0 && +formattedAmounts[Field.OUTPUT] > 0) && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
               </SwapWrap>
             </SwapFlexRow>
             <BalanceRow isColumn={isColumn}>
