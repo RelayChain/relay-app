@@ -3,6 +3,7 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -116,11 +117,11 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string | undefined): TokenAddressMap {
+export function useTokenList(url: string[] | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
-    const current = lists[url]?.current
+    const current = lists[url[0]]?.current
     if (!current) return EMPTY_LIST
     try {
       return listToTokenMap(current)
@@ -131,7 +132,7 @@ export function useTokenList(url: string | undefined): TokenAddressMap {
   }, [lists, url])
 }
 
-export function useSelectedListUrl(): string | undefined {
+export function useSelectedListUrl(): string[] | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
 }
 
@@ -142,7 +143,7 @@ export function useSelectedTokenList(): TokenAddressMap {
 export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
   const selectedUrl = useSelectedListUrl()
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
+  const list = selectedUrl ? listsByUrl[selectedUrl[0]] : undefined
   return {
     current: list?.current ?? null,
     pending: list?.pendingUpdate ?? null,
@@ -160,5 +161,12 @@ export function useAllLists(): TokenList[] {
         .map(url => lists[url].current)
         .filter((l): l is TokenList => Boolean(l)),
     [lists]
+  )
+}
+
+// filter out unsupported lists
+export function useActiveListUrls(): string[] | undefined {
+  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)?.filter(
+    url => !UNSUPPORTED_LIST_URLS.includes(url)
   )
 }

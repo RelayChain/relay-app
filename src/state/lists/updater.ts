@@ -57,7 +57,7 @@ export default function Updater(): null {
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
-              if (listUrl === selectedListUrl) {
+              if (selectedListUrl?.includes(listUrl)) {
                 dispatch(
                   addPopup({
                     key: listUrl,
@@ -80,7 +80,7 @@ export default function Updater(): null {
             break
 
           case VersionUpgrade.MAJOR:
-            if (listUrl === selectedListUrl) {
+            if (selectedListUrl?.includes(listUrl)) {
               dispatch(
                 addPopup({
                   key: listUrl,
