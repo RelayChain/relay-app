@@ -1,25 +1,18 @@
-// External libraries
 import React, { useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
-
-// Logotypes
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
-// Components
 import CrossChainModal from 'components/CrossChainModal'
 import PlainPopup from 'components/Popups/PlainPopup'
-// Tools
 import { PopupContent } from 'state/application/actions'
-import Settings from '../Settings'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React } from '../../hooks'
-// Hooks
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
@@ -276,7 +269,6 @@ const Header = () => {
               <Web3Status />
             </AccountElement>
           </HeaderElement>
-          <Settings />
         </HeaderControls>
       ) : (
         <NotConnectedWrap>
