@@ -172,14 +172,14 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 35px;
-  border: 2px solid #1EF7E7;
+  border: 2px solid #1ef7e7;
   background: transparent;
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  margin-right: .5rem;
-  color: #1EF7E7;
+  margin-right: 0.5rem;
+  color: #1ef7e7;
   transition: all 0.2s ease-in-out;
   padding-left: 10px;
   padding-right: 10px;
@@ -250,7 +250,6 @@ export default function CurrencyInputPanel({
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, chainId)
   const theme = useContext(ThemeContext)
 
-  console.log(account)
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
