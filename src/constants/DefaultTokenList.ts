@@ -616,6 +616,13 @@ export const DEFAULT_TOKEN_LIST = [
     decimals: 18
   },
   {
+    address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+    chainId: 1,
+    name: 'Uniswap',
+    symbol: 'UNI',
+    decimals: 18
+  },
+  {
     address: '0x42d6622deCe394b54999Fbd73D108123806f6a18',
     chainId: 1,
     name: 'SPANK',
