@@ -367,7 +367,6 @@ export default function Transfer() {
     }
   }
 
-  console.log("CURRENT TOKEN ========== ", currentToken);
   return (
     <>
       <Title>Transfer</Title>
@@ -436,9 +435,17 @@ export default function Transfer() {
                 onShowTransferChainModal={showTransferChainModal}
               />
               <RowBetweenTransfer>
-                <span>You will receive ≈ </span>
+
+                <div style={{ maxWidth: '260px'}}>
+                  { transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ?
+                    (<span>
+                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name}
+                    </span>) : ''
+                  }
+                </div>
+
                 <BottomGroupingTransfer>
-                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentToken ? (
+                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
                     <>
                       <GreyCard
                         onClick={showConfirmTransferModal}

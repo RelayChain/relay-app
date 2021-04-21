@@ -118,12 +118,11 @@ function CurrencyRow({
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
-
+  // const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
+  // const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   // only show add or remove buttons if not on selected list
 
   return (
@@ -176,9 +175,9 @@ function CurrencyRow({
         </FadedSpan>
       </Column>
       <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
+      {/*<RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : null}
-      </RowFixed>
+      </RowFixed>*/}
     </MenuItem>
   )
 }
