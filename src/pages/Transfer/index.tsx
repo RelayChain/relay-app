@@ -14,7 +14,6 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import PageContainer from './../../components/PageContainer'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -48,6 +47,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Loader from '../../components/Loader'
+import PageContainer from './../../components/PageContainer'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -119,7 +119,6 @@ const Title = styled.h1`
 `
 const TransferBodyWrapper = styled.div`
   width: 100%;
-  margin-top: 3rem;
   max-width: 600px;
   position: relative;
   padding: 2rem;
@@ -368,6 +367,7 @@ export default function Transfer() {
     }
   }
 
+  console.log("CURRENT TOKEN ========== ", currentToken);
   return (
     <>
       <Title>Transfer</Title>
@@ -438,7 +438,7 @@ export default function Transfer() {
               <RowBetweenTransfer>
                 <span>You will receive ≈ </span>
                 <BottomGroupingTransfer>
-                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentTargetToken ? (
+                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentToken ? (
                     <>
                       <GreyCard
                         onClick={showConfirmTransferModal}

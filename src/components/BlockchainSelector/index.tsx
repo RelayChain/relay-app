@@ -1,11 +1,11 @@
 import { ChevronDown, Link } from 'react-feather'
 import React, { useEffect } from 'react'
 
+import ArrowDown from '../ArrowDown'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
-import ArrowDown from '../ArrowDown'
 
 const Container = styled.div`
   border-radius: 14px;
@@ -67,7 +67,7 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
 const CrossChainWrap = styled.div`
   position: relative;
   width: 252px;
-  min-height: 204px;
+  min-height: 146px;
   background: rgba(18, 21, 56, 0.24);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
@@ -193,7 +193,7 @@ const BlockchainSelector = ({
       {isCrossChain && (
         <Row borderBottom={false} isCrossChain={isCrossChain}>
           <CrossChainWrap>
-            <SubTitle>From</SubTitle>
+            <SubTitle>Current Blockchain</SubTitle>
             <FlexOrder>
               <p className="crosschain currentchain">
                 <BlockchainLogo
@@ -203,9 +203,7 @@ const BlockchainSelector = ({
                 />
                 <span>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
               </p>
-              <TransferAmount>{transferAmount || 0}</TransferAmount>
             </FlexOrder>
-            <BottomTitle>Curent Blockchain</BottomTitle>
           </CrossChainWrap>
 
           <HideSmall>
@@ -215,7 +213,7 @@ const BlockchainSelector = ({
             <ArrowDown conditionInput={true} conditionOutput={true} defaultColor="#727BBA" activeColor="white" />
           </ShowSmall>
           <CrossChainWrap>
-            <SubTitle>To</SubTitle>
+            <SubTitle>Destination Chain</SubTitle>
             <FlexOrder>
               <p className="crosschain" onClick={openTransferModal}>
                 <BlockchainLogo
@@ -226,9 +224,7 @@ const BlockchainSelector = ({
                 <span>{typeof transferTo !== 'string' ? transferTo.name : blockchain}</span>
                 <ChevronDown size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />
               </p>
-              <TransferAmount>{transferAmount || 0}</TransferAmount>
             </FlexOrder>
-            <BottomTitle>Destination Chain</BottomTitle>
           </CrossChainWrap>
         </Row>
       )}

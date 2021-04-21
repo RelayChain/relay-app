@@ -7,6 +7,8 @@ const PageWrapper = styled.div`
   width: 100%;
   padding: 0 24px;
   margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   padding: 0;
 `};
