@@ -106,7 +106,7 @@ export default function CrossChainModal({
 }: CrossChainModalProps) {
   const dispatch = useDispatch<AppDispatch>()
   const switchChain = async (chain: CrosschainChain) => {
-    
+
     let { ethereum } = window;
 
     if (ethereum) {
@@ -132,16 +132,16 @@ export default function CrossChainModal({
         }]
         /* eslint-disable */
         const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
-        dispatch(
-          setCrosschainLastTimeSwitched({})
-        )
-        
-        if (tx !== '') { 
+
+        if (tx !== '') {
           tx
-          .then(t => {
-            console.log(t)
-            window.location.reload()
-          })
+            .then(t => {
+              dispatch(
+                setCrosschainLastTimeSwitched({})
+              )
+              window.location.reload()
+            })
+
         }
       }
     }
