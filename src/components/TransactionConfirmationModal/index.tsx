@@ -4,6 +4,7 @@ import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
+import SuccessIllustation from './SuccessIllustation'
 import { ButtonPrimary } from '../Button'
 import { ChainId } from '@zeroexchange/sdk'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -32,6 +33,11 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
+const Title = styled.h2`
+  font-weight: bold;
+  font-size: 32px;
+`
+
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
   return (
     <Wrapper>
@@ -53,7 +59,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
             </Text>
           </AutoColumn>
           <Text fontSize={12} color="#565A69" textAlign="center">
-            Confirm this transaction in your wallet
+          Your tokens transfer has been successful.
           </Text>
         </AutoColumn>
       </Section>
@@ -80,11 +86,14 @@ function TransactionSubmittedContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <ConfirmedIcon>
-          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+         <SuccessIllustation/>
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20}>
-            Transaction Submitted
+          <Title>
+            Success!
+          </Title>
+          <Text fontWeight={600} fontSize={13} textAlign='center'>
+          Your tokens transfer has been successful.
           </Text>
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
@@ -95,7 +104,7 @@ function TransactionSubmittedContent({
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
-              Close
+              Done
             </Text>
           </ButtonPrimary>
         </AutoColumn>

@@ -36,7 +36,7 @@ const Container = styled.div`
       cursor: pointer;
     }
     &.crosschain {
-      position: relative;d;
+      position: relative;
       width: 186px;
       height: 40px;
       background: rgba(225,248,250,0.12);
@@ -48,6 +48,8 @@ const Container = styled.div`
     }
     &.currentchain {
       background: transparent;
+      display: flex;
+      justify-content: center;
     }
   }
 `
@@ -56,7 +58,7 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: ${({ isCrossChain }) => (!isCrossChain ? '0 1rem 0 1rem' : '1rem')};
+  padding: ${({ isCrossChain }) => (!isCrossChain ? '0 1rem 0 1rem' : '0rem')};
   border-bottom: ${({ borderBottom }) => (borderBottom ? '1px dashed rgba(103, 82, 247, .5)' : 'none')};
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
@@ -74,6 +76,7 @@ const CrossChainWrap = styled.div`
   padding-top: 30px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
+  padding-left: 0px;
   margin-bottom: 20px;
 `};
 `
@@ -196,7 +199,7 @@ const BlockchainSelector = ({
                 <BlockchainLogo
                   size="32px"
                   blockchain={typeof blockchain !== 'string' ? blockchain.name : blockchain}
-                  style={{ marginBottom: '-3px' }}
+                  style={{ marginBottom: '-3px', marginLeft: '0px', marginRight: '0px' }}
                 />
                 <span>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
               </p>
@@ -218,7 +221,7 @@ const BlockchainSelector = ({
                 <BlockchainLogo
                   size="32px"
                   blockchain={typeof transferTo !== 'string' ? transferTo.name : blockchain}
-                  style={{ marginBottom: '-3px' }}
+                  style={{ marginRight: '0px' }}
                 />
                 <span>{typeof transferTo !== 'string' ? transferTo.name : blockchain}</span>
                 <ChevronDown size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />

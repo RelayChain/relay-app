@@ -53,6 +53,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
   margin-top: 30px;
+  margin-left: 0px;
 `};
 `
 
