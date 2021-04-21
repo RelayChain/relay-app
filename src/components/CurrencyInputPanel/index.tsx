@@ -107,11 +107,11 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 `};
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{ hideInput?: boolean, transferPage?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  background: rgba(18, 21, 56, 0.54);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  background: ${({ transferPage }) => (transferPage ? 'rgba(18, 21, 56, 0.24)' : 'rgba(18, 21, 56, 0.54)')};
+  box-shadow: ${({ transferPage }) => (transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)')};
   backdrop-filter: blur(28px);
   border-radius: 44px;
   z-index: 1;
@@ -217,6 +217,7 @@ interface CurrencyInputPanelProps {
   isCrossChain?: boolean
   crossChainBalance?: string
   currentTargetToken?: any
+  transferPage?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -239,6 +240,7 @@ export default function CurrencyInputPanel({
   showCommonBases,
   customBalanceText,
   isCrossChain,
+  transferPage,
   crossChainBalance,
   currentTargetToken
 }: CurrencyInputPanelProps) {
@@ -264,7 +266,7 @@ export default function CurrencyInputPanel({
 
   return (
     <>
-      <InputPanel id={id}>
+      <InputPanel id={id} transferPage={transferPage}>
         <Container hideInput={hideInput}>
           {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
@@ -296,6 +298,7 @@ export default function CurrencyInputPanel({
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
+                  transferPage={!!transferPage}
                   onUserInput={val => {
                     onUserInput(val)
                   }}
