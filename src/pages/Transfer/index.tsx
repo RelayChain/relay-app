@@ -101,7 +101,6 @@ const Heading = styled.h2`
 const Description = styled.p`
   text-align: center;
   margin-top: 0.25rem;
-  margin-bottom: 1.5rem;
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.1em;
@@ -128,6 +127,19 @@ const TransferBodyWrapper = styled.div`
   margin-right: auto;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin-bottom: 50px;
+`};
+`
+const RowBetweenTransfer = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: -10px;
+`};
+`
+const BottomGroupingTransfer = styled(BottomGrouping)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+width: 100%;
 `};
 `
 
@@ -423,35 +435,50 @@ export default function Transfer() {
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
+              <RowBetweenTransfer>
+                <span>You will receive ≈ </span>
+                <BottomGroupingTransfer>
+                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentTargetToken ? (
+                    <>
+                      <GreyCard
+                        onClick={showConfirmTransferModal}
+                        style={{
+                          backgroundColor: '#6752F7',
+                          textAlign: 'center',
+                          minWidth: '230px',
+                          borderRadius: '100px',
+                          height: '58px',
+                          color: '#fff',
+                          paddingTop: 0,
+                          paddingBottom: 0
+                        }}
+                      >
+                        <TYPE.white mb="4px" style={{ lineHeight: '58px' }}>
+                          Transfer
+                        </TYPE.white>
+                      </GreyCard>
+                    </>
+                  ) : !account ? (
+                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                  ) : (
+                    <GreyCard
+                      style={{
+                        textAlign: 'center',
+                        minWidth: '230px',
+                        borderRadius: '100px',
+                        height: '58px',
+                        paddingTop: 0,
+                        paddingBottom: 0
+                      }}
+                    >
+                      <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
+                        Transfer
+                      </TYPE.main>
+                    </GreyCard>
+                  )}
+                </BottomGroupingTransfer>
+              </RowBetweenTransfer>
             </AutoColumn>
-
-            <RowBetween>
-              <span>You will receive ≈ </span>
-              <BottomGrouping>
-                {isCrossChain && transferAmount.length && transferAmount !== '0' && currentTargetToken ? (
-                  <>
-                    <ButtonPrimary onClick={showConfirmTransferModal}>Transfer</ButtonPrimary>
-                  </>
-                ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                ) : (
-                  <GreyCard
-                    style={{
-                      textAlign: 'center',
-                      minWidth: '230px',
-                      borderRadius: '100px',
-                      height: '58px',
-                      paddingTop: 0,
-                      paddingBottom: 0
-                    }}
-                  >
-                    <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
-                      Transfer
-                    </TYPE.main>
-                  </GreyCard>
-                )}
-              </BottomGrouping>
-            </RowBetween>
           </div>
         </TransferBodyWrapper>
         {(chainId === undefined || account === undefined) && (
