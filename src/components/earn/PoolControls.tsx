@@ -34,7 +34,7 @@ const ControlGroup = styled.div`
 `
 const SearchGroup = styled(ControlGroup)`
   flex-grow: 1;
-  max-width: 500px;
+  max-width: 240px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   max-width: none;
     width: 100%;

@@ -131,6 +131,7 @@ const GridContainer = styled.div`
   column-gap: 28px;
 `
 export default function Pools() {
+
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -138,6 +139,17 @@ export default function Pools() {
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
+
+  // filters & sorting
+  const [showLive, setShowLive] = useState(false);
+  let arrayToShow: any[] = [];
+
+  // live or finished pools?
+  if (showLive && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
+    arrayToShow = stakingInfosWithBalance
+  } else if (!showLive && finishedPools && finishedPools.length > 0) {
+    arrayToShow = finishedPools;
+  }
 
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
@@ -191,7 +203,7 @@ export default function Pools() {
                     </tr>
                   </thead>
                   <tbody>
-                    {stakingInfosWithBalance?.map(stakingInfo => {
+                    {arrayToShow?.map(stakingInfo => {
                       // need to sort by added liquidity here
                       return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
                     })}
@@ -205,7 +217,7 @@ export default function Pools() {
               </Wrapper>
             ) : (
               <GridContainer>
-                {stakingInfosWithBalance?.map(stakingInfo => {
+                {arrayToShow?.map(stakingInfo => {
                   return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
                 })}
               </GridContainer>

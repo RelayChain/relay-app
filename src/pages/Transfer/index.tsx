@@ -447,23 +447,13 @@ export default function Transfer() {
                 <BottomGroupingTransfer>
                   {isCrossChain && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
                     <>
-                      <GreyCard
+                      <ButtonPrimary
                         onClick={showConfirmTransferModal}
-                        style={{
-                          backgroundColor: '#6752F7',
-                          textAlign: 'center',
-                          minWidth: '230px',
-                          borderRadius: '100px',
-                          height: '58px',
-                          color: '#fff',
-                          paddingTop: 0,
-                          paddingBottom: 0
-                        }}
                       >
-                        <TYPE.white mb="4px" style={{ lineHeight: '58px' }}>
+                        <TYPE.white>
                           Transfer
                         </TYPE.white>
-                      </GreyCard>
+                      </ButtonPrimary>
                     </>
                   ) : !account ? (
                     <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>

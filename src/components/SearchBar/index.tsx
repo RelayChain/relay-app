@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
+
 import styled from 'styled-components'
 
 const StyledInput = styled.input`
@@ -9,6 +10,7 @@ const StyledInput = styled.input`
   border: none;
   outline: none;
   color: #A7B1F4;
+  height: 40px;
   width: 100%;
   ::placeholder {
     color: #727bba;
@@ -46,7 +48,7 @@ const SearchBar: React.FC<Props> = ({ value, onChange }) => {
         placeholder="Search"
         onFocus={e => (e.target.placeholder = '')}
         onBlur={e => (e.target.placeholder = 'Search')}
-    
+
       />
     </Container>
   )
