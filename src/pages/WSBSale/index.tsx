@@ -3,13 +3,13 @@ import { utils } from 'ethers'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useZeroFreeClaimContract } from '../../hooks/useContract'
-import { calculateGasMargin } from '../../utils'
+import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import AppBody from '../AppBody'
 import { AutoColumn } from '../../components/Column'
 import { ButtonLight } from '../../components/Button'
 
 export default function WSBSale() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     // @ts-ignore
@@ -18,10 +18,11 @@ export default function WSBSale() {
     purchase,
     // @ts-ignore
     estimateGas: { purchase: purchaseEstimate }
-  } = useZeroFreeClaimContract('0xa1453A97EF37FD456c0698e9aF0b745c669Ad8Ee')
+  } = useZeroFreeClaimContract('0x4316D36b3dDbee249f8E9EfB22505cD047988e07')
 
   const [limits, setLimits] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [successHash, setSuccessHash] = useState<null | string>(null)
 
   const getLimits = async () => {
     const res = await buyersLimits(account)
@@ -42,6 +43,7 @@ export default function WSBSale() {
         gasLimit: calculateGasMargin(gusLimit)
       })
       await res.wait()
+      setSuccessHash(res.hash)
     } catch (e) {
       console.log(e)
     } finally {
@@ -52,14 +54,29 @@ export default function WSBSale() {
   return (
     <AppBody>
       <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-        <h2>WSB Token Sale:</h2>
-        {!account && <p>Please connect to wallet</p>}
-        {account && (
+        <h2 style={{ marginBottom: '0' }}>WSB Token Sale:</h2>
+        {successHash ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <p>Claimed successfully</p>
+            <a
+              href={getEtherscanLink(chainId as number, successHash as string, 'transaction')}
+              rel="noreferrer"
+              target="_blank"
+            >
+              View tx on bscscan
+            </a>
+          </div>
+        ) : (
           <>
-            <p style={{ textAlign: 'center' }}>Your limits {limits}</p>
-            <ButtonLight disabled={!limits || isLoading} onClick={onPurchase}>
-              Claim
-            </ButtonLight>
+            {!account && <p>Please connect to wallet</p>}
+            {account && (
+              <>
+                <p style={{ textAlign: 'center' }}>Your limits {limits}</p>
+                <ButtonLight disabled={!limits || isLoading} onClick={onPurchase}>
+                  Claim
+                </ButtonLight>
+              </>
+            )}
           </>
         )}
       </AutoColumn>
