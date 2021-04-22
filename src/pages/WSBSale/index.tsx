@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { utils } from 'ethers'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useZeroFreeClaimContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
+import AppBody from '../AppBody'
+import { AutoColumn } from '../../components/Column'
+import { ButtonLight } from '../../components/Button'
 
 export default function WSBSale() {
   const { account } = useActiveWeb3React()
@@ -46,13 +50,19 @@ export default function WSBSale() {
   }
 
   return (
-    <div>
-      <h1>WSB Token Sale:</h1>
-      {!account && <p>Please connect to wallet</p>}
-      {limits && <p>Your limits {limits}</p>}
-      <button disabled={!limits || isLoading} onClick={onPurchase}>
-        Claim
-      </button>
-    </div>
+    <AppBody>
+      <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
+        <h2>WSB Token Sale:</h2>
+        {!account && <p>Please connect to wallet</p>}
+        {account && (
+          <>
+            <p style={{ textAlign: 'center' }}>Your limits {limits}</p>
+            <ButtonLight disabled={!limits || isLoading} onClick={onPurchase}>
+              Claim
+            </ButtonLight>
+          </>
+        )}
+      </AutoColumn>
+    </AppBody>
   )
 }
