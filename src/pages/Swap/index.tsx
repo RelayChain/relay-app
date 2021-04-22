@@ -4,7 +4,6 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { CHAIN_LABELS, ETH_RPCS } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
-import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -14,6 +13,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
+import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -29,7 +29,7 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import Settings from '../../components/Settings'
+
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
@@ -51,6 +51,7 @@ import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
+import Settings from '../../components/Settings'
 import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
@@ -581,7 +582,7 @@ export default function Swap() {
     setConfirmTransferModalOpen(true)
   }
 
-  // token transfer state 
+  // token transfer state
   const onChangeTransferState = (state: ChainTransferState) => {
     dispatch(
       setCrosschainTransferStatus({
@@ -917,7 +918,7 @@ export default function Swap() {
                 </CopyImage>
               </BalanceCard>
             </BalanceRow>
-          
+
           </SwapFlex>
           {(chainId === undefined || account === undefined) && (
             <CustomLightSpinner
@@ -942,7 +943,7 @@ export default function Swap() {
             ''
           )}
 
-        
+
         </SwapOuterWrap>
       </PageContainer>
     </>

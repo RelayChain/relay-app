@@ -523,6 +523,7 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
+
   const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
@@ -540,9 +541,9 @@ export function useCrossChain() {
     const newTargetCain = chains.length
       ? targetChain
       : {
-          name: '',
-          chainID: ''
-        }
+        name: '',
+        chainID: ''
+      }
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetCain?.name)
@@ -565,11 +566,13 @@ export function useCrossChain() {
       setCurrentChain({
         chain: GetCurrentChain(currentChainName)
       })
+      
     )
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance().catch(console.error)
-    UpdateFee().catch(console.error)
+    UpdateFee().catch(console.error)    
   }
+  
 
   useEffect(initAll, [])
   useEffect(initAll, [chainId, library])

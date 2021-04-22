@@ -190,7 +190,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
-        lastTimeSwitched: ~~(Date.now() / 1000) + 20
+        lastTimeSwitched: ~~(Date.now() / 1000) + 5
       }
     })
 )
