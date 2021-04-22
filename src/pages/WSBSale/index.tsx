@@ -20,13 +20,13 @@ export default function WSBSale() {
     estimateGas: { purchase: purchaseEstimate }
   } = useZeroFreeClaimContract('0x4316D36b3dDbee249f8E9EfB22505cD047988e07')
 
-  const [limits, setLimits] = useState(0)
+  const [limits, setLimits] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
   const [successHash, setSuccessHash] = useState<null | string>(null)
 
   const getLimits = async () => {
     const res = await buyersLimits(account)
-    setLimits(+utils.formatUnits(res, 18))
+    setLimits(utils.formatUnits(res, 18))
   }
 
   useEffect(() => {
@@ -38,9 +38,8 @@ export default function WSBSale() {
   const onPurchase = async () => {
     try {
       setIsLoading(true)
-      const gusLimit = await purchaseEstimate()
       const res = await purchase({
-        gasLimit: calculateGasMargin(gusLimit)
+        gasLimit: 350000
       })
       await res.wait()
       setSuccessHash(res.hash)
@@ -72,7 +71,7 @@ export default function WSBSale() {
             {account && (
               <>
                 <p style={{ textAlign: 'center' }}>Your limits {limits}</p>
-                <ButtonLight disabled={!limits || isLoading} onClick={onPurchase}>
+                <ButtonLight disabled={limits === '0.0' || isLoading} onClick={onPurchase}>
                   Claim
                 </ButtonLight>
               </>
