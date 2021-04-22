@@ -18,7 +18,7 @@ export default function WSBSale() {
     purchase,
     // @ts-ignore
     estimateGas: { purchase: purchaseEstimate }
-  } = useZeroFreeClaimContract('0x4316D36b3dDbee249f8E9EfB22505cD047988e07')
+  } = useZeroFreeClaimContract('0xe81Cee3E15B64076A7fc94E6cd1CC613cd05b0f5')
 
   const [limits, setLimits] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
