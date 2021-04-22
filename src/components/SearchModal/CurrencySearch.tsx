@@ -21,6 +21,7 @@ import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
+import { useUserAddedTokens } from '../../state/user/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useToken } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
@@ -63,6 +64,11 @@ export function CurrencySearch({
 
   // cross chain
   const { availableTokens } = useCrosschainState()
+  const userTokens = useUserAddedTokens()
+    ?.filter((x: any) => x.chainId === chainId)
+    ?.map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
   // ChainId.RINKEBY BUSD
   const availableTokensArray = isCrossChain
     ? availableTokens
@@ -70,13 +76,18 @@ export function CurrencySearch({
         .map((x: any) => {
           return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
         })
-    : availableTokens.map((x: any) => {
-        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-      })
+        .concat(userTokens)
+    : availableTokens
+        .map((x: any) => {
+          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+        })
+        .concat(userTokens)
 
-  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
-    return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-  })
+  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId)
+    .map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
+    .concat(userTokens)
 
   useEffect(() => {
     if (isAddressSearch) {

@@ -1,0 +1,186 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+      ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "buyers_limits",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "claimingDuration",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "genesis",
+    "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+  "inputs": [],
+  "name": "owner",
+  "outputs": [
+    {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function",
+  "constant": true
+  },
+  {
+  "inputs": [],
+  "name": "renounceOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "token",
+  "outputs": [
+    {
+      "internalType": "address",
+      "name": "",
+      "type": "address"
+    }
+    ],
+  "stateMutability": "view",
+  "type": "function",
+  "constant": true
+  },
+  {
+  "inputs": [
+    {
+      "internalType": "address",
+      "name": "newOwner",
+      "type": "address"
+    }
+  ],
+  "name": "transferOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "newDeadline",
+      "type": "uint256"
+    }
+  ],
+  "name": "setClaimingDuration",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+    {
+      "internalType": "address[]",
+      "name": "_buyer",
+      "type": "address[]"
+    },
+    {
+      "internalType": "uint256[]",
+      "name": "_amount",
+      "type": "uint256[]"
+    }
+  ],
+  "name": "addAllocations",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+    {
+      "internalType": "address",
+      "name": "_token",
+      "type": "address"
+    }
+  ],
+  "name": "adminWithdrawERC20",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "adminWithdraw",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "purchase",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  }
+]

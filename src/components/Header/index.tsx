@@ -6,12 +6,16 @@ import Row, { RowFixed } from '../Row'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
+import CrossChainModal from 'components/CrossChainModal'
 // import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/images/0-icon.png'
 import Menu from '../Menu'
 import Modal from 'components/Modal'
 import { NavLink } from 'react-router-dom'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
+import PopupItem from 'components/Popups/PopupItem'
 import Settings from '../Settings'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
@@ -22,10 +26,6 @@ import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
-import CrossChainModal from 'components/CrossChainModal'
-import PopupItem from 'components/Popups/PopupItem'
-import { PopupContent } from 'state/application/actions'
-import PlainPopup from 'components/Popups/PlainPopup'
 
 // import AvaxLogo from '../../assets/images/avax-logo.png'
 
@@ -246,10 +246,16 @@ const StyledNavLink = styled(NavLink).attrs({
   margin: 0 16px;
   font-weight: 500;
   transition: all 0.2s ease-in-out;
+  &.yellow {
+    color: #fced30;
+  }
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.primary1};
+  }
+  &.yellow {
+    color: #fced30;
   }
 
   :hover,
@@ -388,6 +394,9 @@ export default function Header() {
             <Book size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-2px' }} />
             Guides
           </HeaderExternalLink>
+          <StyledNavLink id={`wsb-nav-link`} to={'/wsb-sale'} className="yellow">
+            WSB Sale
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
 

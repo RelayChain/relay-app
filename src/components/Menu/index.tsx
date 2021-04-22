@@ -99,23 +99,27 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://0.exchange">
-            <Info size={14} />
-            Home
+          <MenuItem id="guides-link" href="https://zero-exchange.gitbook.io/zero-exchange-docs/">
+            <BookOpen size={14} />
+            Guides
           </MenuItem>
-          <MenuItem id="link" href="https://blog.0.exchange">
+          <MenuItem id="home-link" href="https://0.exchange">
+            <Info size={14} />
+            Homepage
+          </MenuItem>
+          <MenuItem id="blog-link" href="https://blog.0.exchange">
             <BookOpen size={14} />
             Blog
           </MenuItem>
-          <MenuItem id="link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+          <MenuItem id="telegram-link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
             <MessageCircle size={14} />
             Telegram
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/XtZTNVTX5T">
+          <MenuItem id="discord-link" href="https://discord.gg/XtZTNVTX5T">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://www.coingecko.com/en/coins/zero-exchange">
+          <MenuItem id="coingecko-link" href="https://www.coingecko.com/en/coins/zero-exchange">
             <img style={{ float: 'left', width: '14px', height: '14px', marginRight: '9px', marginTop: '3px' }}src="/images/coingecko.png" />
             CoinGecko
           </MenuItem>

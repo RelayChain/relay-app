@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import ApprovalComplete from './ApprovalComplete'
 import ApprovalPending from './ApprovalPending'
-import { ChainTransferState } from '../../state/crosschain/actions'
+import { ChainTransferState, CrosschainChain } from '../../state/crosschain/actions'
 import { CloseIcon } from '../../theme/components'
 import { Currency } from '@zeroexchange/sdk'
 import Modal from '../Modal'
@@ -18,7 +18,7 @@ interface ConfirmTransferProps {
   isOpen: boolean
   onDismiss: () => void
   activeChain?: string
-  transferTo?: string
+  transferTo?: CrosschainChain
   currency?: Currency | null
   value?: string
   trade?: Trade
@@ -89,7 +89,7 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.NotStarted && (
           <NotStarted
             activeChain={activeChain}
-            transferTo={transferTo}
+            transferTo={transferTo?.name}
             currency={currency}
             value={value}
             trade={trade}
@@ -111,7 +111,7 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.TransferComplete && (
           <TransferComplete
             activeChain={activeChain}
-            transferTo={transferTo}
+            transferTo={transferTo?.name}
             onDismiss={onDismiss}
             currentToken={currentToken}
             transferAmount={transferAmount}
