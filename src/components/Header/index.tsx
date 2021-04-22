@@ -255,6 +255,9 @@ const StyledNavLink = styled(NavLink).attrs({
     font-weight: 600;
     color: ${({ theme }) => theme.primary1};
   }
+  &.yellow {
+    color: #fced30;
+  }
 
   :hover,
   :focus {
@@ -387,6 +390,10 @@ export default function Header() {
           <HeaderExternalLink href={`https://charts.0.exchange`}>
             <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
             Charts
+          </HeaderExternalLink>
+          <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
+            <Book size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-2px' }} />
+            Guides
           </HeaderExternalLink>
           <StyledNavLink id={`wsb-nav-link`} to={'/wsb-sale'} className="yellow">
             WSB Sale
