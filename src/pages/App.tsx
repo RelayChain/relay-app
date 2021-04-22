@@ -32,6 +32,7 @@ import Swap from './Swap'
 import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+import WSBSale from './WSBSale'
 import Web3ReactManager from '../components/Web3ReactManager'
 import Wsb from './Wsb'
 import styled from 'styled-components'
@@ -120,6 +121,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/zero/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/wsb-sale" component={WSBSale} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
