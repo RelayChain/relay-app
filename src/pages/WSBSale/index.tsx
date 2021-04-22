@@ -70,9 +70,9 @@ export default function WSBSale() {
             {!account && <p>Please connect to wallet</p>}
             {account && (
               <>
-                <p style={{ textAlign: 'center' }}>Your limits {limits}</p>
+                <p style={{ textAlign: 'center' }}>Your limits {limits} BUSD</p>
                 <ButtonLight disabled={limits === '0.0' || isLoading} onClick={onPurchase}>
-                  Claim
+                  {isLoading ? '... loading' : 'Claim'}
                 </ButtonLight>
               </>
             )}
