@@ -1,10 +1,10 @@
 import { RowBetween, RowFixed } from '../Row'
 
 import { AutoColumn } from '../Column'
+import { ArrowDown, ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
-import { ChevronsRight } from 'react-feather'
 import { Currency } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo'
 import React from 'react'
@@ -30,8 +30,10 @@ const ChainContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  border: 1px dashed ${({ theme }) => theme.primary1};
   border-radius: 12px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+`};
 `
 
 const ChainItem = styled.div`
@@ -39,13 +41,19 @@ const ChainItem = styled.div`
   flex-direction: column;
   margin: 1rem;
   position: relative;
-  padding: 12px;
+  height: 120px;
+  width: 120px;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease-in-out;
-  border-radius: 12px;
-  img {
-    margin: auto;
-    margin-bottom: 0.5rem;
-  }
+  background: rgba(18, 21, 56, 0.24);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  border-radius: 22px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  height: 130px;
+  width: 180px;
+`};
 `
 const ChainMessage = styled.p`
   font-size: 0.85rem;
@@ -60,7 +68,17 @@ const ChainMessage = styled.p`
     margin-right: 4px;
   }
 `
-
+const HideSmall = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  display: none;
+`};
+`
+const ShowSmall = styled.div`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  display: block;
+`};
+`
 export default function NotStarted({
   activeChain,
   transferTo,
@@ -99,7 +117,12 @@ export default function NotStarted({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </ChainItem>
-          <ChevronsRight />
+          <HideSmall>
+            <ArrowRight color="white"/>
+          </HideSmall>
+          <ShowSmall>
+            <ArrowDown />
+          </ShowSmall>
           <ChainItem>
             <BlockchainLogo size="28px" blockchain={transferTo} />
             <span>{transferTo}</span>

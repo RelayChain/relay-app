@@ -4,7 +4,7 @@ import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-import SuccessIllustation from './SuccessIllustation'
+import {SuccessIllustation, ErrorIllustratiton} from '../IllustationIcons'
 import { ButtonPrimary } from '../Button'
 import { ChainId } from '@zeroexchange/sdk'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -24,7 +24,6 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -152,7 +151,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
+        <ErrorIllustratiton/>
           <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
             {message}
           </Text>

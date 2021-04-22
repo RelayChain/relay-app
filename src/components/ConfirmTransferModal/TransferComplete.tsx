@@ -1,9 +1,9 @@
 import { AutoColumn } from '../Column'
 import { ButtonOutlined } from '../Button'
-import { CheckCircle } from 'react-feather'
 import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
+import {SuccessIllustation} from '../IllustationIcons'
 import styled from 'styled-components'
 
 const Message = styled.p`
@@ -38,8 +38,7 @@ export default function TransferComplete({
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <CheckCircle size={'66'} style={{ margin: '.5rem', color: '#27AE60' }} />
-        <CheckCircle size={'66'} style={{ margin: '.5rem', color: '#27AE60' }} />
+     <SuccessIllustation />
       </RowFixed>
       <RowFixed style={{ width: '100%', marginTop: '1rem' }}>
         <Text fontSize={17} textAlign="center" style={{ lineHeight: '20px' }}>

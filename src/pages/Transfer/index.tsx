@@ -96,6 +96,9 @@ const ChainBridgePending = styled.div`
 const Heading = styled.h2`
   text-align: center;
   font-size: 32px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  font-size: 24px;
+`};
 `
 
 const Description = styled.p`
@@ -138,8 +141,13 @@ const RowBetweenTransfer = styled(RowBetween)`
 `
 const BottomGroupingTransfer = styled(BottomGrouping)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
-width: 100%;
+  width: 100%;
 `};
+`
+const SpanAmount = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  text-align: center;
+  `};
 `
 
 export default function Transfer() {
@@ -438,9 +446,9 @@ export default function Transfer() {
 
                 <div style={{ maxWidth: '260px'}}>
                   { transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ?
-                    (<span>
+                    (<SpanAmount>
                       You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name}
-                    </span>) : ''
+                    </SpanAmount>) : ''
                   }
                 </div>
 
