@@ -1,11 +1,12 @@
 import { ChevronDown, Link } from 'react-feather'
 import React, { useEffect } from 'react'
 
-import ArrowDown from '../ArrowDown'
+import {ArrowDown} from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
+import { ArrowRight } from '../Arrows'
 
 const Container = styled.div`
   border-radius: 14px;
@@ -48,8 +49,10 @@ const Container = styled.div`
     }
     &.currentchain {
       background: transparent;
+      ${({ theme }) => theme.mediaWidth.upToSmall`
       display: flex;
       justify-content: center;
+    `};
     }
   }
 `
@@ -153,20 +156,6 @@ const BlockchainSelector = ({
 
   const openTransferModal = () => {
     onShowTransferChainModal()
-  }
-
-  const ArrowRight = () => {
-    return (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M12.2354 23.5293L20.2354 15.5293L12.2354 7.5293"
-          stroke="#727BBA"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    )
   }
 
   if (!blockchain) {
