@@ -25,8 +25,12 @@ export default function WSBSale() {
   const [successHash, setSuccessHash] = useState<null | string>(null)
 
   const getLimits = async () => {
-    const res = await buyersLimits(account)
-    setLimits(utils.formatUnits(res, 18))
+    try {
+      const res = await buyersLimits(account)
+      setLimits(utils.formatUnits(res, 18))
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export default function WSBSale() {
       <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
         <h2 style={{ marginBottom: '0' }}>WSB Token Sale:</h2>
         {successHash ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <p>Claimed successfully</p>
             <a
               href={getEtherscanLink(chainId as number, successHash as string, 'transaction')}
