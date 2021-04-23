@@ -67,7 +67,6 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
   const allTokens = useAllTokens()
-  console.log(allTokens)
 
   // cross chain
   const { availableTokens } = useCrosschainState()

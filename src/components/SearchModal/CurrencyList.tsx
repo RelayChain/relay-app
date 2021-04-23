@@ -16,8 +16,10 @@ import { isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useTokenBalances } from '../../state/user/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
+import BigNumber from 'bignumber.js'
+import { useETHBalances } from '../../state/wallet/hooks'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -54,12 +56,8 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance }: { balance: CurrencyAmount }) {
-  return (
-    <StyledBalanceText title={balance.toExact()}>
-      {balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' })}
-    </StyledBalanceText>
-  )
+function Balance({ balance }: { balance: string }) {
+  return <StyledBalanceText title={balance}>{balance}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`
@@ -96,6 +94,11 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
+const weiToEthNum = (balance: any, decimals = 18) => {
+  const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
+  return displayBalance.toNumber()
+}
+
 function CurrencyRow({
   currency,
   onSelect,
@@ -103,22 +106,32 @@ function CurrencyRow({
   otherSelected,
   style,
   isEnd,
-  hasQuery
+  hasQuery,
+  tokenBalances
 }: {
-  currency: Currency
+  currency: any
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
   isEnd: boolean
   hasQuery: any
+  tokenBalances: any
 }) {
   const { account, chainId } = useActiveWeb3React()
+  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  // const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
+  let balanceData = {}
+  for (let i = 0; i < tokenBalances.length; i++) {
+    balanceData[tokenBalances[i].address] = weiToEthNum(
+      new BigNumber(tokenBalances[i]?.amount),
+      tokenBalances[i]?.decimals
+    )
+  }
+
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
@@ -175,9 +188,13 @@ function CurrencyRow({
         </FadedSpan>
       </Column>
       <TokenTags currency={currency} />
-      {/*<RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : null}
-      </RowFixed>*/}
+      <RowFixed style={{ justifySelf: 'flex-end' }}>
+        <Balance
+          balance={
+            currency?.address ? balanceData[currency?.address.toLowerCase()] || 0 : userEthBalance?.toSignificant(4)
+          }
+        />
+      </RowFixed>
     </MenuItem>
   )
 }
@@ -202,6 +219,7 @@ export default function CurrencyList({
   searchQuery: string | undefined
 }) {
   const { chainId } = useActiveWeb3React()
+  const tokenBalances = useTokenBalances()
 
   const nativeToken =
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
@@ -214,7 +232,6 @@ export default function CurrencyList({
     showETH,
     nativeToken
   ])
-
   const Row = useCallback(
     ({ data, index, style }) => {
       const currency: Currency = data[index]
@@ -228,6 +245,7 @@ export default function CurrencyList({
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={otherSelected}
+          tokenBalances={tokenBalances}
           isEnd={index === data.length - 1}
           hasQuery={searchQuery && searchQuery.length > 0}
         />

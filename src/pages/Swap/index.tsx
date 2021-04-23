@@ -68,6 +68,9 @@ import BigNumber from 'bignumber.js'
 import { useETHBalances } from '../../state/wallet/hooks'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { copyToClipboard, wait } from '../../utils'
+import { setTokenBalances } from '../../state/user/actions'
+import { useTokenBalances } from '../../state/user/hooks'
+
 const CrossChainLabels = styled.div`
   p {
     display: flex;
@@ -293,8 +296,8 @@ export default function Swap() {
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
-  const [tokenBalances, setTokeBalances] = useState([])
-
+  //const [tokenBalances, setTokeBalancesData] = useState([])
+  const tokenBalances = useTokenBalances()
   const dispatch = useDispatch<AppDispatch>()
 
   // token warning stuff
@@ -317,7 +320,7 @@ export default function Swap() {
   const getTokenBalancesList = async () => {
     const res = await getTokenBalances(account)
     if (res.status === 200) {
-      setTokeBalances(res?.payload?.records)
+      dispatch(setTokenBalances(res?.payload?.records))
       console.log(res?.payload?.records)
     }
   }
