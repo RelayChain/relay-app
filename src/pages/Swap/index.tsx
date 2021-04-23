@@ -13,7 +13,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import { CurrencyAmount, JSBI, Token, Trade, ChainId } from '@zeroexchange/sdk'
+import { CurrencyAmount, JSBI, Token, Trade, ChainId, TokenAmount } from '@zeroexchange/sdk'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -320,13 +320,13 @@ export default function Swap() {
   const getTokenBalancesList = async () => {
     const res = await getTokenBalances(account)
     if (res.status === 200) {
-      dispatch(setTokenBalances(res?.payload?.records))
-      console.log(res?.payload?.records)
+      const filteredBalances = res?.payload?.records.filter((token: any) => token?.name && parseFloat(token.amount) > 0)
+      dispatch(setTokenBalances(filteredBalances))
     }
   }
 
   useEffect(() => {
-    if (chainId === ChainId.MAINNET) {
+    if (chainId === ChainId.MAINNET || true) {
       getTokenBalancesList()
     }
   }, [chainId, account])
