@@ -15,7 +15,7 @@ import { getEtherscanLink } from '../../utils'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
-import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
+import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../pools/styled'
 
 import Modal from '../Modal'
 import { RowBetween } from '../Row'

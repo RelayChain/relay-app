@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
-import { CardNoise } from '../earn/styled'
+import { CardNoise } from '../pools/styled'
 import CurrencyLogo from '../CurrencyLogo'
 import { Dots } from '../swap/styleds'
 import DoubleCurrencyLogo from '../DoubleLogo'

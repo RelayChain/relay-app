@@ -8,15 +8,15 @@ import { AutoColumn } from '../../components/Column'
 import { ButtonSecondary } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk'
 import { Countdown } from './Countdown'
-import { DataCard } from '../../components/earn/styled'
+import { DataCard } from '../../components/pools/styled'
 import { Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
 import NoResults from '../../assets/svg/no_results.svg'
 import { OutlineCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
-import PoolCard from '../../components/earn/PoolCard'
-import PoolControls from '../../components/earn/PoolControls'
-import PoolRow from '../../components/earn/PoolRow'
+import PoolCard from '../../components/pools/PoolCard'
+import PoolControls from '../../components/pools/PoolControls'
+import PoolRow from '../../components/pools/PoolRow'
 import { RowBetween } from '../../components/Row'
 import WalletMissing from '../../assets/svg/wallet_missing.svg'
 import { Zap } from 'react-feather'
@@ -141,7 +141,7 @@ export default function Pools() {
   const finishedPools = stakingInfos.filter(x => !x.active)
 
   // filters & sorting
-  const [showLive, setShowLive] = useState(false);
+  const [showLive, setShowLive] = useState(true);
   let arrayToShow: any[] = [];
 
   // live or finished pools?
@@ -150,6 +150,8 @@ export default function Pools() {
   } else if (!showLive && finishedPools && finishedPools.length > 0) {
     arrayToShow = finishedPools;
   }
+
+  // do search logic, filtering, and sorting logic here on arrayToShow
 
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {

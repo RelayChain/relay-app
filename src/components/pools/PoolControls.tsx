@@ -131,10 +131,6 @@ function PoolControls({ displayMode, setDisplayMode }: PoolControlsProps) {
                 value: 'apr'
               },
               {
-                label: 'Multiplier',
-                value: 'multiplier'
-              },
-              {
                 label: 'Earned',
                 value: 'earned'
               },

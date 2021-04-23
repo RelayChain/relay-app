@@ -23,41 +23,50 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
-const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
-  border: 2px solid;
-  border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
-  background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
-  backdrop-filter: blur(28px);
-  border-radius: 44px;
-  padding: 32px 16px;
-  margin-bottom: 1rem;
-  overflow: hidden;
+const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: boolean }>`
+  cursor: pointer;
+  border-bottom: 0px solid rgba(167, 177, 244, 0.1);
+  border-bottom-width: ${({ showDetails }) => (showDetails ? `0` : `1`)}px;
+  &:last-of-type {
+    border-bottom-width: 0px;
+  }
+`
+
+const Details = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: 34px;
+  row-gap: 16px;
+  border-bottom: 1px solid rgba(167, 177, 244, 0.1);
+  padding-bottom: 16px;
+`
+const Logo = styled(DoubleCurrencyLogo)`
+  margin-bottom: 20px;
+`
+const Cell = styled.td<{ mobile?: boolean }>`
+  display: table-cell;
+  padding: 16px 8px;
+  ${({ theme, mobile = true }) =>
+    !mobile &&
+    theme.mediaWidth.upToMedium`
+      display: none;
+  `};
+`
+const TitleCell = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
 `
-
-const Row = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 0px 16px;
-`
-
-const Icons = styled(DoubleCurrencyLogo)`
-  padding: 100px;
-`
-
-const Label = styled.div`
-  margin-bottom: 16px;
-`
-const DetailsButton = styled.div<{ showDetails?: boolean }>`
+const DetailsCell = styled.div<{ showDetails?: boolean }>`
   display: flex;
   height: 100%;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-bottom: 16px;
+  justify-content: flex-end;
+  ${({ theme }) =>
+    theme.mediaWidth.upToMedium`
+      div{
+        display: none;
+      }
+  `}
   svg {
     ${({ showDetails }) => showDetails && `transform: rotate(180deg);`}
     margin-left: 8px;
@@ -66,35 +75,16 @@ const DetailsButton = styled.div<{ showDetails?: boolean }>`
     }
   }
 `
-const Details = styled.div<{ showDetails?: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  row-gap: 16px;
-  margin-top: 16px;
-  ${({ showDetails }) => !showDetails && `display: none;`}
-
-`
 const DetailsBox = styled.div`
-  width: 100%;
+  flex: 1;
   flex-direction: column;
   padding: 34px;
   background: rgba(18, 21, 56, 0.54);
   border-radius: 44px;
 `
-const Multiplier = styled.div`
-  border: 2px solid #727bba;
-  border-radius: 44px;
-  padding: 4px 16px;
-`
-
-export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
+export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
   const { chainId, account } = useActiveWeb3React()
-  const [showDetails, setShowDetails] = useState(true)
-
-  const toggleDetails = () => {
-    setShowDetails(!showDetails)
-  }
-
+  const [showDetails, setShowDetails] = useState(false)
   const token0 = stakingInfoTop.tokens[0]
   const token1 = stakingInfoTop.tokens[1]
 
@@ -146,6 +136,9 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
     )
   }
 
+  const toggleDetails = () => {
+    setShowDetails(!showDetails)
+  }
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
@@ -154,71 +147,81 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
   const symbol = WETH?.symbol
 
   return (
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-      <Icons currency0={currency0} currency1={currency1} size={38} />
-      <Label>
-        <TYPE.main fontWeight={600} fontSize={18}>
-          {currency0.symbol}-{currency1.symbol}
-        </TYPE.main>
-      </Label>
-      <Multiplier>
-        <TYPE.white fontWeight={400} fontSize={15}>
-          {`Multiplier: 40x`}
-        </TYPE.white>
-      </Multiplier>
-      <Row>
-        <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
-          APR
-        </TYPE.main>
-        <TYPE.main fontWeight={500} fontSize={15}>
-          0%
-        </TYPE.main>
-      </Row>
-      <Row>
-        <TYPE.main fontWeight={600} fontSize={12} style={{ flexGrow: 1 }}>
-          Liquidity
-        </TYPE.main>
-        <TYPE.main fontWeight={500} fontSize={15}>
-          $15,893,234.34
-        </TYPE.main>
-      </Row>
-      {/* <DetailsButton showDetails={showDetails}  onClick={toggleDetails} >
-        <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
-          Details
-        </TYPE.main>
-        <DropdownArrow />
-      </DetailsButton> */}
-
-      <Details showDetails={showDetails}>
-        <DetailsBox>
-          <TYPE.main fontWeight={500} fontSize={15}>
-            Earned
+    <>
+      <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
+        <Cell>
+          <TitleCell>
+            <Logo currency0={currency0} currency1={currency1} size={24} style={{marginRight: '8px'}} />
+            <TYPE.main fontWeight={500} fontSize={15} style={{ display: 'inline' }}>
+              {currency0.symbol}-{currency1.symbol}
+            </TYPE.main>
+          </TitleCell>
+        </Cell>
+        <Cell>
+          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+            0
           </TYPE.main>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexGrow: 1, marginRight: 16, overflow: 'hidden' }}>
-              <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsize' }}>
-                0.784980
-              </TYPE.white>
-            </div>
-            <div style={{ display: 'flex', flexGrow: 0 }}>
-              <ButtonPrimary width={'fit-content'}>Harvest</ButtonPrimary>
-            </div>
-          </div>
-        </DetailsBox>
-        <DetailsBox>
-          <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            Staked
-          </TYPE.white>
-          <StyledInternalLink
-            to={{
-              pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`,
-              state: { stakingRewardAddress }
-            }}
-          >
-            <ButtonOutlined>Select</ButtonOutlined>
-          </StyledInternalLink>
-        </DetailsBox>
-      </Details>
-    </Wrapper>
+        </Cell>
+        <Cell>
+          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+            80.1%
+          </TYPE.main>
+        </Cell>
+        <Cell mobile={false}>
+          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+            $855.069.231
+          </TYPE.main>
+        </Cell>
+        <Cell mobile={false}>
+          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+            40x
+          </TYPE.main>
+        </Cell>
+        <Cell>
+          <DetailsCell showDetails={showDetails}>
+            <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
+              Details
+            </TYPE.main>
+            <DropdownArrow />
+          </DetailsCell>
+        </Cell>
+      </Wrapper>
+      {showDetails && (
+        <tr>
+          <td colSpan={6}>
+            <Details>
+              <DetailsBox>
+                <TYPE.main fontWeight={500} fontSize={15}>
+                  Earned
+                </TYPE.main>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', flexGrow: 1 }}>
+                    <TYPE.white fontWeight={600} fontSize={32}>
+                      0.784980
+                    </TYPE.white>
+                  </div>
+                  <div style={{ display: 'flex', flexGrow: 0 }}>
+                    <ButtonPrimary>Harvest</ButtonPrimary>
+                  </div>
+                </div>
+              </DetailsBox>
+              <DetailsBox>
+                <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+                  Start Farming
+                </TYPE.white>
+                <StyledInternalLink
+                  to={{
+                    pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`,
+                    state: { stakingRewardAddress }
+                  }}
+                >
+                  <ButtonOutlined>Select</ButtonOutlined>
+                </StyledInternalLink>
+              </DetailsBox>
+            </Details>
+          </td>
+        </tr>
+      )}
+    </>
   )
 }

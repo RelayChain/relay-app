@@ -1,5 +1,5 @@
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
 import { ChainId, JSBI, Pair } from '@zeroexchange/sdk'
 import { ExternalLink, HideSmall, StyledInternalLink, TYPE } from '../../theme'
 import React, { useContext, useMemo } from 'react'

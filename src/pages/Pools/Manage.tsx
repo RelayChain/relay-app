@@ -1,6 +1,6 @@
 import { AVAX, BNB, ChainId, ETHER, JSBI, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
@@ -9,7 +9,7 @@ import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../sta
 import { AutoColumn } from '../../components/Column'
 import { ButtonPrimary } from '../../components/Button'
 import Card from '../../components/Card'
-import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
+import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
 import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
@@ -17,9 +17,9 @@ import FullPositionCard from '../../components/PositionCard'
 import { Link } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router-dom'
 import { RowBetween } from '../../components/Row'
-import StakingModal from '../../components/earn/StakingModal'
+import StakingModal from '../../components/pools/StakingModal'
 import { TYPE } from '../../theme'
-import UnstakingModal from '../../components/earn/UnstakingModal'
+import UnstakingModal from '../../components/pools/UnstakingModal'
 import { currencyId } from '../../utils/currencyId'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
@@ -146,7 +146,7 @@ export default function Manage({
   const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
 
   if (!stakingRewardAddress) {
-    history.push('/earn');
+    history.push('/pools');
   }
 
   const theme = useContext(ThemeContext)

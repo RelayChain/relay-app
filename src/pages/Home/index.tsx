@@ -143,7 +143,7 @@ export default function Home() {
           </>
         )}
       </Flex>
-      {transactionsData.loading ? (
+      {(transactionsData.loading || !transactionsData.data.transactions) ? (
         <CenterWrap>
           <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
         </CenterWrap>

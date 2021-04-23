@@ -16,7 +16,7 @@ export function RedirectPathToHomeOnly({ location }: RouteComponentProps) {
 
 // Redirects to earn but only replace the pathname
 export function RedirectPathToEarnOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/earn' }} />
+  return <Redirect to={{ ...location, pathname: '/pools' }} />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
