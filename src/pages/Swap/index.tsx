@@ -487,7 +487,6 @@ export default function Swap() {
       showConfirmTransferModal()
     }
   }
-
   return (
     <>
       <TokenWarningModal
@@ -518,7 +517,7 @@ export default function Swap() {
             isOpen={confirmTransferModalOpen}
             onDismiss={hideConfirmTransferModal}
             // @ts-ignore
-            transferTo={transferTo}
+            transferTo={isCrossChain ? targetChain : transferTo}
             activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
             changeTransferState={onChangeTransferState}
             tokenTransferState={crosschainTransferStatus}
