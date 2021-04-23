@@ -675,7 +675,7 @@ export default function Swap() {
               {isCrossChain && transferAmount.length && transferAmount !== '0' ? (
                 <>
                   <ButtonPrimary onClick={showConfirmTransferModal}>
-                    Transfer {currencies[Field.INPUT]?.symbol} Tokens to {transferTo}
+                    Transfer {currencies[Field.INPUT]?.symbol} Tokens to {targetChain.name}
                   </ButtonPrimary>
                 </>
               ) : !account ? (
