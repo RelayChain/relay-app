@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
 import Modal from '../Modal'
@@ -105,10 +105,11 @@ export default function CrossChainModal({
   selectTransferChain
 }: CrossChainModalProps) {
   const dispatch = useDispatch<AppDispatch>()
+  const [isMetamaskError, setMetamaskError] = useState(false)
   const switchChain = async (chain: CrosschainChain) => {
 
     let { ethereum } = window;
-
+    
     if (ethereum) {
       let chainsConfig = null
       for (const item of crosschainConfig.chains) {
@@ -142,6 +143,8 @@ export default function CrossChainModal({
               window.location.reload()
             })
 
+        } else {
+          setMetamaskError(true)
         }
       }
     }
@@ -165,6 +168,9 @@ export default function CrossChainModal({
                   onDismiss()
                 } else if (+chain.chainID === 1) {
                   alert('To switch back to Ethereum, please change your RPC inside your wallet.');
+                  onDismiss()
+                } else if(isMetamaskError){
+                  alert('The wallet is not responding now. Please try to change your RPC inside your wallet.');
                   onDismiss()
                 } else {
                   switchChain(chain)
