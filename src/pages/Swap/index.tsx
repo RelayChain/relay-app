@@ -13,7 +13,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import { CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { CurrencyAmount, JSBI, Token, Trade, ChainId } from '@zeroexchange/sdk'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -42,7 +42,7 @@ import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import {ArrowDown as CustomArrowDown} from '../../components/Arrows'
+import { ArrowDown as CustomArrowDown } from '../../components/Arrows'
 import { CustomLightSpinner } from '../../theme/components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
@@ -63,7 +63,11 @@ import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
-
+import { getTokenBalances } from 'api'
+import BigNumber from 'bignumber.js'
+import { useETHBalances } from '../../state/wallet/hooks'
+import CurrencyLogo from '../../components/CurrencyLogo'
+import { copyToClipboard, wait } from '../../utils'
 const CrossChainLabels = styled.div`
   p {
     display: flex;
@@ -254,6 +258,10 @@ const Header = styled.div`
   justify-content: space-between;
   margin-bottom: 1rem;
 `
+const weiToEthNum = (balance: any, decimals = 18) => {
+  const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
+  return displayBalance.toNumber()
+}
 
 export default function Swap() {
   useCrossChain()
@@ -285,6 +293,7 @@ export default function Swap() {
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
+  const [tokenBalances, setTokeBalances] = useState([])
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -303,6 +312,21 @@ export default function Swap() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
+  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
+
+  const getTokenBalancesList = async () => {
+    const res = await getTokenBalances(account)
+    if (res.status === 200) {
+      setTokeBalances(res?.payload?.records)
+      console.log(res?.payload?.records)
+    }
+  }
+
+  useEffect(() => {
+    if (chainId === ChainId.MAINNET) {
+      getTokenBalancesList()
+    }
+  }, [chainId, account])
 
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
@@ -899,29 +923,58 @@ export default function Swap() {
                     </BottomGroupingSwap>
                   </Flex>
                 </Wrapper>
-                {!isCrossChain && (+formattedAmounts[Field.INPUT] > 0 && +formattedAmounts[Field.OUTPUT] > 0) && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
+                {!isCrossChain && +formattedAmounts[Field.INPUT] > 0 && +formattedAmounts[Field.OUTPUT] > 0 && (
+                  <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />
+                )}
               </SwapWrap>
             </SwapFlexRow>
-            <BalanceRow isColumn={isColumn}>
-              <TextBalance>Your Balances</TextBalance>
-              <BalanceCard>
-                <BubbleBase />
-                <BoxFlex>
-                  <StyledEthereumLogo src={EthereumLogo} />
-                  <Box>
-                    <CrossChain>
-                      ETH
-                      <span>Ether</span>
-                    </CrossChain>
-                    <AdressWallet>30.662</AdressWallet>
-                  </Box>
-                </BoxFlex>
-                <CopyImage>
-                  <Icon icon="copyClipboard" />
-                </CopyImage>
-              </BalanceCard>
-            </BalanceRow>
+            {account && userEthBalance && (
+              <BalanceRow isColumn={isColumn}>
+                <TextBalance>Your Balances</TextBalance>
+                <BalanceCard>
+                  <BubbleBase />
+                  <BoxFlex>
+                    <StyledEthereumLogo src={EthereumLogo} />
+                    <Box>
+                      <CrossChain>
+                        ETH
+                        <span>Ether</span>
+                      </CrossChain>
+                      <AdressWallet>{userEthBalance?.toSignificant(4)}</AdressWallet>
+                    </Box>
+                  </BoxFlex>
+                  <CopyImage>
+                    <Icon icon="copyClipboard" />
+                  </CopyImage>
+                </BalanceCard>
+                {tokenBalances?.map((token: any, index) => {
+                  const onClickCopyClipboard = async (e: any) => {
+                    e.stopPropagation()
+                    copyToClipboard(token.address)
+                    await wait(1)
+                  }
 
+                  return (
+                    <BalanceCard key={index}>
+                      <BubbleBase />
+                      <BoxFlex>
+                        <CurrencyLogo size="48px" currency={token} />
+                        <Box>
+                          <CrossChain>
+                            {token?.symbol}
+                            <span>{token?.name}</span>
+                          </CrossChain>
+                          <AdressWallet>{weiToEthNum(new BigNumber(token?.amount), token?.decimals)}</AdressWallet>
+                        </Box>
+                      </BoxFlex>
+                      <CopyImage onClick={onClickCopyClipboard}>
+                        <Icon icon="copyClipboard" />
+                      </CopyImage>
+                    </BalanceCard>
+                  )
+                })}
+              </BalanceRow>
+            )}
           </SwapFlex>
           {(chainId === undefined || account === undefined) && (
             <CustomLightSpinner
@@ -945,8 +998,6 @@ export default function Swap() {
           ) : (
             ''
           )}
-
-
         </SwapOuterWrap>
       </PageContainer>
     </>
