@@ -1,7 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL, DEFAULT_ACTIVE_LIST_URLS } from '../../constants/lists'
+import {
+  DEFAULT_LIST_OF_LISTS,
+  DEFAULT_TOKEN_LIST_URL,
+  DEFAULT_ACTIVE_LIST_URLS,
+  COINGECKO_LIST
+} from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
 
@@ -38,7 +43,7 @@ const initialState: ListsState = {
       return memo
     }, {})
   },
-  selectedListUrl: DEFAULT_ACTIVE_LIST_URLS
+  selectedListUrl: [COINGECKO_LIST]
 }
 
 export default createReducer(initialState, builder =>
@@ -51,7 +56,7 @@ export default createReducer(initialState, builder =>
         loadingRequestId: requestId,
         error: null
       }
-      state.selectedListUrl = []
+      state.selectedListUrl = state.selectedListUrl || []
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
       const current = state.byUrl[url]?.current

@@ -140,3 +140,17 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
   if (currency === BNB) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
+
+export const copyToClipboard = (text: string) => {
+  const textArea = document.createElement('textarea')
+  textArea.value = text
+  document.body.appendChild(textArea)
+  textArea.select()
+  document.execCommand('copy')
+  document.body.removeChild(textArea)
+}
+
+export const wait = (time: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, time * 1000)
+  })

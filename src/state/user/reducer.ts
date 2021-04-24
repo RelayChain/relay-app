@@ -11,7 +11,8 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  setTokenBalances
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
@@ -49,6 +50,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  tokenBalances: []
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -64,7 +66,8 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true
+  URLWarningVisible: true,
+  tokenBalances: []
 }
 
 export default createReducer(initialState, builder =>
@@ -83,6 +86,7 @@ export default createReducer(initialState, builder =>
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()
+      state.tokenBalances = []
     })
     .addCase(updateUserDarkMode, (state, action) => {
       state.userDarkMode = action.payload.userDarkMode
@@ -135,5 +139,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleURLWarning, state => {
       state.URLWarningVisible = !state.URLWarningVisible
+    })
+    .addCase(setTokenBalances, (state, { payload: tokenBalances }) => {
+      state.tokenBalances = tokenBalances || []
     })
 )

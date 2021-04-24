@@ -26,6 +26,11 @@ import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 import { useUserAddedTokens } from '../../state/user/hooks'
+import { AppDispatch } from '../../state'
+import { removeList, selectList } from '../../state/lists/actions'
+import { useSelectedListUrl } from '../../state/lists/hooks'
+import { COINGECKO_LIST } from 'constants/lists'
+import { useDispatch, useSelector } from 'react-redux'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -62,7 +67,6 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
   const allTokens = useAllTokens()
-  console.log(allTokens)
 
   // cross chain
   const { availableTokens } = useCrosschainState()
@@ -86,6 +90,23 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
+  const selectedListUrl = useSelectedListUrl()
+  const dispatch = useDispatch<AppDispatch>()
+
+  const isCoingeckoSelected = selectedListUrl?.includes(COINGECKO_LIST) || false
+
+  const handleCoingeckoList = useCallback(() => {
+    if (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) {
+      !isCoingeckoSelected && dispatch(selectList(COINGECKO_LIST))
+    } else {
+      isCoingeckoSelected && dispatch(removeList(COINGECKO_LIST))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    handleCoingeckoList()
+  }, [selectedListUrl])
+
   // const showETH: boolean = useMemo(() => {
   //   const s = searchQuery.toLowerCase().trim()
   //   return s === '' || s === 'e' || s === 'et' || s === 'eth' || s.includes('ava')
@@ -99,11 +120,11 @@ export function CurrencySearch({
     if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? [...defaultTokenList, ...Object.values(allTokens), ...userAddedTokens]
-        : [...availableTokensArray, ...Object.values(allTokens), ...userAddedTokens],
+        ? [...Object.values(allTokens)]
+        : [...availableTokensArray, ...Object.values(allTokens)],
       searchQuery
     )
-  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
+  }, [isAddressSearch, searchToken, searchQuery, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]

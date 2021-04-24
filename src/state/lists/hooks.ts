@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { toCheckSumAddress } from '../../state/crosschain/hooks'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -101,7 +102,9 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
             return { ...list.tags[tagId], id: tagId }
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
-      const token = new WrappedTokenInfo(tokenInfo, tags)
+      const address = toCheckSumAddress(tokenInfo?.address)
+      const tokenData = { ...tokenInfo, address }
+      const token = new WrappedTokenInfo(tokenData, tags)
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
