@@ -120,8 +120,8 @@ export function CurrencySearch({
     if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? [...Object.values(allTokens), ...userAddedTokens]
-        : [...availableTokensArray, ...Object.values(allTokens), ...userAddedTokens],
+        ? [...Object.values(allTokens)]
+        : [...availableTokensArray, ...Object.values(allTokens)],
       searchQuery
     )
   }, [isAddressSearch, searchToken, searchQuery, chainId, availableTokensArray])

@@ -189,11 +189,13 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        <Balance
-          balance={
-            currency?.address ? balanceData[currency?.address.toLowerCase()] || 0 : userEthBalance?.toSignificant(4)
-          }
-        />
+        {(chainId === ChainId.MAINNET || !currency.address) && (
+          <Balance
+            balance={
+              currency?.address ? balanceData[currency?.address.toLowerCase()] || 0 : userEthBalance?.toSignificant(4)
+            }
+          />
+        )}
       </RowFixed>
     </MenuItem>
   )
