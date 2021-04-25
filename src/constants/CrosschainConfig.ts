@@ -148,7 +148,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
-        }
+        },
       ]
     },
     {
@@ -266,7 +266,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'YFI',
           decimals: 18,
           resourceId: '0x0000000000000000000000D94f76f8DD5c3832dd798621c0d673bBae9D946b02'
-        }
+        },
       ]
     },
     {
@@ -393,7 +393,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'BUSD',
           decimals: 18,
           resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
-        }
+        },
       ]
     },
   ]

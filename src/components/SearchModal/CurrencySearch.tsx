@@ -3,9 +3,13 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Row, { RowBetween } from '../Row'
+import { removeList, selectList } from '../../state/lists/actions'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { AppDispatch } from '../../state'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { COINGECKO_LIST } from 'constants/lists'
 import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
@@ -23,14 +27,10 @@ import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
+import { useSelectedListUrl } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 import { useUserAddedTokens } from '../../state/user/hooks'
-import { AppDispatch } from '../../state'
-import { removeList, selectList } from '../../state/lists/actions'
-import { useSelectedListUrl } from '../../state/lists/hooks'
-import { COINGECKO_LIST } from 'constants/lists'
-import { useDispatch, useSelector } from 'react-redux'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -70,6 +70,11 @@ export function CurrencySearch({
 
   // cross chain
   const { availableTokens } = useCrosschainState()
+  const userTokens = useUserAddedTokens()
+    ?.filter((x: any) => x.chainId === chainId)
+    ?.map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
   // ChainId.RINKEBY BUSD
   const availableTokensArray = isCrossChain
     ? availableTokens
@@ -77,13 +82,18 @@ export function CurrencySearch({
         .map((x: any) => {
           return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
         })
-    : availableTokens.map((x: any) => {
-        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-      })
+        .concat(userTokens)
+    : availableTokens
+        .map((x: any) => {
+          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+        })
+        .concat(userTokens)
 
-  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId).map((x: any) => {
-    return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-  })
+  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId)
+    .map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
+    .concat(userTokens)
 
   useEffect(() => {
     if (isAddressSearch) {

@@ -4,6 +4,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { CHAIN_LABELS, ETH_RPCS } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -13,12 +14,12 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import { CurrencyAmount, JSBI, Token, Trade, ChainId, TokenAmount } from '@zeroexchange/sdk'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { copyToClipboard, wait } from '../../utils'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -34,6 +35,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
+import BigNumber from 'bignumber.js'
 import BubbleBase from '../../components/BubbleBase'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
@@ -42,6 +44,7 @@ import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { ArrowDown as CustomArrowDown } from '../../components/Arrows'
 import { CustomLightSpinner } from '../../theme/components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -56,20 +59,17 @@ import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import { getTokenBalances } from 'api'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { setTokenBalances } from '../../state/user/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
-import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useWindowDimensions from './../../hooks/useWindowDimensions'
-import { getTokenBalances } from 'api'
-import BigNumber from 'bignumber.js'
 import { useETHBalances } from '../../state/wallet/hooks'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { copyToClipboard, wait } from '../../utils'
-import { setTokenBalances } from '../../state/user/actions'
+import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useTokenBalances } from '../../state/user/hooks'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const CrossChainLabels = styled.div`
   p {
@@ -562,18 +562,6 @@ export default function Swap() {
     )
   }
 
-  const [transferTo, setTransferTo] = useState<string>('')
-  useEffect(() => {
-    // change logic when we add polka
-    if (chainId) {
-      if (ETH_RPCS.indexOf(CHAIN_LABELS[chainId] || 'Ethereum') !== -1) {
-        setTransferTo('Avalanche')
-      } else {
-        setTransferTo('Ethereum')
-      }
-    }
-  }, [chainId, currentChain])
-
   const startNewSwap = () => {
     BreakCrosschainSwap()
   }
@@ -638,7 +626,6 @@ export default function Swap() {
       showConfirmTransferModal()
     }
   }
-
   return (
     <>
       <Title>Trade</Title>
@@ -655,18 +642,6 @@ export default function Swap() {
               <SwapWrap>
                 <BubbleBase />
                 <Wrapper id="swap-page">
-                  <ConfirmTransferModal
-                    isOpen={confirmTransferModalOpen}
-                    onDismiss={hideConfirmTransferModal}
-                    transferTo={transferTo}
-                    activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
-                    changeTransferState={onChangeTransferState}
-                    tokenTransferState={crosschainTransferStatus}
-                    value={formattedAmounts[Field.INPUT]}
-                    currency={currencies[Field.INPUT]}
-                    trade={trade}
-                  />
-                  <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
                   <ConfirmSwapModal
                     isOpen={showConfirm}
                     trade={trade}

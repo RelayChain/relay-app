@@ -395,7 +395,7 @@ export default function Transfer() {
         <ConfirmTransferModal
           isOpen={confirmTransferModalOpen}
           onDismiss={hideConfirmTransferModal}
-          transferTo={targetChain.name}
+          transferTo={targetChain}
           activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
           changeTransferState={onChangeTransferState}
           tokenTransferState={crosschainTransferStatus}
