@@ -1,15 +1,13 @@
 import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
-import { Break, CardNoise } from './styled'
+import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import React, { useState } from 'react'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
-import { AutoColumn } from '../Column'
-import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { CountUp } from 'use-count-up'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import DropdownArrow from '../../assets/svg/DropdownArrow'
-import { RowBetween } from '../Row'
+import SettingIcon from '../Settings/SettingIcon';
 import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
 import styled from 'styled-components'
@@ -18,6 +16,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
+import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
@@ -48,6 +47,27 @@ const Icons = styled(DoubleCurrencyLogo)`
   padding: 100px;
 `
 
+const ManageButton = styled(StyledInternalLink)`
+  postion: absolute;
+  width: 140px;
+  padding: .25rem;
+  text-decoration: none !important;
+  position: absolute;
+  right: 0; top: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6752F7;
+  transition: all .2s ease-in-out;
+  &:hover {
+    color: #6752F7;
+    filter: brightness(1.2);
+  }
+`
+
 const Label = styled.div`
   margin-bottom: 16px;
 `
@@ -71,6 +91,7 @@ const Details = styled.div<{ showDetails?: boolean }>`
   grid-template-columns: 1fr;
   row-gap: 16px;
   margin-top: 16px;
+  width: 100%;
   ${({ showDetails }) => !showDetails && `display: none;`}
 
 `
@@ -80,11 +101,10 @@ const DetailsBox = styled.div`
   padding: 34px;
   background: rgba(18, 21, 56, 0.54);
   border-radius: 44px;
-`
-const Multiplier = styled.div`
-  border: 2px solid #727bba;
-  border-radius: 44px;
-  padding: 4px 16px;
+  min-height: 224px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 `
 
 export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
@@ -146,6 +166,9 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
     )
   }
 
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
+
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
@@ -161,12 +184,7 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           {currency0.symbol}-{currency1.symbol}
         </TYPE.main>
       </Label>
-      {/*<Multiplier>
-        <TYPE.white fontWeight={400} fontSize={15}>
-          {`Multiplier: 40x`}
-        </TYPE.white>
-      </Multiplier>*/}
-      <Row>
+      <Row style={{ marginBottom: '10px'}}>
         <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
           APR
         </TYPE.main>
@@ -174,49 +192,76 @@ export default function PoolCard({ stakingInfoTop }: { stakingInfoTop: StakingIn
           0%
         </TYPE.main>
       </Row>
-      <Row>
+      <Row style={{ marginBottom: '10px'}}>
+        <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
+          Reward
+        </TYPE.main>
+        <TYPE.main fontWeight={500} fontSize={15}>
+          {stakingInfo?.active
+            ? stakingInfo?.totalRewardRate
+                ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+            : '0'}
+          {' ZERO / week'}
+        </TYPE.main>
+      </Row>
+      <Row style={{ marginBottom: '10px'}}>
         <TYPE.main fontWeight={600} fontSize={12} style={{ flexGrow: 1 }}>
           Liquidity
         </TYPE.main>
         <TYPE.main fontWeight={500} fontSize={15}>
-          $15,893,234.34
+        {valueOfTotalStakedAmountInUSDC
+          ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+          : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
         </TYPE.main>
       </Row>
-      {/* <DetailsButton showDetails={showDetails}  onClick={toggleDetails} >
-        <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
-          Details
-        </TYPE.main>
-        <DropdownArrow />
-      </DetailsButton> */}
 
       <Details showDetails={showDetails}>
         <DetailsBox>
-          <TYPE.main fontWeight={500} fontSize={15}>
-            Earned
+          {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) ?
+          <>
+          <TYPE.main fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem'}}>
+            Earned:
           </TYPE.main>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexGrow: 1, marginRight: 16, overflow: 'hidden' }}>
-              <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsize' }}>
-                0.784980
-              </TYPE.white>
-            </div>
-            <div style={{ display: 'flex', flexGrow: 0 }}>
-              <ButtonPrimary width={'fit-content'}>Harvest</ButtonPrimary>
+          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'flex-start' }}>
+            <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsize' }}>
+              <CountUp
+                key={countUpAmount}
+                isCounting
+                decimalPlaces={4}
+                start={parseFloat(countUpAmountPrevious)}
+                end={parseFloat(countUpAmount)}
+                thousandsSeparator={','}
+                duration={1}
+              />
+            </TYPE.white>
+            <div style={{ display: 'flex', flexGrow: 1, marginTop: '1rem', width: '100%' }}>
+              <ButtonPrimary style={{ width: '100%'}}>Harvest</ButtonPrimary>
             </div>
           </div>
-        </DetailsBox>
-        <DetailsBox>
-          <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            Staked
-          </TYPE.white>
-          <StyledInternalLink style={{ textDecoration: 'none'}}
+          <ManageButton
             to={{
-              pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`,
+              pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
               state: { stakingRewardAddress }
             }}
           >
-            <ButtonOutlined>Select</ButtonOutlined>
-          </StyledInternalLink>
+            <span style={{ marginRight: '10px'}}>Manage</span>
+            <SettingIcon stroke="#6752F7"/>
+          </ManageButton>
+          </> :
+          <div style={{ display: 'flex', flexGrow: 1, height: '100%', justifyContent: 'flex-start', flexDirection: 'column' }}>
+            <TYPE.main fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              Start Farming:
+            </TYPE.main>
+            <StyledInternalLink style={{ textDecoration: 'none', width: '100%', marginTop: 'auto' }}
+              to={{
+                pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
+                state: { stakingRewardAddress }
+              }}
+            >
+              <ButtonOutlined>Select</ButtonOutlined>
+            </StyledInternalLink>
+          </div>}
         </DetailsBox>
       </Details>
     </Wrapper>

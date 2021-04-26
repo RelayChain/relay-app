@@ -1,15 +1,13 @@
 import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
-import { Break, CardNoise } from './styled'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import React, { useState } from 'react'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
-import { AutoColumn } from '../Column'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { CountUp } from 'use-count-up'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import DropdownArrow from '../../assets/svg/DropdownArrow'
-import { RowBetween } from '../Row'
 import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
 import styled from 'styled-components'
@@ -18,6 +16,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
+import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
@@ -81,6 +80,8 @@ const DetailsBox = styled.div`
   padding: 34px;
   background: rgba(18, 21, 56, 0.54);
   border-radius: 44px;
+  justify-content: center;
+  display: flex;
 `
 export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
   const { chainId, account } = useActiveWeb3React()
@@ -146,6 +147,9 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
 
   const symbol = WETH?.symbol
 
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
+
   return (
     <>
       <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
@@ -157,24 +161,31 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
             </TYPE.main>
           </TitleCell>
         </Cell>
-        <Cell>
+        <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            0
+            {stakingInfo?.active
+              ? stakingInfo?.totalRewardRate
+                  ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                  ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+              : '0'}
+            {' ZERO / week'}
           </TYPE.main>
         </Cell>
-        <Cell>
+        <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             80.1%
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            $855.069.231
-          </TYPE.main>
+            {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
+            </TYPE.main>
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            40x
+            {countUpAmount}
           </TYPE.main>
         </Cell>
         <Cell>
@@ -192,26 +203,34 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
             <Details>
               <DetailsBox>
                 <TYPE.main fontWeight={500} fontSize={15}>
-                  Earned
+                  Earned:
                 </TYPE.main>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ display: 'flex', flexGrow: 1 }}>
                     <TYPE.white fontWeight={600} fontSize={32}>
-                      0.784980
+                      <CountUp
+                        key={countUpAmount}
+                        isCounting
+                        decimalPlaces={4}
+                        start={parseFloat(countUpAmountPrevious)}
+                        end={parseFloat(countUpAmount)}
+                        thousandsSeparator={','}
+                        duration={1}
+                      />
                     </TYPE.white>
                   </div>
-                  <div style={{ display: 'flex', flexGrow: 0 }}>
-                    <ButtonPrimary>Harvest</ButtonPrimary>
-                  </div>
+                  { countUpAmount && parseFloat(countUpAmount) > 0 &&
+                    <div style={{ display: 'flex', flexGrow: 0 }}>
+                      <ButtonPrimary>Harvest</ButtonPrimary>
+                    </div>
+                  }
                 </div>
               </DetailsBox>
               <DetailsBox>
-                <TYPE.white fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-                  Start Farming
-                </TYPE.white>
                 <StyledInternalLink
+                  style={{ textDecoration: 'none', width: '100%' }}
                   to={{
-                    pathname: `/zero/${currencyId(currency0)}/${currencyId(currency1)}`,
+                    pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
                     state: { stakingRewardAddress }
                   }}
                 >

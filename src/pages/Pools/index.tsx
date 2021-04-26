@@ -181,12 +181,12 @@ export default function Pools() {
                           Type
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell>
+                      <HeaderCell mobile={false}>
                         <TYPE.main fontWeight={600} fontSize={12}>
-                          Earned
+                          Reward
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell>
+                      <HeaderCell mobile={false}>
                         <TYPE.main fontWeight={600} fontSize={12}>
                           APR
                         </TYPE.main>
@@ -198,7 +198,7 @@ export default function Pools() {
                       </HeaderCell>
                       <HeaderCell mobile={false}>
                         <TYPE.main fontWeight={600} fontSize={12}>
-                          Multiplier
+                          Earned
                         </TYPE.main>
                       </HeaderCell>
                       <HeaderCell></HeaderCell>
