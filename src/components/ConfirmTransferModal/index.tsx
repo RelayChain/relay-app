@@ -39,7 +39,11 @@ const ModalContainer = styled.div`
     text-align: center;
     margin-top: 1rem;
     font-size: 1.25rem;
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 1rem;
+    `
   }
+}
 `
 
 export default function ConfirmTransferModal({

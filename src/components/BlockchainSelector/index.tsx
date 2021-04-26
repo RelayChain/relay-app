@@ -1,7 +1,7 @@
 import { ChevronDown, Link } from 'react-feather'
 import React, { useEffect } from 'react'
 
-import {ArrowDown} from '../Arrows'
+import { ArrowDown } from '../Arrows'
 import { ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
@@ -40,12 +40,16 @@ const Container = styled.div`
       position: relative;
       width: 186px;
       height: 40px;
-      background: rgba(225,248,250,0.12);
-      color: #FFFFFF;
+      background: rgba(225, 248, 250, 0.12);
+      color: #ffffff;
       border-radius: 54px;
       ${({ theme }) => theme.mediaWidth.upToSmall`
       width: 229px;
     `};
+      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: 186px;
+    max-width: 100%;
+  `};
     }
     &.currentchain {
       background: transparent;
@@ -188,7 +192,7 @@ const BlockchainSelector = ({
                 <BlockchainLogo
                   size="32px"
                   blockchain={typeof blockchain !== 'string' ? blockchain.name : blockchain}
-                  style={{ marginBottom: '-3px', marginLeft: '0px', marginRight: '0px' }}
+                  style={{ marginLeft: '0px', marginRight: '0px' }}
                 />
                 <span>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
               </p>

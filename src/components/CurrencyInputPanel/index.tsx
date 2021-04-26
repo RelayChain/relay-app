@@ -10,6 +10,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown-white-select.svg'
+import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
@@ -25,6 +26,10 @@ const InputRow = styled.div<{ selected: boolean }>`
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+padding: 0;
+margin-top: 25px;
 `};
 `
 
@@ -52,7 +57,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
-  margin-top: 30px;
+  margin-top: 15px;
   margin-left: 0px;
 `};
 `
@@ -87,15 +92,12 @@ const SectionLabel = styled.span`
   opacity: 0.56;
   font-size: 13px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
 `};
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
-
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
     stroke-width: 3.5px;
@@ -103,16 +105,34 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   position: absolute;
   height: 100%;
   right: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  right: 10px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display: none
 `};
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean, transferPage?: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+  display: none;
+  margin: 0 0.25rem 0 0.5rem;
+  path {
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke-width: 3.5px;
+  }
+  position: absolute;
+  height: 100%;
+  right: 0;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display: block;
+  position: static;
+`};
+`
+
+const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   background: ${({ transferPage }) => (transferPage ? 'rgba(18, 21, 56, 0.24)' : 'rgba(18, 21, 56, 0.54)')};
-  box-shadow: ${({ transferPage }) => (transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)')};
+  box-shadow: ${({ transferPage }) =>
+    transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)'};
   backdrop-filter: blur(28px);
   border-radius: 44px;
   z-index: 1;
@@ -167,10 +187,31 @@ const Container = styled.div<{ hideInput: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '16px')};
-
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  font-size: 15px;
+  line-height: 100%;
+`};
 `
-
+const StyledTokenNameDeafult = styled(StyledTokenName)`
+  font-size: 16px;
+  margin: 0 0.25rem 0 0.25rem;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin: 0;
+  font-size: 12px;
+`};
+`
+const TokenNameAligner = styled(Aligner)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  align-items: center;
+  justify-content: space-between;
+`};
+`
+const RowBetweenTransfer = styled(RowBetween)`
+${({ theme }) => theme.mediaWidth.upToExtraSmall`
+flex-direction: column;
+gap: 1rem;
+`};
+`
 const StyledBalanceMax = styled.button`
   height: 35px;
   border: 2px solid #1ef7e7;
@@ -191,8 +232,8 @@ const StyledBalanceMax = styled.button`
     outline: none;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin: 15px auto 0;
   `};
 `
 
@@ -271,7 +312,7 @@ export default function CurrencyInputPanel({
         <Container hideInput={hideInput}>
           {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
-              <RowBetween>
+              <RowBetweenTransfer>
                 <SectionLabel>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
@@ -289,7 +330,7 @@ export default function CurrencyInputPanel({
                       : ''}
                   </TYPE.body>
                 )}
-              </RowBetween>
+              </RowBetweenTransfer>
             </LabelRow>
           )}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
@@ -319,7 +360,7 @@ export default function CurrencyInputPanel({
                 }
               }}
             >
-              <Aligner>
+              <TokenNameAligner>
                 {pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
                 ) : altCurrency ? (
@@ -340,11 +381,12 @@ export default function CurrencyInputPanel({
                           ? altCurrency.symbol.slice(0, 4) +
                             '...' +
                             altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                          : altCurrency?.symbol) || t('selectToken')}
+                          : altCurrency?.symbol) || <StyledTokenNameDeafult>{t('selectToken')}</StyledTokenNameDeafult>}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
-              </Aligner>
+                {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}
+              </TokenNameAligner>
             </CurrencySelect>
           </InputRow>
         </Container>

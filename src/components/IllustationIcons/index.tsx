@@ -17,16 +17,16 @@ export const SuccessIllustation = () => {
       <path
         d="M107.443 104.076L127.076 123.709L157.152 93.6328"
         stroke="white"
-        stroke-width="10.8608"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="10.8608"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M212.408 49.2585C222.822 31.9115 241.078 19.8519 244.377 31.702C248.258 45.6433 209.988 42.2269 245.313 6.99994"
         stroke="#FC5EFF"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle cx="146.5" cy="3.5" r="3.5" fill="#1EF7E7" />
       <circle cx="32.5" cy="58.5" r="4.5" fill="#1EF7E7" />
@@ -35,16 +35,16 @@ export const SuccessIllustation = () => {
       <path
         d="M30.6694 121.776C30.6694 121.776 20.1802 124.381 16.8377 129.612C14.6854 132.981 16.8215 136.496 14.1809 139.498C11.0605 143.044 2.61846 143.051 2.61846 143.051"
         stroke="#FC5EFF"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M177.289 189C177.289 189 179.24 196.891 182.163 201.035C185.805 206.199 194.857 211.07 194.857 211.07"
         stroke="#FC5EFF"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <defs>
         <radialGradient
@@ -82,8 +82,8 @@ export const ErrorIllustratiton = () => {
         fill-opacity="0.15"
       />
       <circle cx="130" cy="111" r="66" fill="url(#paint0_radial)" />
-      <path d="M111 130L149 92" stroke="white" stroke-width="10.8608" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M149 130L111 92" stroke="white" stroke-width="10.8608" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M111 130L149 92" stroke="white" strokeWidth="10.8608" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M149 130L111 92" stroke="white" strokeWidth="10.8608" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="134.5" cy="19.5" r="3.5" fill="#1EF7E7" />
       <circle cx="45.5" cy="40.5" r="4.5" fill="#1EF7E7" />
       <circle cx="220.5" cy="89.5" r="3.5" fill="#1EF7E7" />
@@ -91,44 +91,44 @@ export const ErrorIllustratiton = () => {
       <path
         d="M201.001 56.2847L231.646 38.5918"
         stroke="#FC5EFF"
-        stroke-width="7.15139"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="7.15139"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M225.168 62.7603L207.476 32.1153"
         stroke="#FC5EFF"
-        stroke-width="7.15139"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="7.15139"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M24.8995 146.51L33.6106 114"
         stroke="#FC5EFF"
-        stroke-width="6.80199"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="6.80199"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M45.5099 134.611L12.9998 125.9"
         stroke="#FC5EFF"
-        stroke-width="6.80199"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="6.80199"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M185 205.888L206.487 191.6"
         stroke="#FC5EFF"
-        stroke-width="5.21493"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="5.21493"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M202.887 209.488L188.6 188"
         stroke="#FC5EFF"
-        stroke-width="5.21493"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="5.21493"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <defs>
         <radialGradient
