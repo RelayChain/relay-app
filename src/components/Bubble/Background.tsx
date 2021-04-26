@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const BackgroundWrap = styled.div`
@@ -25,7 +24,7 @@ export default function Background({ variant = 'green' }: BackgroundProps) {
       {variant === 'green' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#prefix__filter0_bi)">
-            <rect width={261} height={162} rx={44} fill="#1B8BDC" fillOpacity={0.26} />
+            <rect width={261} height={162} rx={44} fill="#6752F7" fillOpacity={0.26} />
             <rect
               x={1}
               y={1}
@@ -42,7 +41,7 @@ export default function Background({ variant = 'green' }: BackgroundProps) {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M0 115l25-21 27-3 26-8 26-16 28 14 25 32 26-30 26 2 26-10 26 16v27c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-3z"
-            fill="#0A8DC6"
+            fill="#6752F7"
           />
           <defs>
             <filter
@@ -70,7 +69,7 @@ export default function Background({ variant = 'green' }: BackgroundProps) {
       ) : (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#prefix__filter0_bi)">
-            <rect width={261} height={162} rx={44} fill="#2662FF" fillOpacity={0.26} />
+            <rect width={261} height={162} rx={44} fill="#6752F7" fillOpacity={0.26} />
             <rect
               x={1}
               y={1}
@@ -87,7 +86,7 @@ export default function Background({ variant = 'green' }: BackgroundProps) {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M0 100l33 14 32-28 31-11 35 48 32-24 33-11 32 16 33-20v34c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-18z"
-            fill="#2662FF"
+            fill="#6752F7"
           />
           <defs>
             <linearGradient
