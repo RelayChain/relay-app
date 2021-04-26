@@ -34,6 +34,19 @@ const ChainContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
 `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+flex-direction: row;
+justify-content: space-evenly;
+margin: 10px auto;
+`};
+`
+
+const RowFixedTransfer = styled(RowFixed)`
+  margin: '1.5rem auto'
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin: 0;
+  width: 100%;
+  `};
 `
 
 const ChainItem = styled.div`
@@ -51,8 +64,16 @@ const ChainItem = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 22px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  height: 130px;
-  width: 180px;
+  height: 87px;
+  width: 150px;
+  margin: 0.5rem;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  height: 0px;
+  width: 0px;
+  background: none;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(0px);
 `};
 `
 const ChainMessage = styled.p`
@@ -76,6 +97,15 @@ const HideSmall = styled.div`
 const ShowSmall = styled.div`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
+  display: block;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+display: none;
+`};
+`
+const ShowExtraSmall = styled.div`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   display: block;
 `};
 `
@@ -111,24 +141,27 @@ export default function NotStarted({
           </Text>
         </RowFixed>
       </RowBetween>
-      <RowFixed gap={'0px'} style={{ margin: '1.5rem auto' }}>
-        <ChainContainer>
-          <ChainItem>
-            <BlockchainLogo size="28px" blockchain={activeChain} />
-            <span>{activeChain}</span>
-          </ChainItem>
-          <HideSmall>
-            <ArrowRight color="white"/>
-          </HideSmall>
-          <ShowSmall>
-            <ArrowDown />
-          </ShowSmall>
-          <ChainItem>
-            <BlockchainLogo size="28px" blockchain={transferTo} />
-            <span>{transferTo}</span>
-          </ChainItem>
-        </ChainContainer>
-      </RowFixed>
+
+      <ChainContainer>
+        <ChainItem>
+          <BlockchainLogo size="28px" blockchain={activeChain} />
+          <span>{activeChain}</span>
+        </ChainItem>
+        <HideSmall>
+          <ArrowRight color="white" />
+        </HideSmall>
+        <ShowSmall>
+          <ArrowDown />
+        </ShowSmall>
+        <ShowExtraSmall>
+          <ArrowRight color="white" width="21" height="21" />
+        </ShowExtraSmall>
+        <ChainItem>
+          <BlockchainLogo size="28px" blockchain={transferTo} />
+          <span>{transferTo}</span>
+        </ChainItem>
+      </ChainContainer>
+
       <RowFixed gap={'0px'}>
         <ChainMessage>
           You will be transfering your {activeChain} tokens to the {transferTo} Blockchain. You must

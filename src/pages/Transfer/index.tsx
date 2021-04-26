@@ -149,6 +149,24 @@ const SpanAmount = styled.span`
   text-align: center;
   `};
 `
+const TransferButton = styled(GreyCard)`
+  text-align: center;
+  min-width: 230px;
+  border-radius: 100px;
+  height: 58px;
+  padding-top: 0;
+  padding-bottom: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  min-width: 0;
+  `};
+`
+
+const TextBottom = styled.div`
+  max-width: 260px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  text-align: center;
+  `};
+`
 
 export default function Transfer() {
   useCrossChain()
@@ -443,43 +461,35 @@ export default function Transfer() {
                 onShowTransferChainModal={showTransferChainModal}
               />
               <RowBetweenTransfer>
-
-                <div style={{ maxWidth: '260px'}}>
-                  { transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ?
-                    (<SpanAmount>
+                <TextBottom>
+                  {transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
+                    <SpanAmount>
                       You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name}
-                    </SpanAmount>) : ''
-                  }
-                </div>
+                    </SpanAmount>
+                  ) : (
+                    ''
+                  )}
+                </TextBottom>
 
                 <BottomGroupingTransfer>
-                  {isCrossChain && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
+                  {isCrossChain &&
+                  transferAmount.length &&
+                  transferAmount !== '0' &&
+                  currentToken &&
+                  currencies[Field.INPUT] ? (
                     <>
-                      <ButtonPrimary
-                        onClick={showConfirmTransferModal}
-                      >
-                        <TYPE.white>
-                          Transfer
-                        </TYPE.white>
+                      <ButtonPrimary onClick={showConfirmTransferModal}>
+                        <TYPE.white>Transfer</TYPE.white>
                       </ButtonPrimary>
                     </>
                   ) : !account ? (
                     <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
                   ) : (
-                    <GreyCard
-                      style={{
-                        textAlign: 'center',
-                        minWidth: '230px',
-                        borderRadius: '100px',
-                        height: '58px',
-                        paddingTop: 0,
-                        paddingBottom: 0
-                      }}
-                    >
+                    <TransferButton>
                       <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
                         Transfer
                       </TYPE.main>
-                    </GreyCard>
+                    </TransferButton>
                   )}
                 </BottomGroupingTransfer>
               </RowBetweenTransfer>
