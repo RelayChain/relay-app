@@ -6,7 +6,7 @@ import PopupItem from 'components/Popups/PopupItem'
 
 const popupContent: PopupContent = {
     simpleAnnounce: {
-      message: 'Please wait 10 seconds to change RPCs again.'
+      message: 'Please wait 5 seconds to change RPCs again.'
     },
   }
 

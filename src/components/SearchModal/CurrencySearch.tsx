@@ -132,7 +132,7 @@ export function CurrencySearch({
 
     // the search list should only show by default tokens that are in our pools
     return filterTokens([...availableTokensArray], searchQuery);
-    
+
     // return filterTokens(
     //   chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
     //     ? [...Object.values(allTokens)]
@@ -256,13 +256,13 @@ export function CurrencySearch({
       <Separator />
       <Card>
         <RowBetween>
-          <LinkStyledButton
+          {/*<LinkStyledButton
             style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
             onClick={onChangeList}
             id="currency-search-change-list-button"
           >
             Manage Lists
-          </LinkStyledButton>
+          </LinkStyledButton>*/}
         </RowBetween>
       </Card>
     </Column>

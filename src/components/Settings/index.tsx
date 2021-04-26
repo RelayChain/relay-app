@@ -5,12 +5,12 @@ import styled, { ThemeContext } from 'styled-components'
 import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 
-import SettingIcon from './SettingIcon'
 import { ApplicationModal } from '../../state/application/actions'
 import { AutoColumn } from '../Column'
 import { ButtonError } from '../Button'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
+import SettingIcon from './SettingIcon'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import Toggle from '../Toggle'
@@ -88,7 +88,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 2rem;
   position: absolute;
-  top: 4rem;
+  top: 45px;
   right: 0rem;
   z-index: 100;
 

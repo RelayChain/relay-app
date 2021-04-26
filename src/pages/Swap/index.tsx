@@ -35,19 +35,15 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
-import BigNumber from 'bignumber.js'
+import BalanceItem from '../../components/BalanceItem';
 import BubbleBase from '../../components/BubbleBase'
-import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
 import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import { ArrowDown as CustomArrowDown } from '../../components/Arrows'
 import { CustomLightSpinner } from '../../theme/components'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
@@ -85,12 +81,6 @@ const CrossChainLabels = styled.div`
       font-weight: bold;
     }
   }
-`
-const StyledEthereumLogo = styled.img`
-  width: 48px;
-  height: 48px;
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  border-radius: 24px;
 `
 
 const SwapOuterWrap = styled.div`
@@ -153,6 +143,7 @@ const TextBalance = styled.h3`
   font-size: 32px;
   white-space: nowrap;
   margin-bottom: 1rem;
+  text-align: center;
 `
 const BalanceRow = styled.div<{ isColumn?: boolean }>`
   flex: 1;
@@ -213,58 +204,13 @@ const IconWrap = styled.div`
   margin-left: 1.5rem;
   margin-top: 8px;
 `
-const BalanceCard = styled.div`
-  margin-bottom: 20px;
-  position: relative;
-  height: 118px;
-  width: 100%;
-  background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
-  backdrop-filter: blur(28px);
-  border-radius: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 34px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  width: 100%;
-  `};
-`
-const Box = styled.div`
-  margin-left: 24px;
-`
 
-const CrossChain = styled.div`
-  font-weight: 600;
-  font-size: 13px;
-
-  span {
-    margin-left: 10px;
-    color: #929ad6;
-    opacity: 0.8;
-  }
-`
-const AdressWallet = styled.div`
-  font-size: 17px;
-  color: #b97cd6;
-  opacity: 0.88;
-`
-const BoxFlex = styled.div`
-  display: flex;
-`
-const CopyImage = styled.div`
-  cursor: pointer;
-`
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
 `
-const weiToEthNum = (balance: any, decimals = 18) => {
-  const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
-  return displayBalance.toNumber()
-}
 
 export default function Swap() {
   useCrossChain()
@@ -316,20 +262,6 @@ export default function Swap() {
 
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
-
-  const getTokenBalancesList = async () => {
-    const res = await getTokenBalances(account)
-    if (res.status === 200) {
-      const filteredBalances = res?.payload?.records.filter((token: any) => token?.name && parseFloat(token.amount) > 0)
-      dispatch(setTokenBalances(filteredBalances))
-    }
-  }
-
-  useEffect(() => {
-    if (chainId === ChainId.MAINNET || true) {
-      getTokenBalancesList()
-    }
-  }, [chainId, account])
 
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
@@ -626,6 +558,7 @@ export default function Swap() {
       showConfirmTransferModal()
     }
   }
+
   return (
     <>
       <Title>Trade</Title>
@@ -908,47 +841,11 @@ export default function Swap() {
             </SwapFlexRow>
             {account && userEthBalance && (
               <BalanceRow isColumn={isColumn}>
-                <TextBalance>Your Balances</TextBalance>
-                <BalanceCard>
-                  <BubbleBase />
-                  <BoxFlex>
-                    <StyledEthereumLogo src={EthereumLogo} />
-                    <Box>
-                      <CrossChain>
-                        ETH
-                        <span>Ether</span>
-                      </CrossChain>
-                      <AdressWallet>{userEthBalance?.toSignificant(4)}</AdressWallet>
-                    </Box>
-                  </BoxFlex>
-                  <CopyImage>
-                    <Icon icon="copyClipboard" />
-                  </CopyImage>
-                </BalanceCard>
+                <TextBalance>{currentChain.name} Balances</TextBalance>
+                <BalanceItem currentChain={currentChain} chainId={chainId} isNative={true} userEthBalance={userEthBalance}></BalanceItem>
                 {tokenBalances?.map((token: any, index) => {
-                  const onClickCopyClipboard = async (e: any) => {
-                    e.stopPropagation()
-                    copyToClipboard(token.address)
-                    await wait(1)
-                  }
-
                   return (
-                    <BalanceCard key={index}>
-                      <BubbleBase />
-                      <BoxFlex>
-                        <CurrencyLogo size="48px" currency={token} />
-                        <Box>
-                          <CrossChain>
-                            {token?.symbol}
-                            <span>{token?.name}</span>
-                          </CrossChain>
-                          <AdressWallet>{weiToEthNum(new BigNumber(token?.amount), token?.decimals)}</AdressWallet>
-                        </Box>
-                      </BoxFlex>
-                      <CopyImage onClick={onClickCopyClipboard}>
-                        <Icon icon="copyClipboard" />
-                      </CopyImage>
-                    </BalanceCard>
+                    <BalanceItem key={index} token={token} chainId={chainId}></BalanceItem>
                   )
                 })}
               </BalanceRow>

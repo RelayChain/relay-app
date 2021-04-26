@@ -134,6 +134,9 @@ function CurrencyRow({
 
   const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   // only show add or remove buttons if not on selected list
+  const isNative = () => {
+    return (currency === ETHER || currency === AVAX || currency === BNB);
+  }
 
   return (
     <MenuItem
@@ -148,35 +151,38 @@ function CurrencyRow({
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
-        <FadedSpan>
-          {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Added by user
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
-                }}
-              >
-                (Remove)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-          {/* Fix this so (Add) works for Avax support */}
-          {hasQuery && !isOnSelectedList && !customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Found by address
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (currency instanceof Token) addToken(currency)
-                }}
-              >
-                (Add)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-        </FadedSpan>
+        {
+          !isNative() &&
+          <FadedSpan>
+            {customAdded ? (
+              <TYPE.main fontWeight={500}>
+                Added by user
+                <LinkStyledButton
+                  onClick={event => {
+                    event.stopPropagation()
+                    if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
+                  }}
+                >
+                  (Remove)
+                </LinkStyledButton>
+              </TYPE.main>
+            ) : null}
+            {/* Fix this so (Add) works for Avax support */}
+            {hasQuery && !customAdded ? (
+              <TYPE.main fontWeight={500}>
+                Found by address
+                <LinkStyledButton
+                  onClick={event => {
+                    event.stopPropagation()
+                    if (currency instanceof Token) addToken(currency)
+                  }}
+                >
+                  (Add)
+                </LinkStyledButton>
+              </TYPE.main>
+            ) : null}
+          </FadedSpan>
+        }
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
