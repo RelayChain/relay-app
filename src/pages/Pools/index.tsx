@@ -1,6 +1,6 @@
 import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { ExternalLink, TYPE } from '../../theme'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import styled, { keyframes } from 'styled-components'
 
@@ -23,6 +23,7 @@ import { Zap } from 'react-feather'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 
 const PageWrapper = styled.div`
   flex-direction: column;
@@ -71,7 +72,6 @@ const PoolsTable = styled.table`
   td[colspan='6'] {
     width: 100%;
   }
-
 `
 
 const HeaderCell = styled.th<{ mobile?: boolean }>`
@@ -131,24 +131,24 @@ const GridContainer = styled.div`
   column-gap: 28px;
 `
 export default function Pools() {
-
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
   const [displayMode, setDisplayMode] = useState('grid')
+  const [searchText, setSearchText] = useState('')
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 
   // filters & sorting
-  const [showLive, setShowLive] = useState(true);
-  let arrayToShow: any[] = [];
-
+  const [showLive, setShowLive] = useState(true)
+  let arrayToShow: any[] = []
+  let searchedArrayToShow: any
   // live or finished pools?
   if (showLive && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
     arrayToShow = stakingInfosWithBalance
   } else if (!showLive && finishedPools && finishedPools.length > 0) {
-    arrayToShow = finishedPools;
+    arrayToShow = finishedPools
   }
 
   // do search logic, filtering, and sorting logic here on arrayToShow
@@ -163,12 +163,41 @@ export default function Pools() {
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
+  const searchItems = (items: any[], term: string) => {
+    if (term.length == 0 || term === '' || term.trim().length === 0) {
+      return arrayToShow
+    }
+
+    return items.filter(item => {
+      const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId)
+      const secondCurrencySymbol = unwrappedToken(item.tokens[1], chainId)
+
+      if (firstCurrencySymbol.symbol && secondCurrencySymbol.symbol) {
+        if (
+          firstCurrencySymbol.symbol.toLowerCase().indexOf(searchText.toLowerCase().trim()) > -1 ||
+          secondCurrencySymbol.symbol.toLowerCase().indexOf(searchText.toLowerCase().trim()) > -1
+        ) {
+          return item
+        }
+      }
+    })
+  }
+
+  const visibleItems = searchItems(arrayToShow, searchText)
+
   return (
     <>
       <Title>Pools</Title>
       <PageContainer>
         <PageWrapper>
-          {account !== null && <PoolControls displayMode={displayMode} setDisplayMode={setDisplayMode} />}
+          {account !== null && (
+            <PoolControls
+              displayMode={displayMode}
+              setDisplayMode={setDisplayMode}
+              searchText={searchText}
+              setSearchText={setSearchText}
+            />
+          )}
           {account !== null &&
             stakingInfos?.length > 0 &&
             (displayMode === 'table' ? (
@@ -205,7 +234,7 @@ export default function Pools() {
                     </tr>
                   </thead>
                   <tbody>
-                    {arrayToShow?.map(stakingInfo => {
+                    {visibleItems?.map((stakingInfo: any) => {
                       // need to sort by added liquidity here
                       return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
                     })}
@@ -219,7 +248,7 @@ export default function Pools() {
               </Wrapper>
             ) : (
               <GridContainer>
-                {arrayToShow?.map(stakingInfo => {
+                {visibleItems?.map((stakingInfo: any) => {
                   return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
                 })}
               </GridContainer>
