@@ -14,15 +14,17 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   border-radius: 10px;
   display: flex;
   padding: 6px;
-
   align-items: center;
-  :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+  transition: all .1s ease-in-out;
+  ${({ disable }) => !disable &&
+    `&:hover {
+      cursor: pointer;
+      background: rgba(255,255,255,.075);
+    }`
   }
-
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
-  opacity: ${({ disable }) => disable && '0.4'};
+  ${({ disable }) => disable &&
+    `opacity: .4`
+  }
 `
 
 export default function CommonBases({
