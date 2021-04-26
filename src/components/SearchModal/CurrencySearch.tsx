@@ -129,12 +129,16 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(
-      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? [...Object.values(allTokens)]
-        : [...availableTokensArray, ...Object.values(allTokens)],
-      searchQuery
-    )
+
+    // the search list should only show by default tokens that are in our pools
+    return filterTokens([...availableTokensArray], searchQuery);
+    
+    // return filterTokens(
+    //   chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+    //     ? [...Object.values(allTokens)]
+    //     : [...availableTokensArray, ...Object.values(allTokens)],
+    //   searchQuery
+    // )
   }, [isAddressSearch, searchToken, searchQuery, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
