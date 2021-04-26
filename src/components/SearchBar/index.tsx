@@ -48,7 +48,6 @@ const SearchBar: React.FC<Props> = ({ value, onChange }) => {
         placeholder="Search"
         onFocus={e => (e.target.placeholder = '')}
         onBlur={e => (e.target.placeholder = 'Search')}
-
       />
     </Container>
   )

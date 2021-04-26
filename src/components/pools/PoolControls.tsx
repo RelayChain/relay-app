@@ -102,11 +102,12 @@ const Group = styled.div`
 
 export interface PoolControlsProps {
   displayMode: string
+  searchText: string
   setDisplayMode: (p: string) => void
+  setSearchText: (p: string) => void
 }
 
-function PoolControls({ displayMode, setDisplayMode }: PoolControlsProps) {
-  const [searchText, setSearchText] = useState('')
+function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText  }: PoolControlsProps) {
 
   return (
     <Controls>
