@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, ETHER, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -374,3 +374,12 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
+
+export const NATIVE_CURRENCY = {
+  [ChainId.MAINNET]: ETHER,
+  [ChainId.RINKEBY]: ETHER,
+  [ChainId.FUJI]: AVAX,
+  [ChainId.AVALANCHE]: AVAX,
+  [ChainId.SMART_CHAIN]: BNB,
+  [ChainId.SMART_CHAIN_TEST]: BNB
+}

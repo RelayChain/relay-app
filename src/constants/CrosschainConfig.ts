@@ -205,7 +205,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-          name: 'ZERO(AVA)',
+          name: 'ZERO(AVAX)',
           symbol: 'ZERO',
           assetBase: 'ZERO',
           decimals: 18,
@@ -324,7 +324,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
-          name: 'ZERO',
+          name: 'ZERO(BSC)',
           symbol: 'ZERO',
           assetBase: 'ZERO',
           decimals: 18,

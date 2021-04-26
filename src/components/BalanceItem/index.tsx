@@ -1,15 +1,17 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { copyToClipboard, wait } from '../../utils'
-import styled, { ThemeContext } from 'styled-components'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BigNumber from 'bignumber.js'
 import BinanceLogo from '../../assets/images/binance-logo.png'
 import BubbleBase from '../BubbleBase';
+import { ChainId } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo';
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Icon from '../Icon';
 import React from 'react'
+import { returnBalanceNum } from '../../constants'
+import styled from 'styled-components'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 const BalanceCard = styled.div`
   margin-bottom: 20px;
@@ -24,6 +26,11 @@ const BalanceCard = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px 34px;
+  transition: all .2s ease-in-out;
+  &:hover {
+    filter: brightness(1.2);
+    cursor: pointer;
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
   `};
@@ -57,6 +64,29 @@ const CopyImage = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  .address {
+    margin-right: 6px;
+    color: #A7B1F4;
+  }
+  .copied {
+    margin-right: 6px;
+    color: #27AE60;
+    display: none;
+  }
+  .icon-regular, .icon-green {
+    padding-top: 4px;
+  }
+  .icon-green {
+    display: none;
+  }
+  &:active {
+    .address, .icon-regular {
+      display: none;
+    }
+    .copied, .icon-green {
+      display: block;
+    }
+  }
 `
 
 const StyledEthereumLogo = styled.img`
@@ -67,23 +97,30 @@ const StyledEthereumLogo = styled.img`
 `
 
 export default function BalanceItem({
+  account,
   chainId,
   token,
   isNative,
   currentChain,
   userEthBalance,
+  selectBalance,
 }: {
+  account?: any,
   chainId?: any,
   token?: any,
   isNative?: boolean,
   currentChain?: any,
   userEthBalance?: any,
+  selectBalance?: any,
 }) {
 
   const weiToEthNum = (balance: any, decimals = 18) => {
     const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
     return displayBalance.toNumber()
   }
+
+  const balance = useCurrencyBalance(account ?? undefined, token, chainId)
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
 
   const returnChainLogo = () => {
     switch (chainId) {
@@ -108,8 +145,8 @@ export default function BalanceItem({
     await wait(1)
   }
 
-  return (
-    <BalanceCard>
+  return ( isNative || (!isNative && hasABalance) ?
+    <BalanceCard onClick={selectBalance}>
       <BubbleBase />
       <BoxFlex>
         {
@@ -122,18 +159,24 @@ export default function BalanceItem({
             <span>{isNative ? currentChain?.name : token?.name}</span>
           </CrossChain>
           {
-            isNative ? <AddressWallet>{userEthBalance?.toSignificant(4)}</AddressWallet> :
-            <AddressWallet>{weiToEthNum(new BigNumber(token?.amount), token?.decimals)}</AddressWallet>
+            isNative ? <AddressWallet>{userEthBalance?.toSignificant(returnBalanceNum(userEthBalance, 4), { groupSeparator: ',' }) || 0}</AddressWallet> :
+            <AddressWallet>{balance?.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}</AddressWallet>
           }
         </Box>
       </BoxFlex>
       {
         !isNative &&
         <CopyImage onClick={onClickCopyClipboard}>
-          <span style={{ marginRight: '6px', color: '#A7B1F4' }}>address</span>
-          <Icon icon="copyClipboard" />
+          <span className="address">address</span>
+          <span className="copied">copied!</span>
+          <div className="icon-regular">
+            <Icon icon="copyClipboard" />
+          </div>
+          <div className="icon-green">
+            <Icon icon="copyClipboard" color="#27AE60" />
+          </div>
         </CopyImage>
       }
-    </BalanceCard>
+    </BalanceCard> : <></>
   )
 }
