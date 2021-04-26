@@ -19,7 +19,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalances } from '../../state/user/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import BigNumber from 'bignumber.js'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -56,8 +56,12 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance }: { balance: string }) {
-  return <StyledBalanceText title={balance}>{balance}</StyledBalanceText>
+function Balance({ balance }: { balance: CurrencyAmount }) {
+  return (
+    <StyledBalanceText title={balance.toExact()}>
+      {balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}
+    </StyledBalanceText>
+  )
 }
 
 const TagContainer = styled.div`
@@ -119,23 +123,16 @@ function CurrencyRow({
   tokenBalances: any
 }) {
   const { account, chainId } = useActiveWeb3React()
-  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  let balanceData = {}
-  for (let i = 0; i < tokenBalances.length; i++) {
-    balanceData[tokenBalances[i].address] = weiToEthNum(
-      new BigNumber(tokenBalances[i]?.amount),
-      tokenBalances[i]?.decimals
-    )
-  }
 
+  const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  // const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
+  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   // only show add or remove buttons if not on selected list
 
   return (
@@ -183,13 +180,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {(chainId === ChainId.MAINNET || !currency.address) && (
-          <Balance
-            balance={
-              currency?.address ? balanceData[currency?.address.toLowerCase()] || 0 : userEthBalance?.toSignificant(4)
-            }
-          />
-        )}
+        {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : 0}
       </RowFixed>
     </MenuItem>
   )
