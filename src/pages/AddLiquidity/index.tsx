@@ -1,5 +1,5 @@
 import { AVAX, BNB, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS, WBNB } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -175,7 +175,9 @@ export default function AddLiquidity({
       currencyB === BNB ||
       currencyA === AVAX ||
       currencyB === AVAX ||
-      currencyB === BNB
+      currencyB === BNB ||
+      currencyA === WBNB ||
+      currencyB === WBNB 
     ) {
       const tokenBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB
       estimate = router.estimateGas.addLiquidityETH
