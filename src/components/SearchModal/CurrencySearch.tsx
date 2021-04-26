@@ -17,6 +17,7 @@ import CurrencyList from './CurrencyList'
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
+import ListLoader from '../ListLoader';
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
@@ -245,6 +246,7 @@ export function CurrencySearch({
             />
           )}
         </AutoSizer>
+        <ListLoader />
       </div>
 
       <Separator />

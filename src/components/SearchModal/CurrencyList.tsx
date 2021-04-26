@@ -5,6 +5,7 @@ import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 're
 import { WrappedTokenInfo, useSelectedTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
+import BigNumber from 'bignumber.js'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { FixedSizeList } from 'react-window'
@@ -16,10 +17,9 @@ import { isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenBalances } from '../../state/user/hooks'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
-import BigNumber from 'bignumber.js'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useIsUserAddedToken } from '../../hooks/Tokens'
+import { useTokenBalances } from '../../state/user/hooks'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -137,7 +137,7 @@ function CurrencyRow({
 
   return (
     <MenuItem
-      style={{ ...style, borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}` }}
+      style={{ ...style, background: '#1f224a', borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}` }}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
