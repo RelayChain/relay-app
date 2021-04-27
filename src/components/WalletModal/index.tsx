@@ -357,7 +357,7 @@ export default function WalletModal({
 
   return (
     <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-      <ChainSwitcherContent />
+      {getModalContent()}
     </Modal>
   )
 }
