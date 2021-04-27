@@ -167,7 +167,15 @@ export default function Pool() {
                   as={Link}
                   padding="6px 8px"
                   to={`create/${
-                    (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'ETH' : (chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST) ? 'BNB' : 'AVAX'
+                    chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+                      ? 'ETH'
+                      : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
+                      ? 'BNB'
+                      : chainId === ChainId.MOONBASE_ALPHA
+                      ? 'DEV'
+                      : chainId === ChainId.MUMBAI
+                      ? 'MATIC'
+                      : 'AVAX'
                   }`}
                   style={{ margin: '10px' }}
                 >

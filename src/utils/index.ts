@@ -1,5 +1,5 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../constants'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS } from '../constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
 import { AddressZero } from '@ethersproject/constants'
@@ -30,7 +30,9 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   43113: 'FUJI',
   43114: 'AVALANCHE',
   97: 'SMART_CHAIN_TEST',
-  56: 'SMART_CHAIN'
+  56: 'SMART_CHAIN',
+  1287: 'MOONBASE_ALPHA',
+  80001: 'MUMBAI'
 }
 
 export function getEtherscanLink(
@@ -48,8 +50,14 @@ export function getEtherscanLink(
   if (chainId === ChainId.SMART_CHAIN_TEST) {
     prefix = `https://testnet.bscscan.com`
   }
+  if (chainId === ChainId.MUMBAI) {
+    prefix = `https://explorer-mumbai.maticvigil.com`
+  }
   if (chainId === ChainId.SMART_CHAIN) {
     prefix = `https://bscscan.com`
+  }
+  if (chainId === ChainId.MOONBASE_ALPHA) {
+    prefix = `https://moonbase.subscan.io`
   }
   switch (type) {
     case 'transaction': {
@@ -123,6 +131,10 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,
@@ -138,6 +150,8 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
   if (currency === ETHER) return true
   if (currency === AVAX) return true
   if (currency === BNB) return true
+  if (currency === DEV) return true
+  if (currency === MATIC) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 

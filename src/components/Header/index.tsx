@@ -168,6 +168,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.AVALANCHE]: 'Avalanche',
   [ChainId.SMART_CHAIN]: 'SmartChain',
   [ChainId.SMART_CHAIN_TEST]: 'SmartChain',
+  [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
+  [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MAINNET]: 'Ethereum'
 }
 
@@ -178,7 +180,8 @@ const NETWORK_SYMBOLS: any = {
   Görli: 'ETH',
   Kovan: 'ETH',
   Avalanche: 'AVAX',
-  SmartChain: 'BNB'
+  SmartChain: 'BNB',
+  Moonbeam: 'DEV'
 }
 
 const popupContent: PopupContent = {
@@ -239,7 +242,6 @@ const NetworkSwitcher = () => {
     </div>
   )
 }
-
 const Header = () => {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']

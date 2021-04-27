@@ -209,7 +209,9 @@ export function useSwapCallback(
           chainId === ChainId.AVALANCHE ||
           ChainId.FUJI ||
           chainId === ChainId.SMART_CHAIN ||
-          chainId === ChainId.SMART_CHAIN_TEST
+          chainId === ChainId.SMART_CHAIN_TEST ||
+          chainId === ChainId.MOONBASE_ALPHA ||
+          chainId === ChainId.MUMBAI
             ? BigNumber.from(350000)
             : gasEstimate
 

@@ -39,6 +39,13 @@ export default function BlockchainLogo({
     return <StyledEthereumLogo src={BSCLogo} alt="BNB" size={size} style={style} />
   }
 
+  if (blockchain === 'Moonbeam' || blockchain === 'DEV' || blockchain === 'MoonbeamAlpha') {
+    return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
+  }
+
+  if (blockchain === 'Mumbai' || blockchain === 'MATIC') {
+    return <StyledEthereumLogo src="" alt="MATIC" size={size} style={style} />
+  }
+
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
 }
-

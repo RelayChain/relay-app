@@ -3,6 +3,7 @@ import { copyToClipboard, wait } from '../../utils'
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BigNumber from 'bignumber.js'
 import BinanceLogo from '../../assets/images/binance-logo.png'
+// import MoonbaseLogo from '../../assets/images/moonbase-logo.png'
 import BubbleBase from '../BubbleBase';
 import { ChainId } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo';
@@ -134,6 +135,10 @@ export default function BalanceItem({
       case ChainId.SMART_CHAIN:
       case ChainId.SMART_CHAIN_TEST:
         return BinanceLogo;
+      case ChainId.MOONBASE_ALPHA:
+        return 'Moonbeam Logo';
+      case ChainId.MUMBAI:
+        return 'Mumbai logo';
       default:
         return EthereumLogo;
     }

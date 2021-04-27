@@ -1,5 +1,12 @@
-import { AVAX, BNB, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS, WBNB } from '../../constants'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import {
+  AVAX_ROUTER_ADDRESS,
+  ETH_ROUTER_ADDRESS,
+  SMART_CHAIN_ROUTER_ADDRESS,
+  WBNB,
+  MOONBASE_ROUTER_ADDRESS,
+  MUMBAI_ROUTER_ADDRESS
+} from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -54,13 +61,16 @@ export default function AddLiquidity({
   const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   // hack for BNB / ZERO pool, flip them for staking
-  let curA = currencyIdA;
-  let curB = currencyIdB;
-  if (chainId && chainId === ChainId.SMART_CHAIN &&
-      currencyIdA === 'BNB' &&
-      currencyIdB === '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf') {
-        curA = currencyIdB;
-        curB = currencyIdA;
+  let curA = currencyIdA
+  let curB = currencyIdB
+  if (
+    chainId &&
+    chainId === ChainId.SMART_CHAIN &&
+    currencyIdA === 'BNB' &&
+    currencyIdB === '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf'
+  ) {
+    curA = currencyIdB
+    curB = currencyIdA
   }
   const currencyA = useCurrency(curA)
   const currencyB = useCurrency(curB)
@@ -137,6 +147,10 @@ export default function AddLiquidity({
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
   const [approvalB, approveBCallback] = useApproveCallback(
@@ -145,6 +159,10 @@ export default function AddLiquidity({
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 
@@ -173,13 +191,17 @@ export default function AddLiquidity({
       currencyA === ETHER ||
       currencyB === ETHER ||
       currencyB === BNB ||
+      currencyB === MATIC ||
       currencyA === AVAX ||
       currencyB === AVAX ||
       currencyB === BNB ||
       currencyA === WBNB ||
-      currencyB === WBNB 
+      currencyB === WBNB ||
+      currencyA === DEV ||
+      currencyA === MATIC ||
+      currencyB === DEV
     ) {
-      const tokenBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB
+      const tokenBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [

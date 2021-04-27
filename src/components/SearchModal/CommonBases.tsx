@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -15,16 +15,14 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   display: flex;
   padding: 6px;
   align-items: center;
-  transition: all .1s ease-in-out;
-  ${({ disable }) => !disable &&
+  transition: all 0.1s ease-in-out;
+  ${({ disable }) =>
+    !disable &&
     `&:hover {
       cursor: pointer;
       background: rgba(255,255,255,.075);
-    }`
-  }
-  ${({ disable }) => disable &&
-    `opacity: .4`
-  }
+    }`}
+  ${({ disable }) => disable && `opacity: .4`}
 `
 
 export default function CommonBases({
@@ -82,18 +80,49 @@ export default function CommonBases({
               </Text>
             </BaseWrapper>
           ))}
-        {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && (
+        {(chainId && chainId === ChainId.SMART_CHAIN) ||
+          (chainId === ChainId.SMART_CHAIN_TEST && (
+            <BaseWrapper
+              onClick={() => {
+                if (!selectedCurrency || !currencyEquals(selectedCurrency, BNB)) {
+                  onSelect(BNB)
+                }
+              }}
+              disable={selectedCurrency === BNB}
+            >
+              <CurrencyLogo currency={BNB} style={{ marginRight: 8 }} />
+              <Text fontWeight={500} fontSize={16}>
+                BNB
+              </Text>
+            </BaseWrapper>
+          ))}
+        {chainId && chainId === ChainId.MOONBASE_ALPHA && (
           <BaseWrapper
             onClick={() => {
-              if (!selectedCurrency || !currencyEquals(selectedCurrency, BNB)) {
-                onSelect(BNB)
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, DEV)) {
+                onSelect(DEV)
               }
             }}
-            disable={selectedCurrency === BNB}
+            disable={selectedCurrency === DEV}
           >
-            <CurrencyLogo currency={BNB} style={{ marginRight: 8 }} />
+            <CurrencyLogo currency={DEV} style={{ marginRight: 8 }} />
             <Text fontWeight={500} fontSize={16}>
-              BNB
+              DEV
+            </Text>
+          </BaseWrapper>
+        )}
+        {chainId && chainId === ChainId.MUMBAI && (
+          <BaseWrapper
+            onClick={() => {
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, MATIC)) {
+                onSelect(MATIC)
+              }
+            }}
+            disable={selectedCurrency === MATIC}
+          >
+            <CurrencyLogo currency={MATIC} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+              MATIC
             </Text>
           </BaseWrapper>
         )}

@@ -3,9 +3,11 @@ import React, { useMemo } from 'react'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BNBLogo from '../../assets/images/binance-coin-logo.webp'
+// import DEVLogo from '../../assets/images/DEV-logo'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
+// import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
@@ -105,6 +107,24 @@ export default function CurrencyLogo({
     currency?.symbol === 'eBNB'
   ) {
     return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
+  }
+  // [ChainId.MUMBAI]: 'Mumbai'
+  if (
+    currency?.symbol === 'DEV' ||
+    currency?.symbol === 'WDEV' ||
+    currency?.symbol === 'wDEV' ||
+    currency?.symbol === 'eDEV'
+  ) {
+    return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
+  }
+
+  if (
+    currency?.symbol === 'MATIC' ||
+    currency?.symbol === 'WMATIC' ||
+    currency?.symbol === 'wMATIC' ||
+    currency?.symbol === 'eMATIC'
+  ) {
+    return <StyledEthereumLogo src="" alt="MATIC" size={size} style={style} />
   }
 
   // cross chain

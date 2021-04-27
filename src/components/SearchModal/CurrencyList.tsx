@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -30,6 +30,8 @@ function currencyKey(currency: Currency): string {
     return 'AVAX'
   } else if (currency === BNB) {
     return 'BNB'
+  } else if (currency === DEV) {
+    return 'DEV'
   } else {
     return ''
   }
@@ -135,12 +137,16 @@ function CurrencyRow({
   const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   // only show add or remove buttons if not on selected list
   const isNative = () => {
-    return (currency === ETHER || currency === AVAX || currency === BNB);
+    return currency === ETHER || currency === AVAX || currency === BNB || currency === DEV
   }
 
   return (
     <MenuItem
-      style={{ ...style, background: '#1f224a', borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}` }}
+      style={{
+        ...style,
+        background: '#1f224a',
+        borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}`
+      }}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
@@ -151,8 +157,7 @@ function CurrencyRow({
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
-        {
-          !isNative() &&
+        {!isNative() && (
           <FadedSpan>
             {customAdded ? (
               <TYPE.main fontWeight={500}>
@@ -182,7 +187,7 @@ function CurrencyRow({
               </TYPE.main>
             ) : null}
           </FadedSpan>
-        }
+        )}
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
@@ -219,6 +224,10 @@ export default function CurrencyList({
       ? Currency.ETHER
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? Currency.BNB
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? Currency.DEV
+      : chainId === ChainId.MUMBAI
+      ? Currency.MATIC
       : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,

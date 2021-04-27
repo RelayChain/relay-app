@@ -171,6 +171,98 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x00000000000000000000009BBba9D5be49c777A1c9cDF4ED7965A27CaBb7F203'
         }
       ]
+    },
+    {
+      chainId: 4,
+      networkId: 1287,
+      name: 'Moonbeam',
+      bridgeAddress: '0xD73CFAACEfe4812d350d38f634fA61eC3aFdFEbA',
+      erc20HandlerAddress: '0xff7c781E1ed2A67a790Be70536299c7DFE4D5f33',
+      rpcUrl: 'https://rpc.testnet.moonbeam.network',
+      type: 'Ethereum',
+      gasLimit: 6721975,
+      defaultGasPrice: 12.5,
+      blockExplorer: 'https://moonbeam-explorer.netlify.app/',
+      nativeTokenSymbol: 'DEV',
+      tokens: [
+        {
+          address: '0x036D90f25DbfC55534C8cBD659bBd891D15121E7',
+          name: 'zETH',
+          symbol: 'zETH',
+          assetBase: 'zETH',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000036D90f25DbfC55534C8cBD659bBd891D15121E704'
+        },
+        {
+          address: '0x90Cef7CfE4C88b3bd6d8bE52c2Ebce04210820Ac',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: '0x000000000000000000000090Cef7CfE4C88b3bd6d8bE52c2Ebce04210820Ac04'
+        },
+        {
+          address: '0xA14Af06dEc505ca794635f827a24B976a434d427',
+          name: 'zUSDC',
+          symbol: 'zUSDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000A14Af06dEc505ca794635f827a24B976a434d42704'
+        },
+        {
+          address: '0x201BBbc21F3A461c775f5A8A59beD69769355dC8',
+          name: 'ZERO',
+          symbol: 'ZERO',
+          assetBase: 'ZERO',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000201BBbc21F3A461c775f5A8A59beD69769355dC804'
+        }
+      ]
+    },
+    {
+      chainId: 5,
+      networkId: 80001,
+      name: 'Mumbai',
+      bridgeAddress: '0xD73CFAACEfe4812d350d38f634fA61eC3aFdFEbA',
+      erc20HandlerAddress: '0xff7c781E1ed2A67a790Be70536299c7DFE4D5f33',
+      rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+      type: 'Ethereum',
+      blockExplorer: 'https://explorer-mumbai.maticvigil.com/',
+      nativeTokenSymbol: 'MATIC',
+      tokens: [
+        {
+          address: '0x3BaDD0399e9c1DFAd16dddb42D6759afE0e3e6f2',
+          name: 'zETH',
+          symbol: 'zETH',
+          assetBase: 'zETH',
+          decimals: 18,
+          resourceId: '0x00000000000000000000003BaDD0399e9c1DFAd16dddb42D6759afE0e3e6f205'
+        },
+        {
+          address: '0x63cF3afFD720F23c55cD652Ba2242EfE1bccFBfC',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: '0x000000000000000000000063cF3afFD720F23c55cD652Ba2242EfE1bccFBfC05'
+        },
+        {
+          address: '0xA14Af06dEc505ca794635f827a24B976a434d427',
+          name: 'zUSDC',
+          symbol: 'zUSDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000A14Af06dEc505ca794635f827a24B976a434d42705'
+        },
+        {
+          address: '0x5C2E43c99318F60Acc6503f40d734B64dA7106cc',
+          name: 'ZERO',
+          symbol: 'ZERO',
+          assetBase: 'ZERO',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005C2E43c99318F60Acc6503f40d734B64dA7106cc05'
+        }
+      ]
     }
   ]
 
