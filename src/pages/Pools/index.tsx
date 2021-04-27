@@ -196,6 +196,7 @@ export default function Pools() {
   const [displayMode, setDisplayMode] = useState('table')
   const [searchText, setSearchText] = useState('')
 
+  console.log(stakingInfos)
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 

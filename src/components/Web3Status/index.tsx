@@ -135,7 +135,13 @@ const NetworkIcon = styled(Activity)`
   width: 16px;
   height: 16px;
 `
-
+const HeaderRowBetween = styled(RowBetween)`
+    align-items: center;
+`
+const LoaderWrap = styled.div`
+    display: flex;
+    margin-left: 10px;
+`
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -261,9 +267,12 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
         {hasPendingTransactions ? (
-          <>
-            <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
-          </>
+          <HeaderRowBetween>
+            <Text>{pending?.length} Pending</Text> 
+            <LoaderWrap>
+            <Loader stroke="pink" />
+            </LoaderWrap>
+          </HeaderRowBetween>
         ) : (
           <>
             {hasSocks ? SOCK : null}
