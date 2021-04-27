@@ -54,7 +54,6 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
   border-radius: 20px;
   position: relative;
   display: grid;
@@ -78,7 +77,8 @@ const AccountGroupingRow = styled.div`
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   padding: 0rem 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
+  border-radius: 12px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`padding: 0rem 1rem 0rem 1rem;`};
 `
 
 const YourAccount = styled.div`
@@ -139,6 +139,9 @@ const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   :hover {
     color: ${({ theme }) => theme.text2};
   }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin-left: 0.7rem;
+`};
 `
 
 const CloseIcon = styled.div`
@@ -197,6 +200,16 @@ const WalletAction = styled(ButtonSecondary)`
 
 const MainWalletAction = styled(WalletAction)`
   color: ${({ theme }) => theme.primary1};
+`
+
+const AccountInnerControl = styled.div`
+  display: flex;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`};
 `
 
 function renderTransactions(transactions: string[]) {
@@ -340,53 +353,49 @@ export default function AccountDetails({
                   )}
                 </AccountControl>
               </AccountGroupingRow>
-              <AccountGroupingRow>
+              <>
                 {ENSName ? (
                   <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
+                    <AccountInnerControl>
+                      {account && (
+                        <Copy toCopy={account}>
+                          <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                        </Copy>
+                      )}
+                      {chainId && account && (
+                        <AddressLink
+                          hasENS={!!ENSName}
+                          isENS={true}
+                          href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
+                        >
+                          <LinkIcon size={16} />
+                          <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
+                        </AddressLink>
+                      )}
+                    </AccountInnerControl>
                   </>
                 ) : (
                   <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
+                    <AccountInnerControl>
+                      {account && (
+                        <Copy toCopy={account}>
+                          <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                        </Copy>
+                      )}
+                      {chainId && account && (
+                        <AddressLink
+                          hasENS={!!ENSName}
+                          isENS={false}
+                          href={getEtherscanLink(chainId, account, 'address')}
+                        >
+                          <LinkIcon size={16} />
+                          <span style={{ marginLeft: '4px' }}>{chainId && `View on ${CHAIN_LABELS[chainId]}`}</span>
+                        </AddressLink>
+                      )}
+                    </AccountInnerControl>
                   </>
                 )}
-              </AccountGroupingRow>
+              </>
             </InfoCard>
           </YourAccount>
         </AccountSection>

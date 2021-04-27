@@ -108,6 +108,9 @@ const HoverText = styled.div`
     cursor: pointer;
   }
 `
+const ModalInnerWrap = styled.div`
+  width: 100%;
+`
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -281,7 +284,7 @@ export default function WalletModal({
         )
       )
     })
-  }  
+  }
 
   function getModalContent() {
     if (error) {
@@ -303,13 +306,15 @@ export default function WalletModal({
     }
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
-        <AccountDetails
-          toggleWalletModal={toggleWalletModal}
-          pendingTransactions={pendingTransactions}
-          confirmedTransactions={confirmedTransactions}
-          ENSName={ENSName}
-          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
-        />
+        <ModalInnerWrap>
+          <AccountDetails
+            toggleWalletModal={toggleWalletModal}
+            pendingTransactions={pendingTransactions}
+            confirmedTransactions={confirmedTransactions}
+            ENSName={ENSName}
+            openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
+          />
+        </ModalInnerWrap>
       )
     }
     return (
