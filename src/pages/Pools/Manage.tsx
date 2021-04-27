@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, JSBI, Pair, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
@@ -210,8 +210,7 @@ export default function Manage({
     }
   }, [account, toggleWalletModal])
 
-  // pool functionality ============================
-
+  // pool functionality =====================
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
