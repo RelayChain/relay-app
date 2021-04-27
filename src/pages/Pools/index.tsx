@@ -18,6 +18,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
+const numeral = require('numeral');
+
 const PageWrapper = styled.div`
   flex-direction: column;
   display: flex;
@@ -184,6 +186,7 @@ const StatValue = styled.h6`
 `
 
 export default function Pools() {
+
   const { width } = useWindowDimensions()
   const isColumn = width < 1500
   const { account, chainId } = useActiveWeb3React()
@@ -240,6 +243,27 @@ export default function Pools() {
 
   const visibleItems = searchItems(arrayToShow, searchText)
 
+  const [weeklyEarnings, setWeeklyEarnings] = useState({})
+  const [readyForHarvest, setReadyForHarvest] = useState({})
+  const [statsDisplay, setStatsDisplay] = useState<any>({})
+
+  const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, contract }: any) => {
+    setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings });
+    setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest });
+  }
+
+  useEffect(() => {
+    let earnings: any = 0;
+    let harvest: any = 0;
+    Object.keys(weeklyEarnings).forEach((key) => {
+      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''));
+    });
+    Object.keys(readyForHarvest).forEach((key) => {
+      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''));
+    });
+    setStatsDisplay({ earnings, harvest });
+  }, [weeklyEarnings, readyForHarvest])
+
   return (
     <>
       <Title>Pools</Title>
@@ -248,11 +272,11 @@ export default function Pools() {
         <StatsWrapper>
           <Stat className="weekly">
             <StatLabel>Weekly Earnings:</StatLabel>
-            <StatValue>123,354.3920 <span>ZERO</span></StatValue>
+            <StatValue>{numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span></StatValue>
           </Stat>
           <Stat className="harvest">
             <StatLabel>Ready To Harvest:</StatLabel>
-            <StatValue>123,354.3920 <span>ZERO</span></StatValue>
+            <StatValue>{numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span></StatValue>
           </Stat>
           <StyledInternalLink className="add-liquidity-link"
             to={{
@@ -310,7 +334,11 @@ export default function Pools() {
                   <tbody>
                     {visibleItems?.map((stakingInfo: any) => {
                       // need to sort by added liquidity here
-                      return <PoolRow key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                      return <PoolRow
+                                dataSent={weeklyEarnings[stakingInfo.stakingRewardAddress] !== undefined || readyForHarvest[stakingInfo.stakingRewardAddress] !== undefined}
+                                key={stakingInfo.stakingRewardAddress}
+                                stakingInfoTop={stakingInfo}
+                                sendDataUp={onSendDataUp} />
                     })}
                   </tbody>
                 </PoolsTable>
@@ -323,7 +351,11 @@ export default function Pools() {
             ) : (
               <GridContainer>
                 {visibleItems?.map((stakingInfo: any) => {
-                  return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
+                  return <PoolCard
+                          dataSent={weeklyEarnings[stakingInfo.stakingRewardAddress] !== undefined || readyForHarvest[stakingInfo.stakingRewardAddress] !== undefined}
+                          key={stakingInfo.stakingRewardAddress}
+                          stakingInfoTop={stakingInfo}
+                          sendDataUp={onSendDataUp} />
                 })}
               </GridContainer>
             ))}

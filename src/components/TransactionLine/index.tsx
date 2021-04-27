@@ -24,7 +24,7 @@ const Text = styled.div`
 `};
 `
 const TextTransition = styled(Text)`
-  color: #1EF7E7;
+  color: #B368FC;
 `
 const TextValue = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToSmall`

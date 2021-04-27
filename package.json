@@ -145,6 +145,7 @@
     "highcharts": "^9.0.1",
     "highcharts-react-official": "^3.0.0",
     "node-sass": "4.14.1",
+    "numeral": "^2.0.6",
     "react-copy-to-clipboard": "^5.0.3",
     "react-ga": "^3.3.0",
     "react-virtualized": "^9.22.3",

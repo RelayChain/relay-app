@@ -1,7 +1,7 @@
 import { AVAX, BNB, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -83,7 +83,7 @@ const DetailsBox = styled.div`
   justify-content: center;
   display: flex;
 `
-export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInfo }) {
+export default function PoolRow({ stakingInfoTop, sendDataUp, dataSent }: { stakingInfoTop: StakingInfo, sendDataUp: any, dataSent: any }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
   const token0 = stakingInfoTop.tokens[0]
@@ -149,6 +149,22 @@ export default function PoolRow({ stakingInfoTop }: { stakingInfoTop: StakingInf
 
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
+
+  useEffect(() => {
+    if (dataSent) {
+      return;
+    }
+    const singleWeeklyEarnings = stakingInfo?.active
+      ? stakingInfo?.rewardRate
+          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+      : '0';
+    const readyToHarvest = countUpAmount;
+    const contract = stakingInfo?.stakingRewardAddress;
+    if (parseFloat(singleWeeklyEarnings) !== 0 || parseFloat(readyToHarvest) !== 0) {
+      sendDataUp({ singleWeeklyEarnings, readyToHarvest, contract })
+    }
+  }, [countUpAmount, stakingInfo, dataSent])
 
   return (
     <>

@@ -51,8 +51,8 @@ const CrossChain = styled.div`
 `
 const AddressWallet = styled.div`
   font-size: 17px;
-  color: #b97cd6;
-  opacity: 0.88;
+  color: #A7B1F4;
+  font-weight: bold;
 `
 const BoxFlex = styled.div`
   display: flex;
