@@ -21,7 +21,7 @@ export interface ListsState {
   }
   // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
   readonly lastInitializedDefaultListOfLists?: string[]
-  readonly selectedListUrl: string[] | undefined
+  readonly selectedListUrl: string[]
 }
 
 type ListState = ListsState['byUrl'][string]
@@ -105,7 +105,7 @@ export default createReducer(initialState, builder =>
       }
 
       if (state.selectedListUrl && !state.selectedListUrl.includes(url)) {
-        state.selectedListUrl.push(url)
+        // state.selectedListUrl.push(url)
       }
 
       if (!state.selectedListUrl) {
