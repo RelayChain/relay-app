@@ -83,7 +83,19 @@ const DetailsBox = styled.div`
   justify-content: center;
   display: flex;
 `
-export default function PoolRow({ stakingInfoTop, sendDataUp, dataSent }: { stakingInfoTop: StakingInfo, sendDataUp: any, dataSent: any }) {
+export default function PoolRow({
+  stakingInfoTop,
+  sendDataUp,
+  harvestSent,
+  earningsSent,
+  onHarvest
+}: {
+  stakingInfoTop: StakingInfo,
+  sendDataUp: any,
+  harvestSent: any,
+  earningsSent: any,
+  onHarvest: any
+}) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
   const token0 = stakingInfoTop.tokens[0]
@@ -151,20 +163,22 @@ export default function PoolRow({ stakingInfoTop, sendDataUp, dataSent }: { stak
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
-    if (dataSent) {
-      return;
-    }
+    const contract = stakingInfo?.stakingRewardAddress;
     const singleWeeklyEarnings = stakingInfo?.active
       ? stakingInfo?.rewardRate
           ?.multiply(BIG_INT_SECONDS_IN_WEEK)
           ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
       : '0';
     const readyToHarvest = countUpAmount;
-    const contract = stakingInfo?.stakingRewardAddress;
+
+    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings) {
+      return;
+    }
+
     if (parseFloat(singleWeeklyEarnings) !== 0 || parseFloat(readyToHarvest) !== 0) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, contract })
     }
-  }, [countUpAmount, stakingInfo, dataSent])
+  }, [countUpAmount, stakingInfo, harvestSent, earningsSent])
 
   return (
     <>
@@ -237,7 +251,7 @@ export default function PoolRow({ stakingInfoTop, sendDataUp, dataSent }: { stak
                   </div>
                   { countUpAmount && parseFloat(countUpAmount) > 0 &&
                     <div style={{ display: 'flex', flexGrow: 0 }}>
-                      <ButtonPrimary>Harvest</ButtonPrimary>
+                      <ButtonPrimary onClick={onHarvest}>Harvest</ButtonPrimary>
                     </div>
                   }
                 </div>

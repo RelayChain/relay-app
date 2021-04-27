@@ -107,7 +107,19 @@ const DetailsBox = styled.div`
   position: relative;
 `
 
-export default function PoolCard({ stakingInfoTop, sendDataUp, dataSent }: { stakingInfoTop: StakingInfo, sendDataUp: any, dataSent: any }) {
+export default function PoolCard({
+  stakingInfoTop,
+  sendDataUp,
+  harvestSent,
+  earningsSent,
+  onHarvest
+}: {
+  stakingInfoTop: StakingInfo,
+  sendDataUp: any,
+  harvestSent: any,
+  earningsSent: any,
+  onHarvest: any
+}) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(true)
 
@@ -170,20 +182,22 @@ export default function PoolCard({ stakingInfoTop, sendDataUp, dataSent }: { sta
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
-    if (dataSent) {
-      return;
-    }
+    const contract = stakingInfo?.stakingRewardAddress;
     const singleWeeklyEarnings = stakingInfo?.active
       ? stakingInfo?.rewardRate
           ?.multiply(BIG_INT_SECONDS_IN_WEEK)
           ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
       : '0';
     const readyToHarvest = countUpAmount;
-    const contract = stakingInfo?.stakingRewardAddress;
+
+    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings) {
+      return;
+    }
+
     if (parseFloat(singleWeeklyEarnings) !== 0 || parseFloat(readyToHarvest) !== 0) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, contract })
     }
-  }, [countUpAmount, stakingInfo, dataSent])
+  }, [countUpAmount, stakingInfo, harvestSent, earningsSent])
 
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
@@ -252,7 +266,7 @@ export default function PoolCard({ stakingInfoTop, sendDataUp, dataSent }: { sta
               />
             </TYPE.white>
             <div style={{ display: 'flex', flexGrow: 1, marginTop: '1rem', width: '100%' }}>
-              <ButtonPrimary style={{ width: '100%'}}>Harvest</ButtonPrimary>
+              <ButtonPrimary style={{ width: '100%'}} onClick={onHarvest}>Harvest</ButtonPrimary>
             </div>
           </div>
           <ManageButton

@@ -5,6 +5,7 @@ import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import styled, { keyframes } from 'styled-components'
 
 import Bubble from './../../components/Bubble'
+import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
@@ -264,8 +265,25 @@ export default function Pools() {
     setStatsDisplay({ earnings, harvest });
   }, [weeklyEarnings, readyForHarvest])
 
+  const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
+  const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
+
+  const handleHarvest = (stakingInfo: any) => {
+    setClaimRewardStaking(stakingInfo)
+    setShowClaimRewardModal(true)
+  }
+
   return (
     <>
+      {claimRewardStaking && (
+        <>
+          <ClaimRewardModal
+            isOpen={showClaimRewardModal}
+            onDismiss={() => { setShowClaimRewardModal(false); setClaimRewardStaking(null); }}
+            stakingInfo={claimRewardStaking}
+          />
+        </>
+      )}
       <Title>Pools</Title>
       <PageContainer>
 
@@ -335,7 +353,9 @@ export default function Pools() {
                     {visibleItems?.map((stakingInfo: any) => {
                       // need to sort by added liquidity here
                       return <PoolRow
-                                dataSent={weeklyEarnings[stakingInfo.stakingRewardAddress] !== undefined || readyForHarvest[stakingInfo.stakingRewardAddress] !== undefined}
+                                onHarvest={() => handleHarvest(stakingInfo)}
+                                harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                                earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
                                 key={stakingInfo.stakingRewardAddress}
                                 stakingInfoTop={stakingInfo}
                                 sendDataUp={onSendDataUp} />
@@ -352,7 +372,9 @@ export default function Pools() {
               <GridContainer>
                 {visibleItems?.map((stakingInfo: any) => {
                   return <PoolCard
-                          dataSent={weeklyEarnings[stakingInfo.stakingRewardAddress] !== undefined || readyForHarvest[stakingInfo.stakingRewardAddress] !== undefined}
+                          onHarvest={() => handleHarvest(stakingInfo)}
+                          harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                          earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
                           key={stakingInfo.stakingRewardAddress}
                           stakingInfoTop={stakingInfo}
                           sendDataUp={onSendDataUp} />
