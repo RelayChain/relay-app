@@ -123,10 +123,10 @@ export default function Home() {
     <PageContainer>
       <WalletsWrap isColumn={isColumn}>
         <BubbleMarginWrap>
-          <Bubble variant="green" color="#A7B1F4" title="Wallet Holders">
+          <Bubble variant="blue" color="#A7B1F4" title="Wallet Holders" showMountains={false}>
             580,725
           </Bubble>
-          <Bubble variant="blue" color="#A7B1F4" prefix="$" suffix="B" title="Total Value Locked">
+          <Bubble variant="green" color="#A7B1F4" prefix="$" suffix="B" title="Total Value Locked" showMountains={false}>
             850.94
           </Bubble>
         </BubbleMarginWrap>

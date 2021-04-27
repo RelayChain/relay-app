@@ -11,7 +11,7 @@ const Controls = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   justify-content: space-between;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -152,20 +152,20 @@ function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText  
           </ControlLabel>
           <InputContainer>
             <Button
-              isSelected={displayMode === 'grid'}
-              onClick={() => {
-                setDisplayMode('grid')
-              }}
-            >
-              <CardMode />
-            </Button>
-            <Button
               isSelected={displayMode === 'table'}
               onClick={() => {
                 setDisplayMode('table')
               }}
             >
               <ListMode />
+            </Button>
+            <Button
+              isSelected={displayMode === 'grid'}
+              onClick={() => {
+                setDisplayMode('grid')
+              }}
+            >
+              <CardMode />
             </Button>
           </InputContainer>
         </ControlGroup>

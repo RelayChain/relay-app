@@ -1,18 +1,10 @@
 import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import { ExternalLink, TYPE } from '../../theme'
-import React, { useState, useEffect } from 'react'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import styled, { keyframes } from 'styled-components'
 
-import { AutoColumn } from '../../components/Column'
-import { ButtonSecondary } from '../../components/Button'
-import { ChainId } from '@zeroexchange/sdk'
-import { Countdown } from './Countdown'
-import { DataCard } from '../../components/pools/styled'
-import { Link } from 'react-router-dom'
-import Loader from '../../components/Loader'
-import NoResults from '../../assets/svg/no_results.svg'
-import { OutlineCard } from '../../components/Card'
+import Bubble from './../../components/Bubble'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
@@ -21,9 +13,10 @@ import { RowBetween } from '../../components/Row'
 import WalletMissing from '../../assets/svg/wallet_missing.svg'
 import { Zap } from 'react-feather'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
+import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const PageWrapper = styled.div`
   flex-direction: column;
@@ -130,11 +123,73 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   column-gap: 28px;
 `
+
+const StatsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2rem;
+  background: rgba(0,0,0,.25);
+  border-radius: 24px;
+  margin-bottom: 1.5rem;
+  .add-liquidity-link {
+    width: 160px;
+    margin-left: auto;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+  .add-liquidity-link {
+    margin-left: auto;
+    margin-right: auto;
+  }
+`};
+`
+const Stat = styled.div`
+  display: flex;
+  flex-grow: 0;
+  flex-direction: column;
+  &.harvest {
+    margin-left: 2rem;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  &.harvest {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 0;
+  }
+`};
+`
+
+const StatLabel = styled.h5`
+  font-weight: bold;
+  color: #fff;
+  font-size: 1rem;
+  span {
+    opacity: .75;
+    font-weight: normal;
+  }
+`
+
+const StatValue = styled.h6`
+  font-weight: bold;
+  color: #fff;
+  font-size: 1.75rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+  span {
+    opacity: .75;
+    font-weight: normal;
+    font-size: 1.25rem;
+  }
+`
+
 export default function Pools() {
+  const { width } = useWindowDimensions()
+  const isColumn = width < 1500
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState('grid')
+  const [displayMode, setDisplayMode] = useState('table')
   const [searchText, setSearchText] = useState('')
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
@@ -189,6 +244,25 @@ export default function Pools() {
     <>
       <Title>Pools</Title>
       <PageContainer>
+
+        <StatsWrapper>
+          <Stat className="weekly">
+            <StatLabel>Weekly Earnings:</StatLabel>
+            <StatValue>123,354.3920 <span>ZERO</span></StatValue>
+          </Stat>
+          <Stat className="harvest">
+            <StatLabel>Ready To Harvest:</StatLabel>
+            <StatValue>123,354.3920 <span>ZERO</span></StatValue>
+          </Stat>
+          <StyledInternalLink className="add-liquidity-link"
+            to={{
+              pathname: `/add`,
+            }}
+          >
+            <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+          </StyledInternalLink>
+        </StatsWrapper>
+
         <PageWrapper>
           {account !== null && (
             <PoolControls

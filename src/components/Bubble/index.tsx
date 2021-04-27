@@ -80,12 +80,13 @@ export interface BubbleProps {
   children?: ReactNode
   prefix?: string
   suffix?: string
+  showMountains?: boolean;
 }
 
-export default function Bubble({ variant, color, title, icon, children, prefix, suffix }: BubbleProps) {
+export default function Bubble({ variant, color, title, icon, children, prefix, suffix, showMountains }: BubbleProps) {
   return (
     <BubbleWrap>
-      <Background variant={variant} />
+      <Background variant={variant} showMountains={showMountains} />
       <BubbleInnerWrap>
         <Title color={color}>{title}</Title>
         <Flex>
