@@ -112,13 +112,15 @@ export default function PoolCard({
   sendDataUp,
   harvestSent,
   earningsSent,
-  onHarvest
+  onHarvest,
+  showStaked
 }: {
   stakingInfoTop: StakingInfo,
   sendDataUp: any,
   harvestSent: any,
   earningsSent: any,
-  onHarvest: any
+  onHarvest: any,
+  showStaked: boolean
 }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(true)
@@ -207,6 +209,8 @@ export default function PoolCard({
   const symbol = WETH?.symbol
 
   return (
+    <>
+     {(isStaking && showStaked) || !showStaked && (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <Icons currency0={currency0} currency1={currency1} size={38} />
       <Label>
@@ -295,5 +299,7 @@ export default function PoolCard({
         </DetailsBox>
       </Details>
     </Wrapper>
+     )}
+    </>
   )
 }

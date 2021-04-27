@@ -201,6 +201,7 @@ export default function Pools() {
 
   // filters & sorting
   const [showLive, setShowLive] = useState(true)
+  const [showStaked, setShowStaked] = useState(false)
   let arrayToShow: any[] = []
   let searchedArrayToShow: any
   // live or finished pools?
@@ -308,14 +309,18 @@ export default function Pools() {
         <PageWrapper>
           {account !== null && (
             <PoolControls
+              setShowLive={() => setShowLive(!showLive)}
+              showLive={showLive}
               displayMode={displayMode}
               setDisplayMode={setDisplayMode}
               searchText={searchText}
               setSearchText={setSearchText}
+              showStaked={showStaked}
+              setShowStaked={() => setShowStaked(!showStaked)}
             />
           )}
           {account !== null &&
-            stakingInfos?.length > 0 &&
+            stakingInfos?.length > 0 && visibleItems?.length > 0 &&
             (displayMode === 'table' ? (
               <Wrapper>
                 <PoolsTable style={{ width: '100%' }}>
@@ -358,7 +363,8 @@ export default function Pools() {
                                 earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
                                 key={stakingInfo.stakingRewardAddress}
                                 stakingInfoTop={stakingInfo}
-                                sendDataUp={onSendDataUp} />
+                                sendDataUp={onSendDataUp} 
+                                showStaked={showStaked}/>
                     })}
                   </tbody>
                 </PoolsTable>
@@ -377,7 +383,8 @@ export default function Pools() {
                           earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
                           key={stakingInfo.stakingRewardAddress}
                           stakingInfoTop={stakingInfo}
-                          sendDataUp={onSendDataUp} />
+                          sendDataUp={onSendDataUp}
+                          showStaked={showStaked} />
                 })}
               </GridContainer>
             ))}

@@ -88,13 +88,15 @@ export default function PoolRow({
   sendDataUp,
   harvestSent,
   earningsSent,
-  onHarvest
+  onHarvest,
+  showStaked
 }: {
   stakingInfoTop: StakingInfo,
   sendDataUp: any,
   harvestSent: any,
   earningsSent: any,
   onHarvest: any
+  showStaked: boolean
 }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -182,6 +184,7 @@ export default function PoolRow({
 
   return (
     <>
+    {(isStaking && showStaked) || (!showStaked) && (
       <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
         <Cell>
           <TitleCell>
@@ -227,6 +230,7 @@ export default function PoolRow({
           </DetailsCell>
         </Cell>
       </Wrapper>
+      )}
       {showDetails && (
         <tr>
           <td colSpan={6}>

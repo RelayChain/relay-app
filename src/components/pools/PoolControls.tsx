@@ -4,6 +4,7 @@ import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
 import SearchBar from '../../components/SearchBar'
 import Select from '../../components/Select'
+import TogglePool from '../../components/TooglePool'
 import { TYPE } from '../../theme'
 import styled from 'styled-components'
 
@@ -13,7 +14,7 @@ const Controls = styled.div`
   width: 100%;
   margin-bottom: 30px;
   justify-content: space-between;
-
+  gap: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
 
 `};
@@ -99,21 +100,31 @@ const Button = styled.button<{ isSelected?: boolean }>`
 const Group = styled.div`
   display: flex;
 `
+const ToggleGroup = styled(Group)`
+  align-items: flex-end;
+`
 
 export interface PoolControlsProps {
   displayMode: string
   searchText: string
   setDisplayMode: (p: string) => void
   setSearchText: (p: string) => void
+  showLive: boolean
+  setShowLive: () => void
+  showStaked: boolean
+  setShowStaked: () => void
 }
 
-function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText  }: PoolControlsProps) {
+function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, showLive, setShowLive, showStaked, setShowStaked }: PoolControlsProps) {
 
   return (
     <Controls>
       <SearchGroup>
         <SearchBar value={searchText} onChange={e => setSearchText(e.target.value)} />
       </SearchGroup>
+      <ToggleGroup>
+        <TogglePool isActive={showLive} toggle={setShowLive} isStaked={showStaked} setShowStaked={setShowStaked}/>
+      </ToggleGroup>
       <Group>
         <ControlGroup>
           <ControlLabel>
