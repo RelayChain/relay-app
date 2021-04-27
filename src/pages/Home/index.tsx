@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Bubble from './../../components/Bubble'
 import BubbleChart from './../../components/BubbleChart'
@@ -11,6 +11,7 @@ import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
+import { getTVLData, getWalletHolderCount } from 'api'
 
 const Title = styled.h1`
   width: 100%;
@@ -21,7 +22,7 @@ const Title = styled.h1`
   margin-top: 40px;
   margin-bottom: 0px;
 `};
-${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
 padding: 0;
 `};
 `
@@ -43,7 +44,7 @@ const BubbleMarginWrap = styled.div`
  width: 100%;
   justify-content: space-between;
 `};
-${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
  width: 100%;
  gap: 0.1rem;
 `};
@@ -85,20 +86,47 @@ const FlexButtons = styled.div`
 const Button = styled.div`
   padding: 10px 20px;
   border-radius: 20px;
-  border: 1px solid #1EF7E7;
-  color: #1EF7E7;
+  border: 1px solid #1ef7e7;
+  color: #1ef7e7;
   outline: none;
   cursor: pointer;
   margin-left: 20px;
   transition: all ease 0.3s;
   :hover {
-    filter: brightness(.9);
-    color: #1EF7E7;
+    filter: brightness(0.9);
+    color: #1ef7e7;
   }
 `
 
+function fnum(x: number) {
+  if (isNaN(x)) return { value: x, suffix: '' }
+
+  if (x < 9999) {
+    return { value: x, suffix: '' }
+  }
+
+  if (x < 1000000) {
+    return { value: x / 1000, suffix: 'K' }
+  }
+
+  if (x < 1000000000) {
+    return { value: x / 1000000, suffix: 'M' }
+  }
+
+  if (x < 1000000000000) {
+    return { value: x / 1000000000, suffix: 'B' }
+  }
+
+  return { value: x / 1000000000000, suffix: 'T' }
+}
+
 export default function Home() {
   const [pagination, setPagination] = useState<number>(0)
+  const [walletHolderCount, setWalletHolderCount] = useState<number>(0)
+  const [totalValue, setTotalValue] = useState<number>(26285647.16)
+  const [loadingWC, setLoadingWC] = useState(true)
+  const [loadingTV, setLoadingTV] = useState(true)
+
   const { width } = useWindowDimensions()
   const zeroData = useQuery(zeroDayDatas)
   const transactionsData = useQuery(transactions, {
@@ -107,6 +135,26 @@ export default function Home() {
       skip: pagination * 12
     }
   })
+
+  const getWalletHoldersData = async () => {
+    const res = await getWalletHolderCount()
+    setLoadingWC(false)
+    if (!res.hasError) {
+      setWalletHolderCount(res?.total)
+    }
+  }
+
+  const getTVL = async () => {
+    const res = await getTVLData()
+    setLoadingTV(false)
+    if (!res.hasError) {
+      setTotalValue(res?.TVL_total_usd)
+    }
+  }
+  useEffect(() => {
+    getWalletHoldersData()
+    getTVL()
+  }, [])
 
   const isColumn = width < 1500
 
@@ -119,44 +167,59 @@ export default function Home() {
   }
   return (
     <>
-    <Title>Exchange</Title>
-    <PageContainer>
-      <WalletsWrap isColumn={isColumn}>
-        <BubbleMarginWrap>
-          <Bubble variant="pink" color="#A7B1F4" title="Wallet Holders" showMountains={true}>
-            580,725
-          </Bubble>
-          <Bubble variant="purple" color="#A7B1F4" prefix="$" suffix="B" title="Total Value Locked" showMountains={true}>
-            850.94
-          </Bubble>
-        </BubbleMarginWrap>
-      </WalletsWrap>
-      <Flex isColumn={isColumn}>
-        {zeroData.loading ? (
+      <Title>Exchange</Title>
+      <PageContainer>
+        <WalletsWrap isColumn={isColumn}>
+          <BubbleMarginWrap>
+            {loadingTV || loadingWC ? (
+              <CenterWrap>
+                <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+              </CenterWrap>
+            ) : (
+              <>
+                <Bubble variant="pink" color="#A7B1F4" title="Wallet Holders" showMountains={true}>
+                  {new Intl.NumberFormat().format(walletHolderCount)}
+                </Bubble>
+                <Bubble
+                  variant="purple"
+                  color="#A7B1F4"
+                  prefix="$"
+                  suffix={fnum(totalValue)?.suffix}
+                  title="Total Value Locked"
+                  showMountains={true}
+                >
+                  {fnum(totalValue)?.value?.toFixed(3)}
+                </Bubble>
+              </>
+            )}
+          </BubbleMarginWrap>
+        </WalletsWrap>
+        <Flex isColumn={isColumn}>
+          {zeroData.loading ? (
+            <CenterWrap>
+              <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+            </CenterWrap>
+          ) : (
+            <>
+              <BubbleChart type="line" data={zeroData.data} title="Liquidity" value={3156943} percentage={-34.66} />
+              <BubbleChart type="bar" data={zeroData.data} title="Volume(24h)" value={4078912} percentage={3.66} />
+            </>
+          )}
+        </Flex>
+        {transactionsData.loading || !transactionsData.data.transactions ? (
           <CenterWrap>
             <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
           </CenterWrap>
         ) : (
           <>
-            <BubbleChart type="line" data={zeroData.data} title="Liquidity" value={3156943} percentage={-34.66} />
-            <BubbleChart type="bar" data={zeroData.data} title="Volume(24h)" value={4078912} percentage={3.66} />
+            <Transactions transactions={transactionsData.data.transactions} />
+            <FlexButtons>
+              {pagination > 0 && <Button onClick={onClickPrevPage}>Back</Button>}
+              {transactionsData.data.transactions.length >= 12 && <Button onClick={onClickNextPage}>Next</Button>}
+            </FlexButtons>
           </>
         )}
-      </Flex>
-      {(transactionsData.loading || !transactionsData.data.transactions) ? (
-        <CenterWrap>
-          <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
-        </CenterWrap>
-      ) : (
-        <>
-          <Transactions transactions={transactionsData.data.transactions} />
-          <FlexButtons>
-            {pagination > 0 && <Button onClick={onClickPrevPage}>Back</Button>}
-            {transactionsData.data.transactions.length >= 12 && <Button onClick={onClickNextPage}>Next</Button>}
-          </FlexButtons>
-        </>
-      )}
-    </PageContainer>
+      </PageContainer>
     </>
   )
 }
