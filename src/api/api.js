@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://web3api.io/'
-
 export async function get(path, params = {}) {
   const response = await axios({
     method: 'get',
