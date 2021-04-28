@@ -41,6 +41,12 @@ const Details = styled.div`
   row-gap: 16px;
   border-bottom: 1px solid rgba(167, 177, 244, 0.1);
   padding: 22px 45px;
+  ${({ theme }) =>
+  theme.mediaWidth.upToExtraSmall`
+    display: flex;
+    flex-direction: column;
+    padding: 12px 10px;
+`}
 `
 const Logo = styled(DoubleCurrencyLogo)`
   margin-bottom: 20px;
@@ -93,7 +99,8 @@ export default function PoolRow({
   earningsSent,
   liquiditySent,
   onHarvest,
-  showStaked
+  showStaked,
+  stakingInfoAPR
 }: {
   stakingInfoTop: StakingInfo,
   sendDataUp: any,
@@ -101,7 +108,8 @@ export default function PoolRow({
   earningsSent: any,
   liquiditySent: any,
   onHarvest: any
-  showStaked: boolean
+  showStaked: boolean,
+  stakingInfoAPR: any
 }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -223,7 +231,7 @@ export default function PoolRow({
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            80.1%
+           {stakingInfoAPR ? stakingInfoAPR +'%' : '-'}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

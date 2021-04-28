@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
@@ -7,6 +7,7 @@ import Select from '../../components/Select'
 import { TYPE } from '../../theme'
 import TogglePool from '../../components/TooglePool'
 import styled from 'styled-components'
+import { arrayMove } from '../../utils/arrayMove'
 
 const Controls = styled.div`
   display: flex;
@@ -109,26 +110,85 @@ export interface PoolControlsProps {
   searchText: string
   setDisplayMode: (p: string) => void
   setSearchText: (p: string) => void
-  showLive: boolean
-  setShowLive: () => void
+  showFinished: boolean
+  setShowFinished: () => void
   showStaked: boolean
   setShowStaked: () => void
-  onSelectFilter: any;
+  onSelectFilter: any
 }
 
-function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, showLive, setShowLive, showStaked, setShowStaked, onSelectFilter }: PoolControlsProps) {
-
-  const selectFilter = (e: any) => {
-    onSelectFilter(e.value);
+function PoolControls({
+  displayMode,
+  setDisplayMode,
+  searchText,
+  setSearchText,
+  showFinished,
+  setShowFinished,
+  showStaked,
+  setShowStaked,
+  onSelectFilter
+}: PoolControlsProps) {
+  let serializePoolsControl = {}
+  const defaultOptions = [
+    {
+      label: 'Hot',
+      value: 'hot'
+    },
+    {
+      label: 'APR',
+      value: 'apr'
+    },
+    {
+      label: 'Earned',
+      value: 'earned'
+    },
+    {
+      label: 'Liquidity',
+      value: 'liquidity'
+    }
+  ]
+  //@ts-ignore
+  if (JSON.parse(localStorage.getItem('PoolControls'))) {
+    //@ts-ignore
+    serializePoolsControl = JSON.parse(localStorage.getItem('PoolControls'))
   }
 
+  const selectFilter = (e: any) => {
+    onSelectFilter(e.value)
+  }
+
+  const setStartOptions = (str: string) => {
+    switch (str) {
+      case 'liquidity':
+        return arrayMove(defaultOptions, 3, 0)
+      case 'hot':
+        return defaultOptions
+      case 'apr':
+        return arrayMove(defaultOptions, 1, 0)
+      case 'earned':
+        return arrayMove(defaultOptions, 2, 0)
+      default:
+        return defaultOptions
+    }
+  }
+  let data: any;
+  //@ts-ignore
+  if (JSON.parse(localStorage.getItem('PoolControls'))) {
+    //@ts-ignore
+    data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).filteredMode)
+  }
   return (
     <Controls>
       <SearchGroup>
         <SearchBar value={searchText} onChange={e => setSearchText(e.target.value)} />
       </SearchGroup>
       <ToggleGroup>
-        <TogglePool isActive={showLive} toggle={setShowLive} isStaked={showStaked} setShowStaked={setShowStaked}/>
+        <TogglePool
+          isActive={showFinished}
+          toggle={setShowFinished}
+          isStaked={showStaked}
+          setShowStaked={setShowStaked}
+        />
       </ToggleGroup>
       <Group>
         <ControlGroup>
@@ -138,25 +198,12 @@ function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, 
             </TYPE.main>
           </ControlLabel>
           <Select
-            options={[
-              {
-                label: 'Hot',
-                value: 'hot'
-              },
-              {
-                label: 'APR',
-                value: 'apr'
-              },
-              {
-                label: 'Earned',
-                value: 'earned'
-              },
-              {
-                label: 'Liquidity',
-                value: 'liquidity'
-              }
-            ]}
-            onChange={(e) => {selectFilter(e)}}
+            options={data || defaultOptions}
+            onChange={e => {
+              selectFilter(e)
+              const clone = { ...serializePoolsControl, filteredMode: e.value }
+              localStorage.setItem('PoolControls', JSON.stringify(clone))
+            }}
           />
         </ControlGroup>
 
@@ -171,6 +218,8 @@ function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, 
               isSelected={displayMode === 'table'}
               onClick={() => {
                 setDisplayMode('table')
+                const clone = { ...serializePoolsControl, displayMode: 'table' }
+                localStorage.setItem('PoolControls', JSON.stringify(clone))
               }}
             >
               <ListMode />
@@ -179,6 +228,8 @@ function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, 
               isSelected={displayMode === 'grid'}
               onClick={() => {
                 setDisplayMode('grid')
+                const clone = { ...serializePoolsControl, displayMode: 'grid' }
+                localStorage.setItem('PoolControls', JSON.stringify(clone))
               }}
             >
               <CardMode />
