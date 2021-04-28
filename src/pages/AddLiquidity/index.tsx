@@ -20,7 +20,6 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -33,7 +32,6 @@ import { PoolPriceBar } from './PoolPriceBar'
 import { RouteComponentProps } from 'react-router-dom'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { TransactionResponse } from '@ethersproject/providers'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -44,6 +42,30 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import styled, { ThemeContext } from 'styled-components'
+
+const Title = styled.h1`
+  width: 100%;
+  padding: 0px 64px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 0;
+  text-align: center;
+  font-size: 49px;
+  margin-top: 40px;
+  margin-bottom: 0px;
+`};
+`
+const BodyWrapper = styled.div`
+  position: relative;
+  max-width: 675px;
+  margin-top: 2rem;
+  width: 100%;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
+  border-radius: 30px;
+  padding: 3rem;
+`
 
 export default function AddLiquidity({
   match: {
@@ -201,7 +223,8 @@ export default function AddLiquidity({
       currencyA === MATIC ||
       currencyB === DEV
     ) {
-      const tokenBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+      const tokenBIsETH =
+        currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -364,7 +387,8 @@ export default function AddLiquidity({
 
   return (
     <>
-      <AppBody>
+      <Title>Add Liquidity</Title>
+      <BodyWrapper>
         <AddRemoveTabs creating={isCreate} adding={true} />
         <Wrapper>
           <TransactionConfirmationModal
@@ -501,8 +525,7 @@ export default function AddLiquidity({
             )}
           </AutoColumn>
         </Wrapper>
-      </AppBody>
-
+      </BodyWrapper>
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
         <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
