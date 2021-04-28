@@ -7,6 +7,7 @@ import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
+import Loader from '../Loader'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { Text } from 'rebass'
@@ -16,7 +17,6 @@ import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-import Loader from '../Loader'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -277,7 +277,7 @@ const Header = () => {
         </HeaderControls>
       ) : (
         <NotConnectedWrap>
-          <Loader stroke="pink" />
+          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
           <Web3Status />
         </NotConnectedWrap>
       )}
