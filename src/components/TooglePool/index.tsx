@@ -53,7 +53,8 @@ const StyledStacked = styled.div`
     padding-left: 25px;
     cursor: pointer;
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-szie: 13px;
+    font-size: 12px;
+    margin-right: 10px;
     `};
     &:before {
       content: '';

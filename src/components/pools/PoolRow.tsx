@@ -41,6 +41,12 @@ const Details = styled.div`
   row-gap: 16px;
   border-bottom: 1px solid rgba(167, 177, 244, 0.1);
   padding: 22px 45px;
+  ${({ theme }) =>
+  theme.mediaWidth.upToExtraSmall`
+    display: flex;
+    flex-direction: column;
+    padding: 12px 10px;
+`}
 `
 const Logo = styled(DoubleCurrencyLogo)`
   margin-bottom: 20px;
