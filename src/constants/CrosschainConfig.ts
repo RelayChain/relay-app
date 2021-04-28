@@ -149,6 +149,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
         },
+        {
+          address: '0x823cE9cca0b9eE2BC4C2d764d304691d770DbBe9',
+          name: 'Gondola (GDL)',
+          symbol: 'GDL',
+          assetBase: 'GDL',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000823cE9cca0b9eE2BC4C2d764d304691d770DbBe901'
+        },
+        {
+          address: '0x433d86336dB759855A66cCAbe4338313a8A7fc77',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000433d86336dB759855A66cCAbe4338313a8A7fc7701'
+        }
       ]
     },
     {
@@ -267,6 +283,23 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000D94f76f8DD5c3832dd798621c0d673bBae9D946b02'
         },
+        {
+          address: '0xd606199557c8ab6f4cc70bd03facc96ca576f142',
+          name: 'Gondola',
+          symbol: 'GDL',
+          assetBase: 'GDL',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000D606199557c8Ab6F4Cc70bD03FaCc96ca576f14202'
+        },
+        {
+          address: '0x791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D02'
+        }
+        
       ]
     },
     {
@@ -394,6 +427,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
         },
+        {
+          address: '0xd705223747C7AF3386a70abbE586d390A6877687',
+          name: 'Gondola (GDL)',
+          symbol: 'GDL',
+          assetBase: 'GDL',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000d705223747C7AF3386a70abbE586d390A687768703'
+        },
+        {
+          address: '0xC878A79B63A41a831E469AE1A830A765eFd9d468',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000C878A79B63A41a831E469AE1A830A765eFd9d46803'
+        }
       ]
     },
   ]
