@@ -16,6 +16,7 @@ import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
+import Loader from '../Loader'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -150,6 +151,7 @@ const NotConnectedWrap = styled.div`
   align-items: center;
   justify-self: flex-end;
   justify-content: space-between;
+  pointer-events: none;
   min-width: 0px;
   height: 0px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -275,6 +277,7 @@ const Header = () => {
         </HeaderControls>
       ) : (
         <NotConnectedWrap>
+          <Loader stroke="pink" />
           <Web3Status />
         </NotConnectedWrap>
       )}
