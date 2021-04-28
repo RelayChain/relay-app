@@ -20,7 +20,7 @@ export async function getAllPoolsAPY() {
 }
 
 export async function getSinglePoolAPY(address) {
-  return get(`${ZERO_API_URL}/APY/GetPoolAPY?contractAddr=${address}?apikey=${ZERO_API_KEY}`)
+  return get(`${ZERO_API_URL}/APY/GetPoolAPY?contractAddr=${address}`)
 }
 
 export async function getWalletHolderCount() {
