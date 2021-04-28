@@ -99,36 +99,19 @@ export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D
 export const zUNI = new Token(ChainId.AVALANCHE, '0xBa9aF11661520129Af69d233E92d69BD40CD90AF', 18, 'zUNI', 'zUNI')
 export const zSUSHI = new Token(ChainId.AVALANCHE, '0xD4feE2e3F88B9138B74a323B40bC63bcc1A1B9eC', 18, 'zSUSHI', 'zSUSHI')
 
-export const WBNB = new Token(
-  ChainId.SMART_CHAIN,
-  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-  18,
-  'WBNB',
-  'SMART_CHAIN'
-)
+export const WBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'SMART_CHAIN')
 
-export const bscZERO = new Token(
-  ChainId.SMART_CHAIN,
-  '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
-  18,
-  'ZERO',
-  'ZERO Exchange'
-)
+export const bscZERO = new Token(ChainId.SMART_CHAIN, '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf', 18, 'ZERO', 'ZERO Exchange')
 export const bscBUSD = new Token(ChainId.SMART_CHAIN, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
 export const bscWBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'WBNB')
 export const bscUSDC = new Token(ChainId.SMART_CHAIN, '0x4022AfEB287052e6e587d39bA99f79cAFC47B570', 6, 'zUSDC', 'zUSDC')
 export const bscUSDT = new Token(ChainId.SMART_CHAIN, '0xBF7e0761417F49b3FAFae564C842823f5f79DB15', 6, 'zUSDT', 'zUSDT')
 export const bscBTC = new Token(ChainId.SMART_CHAIN, '0xB6D5487b00e53e7009E6560189EB8B8c22e11Bf3', 8, 'zBTC', 'zBTC')
 export const bscUNI = new Token(ChainId.SMART_CHAIN, '0xA6b4a72a6f8116dab486fB88192450CF3ed4150C', 18, 'zUNI', 'zUNI')
-export const bscSUSHI = new Token(
-  ChainId.SMART_CHAIN,
-  '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
-  18,
-  'zSUSHI',
-  'zSUSHI'
-)
+export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc', 18, 'zSUSHI', 'zSUSHI')
 export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI')
 export const bscETH = new Token(ChainId.SMART_CHAIN, '0x7c815BBc21FED2B97CA163552991A5C30d6a2336', 18, 'zETH', 'zETH');
+export const bscINDA = new Token(ChainId.SMART_CHAIN, '0xc878a79b63a41a831e469ae1a830a765efd9d468', 2, 'INDA', 'INDA');
 
 export const MOCK1 = new Token(
   ChainId.FUJI,
