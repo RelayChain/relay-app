@@ -30,7 +30,7 @@ const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: 
     border-bottom-width: 0px;
   }
   &.active {
-    background: rgba(179, 104, 252, .2);
+    background: rgba(179, 104, 252, 0.2);
   }
 `
 
@@ -102,11 +102,11 @@ export default function PoolRow({
   showStaked,
   stakingInfoAPR
 }: {
-  stakingInfoTop: StakingInfo,
-  sendDataUp: any,
-  harvestSent: any,
-  earningsSent: any,
-  liquiditySent: any,
+  stakingInfoTop: StakingInfo
+  sendDataUp: any
+  harvestSent: any
+  earningsSent: any
+  liquiditySent: any
   onHarvest: any
   showStaked: boolean,
   stakingInfoAPR: any
@@ -143,8 +143,14 @@ export default function PoolRow({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC ? tokenB : tokenA
-  const WETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC ? tokenA : tokenB
+  const token =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenB
+      : tokenA
+  const WETH =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenA
+      : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -178,29 +184,35 @@ export default function PoolRow({
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
-    const contract = stakingInfo?.stakingRewardAddress;
+    const contract = stakingInfo?.stakingRewardAddress
     const singleWeeklyEarnings = stakingInfo?.active
-      ? stakingInfo?.rewardRate
-          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
-      : '0';
-    const readyToHarvest = countUpAmount;
+      ? stakingInfo?.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+      : '0'
+    const readyToHarvest = countUpAmount
     const liquidityValue = valueOfTotalStakedAmountInUSDC
       ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
       : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
-    if (harvestSent === readyToHarvest &&
-        earningsSent === singleWeeklyEarnings &&
-        liquiditySent === liquidityValue) {
-      return;
+    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings && liquiditySent === liquidityValue) {
+      return
     }
 
-    if (parseFloat(singleWeeklyEarnings) !== 0 ||
-        parseFloat(readyToHarvest) !== 0 ||
-        parseFloat(liquidityValue) !== 0) {
+    if (
+      parseFloat(singleWeeklyEarnings) !== 0 ||
+      parseFloat(readyToHarvest) !== 0 ||
+      parseFloat(liquidityValue) !== 0
+    ) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
     }
-  }, [countUpAmount, stakingInfo, harvestSent, earningsSent, liquiditySent, valueOfTotalStakedAmountInUSDC, valueOfTotalStakedAmountInWETH])
+  }, [
+    countUpAmount,
+    stakingInfo,
+    harvestSent,
+    earningsSent,
+    liquiditySent,
+    valueOfTotalStakedAmountInUSDC,
+    valueOfTotalStakedAmountInWETH
+  ])
 
   return (
     <>
@@ -209,11 +221,12 @@ export default function PoolRow({
         showBackground={isStaking}
         bgColor={backgroundColor}
         onClick={toggleDetails}
-        showDetails={showDetails}>
+        showDetails={showDetails}
+      >
         <Cell style={{ width: '45px' }}></Cell>
         <Cell>
           <TitleCell>
-            <Logo currency0={currency0} currency1={currency1} size={24} style={{marginRight: '8px'}} />
+            <Logo currency0={currency0} currency1={currency1} size={24} style={{ marginRight: '8px' }} />
             <TYPE.main fontWeight={500} fontSize={15} style={{ display: 'inline' }}>
               {currency0.symbol}-{currency1.symbol}
             </TYPE.main>
@@ -222,9 +235,8 @@ export default function PoolRow({
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
-              ? stakingInfo?.totalRewardRate
-                  ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                  ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
+                '-'
               : '0'}
             {' ZERO / week'}
           </TYPE.main>
@@ -239,7 +251,7 @@ export default function PoolRow({
             {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
-            </TYPE.main>
+          </TYPE.main>
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
@@ -256,7 +268,7 @@ export default function PoolRow({
         </Cell>
         <Cell style={{ width: '45px' }}></Cell>
       </Wrapper>
-      { showDetails && (
+      {showDetails && (
         <tr>
           <td colSpan={8}>
             <Details>
@@ -278,11 +290,11 @@ export default function PoolRow({
                       />
                     </TYPE.white>
                   </div>
-                  { countUpAmount && parseFloat(countUpAmount) > 0 &&
+                  {countUpAmount && parseFloat(countUpAmount) > 0 && (
                     <div style={{ display: 'flex', flexGrow: 0 }}>
                       <ButtonPrimary onClick={onHarvest}>Harvest</ButtonPrimary>
                     </div>
-                  }
+                  )}
                 </div>
               </DetailsBox>
               <DetailsBox>
