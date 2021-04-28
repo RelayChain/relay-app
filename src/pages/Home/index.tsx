@@ -12,6 +12,7 @@ import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import { getTVLData, getWalletHolderCount } from 'api'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
 
 const Title = styled.h1`
   width: 100%;
@@ -84,18 +85,10 @@ const FlexButtons = styled.div`
 `};
 `
 const Button = styled.div`
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: 1px solid #1ef7e7;
-  color: #1ef7e7;
-  outline: none;
-  cursor: pointer;
-  margin-left: 20px;
-  transition: all ease 0.3s;
-  :hover {
-    filter: brightness(0.9);
-    color: #1ef7e7;
-  }
+  width: 25%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+width:100%;
+`};
 `
 
 function fnum(x: number) {
@@ -214,8 +207,16 @@ export default function Home() {
           <>
             <Transactions transactions={transactionsData.data.transactions} />
             <FlexButtons>
-              {pagination > 0 && <Button onClick={onClickPrevPage}>Back</Button>}
-              {transactionsData.data.transactions.length >= 12 && <Button onClick={onClickNextPage}>Next</Button>}
+              {pagination > 0 && (
+                <Button>
+                  <ButtonLight onClick={onClickPrevPage}>Back</ButtonLight>
+                </Button>
+              )}
+              {transactionsData.data.transactions.length >= 12 && (
+                <Button>
+                  <ButtonPrimary onClick={onClickNextPage}>Next</ButtonPrimary>
+                </Button>
+              )}
             </FlexButtons>
           </>
         )}

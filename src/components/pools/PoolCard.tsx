@@ -117,7 +117,8 @@ export default function PoolCard({
   earningsSent,
   liquiditySent,
   onHarvest,
-  showStaked
+  showStaked,
+  stakingInfoAPR
 }: {
   stakingInfoTop: StakingInfo,
   sendDataUp: any,
@@ -125,7 +126,8 @@ export default function PoolCard({
   earningsSent: any,
   liquiditySent: any,
   onHarvest: any,
-  showStaked: boolean
+  showStaked: boolean,
+  stakingInfoAPR: any
 }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(true)
@@ -234,7 +236,7 @@ export default function PoolCard({
           APR
         </TYPE.main>
         <TYPE.main fontWeight={500} fontSize={15}>
-          0%
+        {stakingInfoAPR ? stakingInfoAPR +'%' : '-'}
         </TYPE.main>
       </Row>
       <Row style={{ marginBottom: '10px'}}>

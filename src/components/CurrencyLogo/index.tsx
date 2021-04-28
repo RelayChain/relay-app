@@ -49,7 +49,7 @@ export default function CurrencyLogo({
   size = '24px',
   style
 }: {
-  currency?: Currency
+  currency?: Currency|any
   size?: string
   style?: React.CSSProperties
 }) {
