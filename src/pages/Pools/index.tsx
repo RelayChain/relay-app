@@ -265,7 +265,6 @@ export default function Pools() {
       setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue });
     }
   }
-
    //  APR 
    if (apyData && apyData.length) {
     arrayToShow.forEach((arrItem, index) => {
