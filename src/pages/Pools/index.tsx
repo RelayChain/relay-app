@@ -18,6 +18,7 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
+import { getAllPoolsAPY } from 'api'
 
 const numeral = require('numeral');
 
@@ -188,27 +189,28 @@ const StatValue = styled.h6`
 `
 
 export default function Pools() {
-
+   //@ts-ignore
+  const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'));
   const { width } = useWindowDimensions()
   const isColumn = width < 1500
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState('table')
+  const [displayMode, setDisplayMode] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.displayMode : 'table')
   const [searchText, setSearchText] = useState('')
-
+  
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
-
+  
   // filters & sorting
-  const [showLive, setShowLive] = useState(true)
-  const [showStaked, setShowStaked] = useState(false)
+  const [showFinished, setShowFinished] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false);
+  const [showStaked, setShowStaked] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false)
   let arrayToShow: any[] = []
   let searchedArrayToShow: any
   // live or finished pools?
-  if (showLive && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
+  if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
     arrayToShow = stakingInfosWithBalance
-  } else if (!showLive && finishedPools && finishedPools.length > 0) {
+  } else if (showFinished && finishedPools && finishedPools.length > 0) {
     arrayToShow = finishedPools
   }
 
@@ -243,6 +245,7 @@ export default function Pools() {
     })
   }
 
+  const [apyData, setApyData] = useState([])
   const [weeklyEarnings, setWeeklyEarnings] = useState({})
   const [readyForHarvest, setReadyForHarvest] = useState({})
   const [totalLiquidity, setTotalLiquidity] = useState({})
@@ -256,7 +259,164 @@ export default function Pools() {
     }
   }
 
+   //  APR 
+    const fakeData = [
+      {
+          "APY": 50.13,
+          "name": "ZERO / AVAX",
+          "chain": "AVA",
+          "contract_addr": "0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77"
+      },
+      {
+          "APY": 116.31,
+          "name": "ZERO / ETH",
+          "chain": "AVA",
+          "contract_addr": "0x869bE5d543226e0Cda93416aaC093b472c99c3A8"
+      },
+      {
+          "APY": 198.27,
+          "name": "ZERO / USDC",
+          "chain": "AVA",
+          "contract_addr": "0x617EE464d13F871FAdd6d3BE428cf452299F7a3b"
+      },
+      {
+          "APY": 279.14,
+          "name": "ZERO / USDT",
+          "chain": "AVA",
+          "contract_addr": "0xA8AA762a6529d7A875d0195FAd8572aAd5c697bC"
+      },
+      {
+          "APY": 266.76,
+          "name": "ZERO / WBTC",
+          "chain": "AVA",
+          "contract_addr": "0x1CD4C57f93784a4aba52B86a01E5d821B352BA73"
+      },
+      {
+          "APY": 283.93,
+          "name": "ZERO / UNI",
+          "chain": "AVA",
+          "contract_addr": "0xcE64d9454246e690e005AC6371aF9FeD88134425"
+      },
+      {
+          "APY": 326.16,
+          "name": "ZERO / SUSHI",
+          "chain": "AVA",
+          "contract_addr": "0x46609d1A08fAd26A52f4D84bB58523C6598352a5"
+      },
+      {
+          "APY": 264.32,
+          "name": "ZERO / DAI",
+          "chain": "AVA",
+          "contract_addr": "0xAfE2d3154bd3eC5601b610145923cb0ECA1937De"
+      },
+      {
+          "APY": 136.41,
+          "name": "ZERO / BNB",
+          "chain": "BSC",
+          "contract_addr": "0xE3200B7905559D173eed3E8EBFAd05Ac3E0c438E"
+      },
+      {
+          "APY": 133.52,
+          "name": "ZERO / ETH",
+          "chain": "BSC",
+          "contract_addr": "0x28EE88457DcfC66B6e2A661Ed5C10866e3615BB9"
+      },
+      {
+          "APY": 243.29,
+          "name": "ZERO / USDC",
+          "chain": "BSC",
+          "contract_addr": "0x0Ff36b5F7B87Bb61BE8305F9b47c83910560DF95"
+      },
+      {
+          "APY": 295.77,
+          "name": "ZERO / USDT",
+          "chain": "BSC",
+          "contract_addr": "0xacE237D2cC182E8c1E3866509b800Fe35e192108"
+      },
+      {
+          "APY": 262.69,
+          "name": "ZERO / WBTC",
+          "chain": "BSC",
+          "contract_addr": "0x9c13B95F92F4b35DC725c5d4D5e3ffa467e58091"
+      },
+      {
+          "APY": 286.86,
+          "name": "ZERO / UNI",
+          "chain": "BSC",
+          "contract_addr": "0x300b7ae70C9a8AA3643d4b9Ac90145c8dbd5a961"
+      },
+      {
+          "APY": 372.72,
+          "name": "ZERO / SUSHI",
+          "chain": "BSC",
+          "contract_addr": "0x8C0e0d72b29e51518034536fd509c9c1F5306B2d"
+      },
+      {
+          "APY": 293.95,
+          "name": "ZERO / DAI",
+          "chain": "BSC",
+          "contract_addr": "0xa8630279dBFb97a92a7C477c17FF4466b619A3d2"
+      },
+      {
+          "APY": 222.88,
+          "name": "ZERO / BUSD",
+          "chain": "BSC",
+          "contract_addr": "0xf95F7c701db4866d6C672527db65730E26AA820d"
+      },
+      {
+          "APY": 72.49,
+          "name": "ZERO / ETH",
+          "chain": "ETH",
+          "contract_addr": "0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C"
+      },
+      {
+          "APY": 297.46,
+          "name": "ZERO / USDC",
+          "chain": "ETH",
+          "contract_addr": "0xdAD63CBa8c4b42255e7b7055FC48435316c55E25"
+      },
+      {
+          "APY": 183.73,
+          "name": "ZERO / USDT",
+          "chain": "ETH",
+          "contract_addr": "0xe5cFc90521477f9DeA4784Cc96f0230bFFe82108"
+      },
+      {
+          "APY": 286.79,
+          "name": "ZERO / WBTC",
+          "chain": "ETH",
+          "contract_addr": "0x3C775c9f57e614b11263441968Fac2d70673301a"
+      },
+      {
+          "APY": 320.16,
+          "name": "ZERO / UNI",
+          "chain": "ETH",
+          "contract_addr": "0x8161fBcc80a2526BCf5E5207ED18b2A26dF6807D"
+      },
+      {
+          "APY": 315.07,
+          "name": "ZERO / SUSHI",
+          "chain": "ETH",
+          "contract_addr": "0xDF085d8c554018540Bbfc3123FbD8BaaC620c2Fa"
+      },
+      {
+          "APY": 313.05,
+          "name": "ZERO / DAI",
+          "chain": "ETH",
+          "contract_addr": "0x8995fcD45B13BF75f9FA65BbBC6A75066E4E9Cbf"
+      }
+  ]
+  
+  const getAllAPY = async () => {
+    const res = await getAllPoolsAPY()
+    if (!res.hasError) {
+      setApyData(res?.data)
+    }
+  }
+
+ 
   useEffect(() => {
+    getAllAPY()
     let earnings: any = 0;
     let harvest: any = 0;
     Object.keys(weeklyEarnings).forEach((key) => {
@@ -266,6 +426,16 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''));
     });
     setStatsDisplay({ earnings, harvest });
+    if (serializePoolControls && serializePoolControls.filteredMode) {
+      handleSelectFilter(serializePoolControls.filteredMode)
+    }
+    arrayToShow.forEach((arrItem, index) => {
+      fakeData.forEach(dataItem => {
+        if (dataItem.contract_addr === arrItem.stakingRewardAddress) {
+          arrayToShow[index]['APR'] = dataItem.APY
+        }
+      })
+    })
   }, [weeklyEarnings, readyForHarvest])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
@@ -301,7 +471,9 @@ export default function Pools() {
           return bVal - aVal;
         });
       case 'apr':
-
+        return visibleItems.sort((a: any, b: any) => {
+          return b.APR - a.APR
+        });
       default: return visibleItems;
     }
   }
@@ -345,8 +517,8 @@ export default function Pools() {
         <PageWrapper>
           {account !== null && (
             <PoolControls
-              setShowLive={() => setShowLive(!showLive)}
-              showLive={showLive}
+              setShowFinished={() => setShowFinished(!showFinished)}
+              showFinished={showFinished}
               displayMode={displayMode}
               setDisplayMode={setDisplayMode}
               searchText={searchText}
@@ -402,6 +574,7 @@ export default function Pools() {
                                 liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
                                 key={stakingInfo.stakingRewardAddress}
                                 stakingInfoTop={stakingInfo}
+                                stakingInfoAPR={stakingInfo.APR}
                                 sendDataUp={onSendDataUp}
                                 showStaked={showStaked}/>
                     })}
@@ -423,6 +596,7 @@ export default function Pools() {
                           liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
                           key={stakingInfo.stakingRewardAddress}
                           stakingInfoTop={stakingInfo}
+                          stakingInfoAPR={stakingInfo.APR}
                           sendDataUp={onSendDataUp}
                           showStaked={showStaked} />
                 })}

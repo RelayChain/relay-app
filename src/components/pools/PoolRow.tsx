@@ -93,7 +93,8 @@ export default function PoolRow({
   earningsSent,
   liquiditySent,
   onHarvest,
-  showStaked
+  showStaked,
+  stakingInfoAPR
 }: {
   stakingInfoTop: StakingInfo,
   sendDataUp: any,
@@ -101,7 +102,8 @@ export default function PoolRow({
   earningsSent: any,
   liquiditySent: any,
   onHarvest: any
-  showStaked: boolean
+  showStaked: boolean,
+  stakingInfoAPR: any
 }) {
   const { chainId, account } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
@@ -223,7 +225,7 @@ export default function PoolRow({
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            80.1%
+           {stakingInfoAPR ? stakingInfoAPR +'%' : '-'}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

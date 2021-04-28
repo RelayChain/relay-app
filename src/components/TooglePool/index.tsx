@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Row from 'components/Row'
 import styled from 'styled-components'
 
@@ -65,7 +65,7 @@ const StyledStacked = styled.div`
       border: 2px solid rgba(179, 104, 252, 1);
       border-radius: 6px;
       box-shadow: inset 0 1px 3px rgb(0 0 0 / 30%);
-      background: rgba(179, 104, 252, .25);
+      background: rgba(179, 104, 252, 0.25);
     }
     &:after {
       content: '✔';
@@ -120,17 +120,30 @@ export interface ToggleProps {
 }
 
 export default function Toggle({ isActive, toggle, isStaked, setShowStaked }: ToggleProps) {
+  let serializePoolsControl = {}
+  //@ts-ignore
+  if (JSON.parse(localStorage.getItem('PoolControls'))) {
+    //@ts-ignore
+    serializePoolsControl = JSON.parse(localStorage.getItem('PoolControls'))
+  }
+
+  const onHandleChange = (callback: any, key: string, value: boolean) => {
+    callback()
+    const clone = { ...serializePoolsControl, [key]: !value }
+    localStorage.setItem('PoolControls', JSON.stringify(clone))
+  }
+
   return (
     <Row>
-        <StyledStacked onClick={setShowStaked}>
-          <input type="checkbox" checked={isStaked} />
-          <label>Staked only</label>
-        </StyledStacked>
-      <StyledToggle isActive={isActive} onClick={toggle}>
-        <ToggleElement isActive={isActive} isOnSwitch={true}>
+      <StyledStacked onClick={() => onHandleChange(setShowStaked, 'isStaked', isStaked)}>
+        <input type="checkbox" checked={isStaked} />
+        <label>Staked only</label>
+      </StyledStacked>
+      <StyledToggle isActive={isActive} onClick={() => onHandleChange(toggle, 'isActive', isActive)}>
+        <ToggleElement isActive={!isActive} isOnSwitch={false}>
           Live
         </ToggleElement>
-        <ToggleElement isActive={!isActive} isOnSwitch={false}>
+        <ToggleElement isActive={isActive} isOnSwitch={true}>
           Finished
         </ToggleElement>
       </StyledToggle>
