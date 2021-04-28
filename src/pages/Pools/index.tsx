@@ -142,9 +142,12 @@ const StatsWrapper = styled.div`
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   flex-direction: column;
+  align-items: flex-start;
   .add-liquidity-link {
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
+    max-width: 500px;
   }
 `};
 `
@@ -279,7 +282,7 @@ export default function Pools() {
   // filter array by staked
   let filteredArray = arrayToShow.filter(x => readyForHarvest[x.stakingRewardAddress] !== undefined && parseFloat(readyForHarvest[x.stakingRewardAddress]) !== 0);
   let visibleItems: any = searchItems(showStaked ? filteredArray : arrayToShow, searchText)
-  
+
   // lastly, if there is a sort, sort
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const handleSelectFilter = (val: string) => {
@@ -301,7 +304,8 @@ export default function Pools() {
           return bVal - aVal;
         });
       case 'apr':
-
+        // put logic for APR filter here
+        return visibleItems
       default: return visibleItems;
     }
   }
@@ -323,25 +327,25 @@ export default function Pools() {
       )}
       <Title>Pools</Title>
       <PageContainer>
-
-        <StatsWrapper>
-          <Stat className="weekly">
-            <StatLabel>Weekly Earnings:</StatLabel>
-            <StatValue>{numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span></StatValue>
-          </Stat>
-          <Stat className="harvest">
-            <StatLabel>Ready To Harvest:</StatLabel>
-            <StatValue>{numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span></StatValue>
-          </Stat>
-          <StyledInternalLink className="add-liquidity-link"
-            to={{
-              pathname: `/add`,
-            }}
-          >
-            <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
-          </StyledInternalLink>
-        </StatsWrapper>
-
+        {account !== null &&
+          <StatsWrapper>
+            <Stat className="weekly">
+              <StatLabel>Weekly Earnings:</StatLabel>
+              <StatValue>{numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span></StatValue>
+            </Stat>
+            <Stat className="harvest">
+              <StatLabel>Ready To Harvest:</StatLabel>
+              <StatValue>{numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span></StatValue>
+            </Stat>
+            <StyledInternalLink className="add-liquidity-link"
+              to={{
+                pathname: `/add`,
+              }}
+            >
+              <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+            </StyledInternalLink>
+          </StatsWrapper>
+        }
         <PageWrapper>
           {account !== null && (
             <PoolControls
