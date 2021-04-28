@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useState } from 'react'
@@ -29,6 +29,9 @@ const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: 
   &:last-of-type {
     border-bottom-width: 0px;
   }
+  &.active {
+    background: rgba(179, 104, 252, .2);
+  }
 `
 
 const Details = styled.div`
@@ -37,7 +40,7 @@ const Details = styled.div`
   column-gap: 34px;
   row-gap: 16px;
   border-bottom: 1px solid rgba(167, 177, 244, 0.1);
-  padding-bottom: 16px;
+  padding: 22px 45px;
 `
 const Logo = styled(DoubleCurrencyLogo)`
   margin-bottom: 20px;
@@ -88,6 +91,7 @@ export default function PoolRow({
   sendDataUp,
   harvestSent,
   earningsSent,
+  liquiditySent,
   onHarvest,
   showStaked
 }: {
@@ -95,6 +99,7 @@ export default function PoolRow({
   sendDataUp: any,
   harvestSent: any,
   earningsSent: any,
+  liquiditySent: any,
   onHarvest: any
   showStaked: boolean
 }) {
@@ -172,20 +177,32 @@ export default function PoolRow({
           ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
       : '0';
     const readyToHarvest = countUpAmount;
+    const liquidityValue = valueOfTotalStakedAmountInUSDC
+      ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
+      : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
-    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings) {
+    if (harvestSent === readyToHarvest &&
+        earningsSent === singleWeeklyEarnings &&
+        liquiditySent === liquidityValue) {
       return;
     }
 
-    if (parseFloat(singleWeeklyEarnings) !== 0 || parseFloat(readyToHarvest) !== 0) {
-      sendDataUp({ singleWeeklyEarnings, readyToHarvest, contract })
+    if (parseFloat(singleWeeklyEarnings) !== 0 ||
+        parseFloat(readyToHarvest) !== 0 ||
+        parseFloat(liquidityValue) !== 0) {
+      sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
     }
-  }, [countUpAmount, stakingInfo, harvestSent, earningsSent])
+  }, [countUpAmount, stakingInfo, harvestSent, earningsSent, liquiditySent, valueOfTotalStakedAmountInUSDC, valueOfTotalStakedAmountInWETH])
 
   return (
     <>
-    {(isStaking && showStaked) || (!showStaked) && (
-      <Wrapper showBackground={isStaking} bgColor={backgroundColor} onClick={toggleDetails} showDetails={showDetails}>
+      <Wrapper
+        className={parseFloat(countUpAmount) !== 0 ? 'active' : ''}
+        showBackground={isStaking}
+        bgColor={backgroundColor}
+        onClick={toggleDetails}
+        showDetails={showDetails}>
+        <Cell style={{ width: '45px' }}></Cell>
         <Cell>
           <TitleCell>
             <Logo currency0={currency0} currency1={currency1} size={24} style={{marginRight: '8px'}} />
@@ -229,11 +246,11 @@ export default function PoolRow({
             <DropdownArrow />
           </DetailsCell>
         </Cell>
+        <Cell style={{ width: '45px' }}></Cell>
       </Wrapper>
-      )}
-      {showDetails && (
+      { showDetails && (
         <tr>
-          <td colSpan={6}>
+          <td colSpan={8}>
             <Details>
               <DetailsBox>
                 <TYPE.main fontWeight={500} fontSize={15}>

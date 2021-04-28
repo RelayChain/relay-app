@@ -4,8 +4,8 @@ import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
 import SearchBar from '../../components/SearchBar'
 import Select from '../../components/Select'
-import TogglePool from '../../components/TooglePool'
 import { TYPE } from '../../theme'
+import TogglePool from '../../components/TooglePool'
 import styled from 'styled-components'
 
 const Controls = styled.div`
@@ -113,9 +113,14 @@ export interface PoolControlsProps {
   setShowLive: () => void
   showStaked: boolean
   setShowStaked: () => void
+  onSelectFilter: any;
 }
 
-function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, showLive, setShowLive, showStaked, setShowStaked }: PoolControlsProps) {
+function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, showLive, setShowLive, showStaked, setShowStaked, onSelectFilter }: PoolControlsProps) {
+
+  const selectFilter = (e: any) => {
+    onSelectFilter(e.value);
+  }
 
   return (
     <Controls>
@@ -151,7 +156,7 @@ function PoolControls({ displayMode, setDisplayMode, searchText, setSearchText, 
                 value: 'liquidity'
               }
             ]}
-            onChange={() => {}}
+            onChange={(e) => {selectFilter(e)}}
           />
         </ControlGroup>
 

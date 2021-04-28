@@ -1,5 +1,5 @@
-import Row from 'components/Row'
 import React from 'react'
+import Row from 'components/Row'
 import styled from 'styled-components'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
@@ -44,7 +44,7 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
 
 const StyledStacked = styled.div`
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 20px;
   > input {
     opacity: 0;
   }
@@ -58,22 +58,22 @@ const StyledStacked = styled.div`
     &:before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 1px;
-      width: 17px;
-      height: 17px;
-      border: 1px solid rgba(47,53,115,0.92);
-      border-radius: 10px;
+      left: -8px;
+      top: -2px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(179, 104, 252, 1);
+      border-radius: 6px;
       box-shadow: inset 0 1px 3px rgb(0 0 0 / 30%);
-      background: rgba(47,53,115,0.12);
+      background: rgba(179, 104, 252, .25);
     }
     &:after {
       content: '✔';
       position: absolute;
       top: -6px;
-      left: 2px;
+      left: -2px;
       font-size: 21px;
-      color: #6752F7;
+      color: rgba(179, 104, 252, 1);
       transition: all 0.2s;
     }
   }

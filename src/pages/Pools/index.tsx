@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 44px;
   margin-bottom: 1rem;
-  padding: 30px 45px;
+  padding: 30px 0;
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -138,6 +138,7 @@ const StatsWrapper = styled.div`
   .add-liquidity-link {
     width: 160px;
     margin-left: auto;
+    text-decoration: none;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   flex-direction: column;
@@ -196,7 +197,6 @@ export default function Pools() {
   const [displayMode, setDisplayMode] = useState('table')
   const [searchText, setSearchText] = useState('')
 
-  console.log(stakingInfos)
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 
@@ -226,9 +226,8 @@ export default function Pools() {
 
   const searchItems = (items: any[], term: string) => {
     if (term.length == 0 || term === '' || term.trim().length === 0) {
-      return arrayToShow
+      return items;
     }
-
     return items.filter(item => {
       const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId)
       const secondCurrencySymbol = unwrappedToken(item.tokens[1], chainId)
@@ -244,15 +243,17 @@ export default function Pools() {
     })
   }
 
-  const visibleItems = searchItems(arrayToShow, searchText)
-
   const [weeklyEarnings, setWeeklyEarnings] = useState({})
   const [readyForHarvest, setReadyForHarvest] = useState({})
+  const [totalLiquidity, setTotalLiquidity] = useState({})
   const [statsDisplay, setStatsDisplay] = useState<any>({})
 
-  const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, contract }: any) => {
+  const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract }: any) => {
     setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings });
     setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest });
+    if (parseFloat(liquidityValue) !== 0) {
+      setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue });
+    }
   }
 
   useEffect(() => {
@@ -273,6 +274,40 @@ export default function Pools() {
   const handleHarvest = (stakingInfo: any) => {
     setClaimRewardStaking(stakingInfo)
     setShowClaimRewardModal(true)
+  }
+
+  // filter array by staked
+  let filteredArray = arrayToShow.filter(x => readyForHarvest[x.stakingRewardAddress] !== undefined && parseFloat(readyForHarvest[x.stakingRewardAddress]) !== 0);
+  let visibleItems: any = searchItems(showStaked ? filteredArray : arrayToShow, searchText)
+  
+  // lastly, if there is a sort, sort
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const handleSelectFilter = (val: string) => {
+    setSelectedFilter(val);
+  }
+
+  const filterItems = (str: string) => {
+    switch(str) {
+      case 'earned':
+        return visibleItems.sort((a: any, b: any) => {
+          const aVal = parseFloat(readyForHarvest[a.stakingRewardAddress]) || 0;
+          const bVal = parseFloat(readyForHarvest[b.stakingRewardAddress]) || 0;
+          return bVal - aVal;
+        });
+      case 'liquidity':
+        return visibleItems.sort((a: any, b: any) => {
+          const aVal = parseFloat(totalLiquidity[a.stakingRewardAddress]) || 0;
+          const bVal = parseFloat(totalLiquidity[b.stakingRewardAddress]) || 0;
+          return bVal - aVal;
+        });
+      case 'apr':
+
+      default: return visibleItems;
+    }
+  }
+
+  if (selectedFilter) {
+    visibleItems = filterItems(selectedFilter);
   }
 
   return (
@@ -317,6 +352,7 @@ export default function Pools() {
               searchText={searchText}
               setSearchText={setSearchText}
               showStaked={showStaked}
+              onSelectFilter={handleSelectFilter}
               setShowStaked={() => setShowStaked(!showStaked)}
             />
           )}
@@ -326,9 +362,10 @@ export default function Pools() {
               <Wrapper>
                 <PoolsTable style={{ width: '100%' }}>
                   <thead>
-                    <tr>
+                    <tr style={{ verticalAlign: 'top', height: '30px' }}>
+                      <HeaderCell style={{ width: '45px'}}></HeaderCell>
                       <HeaderCell>
-                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left' }}>
+                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
                           Type
                         </TYPE.main>
                       </HeaderCell>
@@ -352,7 +389,7 @@ export default function Pools() {
                           Earned
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell></HeaderCell>
+                      <HeaderCell style={{ width: '45px'}}></HeaderCell>
                     </tr>
                   </thead>
                   <tbody>
@@ -362,9 +399,10 @@ export default function Pools() {
                                 onHarvest={() => handleHarvest(stakingInfo)}
                                 harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
                                 earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                                liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
                                 key={stakingInfo.stakingRewardAddress}
                                 stakingInfoTop={stakingInfo}
-                                sendDataUp={onSendDataUp} 
+                                sendDataUp={onSendDataUp}
                                 showStaked={showStaked}/>
                     })}
                   </tbody>
@@ -382,6 +420,7 @@ export default function Pools() {
                           onHarvest={() => handleHarvest(stakingInfo)}
                           harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
                           earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                          liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
                           key={stakingInfo.stakingRewardAddress}
                           stakingInfoTop={stakingInfo}
                           sendDataUp={onSendDataUp}

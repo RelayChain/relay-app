@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
@@ -35,6 +35,9 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  &.active {
+    background: rgba(179, 104, 252, .2);
+  }
 `
 
 const Row = styled.div`
@@ -112,6 +115,7 @@ export default function PoolCard({
   sendDataUp,
   harvestSent,
   earningsSent,
+  liquiditySent,
   onHarvest,
   showStaked
 }: {
@@ -119,6 +123,7 @@ export default function PoolCard({
   sendDataUp: any,
   harvestSent: any,
   earningsSent: any,
+  liquiditySent: any,
   onHarvest: any,
   showStaked: boolean
 }) {
@@ -183,6 +188,13 @@ export default function PoolCard({
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
+  // get the USD value of staked WETH
+  const USDPrice = useUSDCPrice(WETH)
+  const valueOfTotalStakedAmountInUSDC =
+    valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
+
+  const symbol = WETH?.symbol
+
   useEffect(() => {
     const contract = stakingInfo?.stakingRewardAddress;
     const singleWeeklyEarnings = stakingInfo?.active
@@ -191,27 +203,26 @@ export default function PoolCard({
           ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
       : '0';
     const readyToHarvest = countUpAmount;
+    const liquidityValue = valueOfTotalStakedAmountInUSDC
+      ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
+      : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
-    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings) {
+    if (harvestSent === readyToHarvest &&
+        earningsSent === singleWeeklyEarnings &&
+        liquiditySent === liquidityValue) {
       return;
     }
 
-    if (parseFloat(singleWeeklyEarnings) !== 0 || parseFloat(readyToHarvest) !== 0) {
-      sendDataUp({ singleWeeklyEarnings, readyToHarvest, contract })
+    if (parseFloat(singleWeeklyEarnings) !== 0 ||
+        parseFloat(readyToHarvest) !== 0 ||
+        parseFloat(liquidityValue) !== 0) {
+      sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
     }
-  }, [countUpAmount, stakingInfo, harvestSent, earningsSent])
-
-  // get the USD value of staked WETH
-  const USDPrice = useUSDCPrice(WETH)
-  const valueOfTotalStakedAmountInUSDC =
-    valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-
-  const symbol = WETH?.symbol
+  }, [countUpAmount, stakingInfo, harvestSent, earningsSent, liquiditySent, valueOfTotalStakedAmountInUSDC, valueOfTotalStakedAmountInWETH])
 
   return (
     <>
-     {(isStaking && showStaked) || !showStaked && (
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+    <Wrapper showBackground={isStaking} bgColor={backgroundColor} className={parseFloat(countUpAmount) !== 0 ? 'active' : ''}>
       <Icons currency0={currency0} currency1={currency1} size={38} />
       <Label>
         <TYPE.main fontWeight={600} fontSize={18}>
@@ -299,7 +310,6 @@ export default function PoolCard({
         </DetailsBox>
       </Details>
     </Wrapper>
-     )}
-    </>
+  </>
   )
 }
