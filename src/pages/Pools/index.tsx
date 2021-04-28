@@ -206,7 +206,7 @@ export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.displayMode : 'table')
+  const [displayMode, setDisplayMode] = useState(localStorage.getItem('PoolControls') ? serializePoolControls?.displayMode : 'table')
   const [searchText, setSearchText] = useState('')
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
@@ -299,10 +299,10 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''));
     });
     setStatsDisplay({ earnings, harvest });
-    if (serializePoolControls && serializePoolControls.filteredMode) {
-      handleSelectFilter(serializePoolControls.filteredMode)
+    if (serializePoolControls && serializePoolControls?.filteredMode) {
+      handleSelectFilter(serializePoolControls?.filteredMode)
     }
-  }, [weeklyEarnings, readyForHarvest, serializePoolControls.filteredMode, serializePoolControls.displayMode, serializePoolControls.isActive, serializePoolControls.isStaked])
+  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.filteredMode, serializePoolControls?.displayMode, serializePoolControls?.isActive, serializePoolControls?.isStaked])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
