@@ -99,16 +99,14 @@ export default function PoolRow({
   earningsSent,
   liquiditySent,
   onHarvest,
-  showStaked,
   stakingInfoAPR
 }: {
-  stakingInfoTop: StakingInfo
+  stakingInfoTop: StakingInfo | any
   sendDataUp: any
   harvestSent: any
   earningsSent: any
   liquiditySent: any
   onHarvest: any
-  showStaked: boolean,
   stakingInfoAPR: any
 }) {
   const { chainId, account } = useActiveWeb3React()
@@ -214,6 +212,9 @@ export default function PoolRow({
     valueOfTotalStakedAmountInWETH
   ])
 
+  if (stakingInfoTop.isHidden) {
+    return (<></>);
+  }
   return (
     <>
       <Wrapper

@@ -175,7 +175,7 @@ function PoolControls({
   //@ts-ignore
   if (JSON.parse(localStorage.getItem('PoolControls'))) {
     //@ts-ignore
-    data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).filteredMode)
+    data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).sortedMode)
   }
   return (
     <Controls>
@@ -201,7 +201,7 @@ function PoolControls({
             options={data || defaultOptions}
             onChange={e => {
               selectFilter(e)
-              const clone = { ...serializePoolsControl, filteredMode: e.value }
+              const clone = { ...serializePoolsControl, sortedMode: e.value }
               localStorage.setItem('PoolControls', JSON.stringify(clone))
             }}
           />

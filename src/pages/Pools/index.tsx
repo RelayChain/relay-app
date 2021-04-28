@@ -214,14 +214,15 @@ export default function Pools() {
 
   // filters & sorting
   const [showFinished, setShowFinished] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false);
-  const [showStaked, setShowStaked] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false)
+  const [showStaked, setShowStaked] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false);
+
   let arrayToShow: any[] = []
-  let searchedArrayToShow: any
+
   // live or finished pools?
   if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
-    arrayToShow = stakingInfosWithBalance
+    arrayToShow = stakingInfos.map(x => x.active ? x : { ...x, isHidden: true });
   } else if (showFinished && finishedPools && finishedPools.length > 0) {
-    arrayToShow = finishedPools
+    arrayToShow = stakingInfos.map(x => !x.active ? x : { ...x, isHidden: true });
   }
 
   // do search logic, filtering, and sorting logic here on arrayToShow
@@ -240,7 +241,7 @@ export default function Pools() {
     if (term.length == 0 || term === '' || term.trim().length === 0) {
       return items;
     }
-    return items.filter(item => {
+    return items.map(item => {
       const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId)
       const secondCurrencySymbol = unwrappedToken(item.tokens[1], chainId)
 
@@ -251,6 +252,8 @@ export default function Pools() {
         ) {
           return item
         }
+      } else {
+        return { ...item, isHidden: true }
       }
     })
   }
@@ -299,10 +302,10 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''));
     });
     setStatsDisplay({ earnings, harvest });
-    if (serializePoolControls && serializePoolControls?.filteredMode) {
-      handleSelectFilter(serializePoolControls?.filteredMode)
+    if (serializePoolControls && serializePoolControls?.sortedMode) {
+      handleSelectSort(serializePoolControls?.sortedMode)
     }
-  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.filteredMode, serializePoolControls?.displayMode, serializePoolControls?.isActive, serializePoolControls?.isStaked])
+  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.sortedMode, serializePoolControls?.displayMode, serializePoolControls?.isActive, serializePoolControls?.isStaked])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
@@ -313,16 +316,26 @@ export default function Pools() {
   }
 
   // filter array by staked
-  let filteredArray = arrayToShow.filter(x => readyForHarvest[x.stakingRewardAddress] !== undefined && parseFloat(readyForHarvest[x.stakingRewardAddress]) !== 0);
-  let visibleItems: any = searchItems(showStaked ? filteredArray : arrayToShow, searchText)
-
-  // lastly, if there is a sort, sort
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const handleSelectFilter = (val: string) => {
-    setSelectedFilter(val);
+  if (showStaked) {
+    arrayToShow = arrayToShow.map((item) => {
+      if (readyForHarvest[item.stakingRewardAddress] !== undefined && parseFloat(readyForHarvest[item.stakingRewardAddress]) !== 0) {
+        return item;
+      } else {
+        return { ...item, isHidden: true };
+      }
+    });
   }
 
-  const filterItems = (str: string) => {
+  // search items
+  let visibleItems: any = searchItems(arrayToShow, searchText)
+
+  // lastly, if there is a sort, sort
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+  const handleSelectSort = (val: string) => {
+    setSelectedSort(val);
+  }
+
+  const sortItems = (str: string) => {
     switch(str) {
       case 'earned':
         return visibleItems.sort((a: any, b: any) => {
@@ -344,8 +357,8 @@ export default function Pools() {
     }
   }
 
-  if (selectedFilter) {
-    visibleItems = filterItems(selectedFilter);
+  if (selectedSort) {
+    visibleItems = sortItems(selectedSort);
   }
 
   return (
@@ -390,7 +403,7 @@ export default function Pools() {
               searchText={searchText}
               setSearchText={setSearchText}
               showStaked={showStaked}
-              onSelectFilter={handleSelectFilter}
+              onSelectFilter={handleSelectSort}
               setShowStaked={() => setShowStaked(!showStaked)}
             />
           )}
@@ -432,7 +445,9 @@ export default function Pools() {
                   </thead>
                   <tbody>
                     {visibleItems?.map((stakingInfo: any) => {
-                      // need to sort by added liquidity here
+                      if (!stakingInfo) {
+                        return <></>
+                      }
                       return <PoolRow
                                 onHarvest={() => handleHarvest(stakingInfo)}
                                 harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
@@ -442,19 +457,17 @@ export default function Pools() {
                                 stakingInfoTop={stakingInfo}
                                 stakingInfoAPR={stakingInfo.APR}
                                 sendDataUp={onSendDataUp}
-                                showStaked={showStaked}/>
+                              />
                     })}
                   </tbody>
                 </PoolsTable>
-                {/* : !stakingRewardsExist ? (
-            <OutlineCard>No active pools</OutlineCard>
-          ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
-            <OutlineCard>No active pools</OutlineCard>
-          ) : null} */}
               </Wrapper>
             ) : (
               <GridContainer>
                 {visibleItems?.map((stakingInfo: any) => {
+                  if (!stakingInfo) {
+                    return <></>
+                  }
                   return <PoolCard
                           onHarvest={() => handleHarvest(stakingInfo)}
                           harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
@@ -464,7 +477,7 @@ export default function Pools() {
                           stakingInfoTop={stakingInfo}
                           stakingInfoAPR={stakingInfo.APR}
                           sendDataUp={onSendDataUp}
-                          showStaked={showStaked} />
+                         />
                 })}
               </GridContainer>
             ))}
@@ -486,16 +499,8 @@ export default function Pools() {
                   Connect a Wallet
                 </ButtonPrimary>
               </div>
-              {/* <NoAccount src={NoResults} /> */}
             </EmptyData>
           )}
-
-          {/* <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-          {finishedPools?.length > 0 &&
-            finishedPools.map(stakingInfo => {
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfoTop={stakingInfo} />
-            })}
-        </AutoColumn> */}
         </PageWrapper>
       </PageContainer>
     </>
