@@ -157,6 +157,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000823cE9cca0b9eE2BC4C2d764d304691d770DbBe901'
         },
+        {
+          address: '0x433d86336dB759855A66cCAbe4338313a8A7fc77',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000433d86336dB759855A66cCAbe4338313a8A7fc7701'
+        }
       ]
     },
     {
@@ -283,6 +291,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000D606199557c8Ab6F4Cc70bD03FaCc96ca576f14202'
         },
+        {
+          address: '0x791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D02'
+        }
         
       ]
     },
@@ -419,6 +435,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000d705223747C7AF3386a70abbE586d390A687768703'
         },
+        {
+          address: '0xC878A79B63A41a831E469AE1A830A765eFd9d468',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x0000000000000000000000C878A79B63A41a831E469AE1A830A765eFd9d46803'
+        }
       ]
     },
   ]
