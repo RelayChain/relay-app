@@ -299,7 +299,7 @@ export default function Pools() {
     if (serializePoolControls && serializePoolControls.filteredMode) {
       handleSelectFilter(serializePoolControls.filteredMode)
     }
-  }, [weeklyEarnings, readyForHarvest, serializePoolControls.filteredMode, serializePoolControls.displayMode, serializePoolControls.isActive, serializePoolControls.isStaked])
+  }, [weeklyEarnings, readyForHarvest])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
