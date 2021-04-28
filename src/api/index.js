@@ -4,7 +4,7 @@ const ZERO_API_URL = process.env.REACT_APP_ZERO_API_URL
 const ZERO_API_KEY = process.env.REACT_APP_ZERO_API_KEY
 
 export async function getTokenBalances(account) {
-  return get(`https://web3api.io/api/v2/addresses/${account}//token-balances/latest`)
+  return get(`https://web3api.io/api/v2/addresses/${account}/token-balances/latest`)
 }
 
 export async function getRelayerBalances() {
@@ -12,11 +12,11 @@ export async function getRelayerBalances() {
 }
 
 export async function getTVLData() {
-  return get(`${ZERO_API_URL}/TVL/GetTVLdata?apikey=${ZERO_API_KEY}`)
+  return get(`${ZERO_API_URL}/TVL/GetTVLdata`)
 }
 
 export async function getAllPoolsAPY() {
-  return get(`${ZERO_API_URL}/APY/GetAllPoolsAPY?apikey=${ZERO_API_KEY}`)
+  return get(`${ZERO_API_URL}/APY/GetAllPoolsAPY`)
 }
 
 export async function getSinglePoolAPY(address) {
@@ -24,5 +24,5 @@ export async function getSinglePoolAPY(address) {
 }
 
 export async function getWalletHolderCount() {
-  return get(`${ZERO_API_URL}/walletholders/getCount?apikey=${ZERO_API_KEY}`)
+  return get(`${ZERO_API_URL}/walletholders/getCount`)
 }
