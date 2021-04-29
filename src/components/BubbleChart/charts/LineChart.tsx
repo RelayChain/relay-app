@@ -19,6 +19,7 @@ const Box = styled.div`
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
 
+  // NOTE:
   // reverse series
   const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
   // reverse data
@@ -36,7 +37,7 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
           events: {
             mouseOver: function () {
               const index = Number(this.index) - 1 > 0 ? Number(this.index) - 1 : 0
-              const value = this.y || 0   
+              const value = this.y || 0
               const perc = getPercentageValues(value, series[index])
               onSelectedValue(value, perc)
             },
