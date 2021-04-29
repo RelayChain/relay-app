@@ -262,7 +262,7 @@ export function useCrosschainHooks() {
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, {
         gasLimit: '500000',
@@ -402,7 +402,7 @@ export function useCrosschainHooks() {
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
