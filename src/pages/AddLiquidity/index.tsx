@@ -205,26 +205,16 @@ export default function AddLiquidity({
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    if (
-      currencyA === ETHER ||
-      currencyB === ETHER ||
-      currencyB === BNB ||
-      currencyB === MATIC ||
-      currencyA === AVAX ||
-      currencyB === AVAX ||
-      currencyB === BNB ||
-      currencyA === WBNB ||
-      currencyB === WBNB ||
-      currencyA === DEV ||
-      currencyA === MATIC ||
-      currencyB === DEV
-    ) {
-      const tokenBIsETH =
-        currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+    // TODO: export this from SDK
+    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC];
+
+    let estimate;
+    let method: (...args: any) => Promise<TransactionResponse>;
+    let args: Array<string | string[] | number>;
+    let value: BigNumber | null;
+
+    if ([currencyA, currencyB].some(c => ALL_ETHERS.includes(c))) {
+      const tokenBIsETH = ALL_ETHERS.includes(currencyB);
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [

@@ -214,20 +214,20 @@ export default function Home() {
             </>
           )}
         </Flex>
-        {transactionsData.loading || !transactionsData.data.transactions ? (
+        {transactionsData.loading || !transactionsData.data?.transactions ? (
           <CenterWrap>
             <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
           </CenterWrap>
         ) : (
           <>
-            <Transactions transactions={transactionsData.data.transactions} />
+            <Transactions transactions={transactionsData.data?.transactions} />
             <FlexButtons>
               {pagination > 0 && (
                 <Button>
                   <ButtonLight onClick={onClickPrevPage}>Back</ButtonLight>
                 </Button>
               )}
-              {transactionsData.data.transactions.length >= 12 && (
+              {transactionsData.data?.transactions.length >= 12 && (
                 <Button>
                   <ButtonPrimary onClick={onClickNextPage}>Next</ButtonPrimary>
                 </Button>

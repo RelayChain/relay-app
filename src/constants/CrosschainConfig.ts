@@ -151,7 +151,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: '0x823cE9cca0b9eE2BC4C2d764d304691d770DbBe9',
-          name: 'Gondola (GDL)',
+          name: 'Gondola',
           symbol: 'GDL',
           assetBase: 'GDL',
           decimals: 18,
@@ -299,7 +299,6 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 2,
           resourceId: '0x0000000000000000000000791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D02'
         }
-        
       ]
     },
     {
