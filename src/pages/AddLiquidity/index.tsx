@@ -1,11 +1,11 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS,
   ETH_ROUTER_ADDRESS,
-  SMART_CHAIN_ROUTER_ADDRESS,
-  WBNB,
   MOONBASE_ROUTER_ADDRESS,
-  MUMBAI_ROUTER_ADDRESS
+  MUMBAI_ROUTER_ADDRESS,
+  SMART_CHAIN_ROUTER_ADDRESS,
+  WBNB
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -16,6 +16,7 @@ import React, { useCallback, useContext, useState } from 'react'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import styled, { ThemeContext } from 'styled-components'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 
@@ -42,7 +43,6 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import styled, { ThemeContext } from 'styled-components'
 
 const Title = styled.h1`
   width: 100%;
@@ -58,7 +58,7 @@ const Title = styled.h1`
 const BodyWrapper = styled.div`
   position: relative;
   max-width: 675px;
-  margin-top: 2rem;
+  margin-top: 4rem;
   width: 100%;
   background: rgba(47, 53, 115, 0.32);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
@@ -385,11 +385,17 @@ export default function AddLiquidity({
 
   const isCreate = history.location.pathname.includes('/create')
 
+  const handleGoBack = () => {
+    const x = isCreate ? '/create' : '/add';
+    const newUrl = history.location.pathname.replace(x, '/manage');
+    history.push(newUrl);
+  }
+
   return (
     <>
-      <Title>Add Liquidity</Title>
+      {/*<Title>Add Liquidity</Title>*/}
       <BodyWrapper>
-        <AddRemoveTabs creating={isCreate} adding={true} />
+        <AddRemoveTabs creating={isCreate} adding={true} onGoBack={handleGoBack} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -454,13 +460,13 @@ export default function AddLiquidity({
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" borderRadius={'20px'}>
+                <LightCard padding="0px" borderRadius={'20px'} style={{ borderWidth: 0 }}>
                   <RowBetween padding="1rem">
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
                     </TYPE.subHeader>
                   </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
+                  <LightCard padding="1rem" borderRadius={'20px'} style={{ borderWidth: 0 }}>
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
@@ -527,7 +533,7 @@ export default function AddLiquidity({
         </Wrapper>
       </BodyWrapper>
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

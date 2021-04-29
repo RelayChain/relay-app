@@ -1,5 +1,5 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -737,7 +737,7 @@ export default function RemoveLiquidity({
       </AppBody>
 
       {pair ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

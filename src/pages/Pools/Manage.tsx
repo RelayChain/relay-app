@@ -131,7 +131,11 @@ const StatValue = styled.h6`
     opacity: .75;
     font-weight: normal;
     font-size: 1.25rem;
+    margin-left: 4px;
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  font-size: 1.25rem;
+`};
 `
 
 const PositionInfo = styled(AutoColumn)<{ dim: any }>`
@@ -226,6 +230,17 @@ const DataRow = styled(RowBetween)`
     flex-direction: column;
     gap: 12px;
   `};
+`
+
+const SymbolTitleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom 2rem;
+`
+const SymbolTitleInner = styled.div`
+  flex-grow: 0;
+  display: flex;
+  font-size: 1.5rem;
 `
 
 export default function Manage({
@@ -364,24 +379,41 @@ export default function Manage({
     <>
     <Title>Manage</Title>
     <PageContainer>
-      {account !== null &&
+      {account !== null && <>
+        <SymbolTitleWrapper>
+          <SymbolTitleInner>
+              {currencyA?.symbol}/{currencyB?.symbol}
+              <span style={{ marginLeft: '5px'}}>Liquidity Mining</span>
+            <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
+          </SymbolTitleInner>
+        </SymbolTitleWrapper>
         <StatsWrapper>
           <Stat className="weekly">
             <StatLabel>Total Deposits:</StatLabel>
-            <StatValue>{} <span>ZERO</span></StatValue>
+            <StatValue>
+              {valueOfTotalStakedAmountInUSDC
+                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}`}
+                <span>{symbol}</span>
+            </StatValue>
           </Stat>
           <Stat className="harvest">
             <StatLabel>Pool Rate:</StatLabel>
-            <StatValue>{} <span>ZERO</span></StatValue>
+            <StatValue>
+              {stakingInfo?.active
+                ? stakingInfo?.totalRewardRate
+                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                    ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                : '0'}
+                <span>{' ZERO / week'}</span>
+            </StatValue>
           </Stat>
           <StyledInternalLink className="add-liquidity-link"
-            to={{
-              pathname: `/add`,
-            }}
+            to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
           >
             <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
           </StyledInternalLink>
-        </StatsWrapper>
+        </StatsWrapper> </>
       }
       <PageWrapper>
       </PageWrapper>

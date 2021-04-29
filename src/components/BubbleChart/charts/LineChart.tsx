@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { LiquidityVolumeList } from '../../../graphql/types'
+import React from 'react'
 import getPercentageValues from './../../../utils/getPercentageValues'
+import styled from 'styled-components'
 import useWindowDimensions from './../../../hooks/useWindowDimensions'
 
 type LineChartProps = {
@@ -18,7 +18,7 @@ const Box = styled.div`
 `
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
-  const series = data.zeroDayDatas.map(a => Number(a.totalLiquidityUSD))
+  const series = data?.zeroDayDatas?.map(a => Number(a.totalLiquidityUSD))
   const options: Highcharts.Options = {
     title: {
       text: '',

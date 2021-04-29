@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { LiquidityVolumeList } from '../../../graphql/types'
+import React from 'react'
 import getPercentageValues from '../../../utils/getPercentageValues'
+import styled from 'styled-components'
 
 type BarChartProps = {
   data: LiquidityVolumeList
@@ -19,7 +19,7 @@ const Box = styled.div`
 `
 
 const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {
-  const series = data.zeroDayDatas.map(a => Number(a.dailyVolumeUSD))
+  const series = data?.zeroDayDatas?.map(a => Number(a.dailyVolumeUSD))
 
   const options: Highcharts.Options = {
     title: {

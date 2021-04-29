@@ -1,9 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-
 import DropDown from './../DropDown'
+import React from 'react'
 import TransactionLine from './../TransactionLine'
 import { TransactionTypes } from './../../graphql/types'
+import styled from 'styled-components'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
 const TransactionsWrap = styled.div`
@@ -94,8 +93,8 @@ const Transactions = ({ transactions }: TransactionsProps) => {
   return (
     <TransactionsWrap>
       <SelectWrap>
-        <Title>Transactions</Title>
-        <DropDown options={[{ label: 'Last 24h', value: '1' }]} />
+        <Title>Latest Transactions</Title>
+        {/*<DropDown options={[{ label: 'Last 24h', value: '1' }]} />*/}
       </SelectWrap>
       <Wrapper>
         <Grid>
