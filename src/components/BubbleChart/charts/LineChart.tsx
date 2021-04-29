@@ -1,13 +1,13 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { LiquidityVolumeList } from '../../../graphql/types'
+import { TVLHistoryData } from '../../../graphql/types'
 import React from 'react'
 import getPercentageValues from './../../../utils/getPercentageValues'
 import styled from 'styled-components'
-import useWindowDimensions from './../../../hooks/useWindowDimensions'
+import { dateFormatted } from '../../../utils/getFormattedMonth'
 
 type LineChartProps = {
-  data: LiquidityVolumeList
+  data: TVLHistoryData[] | any
   onSelectedValue(value?: number, perc?: number): void
   lineChartWidth: number
 }
@@ -18,7 +18,7 @@ const Box = styled.div`
 `
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
-  const series = data?.zeroDayDatas?.map(a => Number(a.totalLiquidityUSD))
+  const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd))
   const options: Highcharts.Options = {
     title: {
       text: '',
@@ -76,7 +76,7 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
       enabled: false,
     },
     xAxis: {
-      categories: data.zeroDayDatas.map(a => new Date(a.date * 1000).getDate().toString()),
+      categories: dateFormatted(data),
       lineColor: 'transparent',
       minorGridLineColor: 'transparent',
       tickColor: 'transparent',
