@@ -5,6 +5,7 @@ import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { ClickableText, MaxButton, Wrapper } from '../Legacy_Pool/styleds'
+import { LightCard, StandardCard } from '../../components/Card'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -21,7 +22,6 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { Field } from '../../state/burn/actions'
-import { LightCard } from '../../components/Card'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import { RouteComponentProps } from 'react-router'
 import Slider from '../../components/Slider'
@@ -508,10 +508,20 @@ export default function RemoveLiquidity({
     liquidityPercentChangeCallback
   )
 
+  const handleGoBack = () => {
+    history.goBack();
+  }
+
   return (
     <>
-      <AppBody>
-        <AddRemoveTabs creating={false} adding={false} />
+      <StandardCard style={{
+        paddingTop: '1rem',
+        paddingBottom: '2rem',
+        width: '100%',
+        maxWidth: '600px',
+        marginTop: '3rem'
+      }}>
+        <AddRemoveTabs creating={false} adding={false} onGoBack={handleGoBack} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -734,7 +744,7 @@ export default function RemoveLiquidity({
             </div>
           </AutoColumn>
         </Wrapper>
-      </AppBody>
+      </StandardCard>
 
       {pair ? (
         <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}>

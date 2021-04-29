@@ -63,7 +63,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     error = 'Connect Wallet'
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? 'Enter amount'
   }
 
   return (

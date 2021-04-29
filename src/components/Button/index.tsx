@@ -55,8 +55,35 @@ export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : '#6752F7')};
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : darken(3, theme.primary1))};
     color: ${({ theme }) => theme.text1};
+    cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '.7')};
+  }
+`
+
+export const ButtonSuccess = styled(Base)<{ isPointer?: boolean }>`
+  background-color: #1EF7E7;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
+  color: rgba(0,0,0,.6);
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, '#1EF7E7')};
+    background-color: ${({ theme }) => darken(0.05, '#1EF7E7')};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, '#1EF7E7')};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#1EF7E7')};
+    background-color: ${({ theme }) => darken(0.1, '#1EF7E7')};
+  }
+  &:disabled {
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? '#1EF7E7' : '#1EF7E7')};
+    color: rgba(0,0,0,.5);
     cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
     border: 1px solid transparent;
@@ -181,7 +208,15 @@ export const ButtonOutlined = styled(Base)`
   border: 1px solid #6752f7;
   box-sizing: border-box;
   backdrop-filter: blur(4.79167px);
-
+  text-decoration: none !important;
+  &.green {
+    background: rgba(30, 247, 231, .18);
+    border: 1px solid #1EF7E7;
+  }
+  &.white {
+    background: rgba(255,255,255,.05);
+    border: 1px solid white;
+  }
   color: ${({ theme }) => theme.text1};
 
   &:focus {

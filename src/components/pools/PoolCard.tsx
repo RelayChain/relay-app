@@ -269,11 +269,11 @@ export default function PoolCard({
         <DetailsBox>
           {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) ?
           <>
-          <TYPE.main fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem'}}>
+          <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem'}}>
             Earned:
-          </TYPE.main>
+          </TYPE.white>
           <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'flex-start' }}>
-            <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsize' }}>
+            <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
               <CountUp
                 key={countUpAmount}
                 isCounting
@@ -299,9 +299,9 @@ export default function PoolCard({
           </ManageButton>
           </> :
           <div style={{ display: 'flex', flexGrow: 1, height: '100%', justifyContent: 'flex-start', flexDirection: 'column' }}>
-            <TYPE.main fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+            <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
               Start Farming:
-            </TYPE.main>
+            </TYPE.white>
             <StyledInternalLink style={{ textDecoration: 'none', width: '100%', marginTop: 'auto' }}
               to={{
                 pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,

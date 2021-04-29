@@ -10,9 +10,9 @@ import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown-white-select.svg'
-import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
+import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 import { TYPE } from '../../theme'
 import { darken } from 'polished'
 import { returnBalanceNum } from '../../constants'
@@ -250,6 +250,7 @@ interface CurrencyInputPanelProps {
   disableCurrencySelect?: boolean
   disableBlockchainSelect?: boolean
   hideBalance?: boolean
+  hideCurrencySelect?: boolean
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
@@ -277,6 +278,7 @@ export default function CurrencyInputPanel({
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
+  hideCurrencySelect = false,
   otherCurrency,
   id,
   showCommonBases,
@@ -350,44 +352,46 @@ export default function CurrencyInputPanel({
                 )}
               </>
             )}
-            <CurrencySelect
-              style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
-              selected={!!altCurrency}
-              className="open-currency-select-button"
-              onClick={() => {
-                if (!disableCurrencySelect) {
-                  setModalOpen(true)
-                }
-              }}
-            >
-              <TokenNameAligner>
-                {pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
-                ) : altCurrency ? (
-                  <CurrencyLogo currency={altCurrency} size={'32px'} />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName
-                    className="token-symbol-container"
-                    active={Boolean(altCurrency && altCurrency.symbol)}
-                  >
-                    {isCrossChain && label === 'To'
-                      ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
-                      : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                          ? altCurrency.symbol.slice(0, 4) +
-                            '...' +
-                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                          : altCurrency?.symbol) || <StyledTokenNameDeafult>{t('selectToken')}</StyledTokenNameDeafult>}
-                  </StyledTokenName>
-                )}
-                {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
-                {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}
-              </TokenNameAligner>
-            </CurrencySelect>
+            { !hideCurrencySelect &&
+              <CurrencySelect
+                style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
+                selected={!!altCurrency}
+                className="open-currency-select-button"
+                onClick={() => {
+                  if (!disableCurrencySelect) {
+                    setModalOpen(true)
+                  }
+                }}
+              >
+                <TokenNameAligner>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
+                  ) : altCurrency ? (
+                    <CurrencyLogo currency={altCurrency} size={'32px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName
+                      className="token-symbol-container"
+                      active={Boolean(altCurrency && altCurrency.symbol)}
+                    >
+                      {isCrossChain && label === 'To'
+                        ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
+                        : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
+                            ? altCurrency.symbol.slice(0, 4) +
+                              '...' +
+                              altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                            : altCurrency?.symbol) || <StyledTokenNameDeafult>{t('selectToken')}</StyledTokenNameDeafult>}
+                    </StyledTokenName>
+                  )}
+                  {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
+                  {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}
+                </TokenNameAligner>
+              </CurrencySelect>
+            }
           </InputRow>
         </Container>
         {!disableCurrencySelect && onCurrencySelect && (

@@ -386,9 +386,7 @@ export default function AddLiquidity({
   const isCreate = history.location.pathname.includes('/create')
 
   const handleGoBack = () => {
-    const x = isCreate ? '/create' : '/add';
-    const newUrl = history.location.pathname.replace(x, '/manage');
-    history.push(newUrl);
+    history.goBack();
   }
 
   return (

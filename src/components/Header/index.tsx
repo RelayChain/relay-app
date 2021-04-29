@@ -151,9 +151,11 @@ const NotConnectedWrap = styled.div`
   align-items: center;
   justify-self: flex-end;
   justify-content: space-between;
-  pointer-events: none;
   min-width: 0px;
   height: 0px;
+  &.no-point {
+    pointer-events: none;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: relative;
     top: -10px;
@@ -275,9 +277,13 @@ const Header = () => {
             </AccountElement>
           </HeaderElement>
         </HeaderControls>
+      ) : account && !userEthBalance ? (
+        <NotConnectedWrap className="no-point">
+          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
+          <Web3Status />
+        </NotConnectedWrap>
       ) : (
         <NotConnectedWrap>
-          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
           <Web3Status />
         </NotConnectedWrap>
       )}

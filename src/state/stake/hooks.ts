@@ -410,7 +410,7 @@ export function useDerivedStakeInfo(
     error = 'Connect Wallet'
   }
   if (!parsedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? 'Enter amount'
   }
 
   return {
@@ -438,7 +438,7 @@ export function useDerivedUnstakeInfo(
     error = 'Connect Wallet'
   }
   if (!parsedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? 'Enter amount'
   }
 
   return {

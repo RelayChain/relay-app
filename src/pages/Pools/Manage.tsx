@@ -1,8 +1,9 @@
 import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
+import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { RowBetween, RowCenter } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
@@ -18,7 +19,6 @@ import FullPositionCard from '../../components/PositionCard'
 import { Link } from 'react-router-dom'
 import PageContainer from './../../components/PageContainer'
 import { RouteComponentProps } from 'react-router-dom'
-import { RowBetween } from '../../components/Row'
 import StakingModal from '../../components/pools/StakingModal'
 import UnstakingModal from '../../components/pools/UnstakingModal'
 import { currencyId } from '../../utils/currencyId'
@@ -44,6 +44,40 @@ const PageWrapper = styled.div`
   padding:0px;
 `};
 `
+const Columns = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+  `};
+`
+const SingleColumn = styled.div`
+  display: flex;
+  flex-grow: 1;
+  max-width: 50%;
+  min-width: 50%;
+  width: 50%;
+  &.left {
+    margin-right: 1rem;
+  }
+  &.right {
+    margin-left: 1rem;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    &.left {
+      margin-right: auto;
+      margin-left: auto;
+      width: 100%;
+    }
+    &.right {
+      margin-right: auto;
+      margin-left: auto;
+      width: 100%;
+    }
+  `};
+`
 const Title = styled.h1`
   width: 100%;
   padding: 0px 64px;
@@ -61,7 +95,7 @@ const Wrapper = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 44px;
   margin-bottom: 1rem;
-  padding: 30px 0;
+  padding: 2rem 2.5rem;
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -80,9 +114,13 @@ const StatsWrapper = styled.div`
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .add-liquidity-link {
-    width: 160px;
+    width: 188px;
     margin-left: auto;
     text-decoration: none;
+  }
+  .remove-liquidity-link {
+    text-decoration: none;
+    margin-left: 2rem;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   flex-direction: column;
@@ -92,6 +130,12 @@ const StatsWrapper = styled.div`
     margin-right: auto;
     width: 100%;
     max-width: 500px;
+  }
+  .remove-liquidity-link {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    width: 100%;
   }
 `};
 `
@@ -167,21 +211,6 @@ const StyledBox = styled.div`
   }
 `
 
-const GreenButton = styled.div`
-  padding: .75rem 1.25rem;
-  display: block;
-  text-align: center;
-  color: #fff !important;
-  background: ${({ theme }) => theme.green1};
-  border-radius: 12px;
-  cursor: pointer;
-  &:hover {
-    color: #fff !important;
-    background: ${({ theme }) => theme.green1};
-    opacity: .8;
-  }
-`
-
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #6752F7 100%);
   z-index: 2;
@@ -241,6 +270,20 @@ const SymbolTitleInner = styled.div`
   flex-grow: 0;
   display: flex;
   font-size: 1.5rem;
+`
+
+const TextLink = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+  color: #6752F7;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+  &.pink {
+    color: #B368FC
+  }
+  &:hover {
+    opacity: .9;
+  }
 `
 
 export default function Manage({
@@ -377,13 +420,33 @@ export default function Manage({
   const symbol = WETH?.symbol
   return (
     <>
+    {stakingInfo && (
+      <>
+        <StakingModal
+          isOpen={showStakingModal}
+          onDismiss={() => setShowStakingModal(false)}
+          stakingInfo={stakingInfo}
+          userLiquidityUnstaked={userLiquidityUnstaked}
+        />
+        <UnstakingModal
+          isOpen={showUnstakingModal}
+          onDismiss={() => setShowUnstakingModal(false)}
+          stakingInfo={stakingInfo}
+        />
+        <ClaimRewardModal
+          isOpen={showClaimRewardModal}
+          onDismiss={() => setShowClaimRewardModal(false)}
+          stakingInfo={stakingInfo}
+        />
+      </>
+    )}
     <Title>Manage</Title>
     <PageContainer>
       {account !== null && <>
         <SymbolTitleWrapper>
           <SymbolTitleInner>
               {currencyA?.symbol}/{currencyB?.symbol}
-              <span style={{ marginLeft: '5px'}}>Liquidity Mining</span>
+              <span style={{ marginLeft: '10px', marginRight: '10px' }}>Liquidity Mining</span>
             <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
           </SymbolTitleInner>
         </SymbolTitleWrapper>
@@ -398,7 +461,7 @@ export default function Manage({
             </StatValue>
           </Stat>
           <Stat className="harvest">
-            <StatLabel>Pool Rate:</StatLabel>
+            <StatLabel>Reward Rate:</StatLabel>
             <StatValue>
               {stakingInfo?.active
                 ? stakingInfo?.totalRewardRate
@@ -413,9 +476,93 @@ export default function Manage({
           >
             <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
           </StyledInternalLink>
+          {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
+            <StyledInternalLink className="remove-liquidity-link"
+              to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+            >
+              <TextLink>Remove Liquidity</TextLink>
+            </StyledInternalLink>
+          )}
         </StatsWrapper> </>
       }
       <PageWrapper>
+        <Columns>
+          <SingleColumn className="left">
+            <Wrapper>
+              <StatLabel style={{ color: '#A7B1F4' }}>Rewards Earned:</StatLabel>
+              <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
+                <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                  <CountUp
+                    key={countUpAmount}
+                    isCounting
+                    decimalPlaces={4}
+                    start={parseFloat(countUpAmountPrevious)}
+                    end={parseFloat(countUpAmount)}
+                    thousandsSeparator={','}
+                    duration={1}
+                  />
+                </TYPE.white>
+                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
+                  <ButtonPrimary onClick={() => setShowClaimRewardModal(true)} style={{ width: '160px'}}>
+                    Harvest
+                  </ButtonPrimary>
+                )}
+              </RowBetween>
+              <StatLabel style={{ color: '#A7B1F4'}}>Earning Rate:</StatLabel>
+              <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
+                <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                  {stakingInfo?.active
+                    ? stakingInfo?.rewardRate
+                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                    : '0'}
+                  <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{' ZERO / week'}</span>
+                </TYPE.white>
+              </RowBetween>
+              <StatLabel style={{ color: '#A7B1F4' }}>Current Liquidity Deposits:</StatLabel>
+              <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
+                <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                  {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
+                  <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO {currencyA?.symbol}-{currencyB?.symbol}</span>
+                </TYPE.white>
+              </RowBetween>
+              {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
+                <RowCenter>
+                  <TextLink onClick={() => setShowUnstakingModal(true)}>Withdraw From Pool</TextLink>
+                </RowCenter>
+              )}
+            </Wrapper>
+          </SingleColumn>
+          { (stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
+            (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) &&
+          <SingleColumn className="right">
+            <Wrapper>
+              {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (<>
+                <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
+                <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
+                  <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                    {userLiquidityUnstaked?.toSignificant(6)}
+                    <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
+                  </TYPE.white>
+                  <ButtonOutlined className="remove-liquidity-button green" onClick={handleDepositClick} style={{ width: '160px'}}>
+                    {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
+                  </ButtonOutlined>
+                </RowBetween>
+              </>)}
+              {stakingPairs.map(
+                (stakingPair, i) =>
+                  stakingPair[1] &&
+                  showMe(stakingPair[1]) && (
+                    <FullPositionCard
+                      key={stakingInfosWithBalance[i].stakingRewardAddress}
+                      pair={stakingPair[1]}
+                      stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                    />
+                  )
+              )}
+            </Wrapper>
+          </SingleColumn>}
+        </Columns>
       </PageWrapper>
     </PageContainer>
   </>

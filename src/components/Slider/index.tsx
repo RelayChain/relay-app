@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+
 import styled from 'styled-components'
 
 const StyledRangeInput = styled.input<{ size: number }>`
@@ -19,7 +20,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: #6752F7;
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
@@ -35,7 +36,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
   &::-moz-range-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: #6752F7;
     border-radius: 100%;
     border: none;
     color: ${({ theme }) => theme.bg1};
@@ -50,7 +51,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
   &::-ms-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: #6752F7;
     border-radius: 100%;
     color: ${({ theme }) => theme.bg1};
 
@@ -62,12 +63,12 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.zeroPurple});
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.zeroPurple});
     height: 2px;
   }
 

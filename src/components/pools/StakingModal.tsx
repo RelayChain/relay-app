@@ -1,17 +1,18 @@
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ButtonConfirmed, ButtonError } from '../Button'
+import { ChainId, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { CloseIcon, TYPE } from '../../theme'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { ChainId, Pair, TokenAmount } from '@zeroexchange/sdk'
 import React, { useCallback, useState } from 'react'
+import { RowBetween, RowCenter } from '../Row'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
 
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import Modal from '../Modal'
 import ProgressCircles from '../ProgressSteps'
-import { RowBetween } from '../Row'
 import { TransactionResponse } from '@ethersproject/providers'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { splitSignature } from 'ethers/lib/utils'
@@ -200,9 +201,12 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Deposit</TYPE.mediumHeader>
+            <DoubleCurrencyLogo currency0={dummyPair.token0} currency1={dummyPair.token1} size={32} />
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
+          <RowCenter>
+            <TYPE.mediumHeader>Deposit {dummyPair?.token0.symbol} - {dummyPair?.token1.symbol}</TYPE.mediumHeader>
+          </RowCenter>
           <CurrencyInputPanel
             value={typedValue}
             onUserInput={onUserInput}
@@ -212,7 +216,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             pair={dummyPair}
             label={''}
             disableCurrencySelect={true}
-            customBalanceText={'Available to deposit: '}
+            hideCurrencySelect={true}
+            customBalanceText={'Available LP: '}
             id="stake-liquidity-token"
           />
 
