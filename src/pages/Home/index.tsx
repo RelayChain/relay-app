@@ -1,19 +1,20 @@
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import React, { useEffect, useState } from 'react'
-import { getTVLData, getWalletHolderCount, getTVLHistory } from 'api'
+import { getTVLData, getTVLHistory, getWalletHolderCount } from 'api'
 
 import Bubble from './../../components/Bubble'
 import BubbleChart from './../../components/BubbleChart'
 import Circle from '../../assets/images/blue-loader.svg'
 import { CustomLightSpinner } from '../../theme'
 import PageContainer from './../../components/PageContainer'
+import { TVLHistoryData } from './../../graphql/types'
 import Transactions from './../../components/Transactions'
+import getPercentageValues from '../../utils/getPercentageValues'
 import styled from 'styled-components'
 import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
-import { TVLHistoryData } from './../../graphql/types'
 
 const Title = styled.h1`
   width: 100%;
@@ -147,7 +148,7 @@ export default function Home() {
       setTotalValue(res?.TVL_total_usd)
     }
   }
-  
+
   const getHistoryTVL = async () => {
     const res = await getTVLHistory()
     if (!res.hasError) {
@@ -169,6 +170,12 @@ export default function Home() {
   const onClickNextPage = () => {
     setPagination(pagination + 1)
   }
+
+  const series = tvlData?.map((item:TVLHistoryData) => Number(item.TVL_total_usd))
+  const lastDataPoint = series[series.length - 1];
+  const index = (series.length - 2) || 0;
+  const perc = getPercentageValues(lastDataPoint, series[index]);
+
   return (
     <>
       <Title>Exchange</Title>
@@ -180,7 +187,7 @@ export default function Home() {
             </CenterWrap>
           ) : (
             <>
-              <BubbleChart type="line" data={tvlData} title="Liquidity" value={3156943} percentage={-34.66} />
+              <BubbleChart type="line" data={tvlData} title="Liquidity" value={lastDataPoint} percentage={perc} />
               <BubbleMarginWrap>
                 {loadingTV || loadingWC ? (
                   <CenterWrap>

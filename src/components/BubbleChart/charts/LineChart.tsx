@@ -1,10 +1,10 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { TVLHistoryData } from '../../../graphql/types'
 import React from 'react'
+import { TVLHistoryData } from '../../../graphql/types'
+import { dateFormatted } from '../../../utils/getFormattedMonth'
 import getPercentageValues from './../../../utils/getPercentageValues'
 import styled from 'styled-components'
-import { dateFormatted } from '../../../utils/getFormattedMonth'
 
 type LineChartProps = {
   data: TVLHistoryData[] | any
@@ -18,7 +18,9 @@ const Box = styled.div`
 `
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
+
   const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd))
+
   const options: Highcharts.Options = {
     title: {
       text: '',
