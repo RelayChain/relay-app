@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
+import React, { useEffect, useState } from 'react'
+import { getTVLData, getWalletHolderCount } from 'api'
 
 import Bubble from './../../components/Bubble'
 import BubbleChart from './../../components/BubbleChart'
@@ -11,8 +13,6 @@ import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
-import { getTVLData, getWalletHolderCount } from 'api'
-import { ButtonLight, ButtonPrimary } from 'components/Button'
 
 const Title = styled.h1`
   width: 100%;
@@ -43,7 +43,8 @@ const BubbleMarginWrap = styled.div`
   gap: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
  width: 100%;
-  justify-content: space-between;
+ justify-content: space-between;
+ align-items: center;
 `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
  width: 100%;
@@ -162,31 +163,6 @@ export default function Home() {
     <>
       <Title>Exchange</Title>
       <PageContainer>
-        <WalletsWrap isColumn={isColumn}>
-          <BubbleMarginWrap>
-            {loadingTV || loadingWC ? (
-              <CenterWrap>
-                <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
-              </CenterWrap>
-            ) : (
-              <>
-                <Bubble variant="pink" color="#A7B1F4" title="Wallet Holders" showMountains={true}>
-                  {new Intl.NumberFormat().format(walletHolderCount)}
-                </Bubble>
-                <Bubble
-                  variant="purple"
-                  color="#A7B1F4"
-                  prefix="$"
-                  suffix={fnum(totalValue)?.suffix}
-                  title="Total Value Locked"
-                  showMountains={true}
-                >
-                  {fnum(totalValue)?.value?.toFixed(3)}
-                </Bubble>
-              </>
-            )}
-          </BubbleMarginWrap>
-        </WalletsWrap>
         <Flex isColumn={isColumn}>
           {zeroData.loading ? (
             <CenterWrap>
@@ -195,7 +171,29 @@ export default function Home() {
           ) : (
             <>
               <BubbleChart type="line" data={zeroData.data} title="Liquidity" value={3156943} percentage={-34.66} />
-              <BubbleChart type="bar" data={zeroData.data} title="Volume(24h)" value={4078912} percentage={3.66} />
+              <BubbleMarginWrap>
+                {loadingTV || loadingWC ? (
+                  <CenterWrap>
+                    <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+                  </CenterWrap>
+                ) : (
+                  <>
+                    <Bubble variant="pink" color="#A7B1F4" title="Wallet Holders" showMountains={true}>
+                      {new Intl.NumberFormat().format(walletHolderCount)}
+                    </Bubble>
+                    <Bubble
+                      variant="purple"
+                      color="#A7B1F4"
+                      prefix="$"
+                      suffix={fnum(totalValue)?.suffix}
+                      title="Total Value Locked"
+                      showMountains={true}
+                    >
+                      {fnum(totalValue)?.value?.toFixed(3)}
+                    </Bubble>
+                  </>
+                )}
+              </BubbleMarginWrap>
             </>
           )}
         </Flex>

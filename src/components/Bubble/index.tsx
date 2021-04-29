@@ -9,6 +9,9 @@ const BubbleWrap = styled.div`
   flex: 1;
   height: auto;
   width: 272px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 100%;
 `};
@@ -16,6 +19,9 @@ const BubbleWrap = styled.div`
 const BubbleInnerWrap = styled.div`
   position: relative;
   padding: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   padding: 25px;
   text-align: center;
