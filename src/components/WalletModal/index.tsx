@@ -16,7 +16,6 @@ import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
-import ChainSwitcherContent from './ChainSwitcherContent'
 import Option from './Option'
 import PendingView from './PendingView'
 
@@ -34,13 +33,6 @@ const CloseColor = styled(Close)`
   path {
     stroke: ${({ theme }) => theme.text4};
   }
-`
-
-const Wrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  margin: 0;
-  padding: 0;
-  width: 100%;
 `
 
 const HeaderRow = styled.div`

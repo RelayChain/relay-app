@@ -7,6 +7,9 @@ import BNBLogo from '../../assets/images/binance-coin-logo.webp'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
+import SushiLogo from '../../assets/images/sushi-logo.png'
+import UNILogo from '../../assets/images/uni-logo.png'
+
 // import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
@@ -52,7 +55,7 @@ export default function CurrencyLogo({
   size = '24px',
   style
 }: {
-  currency?: Currency|any
+  currency?: Currency | any
   size?: string
   style?: React.CSSProperties
 }) {
@@ -159,10 +162,14 @@ export default function CurrencyLogo({
   if (currency?.symbol === 'zDAI') {
     return <StyledEthereumLogo src={ZDAILogo} size={size} style={style} />
   }
-
   if (currency && currency.symbol === 'ZERO') {
     return <StyledEthereumLogo src={ZeroLogo} size={size} style={style} />
   }
-
+  if (currency?.symbol === 'zSUSHI') {
+    return <StyledEthereumLogo src={SushiLogo} size={size} style={style} />
+  }
+  if (currency?.symbol === 'zUNI') {
+    return <StyledEthereumLogo src={UNILogo} size={size} style={style} />
+  }
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
 }

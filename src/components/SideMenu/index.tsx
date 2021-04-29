@@ -131,25 +131,25 @@ export default function SideMenu() {
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="home" active={pathname == '/home'} />
+              <Icon icon="home" active={pathname === '/home'} />
             </IconLink>
             {t('Home')}
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="swap" active={pathname == '/swap'} />
+              <Icon icon="swap" active={pathname === '/swap'} />
             </IconLink>
             {t('Swap')}
           </StyledNavLink>
           <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="bridges" active={pathname == '/transfer'} />
+              <Icon icon="bridges" active={pathname === '/transfer'} />
             </IconLink>
             {t('Transfer')}
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="earn" active={pathname == '/pools'} />
+              <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
             {t('Pools')}
           </StyledNavLink>

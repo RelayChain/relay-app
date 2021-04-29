@@ -137,7 +137,7 @@ export default function Toggle({ isActive, toggle, isStaked, setShowStaked }: To
   return (
     <Row>
       <StyledStacked onClick={() => onHandleChange(setShowStaked, 'isStaked', isStaked)}>
-        <input type="checkbox" checked={isStaked} />
+        <input type="checkbox" checked={isStaked} readOnly />
         <label>Staked only</label>
       </StyledStacked>
       <StyledToggle isActive={isActive} onClick={() => onHandleChange(toggle, 'isActive', isActive)}>
