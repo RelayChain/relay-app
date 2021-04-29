@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import BarChart from './charts/BarChart'
 import BubbleBase from './../BubbleBase'
 import LineChart from './charts/LineChart'
-import { LiquidityVolumeList } from './../../graphql/types'
+import { TVLHistoryData } from './../../graphql/types'
 import Percentage from './../Percantage'
 import styled from 'styled-components'
 import toCurrency from './../../utils/toCurrency'
@@ -21,7 +21,7 @@ export type BubbleChartProps = {
   date?: DateBoxType
   flipMonthWeek?: boolean
   type: 'line' | 'bar'
-  data: LiquidityVolumeList
+  data: TVLHistoryData[]
 }
 
 const BubbleChartWrap = styled.div`

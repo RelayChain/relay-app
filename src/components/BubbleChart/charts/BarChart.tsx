@@ -6,7 +6,7 @@ import getPercentageValues from '../../../utils/getPercentageValues'
 import styled from 'styled-components'
 
 type BarChartProps = {
-  data: LiquidityVolumeList
+  data: any
   onSelectedValue(value?: number, perc?: number): void
   lineChartWidth: number
 }
@@ -19,7 +19,7 @@ const Box = styled.div`
 `
 
 const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {
-  const series = data?.zeroDayDatas?.map(a => Number(a.dailyVolumeUSD))
+  const series = data?.zeroDayDatas?.map((a:any) => Number(a.dailyVolumeUSD))
 
   const options: Highcharts.Options = {
     title: {
@@ -65,7 +65,7 @@ const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {
       enabled: false
     },
     xAxis: {
-      categories: data.zeroDayDatas.map(a => new Date(a.date * 1000).getDate().toString()),
+      categories: data.zeroDayDatas.map((a:any) => new Date(a.date * 1000).getDate().toString()),
       lineColor: 'transparent',
       minorGridLineColor: 'transparent',
       tickColor: 'transparent',

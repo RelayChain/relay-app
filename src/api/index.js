@@ -26,3 +26,7 @@ export async function getSinglePoolAPY(address) {
 export async function getWalletHolderCount() {
   return get(`${ZERO_API_URL}/walletholders/getCount`)
 }
+
+export async function getTVLHistory() {
+  return get(`${ZERO_API_URL}/TVL/GetHistory`)
+}
