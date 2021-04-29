@@ -472,13 +472,19 @@ export default function Manage({
             </StatValue>
           </Stat>
           <StyledInternalLink className="add-liquidity-link"
-            to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+            to={{
+              pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+              state: { stakingRewardAddress }
+            }}
           >
             <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
           </StyledInternalLink>
           {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
             <StyledInternalLink className="remove-liquidity-link"
-              to={`/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+              to={{
+                pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                state: { stakingRewardAddress }
+              }}
             >
               <TextLink>Remove Liquidity</TextLink>
             </StyledInternalLink>
