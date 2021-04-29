@@ -65,6 +65,14 @@ const BodyWrapper = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 30px;
   padding: 3rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding: 2rem;
+  margin-bottom: 5rem;
+  margin-top: 2rem;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+padding: 1rem;
+`};
 `
 
 export default function AddLiquidity({
@@ -471,7 +479,7 @@ export default function AddLiquidity({
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
                     </TYPE.subHeader>
-                  </RowBetween>{' '}
+                  </RowBetween>
                   <LightCard padding="1rem" borderRadius={'20px'} style={{ borderWidth: 0 }}>
                     <PoolPriceBar
                       currencies={currencies}
@@ -539,7 +547,9 @@ export default function AddLiquidity({
         </Wrapper>
       </BodyWrapper>
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}>
+        <AutoColumn
+          style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}
+        >
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

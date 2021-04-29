@@ -1,10 +1,9 @@
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
-import { AutoRow, RowBetween } from '../../components/Row'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { CHAIN_LABELS, ETH_RPCS, SUPPORTED_CHAINS } from '../../constants'
-import Card, { GreyCard } from '../../components/Card'
-import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
+import { BottomGrouping } from '../../components/swap/styleds'
+import { RowBetween } from '../../components/Row'
+import { ButtonLight, ButtonPrimary } from '../../components/Button'
+import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
+import { GreyCard } from '../../components/Card'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -13,12 +12,11 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import Column, { AutoColumn } from '../../components/Column'
-import { Field, selectCurrency } from '../../state/swap/actions'
+import { AutoColumn } from '../../components/Column'
+import { Field } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -26,43 +24,25 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-
-import AddressInputPanel from '../../components/AddressInputPanel'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
-import { ArrowDown } from 'react-feather'
 import BlockchainSelector from '../../components/BlockchainSelector'
 import BubbleBase from '../../components/BubbleBase'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
-import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
-import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import SwapsTabs from '../../components/SwapsTabs'
-import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import TradePrice from '../../components/swap/TradePrice'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { getTradeVersion } from '../../data/V1'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
-import useENSAddress from '../../hooks/useENSAddress'
-import { useSwapCallback } from '../../hooks/useSwapCallback'
 
 const ChainBridgePending = styled.div`
   display: flex;

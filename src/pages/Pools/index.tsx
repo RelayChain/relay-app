@@ -1,26 +1,23 @@
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
-import React, { useEffect, useState } from 'react'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import styled, { keyframes } from 'styled-components'
+import React, { useEffect, useState } from 'react'
+import { getAllPoolsAPY } from 'api'
 
-import Bubble from './../../components/Bubble'
+import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
+import { StyledInternalLink, TYPE } from '../../theme'
+import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
-import { RowBetween } from '../../components/Row'
 import WalletMissing from '../../assets/svg/wallet_missing.svg'
-import { Zap } from 'react-feather'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
-import { getAllPoolsAPY } from 'api'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
-const numeral = require('numeral');
+const numeral = require('numeral')
 
 const PageWrapper = styled.div`
   flex-direction: column;
@@ -72,6 +69,9 @@ const PoolsTable = styled.table`
 `
 
 const HeaderCell = styled.th<{ mobile?: boolean }>`
+  :last-child {
+    width: 45px;
+  }
   ${({ theme, mobile = true }) =>
     !mobile &&
     theme.mediaWidth.upToMedium`
@@ -133,7 +133,7 @@ const StatsWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 2rem;
-  background: rgba(0,0,0,.25);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .add-liquidity-link {
@@ -173,7 +173,7 @@ const StatLabel = styled.h5`
   color: #fff;
   font-size: 1rem;
   span {
-    opacity: .75;
+    opacity: 0.75;
     font-weight: normal;
   }
 `
@@ -185,44 +185,50 @@ const StatValue = styled.h6`
   margin-top: 10px;
   margin-bottom: 0;
   span {
-    opacity: .75;
+    opacity: 0.75;
     font-weight: normal;
     font-size: 1.25rem;
   }
 `
 
 export type APYObjectProps = {
-  APY: number,
-  name: String,
-  chain: String,
+  APY: number
+  name: String
+  chain: String
   contract_addr: String
 }
 
 export default function Pools() {
-   //@ts-ignore
-  const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'));
+  //@ts-ignore
+  const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'))
   const { width } = useWindowDimensions()
   const isColumn = width < 1500
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState(localStorage.getItem('PoolControls') ? serializePoolControls?.displayMode : 'table')
+  const [displayMode, setDisplayMode] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls?.displayMode : 'table'
+  )
   const [searchText, setSearchText] = useState('')
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 
   // filters & sorting
-  const [showFinished, setShowFinished] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false);
-  const [showStaked, setShowStaked] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false);
+  const [showFinished, setShowFinished] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false
+  )
+  const [showStaked, setShowStaked] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
+  )
 
   let arrayToShow: any[] = []
 
   // live or finished pools?
   if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
-    arrayToShow = stakingInfos.map(x => x.active ? x : { ...x, isHidden: true });
+    arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
   } else if (showFinished && finishedPools && finishedPools.length > 0) {
-    arrayToShow = stakingInfos.map(x => !x.active ? x : { ...x, isHidden: true });
+    arrayToShow = stakingInfos.map(x => (!x.active ? x : { ...x, isHidden: true }))
   }
 
   // do search logic, filtering, and sorting logic here on arrayToShow
@@ -239,7 +245,7 @@ export default function Pools() {
 
   const searchItems = (items: any[], term: string) => {
     if (term.length == 0 || term === '' || term.trim().length === 0) {
-      return items;
+      return items
     }
     return items.map(item => {
       const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId)
@@ -265,16 +271,16 @@ export default function Pools() {
   const [statsDisplay, setStatsDisplay] = useState<any>({})
 
   const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract }: any) => {
-    setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings });
-    setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest });
+    setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings })
+    setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest })
     if (parseFloat(liquidityValue) !== 0) {
-      setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue });
+      setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue })
     }
   }
-   //  APR
-   if (apyData && apyData.length) {
+  //  APR
+  if (apyData && apyData.length) {
     arrayToShow.forEach((arrItem, index) => {
-       //@ts-ignore
+      //@ts-ignore
       apyData.forEach((dataItem: APYObjectProps) => {
         if (dataItem?.contract_addr === arrItem.stakingRewardAddress) {
           arrayToShow[index]['APR'] = dataItem.APY
@@ -290,22 +296,28 @@ export default function Pools() {
     }
   }
 
-
   useEffect(() => {
     getAllAPY()
-    let earnings: any = 0;
-    let harvest: any = 0;
-    Object.keys(weeklyEarnings).forEach((key) => {
-      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''));
-    });
-    Object.keys(readyForHarvest).forEach((key) => {
-      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''));
-    });
-    setStatsDisplay({ earnings, harvest });
+    let earnings: any = 0
+    let harvest: any = 0
+    Object.keys(weeklyEarnings).forEach(key => {
+      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
+    })
+    Object.keys(readyForHarvest).forEach(key => {
+      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
+    })
+    setStatsDisplay({ earnings, harvest })
     if (serializePoolControls && serializePoolControls?.sortedMode) {
       handleSelectSort(serializePoolControls?.sortedMode)
     }
-  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.sortedMode, serializePoolControls?.displayMode, serializePoolControls?.isActive, serializePoolControls?.isStaked])
+  }, [
+    weeklyEarnings,
+    readyForHarvest,
+    serializePoolControls?.sortedMode,
+    serializePoolControls?.displayMode,
+    serializePoolControls?.isActive,
+    serializePoolControls?.isStaked
+  ])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
@@ -317,48 +329,52 @@ export default function Pools() {
 
   // filter array by staked
   if (showStaked) {
-    arrayToShow = arrayToShow.map((item) => {
-      if (readyForHarvest[item.stakingRewardAddress] !== undefined && parseFloat(readyForHarvest[item.stakingRewardAddress]) !== 0) {
-        return item;
+    arrayToShow = arrayToShow.map(item => {
+      if (
+        readyForHarvest[item.stakingRewardAddress] !== undefined &&
+        parseFloat(readyForHarvest[item.stakingRewardAddress]) !== 0
+      ) {
+        return item
       } else {
-        return { ...item, isHidden: true };
+        return { ...item, isHidden: true }
       }
-    });
+    })
   }
 
   // search items
   let visibleItems: any = searchItems(arrayToShow, searchText)
 
   // lastly, if there is a sort, sort
-  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null)
   const handleSelectSort = (val: string) => {
-    setSelectedSort(val);
+    setSelectedSort(val)
   }
 
   const sortItems = (str: string) => {
-    switch(str) {
+    switch (str) {
       case 'earned':
         return visibleItems.sort((a: any, b: any) => {
-          const aVal = parseFloat(readyForHarvest[a.stakingRewardAddress]) || 0;
-          const bVal = parseFloat(readyForHarvest[b.stakingRewardAddress]) || 0;
-          return bVal - aVal;
-        });
+          const aVal = parseFloat(readyForHarvest[a.stakingRewardAddress]) || 0
+          const bVal = parseFloat(readyForHarvest[b.stakingRewardAddress]) || 0
+          return bVal - aVal
+        })
       case 'liquidity':
         return visibleItems.sort((a: any, b: any) => {
-          const aVal = parseFloat(totalLiquidity[a.stakingRewardAddress]) || 0;
-          const bVal = parseFloat(totalLiquidity[b.stakingRewardAddress]) || 0;
-          return bVal - aVal;
-        });
+          const aVal = parseFloat(totalLiquidity[a.stakingRewardAddress]) || 0
+          const bVal = parseFloat(totalLiquidity[b.stakingRewardAddress]) || 0
+          return bVal - aVal
+        })
       case 'apr':
         return visibleItems.sort((a: any, b: any) => {
           return b.APR - a.APR
-        });
-      default: return visibleItems;
+        })
+      default:
+        return visibleItems
     }
   }
 
   if (selectedSort) {
-    visibleItems = sortItems(selectedSort);
+    visibleItems = sortItems(selectedSort)
   }
 
   return (
@@ -367,32 +383,40 @@ export default function Pools() {
         <>
           <ClaimRewardModal
             isOpen={showClaimRewardModal}
-            onDismiss={() => { setShowClaimRewardModal(false); setClaimRewardStaking(null); }}
+            onDismiss={() => {
+              setShowClaimRewardModal(false)
+              setClaimRewardStaking(null)
+            }}
             stakingInfo={claimRewardStaking}
           />
         </>
       )}
       <Title>Pools</Title>
       <PageContainer>
-        {account !== null &&
+        {account !== null && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
-              <StatValue>{numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span></StatValue>
+              <StatValue>
+                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span>
+              </StatValue>
             </Stat>
             <Stat className="harvest">
               <StatLabel>Ready To Harvest:</StatLabel>
-              <StatValue>{numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span></StatValue>
+              <StatValue>
+                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span>
+              </StatValue>
             </Stat>
-            <StyledInternalLink className="add-liquidity-link"
+            <StyledInternalLink
+              className="add-liquidity-link"
               to={{
-                pathname: `/add`,
+                pathname: `/add`
               }}
             >
               <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
             </StyledInternalLink>
           </StatsWrapper>
-        }
+        )}
         <PageWrapper>
           {account !== null && (
             <PoolControls
@@ -408,13 +432,14 @@ export default function Pools() {
             />
           )}
           {account !== null &&
-            stakingInfos?.length > 0 && visibleItems?.length > 0 &&
+            stakingInfos?.length > 0 &&
+            visibleItems?.length > 0 &&
             (displayMode === 'table' ? (
               <Wrapper>
                 <PoolsTable style={{ width: '100%' }}>
                   <thead>
                     <tr style={{ verticalAlign: 'top', height: '30px' }}>
-                      <HeaderCell style={{ width: '45px'}}></HeaderCell>
+                      <HeaderCell></HeaderCell>
                       <HeaderCell>
                         <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
                           Type
@@ -440,7 +465,7 @@ export default function Pools() {
                           Earned
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell style={{ width: '45px'}}></HeaderCell>
+                      <HeaderCell></HeaderCell>
                     </tr>
                   </thead>
                   <tbody>
@@ -448,16 +473,18 @@ export default function Pools() {
                       if (!stakingInfo) {
                         return <></>
                       }
-                      return <PoolRow
-                                onHarvest={() => handleHarvest(stakingInfo)}
-                                harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                                earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                                liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                                key={stakingInfo.stakingRewardAddress}
-                                stakingInfoTop={stakingInfo}
-                                stakingInfoAPR={stakingInfo.APR}
-                                sendDataUp={onSendDataUp}
-                              />
+                      return (
+                        <PoolRow
+                          onHarvest={() => handleHarvest(stakingInfo)}
+                          harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                          earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                          liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
+                          key={stakingInfo.stakingRewardAddress}
+                          stakingInfoTop={stakingInfo}
+                          stakingInfoAPR={stakingInfo.APR}
+                          sendDataUp={onSendDataUp}
+                        />
+                      )
                     })}
                   </tbody>
                 </PoolsTable>
@@ -468,16 +495,18 @@ export default function Pools() {
                   if (!stakingInfo) {
                     return <></>
                   }
-                  return <PoolCard
-                          onHarvest={() => handleHarvest(stakingInfo)}
-                          harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                          earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                          liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                          key={stakingInfo.stakingRewardAddress}
-                          stakingInfoTop={stakingInfo}
-                          stakingInfoAPR={stakingInfo.APR}
-                          sendDataUp={onSendDataUp}
-                         />
+                  return (
+                    <PoolCard
+                      onHarvest={() => handleHarvest(stakingInfo)}
+                      harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                      earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                      liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
+                      key={stakingInfo.stakingRewardAddress}
+                      stakingInfoTop={stakingInfo}
+                      stakingInfoAPR={stakingInfo.APR}
+                      sendDataUp={onSendDataUp}
+                    />
+                  )
                 })}
               </GridContainer>
             ))}
