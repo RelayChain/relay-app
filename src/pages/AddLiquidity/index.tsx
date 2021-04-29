@@ -386,7 +386,15 @@ export default function AddLiquidity({
   const isCreate = history.location.pathname.includes('/create')
 
   const handleGoBack = () => {
-    history.goBack();
+    if (stakingRewardAddress) {
+      history.replace({
+        pathname: `/manage/${curA}/${curB}`,
+        state: { stakingRewardAddress }
+      })
+    }
+    else {
+      history.goBack()
+    }
   }
 
   return (

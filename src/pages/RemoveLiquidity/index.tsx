@@ -59,6 +59,9 @@ export default function RemoveLiquidity({
     chainId
   ])
 
+  const locationState: any = history?.location?.state
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -509,7 +512,15 @@ export default function RemoveLiquidity({
   )
 
   const handleGoBack = () => {
-    history.goBack();
+    if (stakingRewardAddress) {
+      history.replace({
+        pathname: `/manage/${currencyIdA}/${currencyIdB}`,
+        state: { stakingRewardAddress }
+      })
+    }
+    else {
+      history.goBack()
+    }
   }
 
   return (
