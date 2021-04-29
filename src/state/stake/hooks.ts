@@ -151,18 +151,18 @@ export const STAKING_REWARDS_INFO: {
     }
   ],
   [ChainId.SMART_CHAIN]: [
-    // {
-    //   tokens: [WBNB, bscINDA],
-    //   stakingRewardAddress: '0x2624f69F15Fa828a21e8Ff6eE58F050840bb60D4'
-    // },
-    // {
-    //   tokens: [bscBUSD, bscINDA],
-    //   stakingRewardAddress: '0x337BDB3197e705c5E2b2630dC571d08608204001'
-    // },
-    // {
-    //   tokens: [bscZERO, bscINDA],
-    //   stakingRewardAddress: '0xef72591604218e31d3fe1978742324d963129953'
-    // },
+    {
+      tokens: [WBNB, bscINDA],
+      stakingRewardAddress: '0x2624f69F15Fa828a21e8Ff6eE58F050840bb60D4'
+    },
+    {
+      tokens: [bscBUSD, bscINDA],
+      stakingRewardAddress: '0x337BDB3197e705c5E2b2630dC571d08608204001'
+    },
+    {
+      tokens: [bscZERO, bscINDA],
+      stakingRewardAddress: '0xef72591604218e31d3fe1978742324d963129953'
+    },
     {
       tokens: [bscZERO, bscBUSD],
       stakingRewardAddress: '0x389a83ce9Da4bceeD934Bcb68c3A9Beb8A10135e'
