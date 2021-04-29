@@ -171,7 +171,8 @@ export default function Home() {
     setPagination(pagination + 1)
   }
 
-  const series = tvlData?.map((item:TVLHistoryData) => Number(item.TVL_total_usd))
+  // make sure to reverse
+  const series = tvlData?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
   const lastDataPoint = series[series.length - 1];
   const index = (series.length - 2) || 0;
   const perc = getPercentageValues(lastDataPoint, series[index]);

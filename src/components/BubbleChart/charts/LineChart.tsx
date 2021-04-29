@@ -19,7 +19,8 @@ const Box = styled.div`
 
 const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
 
-  const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd))
+  // reverse series
+  const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
 
   const options: Highcharts.Options = {
     title: {
