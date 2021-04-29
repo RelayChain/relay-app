@@ -7,7 +7,7 @@ import Select from '../../components/Select'
 import { TYPE } from '../../theme'
 import TogglePool from '../../components/TooglePool'
 import styled from 'styled-components'
-import { arrayMove } from '../../utils/arrayMove'
+
 
 const Controls = styled.div`
   display: flex;
@@ -115,6 +115,8 @@ export interface PoolControlsProps {
   showStaked: boolean
   setShowStaked: () => void
   onSelectFilter: any
+  setFilteredMode: any
+  sortedData: any
 }
 
 function PoolControls({
@@ -126,27 +128,11 @@ function PoolControls({
   setShowFinished,
   showStaked,
   setShowStaked,
-  onSelectFilter
+  onSelectFilter,
+  setFilteredMode,
+  sortedData
 }: PoolControlsProps) {
   let serializePoolsControl = {}
-  const defaultOptions = [
-    {
-      label: 'Hot',
-      value: 'hot'
-    },
-    {
-      label: 'APR',
-      value: 'apr'
-    },
-    {
-      label: 'Earned',
-      value: 'earned'
-    },
-    {
-      label: 'Liquidity',
-      value: 'liquidity'
-    }
-  ]
   //@ts-ignore
   if (JSON.parse(localStorage.getItem('PoolControls'))) {
     //@ts-ignore
@@ -155,28 +141,9 @@ function PoolControls({
 
   const selectFilter = (e: any) => {
     onSelectFilter(e.value)
+    setFilteredMode(e.value)
   }
 
-  const setStartOptions = (str: string) => {
-    switch (str) {
-      case 'liquidity':
-        return arrayMove(defaultOptions, 3, 0)
-      case 'hot':
-        return defaultOptions
-      case 'apr':
-        return arrayMove(defaultOptions, 1, 0)
-      case 'earned':
-        return arrayMove(defaultOptions, 2, 0)
-      default:
-        return defaultOptions
-    }
-  }
-  let data: any;
-  //@ts-ignore
-  if (JSON.parse(localStorage.getItem('PoolControls'))) {
-    //@ts-ignore
-    data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).sortedMode)
-  }
   return (
     <Controls>
       <SearchGroup>
@@ -198,12 +165,13 @@ function PoolControls({
             </TYPE.main>
           </ControlLabel>
           <Select
-            options={data || defaultOptions}
+            options={sortedData}
             onChange={e => {
               selectFilter(e)
               const clone = { ...serializePoolsControl, sortedMode: e.value }
               localStorage.setItem('PoolControls', JSON.stringify(clone))
             }}
+            sortedData={sortedData}
           />
         </ControlGroup>
 
