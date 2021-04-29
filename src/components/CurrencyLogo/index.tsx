@@ -7,6 +7,8 @@ import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import INDALogo from '../../assets/images/crosschain/INDA.png'
+import GDLLogo from '../../assets/images/crosschain/GDL.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
 import USDTLogo from '../../assets/images/crosschain/wUSDT.png'
@@ -23,6 +25,7 @@ import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
 
 const getTokenLogoURL = (address: string) => {
+  // return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/avalanche-tokens/${address}/logo.png`
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
 
@@ -85,26 +88,20 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 
-  if (
-    currency?.symbol === 'AVAX' ||
-    currency?.symbol === 'WAVAX' ||
-    currency?.symbol === 'AWAX' ||
-    currency?.symbol === 'zAWAX' ||
-    currency?.symbol === 'wAVAX' ||
-    currency?.symbol === 'AVA' ||
-    currency?.symbol === 'zAVAX' ||
-    currency?.symbol === 'eAVAX'
-  ) {
+  if (['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
   }
 
-  if (
-    currency?.symbol === 'BNB' ||
-    currency?.symbol === 'WBNB' ||
-    currency?.symbol === 'wBNB' ||
-    currency?.symbol === 'eBNB'
-  ) {
+  if (['BNB', 'WBNB', 'wBNB', 'eBNB'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
+  }
+
+  if (['INDA'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={INDALogo} size={size} style={style} />
+  }
+
+  if (['GDL'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />
   }
 
   // cross chain
