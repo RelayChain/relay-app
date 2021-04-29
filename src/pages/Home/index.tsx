@@ -15,7 +15,6 @@ import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
-
 const Title = styled.h1`
   width: 100%;
   padding: 0px 64px;
