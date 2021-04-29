@@ -15,10 +15,10 @@ const DropDownHeader = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 44px;
 
-  svg{
+  svg {
     g {
-        fill: #727bba;
-      }
+      fill: #727bba;
+    }
   }
 `
 
@@ -88,6 +88,7 @@ const ListItem = styled.li`
 export interface SelectProps {
   options: OptionProps[]
   onChange?: (option: OptionProps) => void
+  sortedData?: any
 }
 
 export interface OptionProps {
@@ -95,7 +96,7 @@ export interface OptionProps {
   value: any
 }
 
-const Select: React.FunctionComponent<SelectProps> = ({ options, onChange }) => {
+const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, sortedData }) => {
   const containerRef = useRef(null)
   const dropdownRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -112,8 +113,10 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange }) => 
       onChange(option)
     }
   }
-
   useEffect(() => {
+    if (sortedData) {
+      setSelectedOption(sortedData[0])
+    }
     const container = dropdownRef.current
     if (container) {
       setContainerSize({
@@ -121,14 +124,14 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange }) => 
         height: container['offsetHeight']
       })
     }
-  }, [])
+  }, [sortedData])
 
   return (
     <DropDownContainer isOpen={isOpen} ref={containerRef} {...containerSize}>
       {containerSize.width !== 0 && (
         <DropDownHeader onClick={toggling}>
           <ListItem>
-          <TYPE.main fontWeight={600} fontSize={13}>
+            <TYPE.main fontWeight={600} fontSize={13}>
               {selectedOption.label}{' '}
             </TYPE.main>
             <DropdownArrow />
