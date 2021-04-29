@@ -89,7 +89,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       blockExplorer: 'https://cchain.explorer.avax-test.network',
       nativeTokenSymbol: 'AVAX',
-      defaultGasPrice: 470,
+      defaultGasPrice: 225,
       tokens: [
         {
           address: '0x3BaDD0399e9c1DFAd16dddb42D6759afE0e3e6f2',
@@ -327,7 +327,7 @@ export const crosschainConfig: ChainbridgeConfig = {
   //     type: "Ethereum",
   //     blockExplorer: "https://blockscout.com/etc/kotti/tx",
   //     nativeTokenSymbol: "AVAX",
-  //     defaultGasPrice: 470,
+  //     defaultGasPrice: 225,
   //     tokens: [
   //       {
   //         address: "0xbe113Dc920b8774c3f03195D6b3445F9B7884C2D",
