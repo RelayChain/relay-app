@@ -21,6 +21,8 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
 
   // reverse series
   const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
+  // reverse data
+  const reverseData = [...data].reverse()
 
   const options: Highcharts.Options = {
     title: {
@@ -34,8 +36,7 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
           events: {
             mouseOver: function () {
               const index = Number(this.index) - 1 > 0 ? Number(this.index) - 1 : 0
-              const value = this.y || 0
-
+              const value = this.y || 0   
               const perc = getPercentageValues(value, series[index])
               onSelectedValue(value, perc)
             },
@@ -79,7 +80,7 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
       enabled: false,
     },
     xAxis: {
-      categories: dateFormatted(data),
+      categories: dateFormatted(reverseData),
       lineColor: 'transparent',
       minorGridLineColor: 'transparent',
       tickColor: 'transparent',
