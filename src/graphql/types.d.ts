@@ -4,6 +4,11 @@ type ZeroDayData = {
   date: number
 }
 
+export type TVLHistoryData = {
+  TVL_total_usd: number
+  date: string
+}
+
 export type LiquidityVolumeList = {
   zeroDayDatas: ZeroDayData[]
 }
