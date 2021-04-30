@@ -48,6 +48,7 @@ import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
 import { useDarkModeManager } from '../state/user/hooks'
+import Lottery from './Lottery'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -135,6 +136,7 @@ export default function App() {
               <Switch>
                 <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/swap" component={Swap} />
+                <Route exact strict path="/lottery" component={Lottery} />
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
