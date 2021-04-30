@@ -2,7 +2,7 @@ import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, Token,
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { WrappedTokenInfo, useSelectedTokenList } from '../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
 import BigNumber from 'bignumber.js'
@@ -126,8 +126,6 @@ function CurrencyRow({
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
-  const selectedTokenList = useSelectedTokenList()
-  const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
 
   const balance = useCurrencyBalance(account ?? undefined, currency, chainId)

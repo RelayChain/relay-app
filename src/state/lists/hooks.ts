@@ -137,25 +137,6 @@ export function useTokenList(url: string[] | undefined): TokenAddressMap {
   }, [lists, url])
 }
 
-export function useSelectedListUrl(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
-}
-
-export function useSelectedTokenList(): TokenAddressMap {
-  return useTokenList(useSelectedListUrl())
-}
-
-export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
-  const selectedUrl = useSelectedListUrl()
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const list = selectedUrl ? listsByUrl[selectedUrl[0]] : undefined
-  return {
-    current: list?.current ?? null,
-    pending: list?.pendingUpdate ?? null,
-    loading: list?.loadingRequestId !== null
-  }
-}
-
 // returns all downloaded current lists
 export function useAllLists(): TokenList[] {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
@@ -169,9 +150,3 @@ export function useAllLists(): TokenList[] {
   )
 }
 
-// filter out unsupported lists
-export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)?.filter(
-    url => !UNSUPPORTED_LIST_URLS.includes(url)
-  )
-}
