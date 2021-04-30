@@ -113,11 +113,11 @@ export default function SideMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [open, setOpen] = useState<boolean>(false)
 
-  history.listen(location => setPathname(location.pathname))
+  history.listen((location) => setPathname(location.pathname))
   const toggleOpen = () => {
     setOpen(!open)
   }
-  const hanldeSidemenuOpen = () => width < 961 && setOpen(!open)
+  const handleSideMenuOpen = () => width < 961 && setOpen(!open)
 
   return (
     <>
@@ -129,25 +129,25 @@ export default function SideMenu() {
           <img width={'100%'} src={LogoDark} alt="logo" />
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={hanldeSidemenuOpen}>
+          <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="home" active={pathname === '/home'} />
             </IconLink>
             {t('Home')}
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="swap" active={pathname === '/swap'} />
             </IconLink>
             {t('Swap')}
           </StyledNavLink>
-          <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
+          <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="bridges" active={pathname === '/transfer'} />
             </IconLink>
             {t('Transfer')}
           </StyledNavLink>
-          <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
+          <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
@@ -159,6 +159,12 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
+          <StyledNavLink id={`lottery-nav-link`} to={'/lottery'} onClick={handleSideMenuOpen}>
+            <IconLink>
+              <Icon icon="lottery" active={pathname === '/lottery'} />
+            </IconLink>
+            {t('Lottery')}
+          </StyledNavLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink>
               <Icon icon="planet" />
