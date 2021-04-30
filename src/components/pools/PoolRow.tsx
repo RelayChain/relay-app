@@ -229,6 +229,7 @@ export default function PoolRow({
     valueOfTotalStakedAmountInWETH
   ])
 
+
   if (stakingInfoTop.isHidden) {
     return <></>
   }
@@ -254,7 +255,7 @@ export default function PoolRow({
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
-                '-'
+              '-'
               : '0'}
             {' ZERO / week'}
           </TYPE.main>
@@ -286,7 +287,7 @@ export default function PoolRow({
         </Cell>
         <Cell></Cell>
       </Wrapper>
-      {showDetails && (
+      { showDetails && (
         <tr>
           <td colSpan={8}>
             <Details>
