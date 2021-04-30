@@ -145,6 +145,9 @@ const TextBalance = styled.h3`
   white-space: nowrap;
   margin-bottom: 1rem;
   text-align: center;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  font-size: 24px;
+`};
 `
 const BalanceRow = styled.div<{ isColumn?: boolean }>`
   flex: 1;

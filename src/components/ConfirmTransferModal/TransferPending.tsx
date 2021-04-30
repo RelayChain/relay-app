@@ -33,7 +33,7 @@ export default function TransferPending({
         <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
       </ConfirmedIcon>
       <AutoColumn gap="12px" justify={'center'}>
-        <Text fontWeight={500} fontSize={20}>
+        <Text fontWeight={500} fontSize={20} textAlign="center">
           Waiting For Transfer
         </Text>
         <Text fontSize={14} color="#565A69" textAlign="center">

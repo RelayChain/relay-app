@@ -33,11 +33,8 @@ const ModalContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   h5 {
-    font-weight: bold;
-    margin-bottom: 1rem;
-    display: block;
+    margin: 1rem 0;
     text-align: center;
-    margin-top: 1rem;
     font-size: 1.25rem;
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     font-size: 1rem;
