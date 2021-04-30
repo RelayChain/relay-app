@@ -15,6 +15,9 @@ const BubbleWrap = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: 100%;
 `};
+${({ theme }) => theme.mediaWidth.upToSmall`
+  margin: 0.2rem 0.4rem;
+`};
 `
 const BubbleInnerWrap = styled.div`
   position: relative;

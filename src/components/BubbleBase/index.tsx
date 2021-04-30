@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { isIOS } from 'react-device-detect'
 
 export interface BubbleBaseProps {
   mode?: 'normal' | 'dark'
@@ -29,7 +30,7 @@ const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
           transform: mode !== 'normal' ? 'rotate(180deg)' : 'none'
         }}
       >
-        <g filter={`url(#${prefixGradient})`}>
+        <g filter={isIOS ? '' : `url(#${prefixGradient})`}>
           <rect
             width="100%"
             height="100%"

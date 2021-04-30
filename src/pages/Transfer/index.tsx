@@ -1,9 +1,5 @@
-import { BottomGrouping } from '../../components/swap/styleds'
-import { RowBetween } from '../../components/Row'
 import { ButtonLight, ButtonPrimary } from '../../components/Button'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
-import { GreyCard } from '../../components/Card'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -12,10 +8,8 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { AutoColumn } from '../../components/Column'
-import { Field } from '../../state/swap/actions'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import { TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import {
@@ -24,10 +18,12 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
+
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
+import { AutoColumn } from '../../components/Column'
 import BlockchainSelector from '../../components/BlockchainSelector'
+import { BottomGrouping } from '../../components/swap/styleds'
 import BubbleBase from '../../components/BubbleBase'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
@@ -36,13 +32,18 @@ import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
+import { Field } from '../../state/swap/actions'
+import { GreyCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
+import { RowBetween } from '../../components/Row'
+import { TYPE } from '../../theme'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -440,6 +441,9 @@ export default function Transfer() {
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
+              <RowBetweenTransfer style={{ marginBottom: '1rem', marginTop: '-1.5rem' }}>
+                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
+              </RowBetweenTransfer>
               <RowBetweenTransfer>
                 <TextBottom>
                   {transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
