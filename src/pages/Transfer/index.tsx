@@ -121,6 +121,7 @@ const RowBetweenTransfer = styled(RowBetween)`
 `};
 `
 const BottomGroupingTransfer = styled(BottomGrouping)`
+  margin-top: 0;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
 `};
@@ -132,7 +133,7 @@ const SpanAmount = styled.span`
 `
 const TransferButton = styled(GreyCard)`
   text-align: center;
-  min-width: 230px;
+  min-width: 180px;
   border-radius: 100px;
   height: 58px;
   padding-top: 0;
@@ -462,12 +463,12 @@ export default function Transfer() {
                   currentToken &&
                   currencies[Field.INPUT] ? (
                     <>
-                      <ButtonPrimary onClick={showConfirmTransferModal}>
+                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px'}}>
                         <TYPE.white>Transfer</TYPE.white>
                       </ButtonPrimary>
                     </>
                   ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px'}}>Connect Wallet</ButtonLight>
                   ) : (
                     <TransferButton>
                       <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
