@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
+  height: 40px;
   padding: 6px 6px;
   background-color: ${({ theme }) => theme.blue1};
   color: white;

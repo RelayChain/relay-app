@@ -122,9 +122,8 @@ export default function App() {
           <SideMenu />
           <div className="snow-bg"></div>
           <div className="bg-darken"></div>
-          <URLWarning />
-
           <BodyWrapper>
+            <URLWarning />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
