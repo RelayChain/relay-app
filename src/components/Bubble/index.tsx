@@ -22,12 +22,15 @@ const BubbleInnerWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  padding: 25px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 45px 60px;
   text-align: center;
 `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding: 25px;
+`};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-padding: 25px 10px;
+  padding: 25px 10px;
 `};
 `
 const Title = styled.div<{ color: string }>`
@@ -42,7 +45,7 @@ const Flex = styled.div`
   display: flex;
   align-items: center;
   margin-top: 30px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
   justify-content:center;
 `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`

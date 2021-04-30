@@ -112,7 +112,7 @@ const opacity = keyframes`
 // Here we create a component that will rotate everything we pass in over two seconds
 const Spinner = styled.img`
   width: 100px;
-  height: autp;
+  height: auto;
   display: inline-block;
   animation: ${rotate} 2s linear infinite, ${opacity} 1.5s linear infinite;
 
@@ -217,11 +217,15 @@ export type APYObjectProps = {
   contract_addr: String
 }
 
+export type SortedTitleProps = {
+  title: String
+  sortedMode: String
+}
+
 export default function Pools() {
   //@ts-ignore
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'))
   const { width } = useWindowDimensions()
-  const isColumn = width < 1500
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -441,6 +445,23 @@ export default function Pools() {
     data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).sortedMode)
   }
 
+  const onSortedChange = (sortedMode: string) => {
+    setFilteredMode(sortedMode)
+    const clone = { ...serializePoolControls, sortedMode: sortedMode }
+    localStorage.setItem('PoolControls', JSON.stringify(clone))
+  }
+
+  const SortedTitle = ({ title, sortedMode }: SortedTitleProps) => (
+    <HeaderCellSpan>
+      {title}
+      {filteredMode === sortedMode && (
+        <DropDownWrap>
+          <DropdownArrow />
+        </DropDownWrap>
+      )}
+    </HeaderCellSpan>
+  )
+
   return (
     <>
       {claimRewardStaking && (
@@ -520,60 +541,33 @@ export default function Pools() {
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => {
-                          setFilteredMode('apr')
-                          const clone = { ...serializePoolControls, sortedMode: 'apr' }
-                          localStorage.setItem('PoolControls', JSON.stringify(clone))
+                          onSortedChange('apr')
                         }}
                       >
                         <TYPE.main fontWeight={600} fontSize={12}>
-                          <HeaderCellSpan>
-                            APR
-                            {filteredMode === 'apr' && (
-                              <DropDownWrap>
-                                <DropdownArrow />
-                              </DropDownWrap>
-                            )}
-                          </HeaderCellSpan>
+                          <SortedTitle title="APR" sortedMode="apr" />
                         </TYPE.main>
                       </HeaderCell>
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => {
-                          setFilteredMode('liquidity')
-                          const clone = { ...serializePoolControls, sortedMode: 'liquidity' }
-                          localStorage.setItem('PoolControls', JSON.stringify(clone))
+                          onSortedChange('liquidity')
                         }}
                       >
                         <TYPE.main fontWeight={600} fontSize={12}>
-                          <HeaderCellSpan>
-                            Liquidity
-                            {filteredMode === 'liquidity' && (
-                              <DropDownWrap>
-                                <DropdownArrow />
-                              </DropDownWrap>
-                            )}
-                          </HeaderCellSpan>
+                          <SortedTitle title="Liquidity" sortedMode="liquidity" />
                         </TYPE.main>
                       </HeaderCell>
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => {
-                          setFilteredMode('earned')
-                          const clone = { ...serializePoolControls, sortedMode: 'earned' }
-                          localStorage.setItem('PoolControls', JSON.stringify(clone))
+                          onSortedChange('earned')
                         }}
                       >
                         <TYPE.main fontWeight={600} fontSize={12}>
-                          <HeaderCellSpan>
-                            Earned
-                            {filteredMode === 'earned' && (
-                              <DropDownWrap>
-                                <DropdownArrow />
-                              </DropDownWrap>
-                            )}
-                          </HeaderCellSpan>
+                          <SortedTitle title="Earned" sortedMode="earned" />
                         </TYPE.main>
                       </HeaderCell>
                       <HeaderCell style={{ width: '45px' }}></HeaderCell>

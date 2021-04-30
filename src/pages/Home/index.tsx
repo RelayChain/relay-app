@@ -48,7 +48,6 @@ const BubbleMarginWrap = styled.div`
  align-items: center;
 `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
- width: 100%;
  gap: 0.1rem;
 `};
 `
@@ -73,8 +72,7 @@ const CenterWrap = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 `
 const FlexButtons = styled.div`
   display: flex;
@@ -131,7 +129,7 @@ export default function Home() {
       skip: pagination * 12
     }
   })
-
+ 
   const getWalletHoldersData = async () => {
     const res = await getWalletHolderCount()
     setLoadingWC(false)
