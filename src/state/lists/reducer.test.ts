@@ -315,7 +315,7 @@ describe('list reducer', () => {
             pendingUpdate: PATCHED_STUB_LIST
           }
         },
-        selectedListUrl: 'fake-url'
+        selectedListUrl: ['fake-url']
       })
       store.dispatch(removeList('fake-url'))
       expect(store.getState()).toEqual({

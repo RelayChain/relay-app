@@ -12,6 +12,14 @@ const Section = styled(AutoColumn)`
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 10px 0 40px 0;
 `
+const TextWaiting = styled.div`
+  font-weight: 500;
+  font-size: 20px
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 17px;
+    text-align: center;
+    `}
+`
 
 export default function ApprovalPending () {
   return (
@@ -20,9 +28,9 @@ export default function ApprovalPending () {
         <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
       </ConfirmedIcon>
       <AutoColumn gap="12px" justify={'center'}>
-        <Text fontWeight={500} fontSize={20}>
+        <TextWaiting>
           Waiting For Transfer Approval
-        </Text>
+        </TextWaiting>
         <Text fontSize={14} color="#565A69" textAlign="center">
           Approve this transaction in your wallet
         </Text>

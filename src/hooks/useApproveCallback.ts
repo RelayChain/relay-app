@@ -1,5 +1,11 @@
-import { AVAX, BNB, ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../constants'
+import { AVAX, BNB, MATIC, DEV, ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
+import {
+  AVAX_ROUTER_ADDRESS,
+  ETH_ROUTER_ADDRESS,
+  SMART_CHAIN_ROUTER_ADDRESS,
+  MOONBASE_ROUTER_ADDRESS,
+  MUMBAI_ROUTER_ADDRESS
+} from '../constants'
 // import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -38,6 +44,8 @@ export function useApproveCallback(
     if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
     if (amountToApprove.currency === AVAX) return ApprovalState.APPROVED
     if (amountToApprove.currency === BNB) return ApprovalState.APPROVED
+    if (amountToApprove.currency === DEV) return ApprovalState.APPROVED
+    if (amountToApprove.currency === MATIC) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -121,6 +129,10 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 }

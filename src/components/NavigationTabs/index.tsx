@@ -1,4 +1,4 @@
-import { Link as HistoryLink, NavLink } from 'react-router-dom'
+import { Link as HistoryLink, NavLink, useHistory } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import QuestionHelper from '../QuestionHelper'
@@ -80,13 +80,18 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+export function AddRemoveTabs({ adding, creating, onGoBack }: { adding: boolean; creating: boolean, onGoBack?: any }) {
+
+  const goBack = () => {
+    onGoBack();
+  }
+
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/earn">
-          <StyledArrowLeft />
-        </HistoryLink>
+
+        <StyledArrowLeft onClick={goBack} style={{ cursor: 'pointer' }} />
+
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <QuestionHelper
           text={

@@ -1,19 +1,26 @@
-import { AVAX, BNB, ChainId, Currency, ETHER, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS, WBNB } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import {
+  AVAX_ROUTER_ADDRESS,
+  ETH_ROUTER_ADDRESS,
+  MOONBASE_ROUTER_ADDRESS,
+  MUMBAI_ROUTER_ADDRESS,
+  SMART_CHAIN_ROUTER_ADDRESS,
+  WBNB
+} from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { BlueCard, LightCard } from '../../components/Card'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots, Wrapper } from '../Legacy_Pool/styleds'
 import React, { useCallback, useContext, useState } from 'react'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import styled, { ThemeContext } from 'styled-components'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -26,7 +33,6 @@ import { PoolPriceBar } from './PoolPriceBar'
 import { RouteComponentProps } from 'react-router-dom'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { TransactionResponse } from '@ethersproject/providers'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -37,6 +43,37 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+
+const Title = styled.h1`
+  width: 100%;
+  padding: 0px 64px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 0;
+  text-align: center;
+  font-size: 49px;
+  margin-top: 40px;
+  margin-bottom: 0px;
+`};
+`
+const BodyWrapper = styled.div`
+  position: relative;
+  max-width: 675px;
+  margin-top: 4rem;
+  width: 100%;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
+  border-radius: 30px;
+  padding: 3rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding: 2rem;
+  margin-bottom: 5rem;
+  margin-top: 2rem;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+padding: 1rem;
+`};
+`
 
 export default function AddLiquidity({
   match: {
@@ -54,13 +91,16 @@ export default function AddLiquidity({
   const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   // hack for BNB / ZERO pool, flip them for staking
-  let curA = currencyIdA;
-  let curB = currencyIdB;
-  if (chainId && chainId === ChainId.SMART_CHAIN &&
-      currencyIdA === 'BNB' &&
-      currencyIdB === '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf') {
-        curA = currencyIdB;
-        curB = currencyIdA;
+  let curA = currencyIdA
+  let curB = currencyIdB
+  if (
+    chainId &&
+    chainId === ChainId.SMART_CHAIN &&
+    currencyIdA === 'BNB' &&
+    currencyIdB === '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf'
+  ) {
+    curA = currencyIdB
+    curB = currencyIdA
   }
   const currencyA = useCurrency(curA)
   const currencyB = useCurrency(curB)
@@ -137,6 +177,10 @@ export default function AddLiquidity({
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
   const [approvalB, approveBCallback] = useApproveCallback(
@@ -145,6 +189,10 @@ export default function AddLiquidity({
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 
@@ -165,7 +213,8 @@ export default function AddLiquidity({
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
-    const ALL_ETHERS = [ETHER, BNB, AVAX];
+    // TODO: export this from SDK
+    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC];
 
     let estimate;
     let method: (...args: any) => Promise<TransactionResponse>;
@@ -334,10 +383,23 @@ export default function AddLiquidity({
 
   const isCreate = history.location.pathname.includes('/create')
 
+  const handleGoBack = () => {
+    if (stakingRewardAddress) {
+      history.replace({
+        pathname: `/manage/${curA}/${curB}`,
+        state: { stakingRewardAddress }
+      })
+    }
+    else {
+      history.goBack()
+    }
+  }
+
   return (
     <>
-      <AppBody>
-        <AddRemoveTabs creating={isCreate} adding={true} />
+      {/*<Title>Add Liquidity</Title>*/}
+      <BodyWrapper>
+        <AddRemoveTabs creating={isCreate} adding={true} onGoBack={handleGoBack} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -402,13 +464,13 @@ export default function AddLiquidity({
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" borderRadius={'20px'}>
+                <LightCard padding="0px" borderRadius={'20px'} style={{ borderWidth: 0 }}>
                   <RowBetween padding="1rem">
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
                     </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
+                  </RowBetween>
+                  <LightCard padding="1rem" borderRadius={'20px'} style={{ borderWidth: 0 }}>
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
@@ -473,10 +535,11 @@ export default function AddLiquidity({
             )}
           </AutoColumn>
         </Wrapper>
-      </AppBody>
-
+      </BodyWrapper>
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+        <AutoColumn
+          style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}
+        >
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

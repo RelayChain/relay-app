@@ -9,6 +9,7 @@ import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 import useToggle from '../../hooks/useToggle'
+import { useListColor } from 'hooks/useColor'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
@@ -23,6 +24,8 @@ import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import ListToggle from '../Toggle/ListToggle'
+import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
@@ -94,7 +97,8 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
-  const isSelected = listUrl === selectedListUrl
+  const isSelected = selectedListUrl?.includes(listUrl) || false
+  const listColor = useListColor(list?.logoURI)
 
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
@@ -112,7 +116,11 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   const selectThisList = useCallback(() => {
     if (isSelected) return
     dispatch(selectList(listUrl))
-    onBack()
+  }, [dispatch, isSelected, listUrl, onBack])
+
+  const removeThisList = useCallback(() => {
+    if (!isSelected) return
+    dispatch(removeList(listUrl))
   }, [dispatch, isSelected, listUrl, onBack])
 
   const handleAcceptListUpdate = useCallback(() => {
@@ -184,31 +192,13 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           </PopoverContainer>
         )}
       </StyledMenu>
-      {isSelected ? (
-        <ButtonPrimary
-          disabled={true}
-          className="select-button"
-          style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
-        >
-          Selected
-        </ButtonPrimary>
-      ) : (
-        <>
-          <ButtonPrimary
-            className="select-button"
-            style={{
-              width: '5rem',
-              minWidth: '4.5rem',
-              padding: '0.5rem .35rem',
-              borderRadius: '12px',
-              fontSize: '14px'
-            }}
-            onClick={selectThisList}
-          >
-            Select
-          </ButtonPrimary>
-        </>
-      )}
+      <ListToggle
+        isActive={isSelected}
+        bgColor={listColor}
+        toggle={() => {
+          isSelected ? removeThisList() : selectThisList()
+        }}
+      />
     </Row>
   )
 })
@@ -269,7 +259,8 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     const listUrls = Object.keys(lists)
     return listUrls
       .filter(listUrl => {
-        return Boolean(lists[listUrl].current)
+        // only show loaded lists, hide unsupported lists
+        return Boolean(lists[listUrl].current) && !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
       })
       .sort((u1, u2) => {
         const { current: l1 } = lists[u1]

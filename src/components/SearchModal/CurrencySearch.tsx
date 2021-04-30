@@ -3,15 +3,21 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Row, { RowBetween } from '../Row'
+import { removeList, selectList } from '../../state/lists/actions'
+import { useAllTokens, useToken } from '../../hooks/Tokens'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { AppDispatch } from '../../state'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { COINGECKO_LIST } from 'constants/lists'
 import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
+import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
+import ListLoader from '../ListLoader';
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
@@ -21,11 +27,11 @@ import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
-import { useUserAddedTokens } from '../../state/user/hooks'
 import { useSelectedListInfo } from '../../state/lists/hooks'
-import { useToken } from '../../hooks/Tokens'
+import { useSelectedListUrl } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
+import { useUserAddedTokens } from '../../state/user/hooks'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -57,10 +63,11 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
-
+  const userAddedTokens = useUserAddedTokens()
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+  const allTokens = useAllTokens()
 
   // cross chain
   const { availableTokens } = useCrosschainState()
@@ -94,6 +101,23 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
+  const selectedListUrl = useSelectedListUrl()
+  const dispatch = useDispatch<AppDispatch>()
+
+  const isCoingeckoSelected = selectedListUrl?.includes(COINGECKO_LIST) || false
+
+  const handleCoingeckoList = useCallback(() => {
+    if (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) {
+      !isCoingeckoSelected && dispatch(selectList(COINGECKO_LIST))
+    } else {
+      isCoingeckoSelected && dispatch(removeList(COINGECKO_LIST))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    handleCoingeckoList()
+  }, [selectedListUrl])
+
   // const showETH: boolean = useMemo(() => {
   //   const s = searchQuery.toLowerCase().trim()
   //   return s === '' || s === 'e' || s === 'et' || s === 'eth' || s.includes('ava')
@@ -105,11 +129,17 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(
-      chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY ? defaultTokenList : availableTokensArray,
-      searchQuery
-    )
-  }, [isAddressSearch, searchToken, searchQuery, defaultTokenList, chainId, availableTokensArray])
+
+    // the search list should only show by default tokens that are in our pools
+    return filterTokens([...availableTokensArray], searchQuery);
+
+    // return filterTokens(
+    //   chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
+    //     ? [...Object.values(allTokens)]
+    //     : [...availableTokensArray, ...Object.values(allTokens)],
+    //   searchQuery
+    // )
+  }, [isAddressSearch, searchToken, searchQuery, chainId, availableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
@@ -220,30 +250,19 @@ export function CurrencySearch({
             />
           )}
         </AutoSizer>
+        <ListLoader />
       </div>
 
       <Separator />
       <Card>
         <RowBetween>
-          {selectedListInfo.current ? (
-            <Row>
-              {selectedListInfo.current.logoURI ? (
-                <ListLogo
-                  style={{ marginRight: 12 }}
-                  logoURI={selectedListInfo.current.logoURI}
-                  alt={`${selectedListInfo.current.name} list logo`}
-                />
-              ) : null}
-              <TYPE.main id="currency-search-selected-list-name">{selectedListInfo.current.name}</TYPE.main>
-            </Row>
-          ) : null}
-          <LinkStyledButton
+          {/*<LinkStyledButton
             style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
             onClick={onChangeList}
             id="currency-search-change-list-button"
           >
-            {selectedListInfo.current ? 'Change' : 'Select a list'}
-          </LinkStyledButton>
+            Manage Lists
+          </LinkStyledButton>*/}
         </RowBetween>
       </Card>
     </Column>

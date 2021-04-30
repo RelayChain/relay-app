@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import React, { useEffect, useState } from 'react'
+import { useEagerConnect, useInactiveListener } from '../../hooks'
+
+import Loader from '../Loader'
+import { NetworkContextName } from '../../constants'
+import { network } from '../../connectors'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-
-import { network } from '../../connectors'
-import { useEagerConnect, useInactiveListener } from '../../hooks'
-import { NetworkContextName } from '../../constants'
-import Loader from '../Loader'
+import { useWeb3React } from '@web3-react/core'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
-        <Loader />
+        <Loader stroke="#6752F7" />
       </MessageWrapper>
     ) : null
   }

@@ -10,6 +10,7 @@ import { AutoColumn } from '../Column'
 import { ButtonError } from '../Button'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
+import SettingIcon from './SettingIcon'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import Toggle from '../Toggle'
@@ -46,7 +47,6 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -55,7 +55,6 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
   }
 
   svg {
@@ -80,29 +79,29 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  min-width: 21.125rem;
+  background: rgba(47,53,115,0.72);
+  backdrop-filter: blur(100px);
+  border-radius: 44px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
+  font-size: 2rem;
   position: absolute;
-  top: 4rem;
+  top: 45px;
   right: 0rem;
   z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -46px;
-  `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 18.125rem;
     top: auto;
-    bottom: 3.5rem;
+    top: 3.5rem;
   `};
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    min-width: 18.125rem;
+    right: -6px;
+`};
 `
 
 const Break = styled.div`
@@ -116,8 +115,7 @@ const ModalContentWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  border-radius: 44px;
 `
 
 export default function SettingsTab() {
@@ -178,7 +176,7 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+      <SettingIcon/>
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">

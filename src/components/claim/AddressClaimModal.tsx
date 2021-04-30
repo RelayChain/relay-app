@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled from 'styled-components'
-import { DataCard, CardSection, Break } from '../earn/styled'
+import { DataCard, CardSection, Break } from '../pools/styled'
 import { RowBetween } from '../Row'
 import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -15,7 +15,7 @@ import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
 import { isAddress } from 'ethers/lib/utils'
 import Confetti from '../Confetti'
-import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
+import { CardNoise, CardBGImage, CardBGImageSmaller } from '../pools/styled'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
 import { TokenAmount } from '@zeroexchange/sdk'
 import { getEtherscanLink, shortenAddress } from '../../utils'
@@ -182,7 +182,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ zIndex: 99 }}>
-                View transaction on Etherscan
+                View transaction on block explorer
               </ExternalLink>
             )}
           </AutoColumn>

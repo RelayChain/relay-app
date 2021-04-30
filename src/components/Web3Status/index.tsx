@@ -1,3 +1,5 @@
+import { CHAIN_LABELS, NetworkContextName } from '../../constants'
+import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
@@ -7,30 +9,28 @@ import styled, { css } from 'styled-components'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Activity } from 'react-feather'
+import { AppDispatch } from 'state'
 import { ButtonSecondary } from '../Button'
+import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import CrossChainModal from 'components/CrossChainModal'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-import { CHAIN_LABELS, NetworkContextName } from '../../constants'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import { RowBetween } from '../Row'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import WalletModal from '../WalletModal'
 import { shortenAddress } from '../../utils'
-import useENSName from '../../hooks/useENSName'
-import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useTranslation } from 'react-i18next'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import CrossChainModal from 'components/CrossChainModal'
 import { useActiveWeb3React } from 'hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
 import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
+import useENSName from '../../hooks/useENSName'
+import { useHasSocks } from '../../hooks/useSocksBalance'
 import usePrevious from '../../hooks/usePrevious'
-import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
+import { useTranslation } from 'react-i18next'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -70,41 +70,52 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-
+  transition: all .2s ease-in-out;
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: 1px solid ${({ theme }) => theme.primary1} !important;
+    filter: brightness(1.3) !important;
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
-
+      background: rgba(103, 82, 247, 0.18);
+      border: 1px solid #6752F7;
+      box-sizing: border-box;
+      backdrop-filter: blur(7px);
+      border-radius: 54px;
+      min-width: 189px;
+      height: 56px;
+      padding: 18px 39px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+        border-color: #fff;
+        color: #fff;
       }
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+const Web3StatusConnected = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 19px;
+  letter-spacing: 0.05em;
+  color: #a7b1f4;
+  opacity: 0.56;
   font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg2))};
+`
 
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg3))};
-    }
-  }
+const StatusIconWrap = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 30px;
 `
 
 const Text = styled.p`
@@ -112,7 +123,7 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
+  margin: 0;
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
@@ -124,7 +135,13 @@ const NetworkIcon = styled(Activity)`
   width: 16px;
   height: 16px;
 `
-
+const HeaderRowBetween = styled(RowBetween)`
+    align-items: center;
+`
+const LoaderWrap = styled.div`
+    display: flex;
+    margin-left: 10px;
+`
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -248,18 +265,25 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
         {hasPendingTransactions ? (
-          <RowBetween>
-            <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
-          </RowBetween>
+          <HeaderRowBetween>
+            <Text>{pending?.length} Pending</Text>
+            <LoaderWrap>
+            <Loader stroke="#6752F7" />
+            </LoaderWrap>
+          </HeaderRowBetween>
         ) : (
-            <>
-              {hasSocks ? SOCK : null}
-              <Text>{ENSName || shortenAddress(account)}</Text>
-            </>
-          )}
-        {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
+          <>
+            {hasSocks ? SOCK : null}
+            <Text>{ENSName || shortenAddress(account)}</Text>
+          </>
+        )}
+        {!hasPendingTransactions && connector && (
+          <StatusIconWrap>
+            <StatusIcon connector={connector} />
+          </StatusIconWrap>
+        )}
       </Web3StatusConnected>
     )
   }
@@ -268,12 +292,9 @@ function Web3StatusInner() {
   }
   else {
     return (
-      <>
-        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-          <Text>{t('Connect to a wallet')}</Text>
-        </Web3StatusConnect>
-        <ChainSwitcherContent />
-      </>
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+        <Text>{t('Connect Wallet')}</Text>
+      </Web3StatusConnect>
     )
   }
 }

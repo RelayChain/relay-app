@@ -255,3 +255,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     return Object.keys(keyed).map(key => keyed[key])
   }, [combinedList])
 }
+
+export function useTokenBalances(): string[] | undefined {
+  return useSelector<AppState, AppState['user']['tokenBalances']>(state => state.user.tokenBalances)
+}

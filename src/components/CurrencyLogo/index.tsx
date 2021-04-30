@@ -3,9 +3,14 @@ import React, { useMemo } from 'react'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BNBLogo from '../../assets/images/binance-coin-logo.webp'
+// import DEVLogo from '../../assets/images/DEV-logo'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
 import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
+import SushiLogo from '../../assets/images/sushi-logo.png'
+import UNILogo from '../../assets/images/uni-logo.png'
+
+// import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
 import GDLLogo from '../../assets/images/crosschain/GDL.png'
@@ -50,7 +55,7 @@ export default function CurrencyLogo({
   size = '24px',
   style
 }: {
-  currency?: Currency
+  currency?: Currency | any
   size?: string
   style?: React.CSSProperties
 }) {
@@ -94,6 +99,24 @@ export default function CurrencyLogo({
 
   if (['BNB', 'WBNB', 'wBNB', 'eBNB'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
+  }
+  // [ChainId.MUMBAI]: 'Mumbai'
+  if (
+    currency?.symbol === 'DEV' ||
+    currency?.symbol === 'WDEV' ||
+    currency?.symbol === 'wDEV' ||
+    currency?.symbol === 'eDEV'
+  ) {
+    return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
+  }
+
+  if (
+    currency?.symbol === 'MATIC' ||
+    currency?.symbol === 'WMATIC' ||
+    currency?.symbol === 'wMATIC' ||
+    currency?.symbol === 'eMATIC'
+  ) {
+    return <StyledEthereumLogo src="" alt="MATIC" size={size} style={style} />
   }
 
   if (['INDA'].includes(String(currency?.symbol))) {
@@ -139,10 +162,14 @@ export default function CurrencyLogo({
   if (currency?.symbol === 'zDAI') {
     return <StyledEthereumLogo src={ZDAILogo} size={size} style={style} />
   }
-
   if (currency && currency.symbol === 'ZERO') {
     return <StyledEthereumLogo src={ZeroLogo} size={size} style={style} />
   }
-
+  if (currency?.symbol === 'zSUSHI') {
+    return <StyledEthereumLogo src={SushiLogo} size={size} style={style} />
+  }
+  if (currency?.symbol === 'zUNI') {
+    return <StyledEthereumLogo src={UNILogo} size={size} style={style} />
+  }
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
 }

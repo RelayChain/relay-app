@@ -16,7 +16,6 @@ import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
-import ChainSwitcherContent from './ChainSwitcherContent'
 import Option from './Option'
 import PendingView from './PendingView'
 
@@ -36,13 +35,6 @@ const CloseColor = styled(Close)`
   }
 `
 
-const Wrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  margin: 0;
-  padding: 0;
-  width: 100%;
-`
-
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
@@ -54,7 +46,7 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: inherit;
   padding: 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -64,7 +56,7 @@ const ContentWrapper = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-
+  width: 100%;
   h5 {
     margin: 0;
     margin-bottom: 0.5rem;
@@ -107,6 +99,9 @@ const HoverText = styled.div`
   :hover {
     cursor: pointer;
   }
+`
+const ModalInnerWrap = styled.div`
+  width: 100%;
 `
 
 const WALLET_VIEWS = {
@@ -281,7 +276,7 @@ export default function WalletModal({
         )
       )
     })
-  }  
+  }
 
   function getModalContent() {
     if (error) {
@@ -303,13 +298,15 @@ export default function WalletModal({
     }
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
-        <AccountDetails
-          toggleWalletModal={toggleWalletModal}
-          pendingTransactions={pendingTransactions}
-          confirmedTransactions={confirmedTransactions}
-          ENSName={ENSName}
-          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
-        />
+        <ModalInnerWrap>
+          <AccountDetails
+            toggleWalletModal={toggleWalletModal}
+            pendingTransactions={pendingTransactions}
+            confirmedTransactions={confirmedTransactions}
+            ENSName={ENSName}
+            openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
+          />
+        </ModalInnerWrap>
       )
     }
     return (
@@ -357,7 +354,7 @@ export default function WalletModal({
 
   return (
     <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-      <ChainSwitcherContent />
+      {getModalContent()}
     </Modal>
   )
 }

@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
 
 import { AutoColumn } from '../Column'
-import { CardNoise } from '../earn/styled'
+import { CardNoise } from '../pools/styled'
 import CurrencyLogo from '../CurrencyLogo'
 import { Dots } from '../swap/styleds'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -35,10 +35,10 @@ export const HoverCard = styled(Card)`
 `
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
   position: relative;
   overflow: hidden;
+  padding: 0;
+  background: transparent;
 `
 
 interface PositionCardProps {
@@ -137,12 +137,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   '-'
                 )}
               </FixedHeightRow>
-              <StyledInternalLink
-                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-                style={{ width: '100%' }}
-              >
-                <ButtonPrimary style={{ marginTop: '1rem' }}>Remove Liquidity</ButtonPrimary>
-              </StyledInternalLink>
             </AutoColumn>
           </AutoColumn>
         </GreyCard>
@@ -167,7 +161,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const currency0 = unwrappedToken(pair.token0, chainId)
   const currency1 = unwrappedToken(pair.token1, chainId)
 
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState(true)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
@@ -224,7 +218,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
-      <CardNoise />
+      {/*<CardNoise />*/}
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px">
@@ -234,7 +228,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </Text>
           </AutoRow>
 
-          <RowFixed gap="8px">
+          {/*<RowFixed gap="8px">
             <ButtonEmpty padding="6px 8px" borderRadius="12px" width="170px" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <>
@@ -248,7 +242,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 </>
               )}
             </ButtonEmpty>
-          </RowFixed>
+          </RowFixed>*/}
         </FixedHeightRow>
 
         {showMore && (

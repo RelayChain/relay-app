@@ -1,6 +1,8 @@
 import {
   AVAX,
   BNB,
+  DEV,
+  MATIC,
   BigintIsh,
   Currency,
   CurrencyAmount,

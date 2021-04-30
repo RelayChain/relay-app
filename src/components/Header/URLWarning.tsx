@@ -14,6 +14,7 @@ const PhishAlert = styled.div<{ isActive: any }>`
   justify-content: space-between;
   align-items: center;
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+  height: 40px;
 `
 
 export const StyledClose = styled(X)`
@@ -26,7 +27,7 @@ export default function URLWarning() {
   const toggleURLWarning = useURLWarningToggle()
   const showURLWarning = useURLWarningVisible()
 
-  return isMobile ? (
+  return false ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is

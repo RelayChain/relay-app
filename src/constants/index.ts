@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -12,6 +12,10 @@ export const SMART_CHAIN_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
 export const ETH_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
   ? '0x70Ee974E2339E41D582593622c8a653842d9d52d'
   : '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+
+export const MOONBASE_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0xaD3eE6686B40655b34e0D150f99715c87A75DF37' : ''
+
+export const MUMBAI_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
@@ -147,7 +151,9 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.FUJI]: new Token(ChainId.FUJI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.SMART_CHAIN]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.SMART_CHAIN_TEST]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.SMART_CHAIN_TEST]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -171,7 +177,9 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.FUJI]: [WETH[ChainId.FUJI]],
   [ChainId.AVALANCHE]: [WETH[ChainId.AVALANCHE]],
   [ChainId.SMART_CHAIN]: [WETH[ChainId.SMART_CHAIN]],
-  [ChainId.SMART_CHAIN_TEST]: [WETH[ChainId.SMART_CHAIN_TEST]]
+  [ChainId.SMART_CHAIN_TEST]: [WETH[ChainId.SMART_CHAIN_TEST]],
+  [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
+  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
 
 // used to construct intermediary pairs for trading
@@ -206,7 +214,9 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.AVALANCHE]: [],
   [ChainId.SMART_CHAIN]: [],
   [ChainId.SMART_CHAIN_TEST]: [],
-  [ChainId.FUJI]: []
+  [ChainId.FUJI]: [],
+  [ChainId.MOONBASE_ALPHA]: [],
+  [ChainId.MUMBAI]: []
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -351,9 +361,22 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.FUJI]: 'Avalanche',
   [ChainId.AVALANCHE]: 'Avalanche',
   [ChainId.SMART_CHAIN]: 'Smart Chain',
-  [ChainId.SMART_CHAIN_TEST]: 'Smart Chain'
+  [ChainId.SMART_CHAIN_TEST]: 'Smart Chain',
+  [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
+  [ChainId.MUMBAI]: 'Mumbai'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
+
+export const NATIVE_CURRENCY = {
+  [ChainId.MAINNET]: ETHER,
+  [ChainId.RINKEBY]: ETHER,
+  [ChainId.FUJI]: AVAX,
+  [ChainId.AVALANCHE]: AVAX,
+  [ChainId.SMART_CHAIN]: BNB,
+  [ChainId.SMART_CHAIN_TEST]: BNB,
+  [ChainId.MOONBASE_ALPHA]: DEV,
+  [ChainId.MUMBAI]: MATIC
+}

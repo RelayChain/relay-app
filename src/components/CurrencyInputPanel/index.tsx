@@ -9,9 +9,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown-white-select.svg'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
+import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 import { TYPE } from '../../theme'
 import { darken } from 'polished'
 import { returnBalanceNum } from '../../constants'
@@ -23,17 +24,13 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
-`
-
-const BlockchainSelect = styled.button<{ selected: boolean }>`
-  align-items: center;
-  outline: none;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1};
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  padding: 0 0.5rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+`};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+padding: 0;
+margin-top: 25px;
+`};
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
@@ -41,23 +38,32 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   height: 2.2rem;
   font-size: 20px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
+  background: rgba(225, 248, 250, 0.12);
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
+  border-radius: 54px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
+  margin-left: 20px;
   user-select: none;
+  transition: all 0.2s ease-in-out;
   border: none;
   padding: 0 0.5rem;
-
+  width: 186px;
+  height: 40px;
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    background: rgba(225, 248, 250, 0.16);
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 100%;
+  margin-top: 15px;
+  margin-left: 0px;
+`};
 `
 
 const LabelRow = styled.div`
+  position: relative;
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   color: ${({ theme }) => theme.text1};
@@ -72,25 +78,63 @@ const LabelRow = styled.div`
 
 const Aligner = styled.span`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: relative;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  justify-content: flex-start;
+
+`};
+`
+const SectionLabel = styled.span`
+  display: flex;
+  color: #a7b1f4 !important;
+  font-weight: bold;
+  cursor: auto;
+  opacity: 0.56;
+  font-size: 13px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  text-align: center;
+`};
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
-  height: 35%;
-
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-    stroke-width: 1.5px;
+    stroke-width: 3.5px;
   }
+  position: absolute;
+  height: 100%;
+  right: 0;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display: none
+`};
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+  display: none;
+  margin: 0 0.25rem 0 0.5rem;
+  path {
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke-width: 3.5px;
+  }
+  position: absolute;
+  height: 100%;
+  right: 0;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  display: block;
+  position: static;
+`};
+`
+
+const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme }) => theme.bg2};
+  background: ${({ transferPage }) => (transferPage ? 'rgba(18, 21, 56, 0.24)' : 'rgba(18, 21, 56, 0.54)')};
+  box-shadow: ${({ transferPage }) =>
+    transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)'};
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
   z-index: 1;
 `
 
@@ -138,38 +182,58 @@ const CopyRow = styled.div`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
+  padding: 1rem 1.5rem;
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '16px')};
-
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  font-size: 15px;
+  line-height: 100%;
+`};
 `
-
+const StyledTokenNameDeafult = styled(StyledTokenName)`
+  font-size: 16px;
+  margin: 0 0.25rem 0 0.25rem;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin: 0;
+  font-size: 12px;
+`};
+`
+const TokenNameAligner = styled(Aligner)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  align-items: center;
+  justify-content: space-between;
+`};
+`
+const RowBetweenTransfer = styled(RowBetween)`
+${({ theme }) => theme.mediaWidth.upToExtraSmall`
+flex-direction: column;
+gap: 1rem;
+`};
+`
 const StyledBalanceMax = styled.button`
-  height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
+  height: 35px;
+  border: 2px solid #1ef7e7;
+  background: transparent;
+  border-radius: 100px;
   font-size: 0.875rem;
-
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primaryText1};
+  color: #1ef7e7;
+  transition: all 0.2s ease-in-out;
+  padding-left: 10px;
+  padding-right: 10px;
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    opacity: 0.9;
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin: 15px auto 0;
   `};
 `
 
@@ -186,6 +250,7 @@ interface CurrencyInputPanelProps {
   disableCurrencySelect?: boolean
   disableBlockchainSelect?: boolean
   hideBalance?: boolean
+  hideCurrencySelect?: boolean
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
@@ -195,6 +260,7 @@ interface CurrencyInputPanelProps {
   isCrossChain?: boolean
   crossChainBalance?: string
   currentTargetToken?: any
+  transferPage?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -212,15 +278,16 @@ export default function CurrencyInputPanel({
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
+  hideCurrencySelect = false,
   otherCurrency,
   id,
   showCommonBases,
   customBalanceText,
   isCrossChain,
+  transferPage,
   crossChainBalance,
   currentTargetToken
 }: CurrencyInputPanelProps) {
-
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -236,38 +303,19 @@ export default function CurrencyInputPanel({
   const hasABalance = !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
 
   // hack to fix AWAX
-  let altCurrency = currency;
+  let altCurrency = currency
   if (altCurrency?.symbol.includes('AWAX')) {
-    altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX');
+    altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX')
   }
 
   return (
     <>
-      <InputPanel id={id}>
+      <InputPanel id={id} transferPage={transferPage}>
         <Container hideInput={hideInput}>
           {!hideInput && (
-            <LabelRow>
-              <RowBetween>
-                <BlockchainSelect
-                  selected={!!blockchain}
-                  className="open-blockchain-select-button"
-                  onClick={() => {
-                    if (!disableBlockchainSelect) {
-                      setModal2Open(true)
-                    }
-                  }}
-                >
-                  <Aligner>
-                    {label}
-                    {/*pair ? (
-                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={14} margin={true} />
-                  ) : blockchain ? (
-                    <BlockchainLogo blockchain={blockchain} size={'14px'} />
-                  ) : null}
-                  {' '+blockchain}
-                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />*/}
-                  </Aligner>
-                </BlockchainSelect>
+            <LabelRow style={{ marginBottom: '1rem' }}>
+              <RowBetweenTransfer>
+                <SectionLabel>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
                     onClick={hasABalance ? onMax : () => {}}
@@ -281,10 +329,10 @@ export default function CurrencyInputPanel({
                         `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
                         })}`
-                      : '-'}
+                      : ''}
                   </TYPE.body>
                 )}
-              </RowBetween>
+              </RowBetweenTransfer>
             </LabelRow>
           )}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
@@ -293,6 +341,8 @@ export default function CurrencyInputPanel({
                 <NumericalInput
                   className="token-amount-input"
                   value={value}
+                  fontSize="32px"
+                  transferPage={!!transferPage}
                   onUserInput={val => {
                     onUserInput(val)
                   }}
@@ -302,40 +352,46 @@ export default function CurrencyInputPanel({
                 )}
               </>
             )}
-            <CurrencySelect
-              style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
-              selected={!!altCurrency}
-              className="open-currency-select-button"
-              onClick={() => {
-                if (!disableCurrencySelect) {
-                  setModalOpen(true)
-                }
-              }}
-            >
-              <Aligner>
-                {pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                ) : altCurrency ? (
-                  <CurrencyLogo currency={altCurrency} size={'24px'} />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(altCurrency && altCurrency.symbol)}>
-                    {isCrossChain && label === 'To'
-                      ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
-                      : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                          ? altCurrency.symbol.slice(0, 4) +
-                            '...' +
-                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                          : altCurrency?.symbol) || t('selectToken')}
-                  </StyledTokenName>
-                )}
-                {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
-              </Aligner>
-            </CurrencySelect>
+            { !hideCurrencySelect &&
+              <CurrencySelect
+                style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
+                selected={!!altCurrency}
+                className="open-currency-select-button"
+                onClick={() => {
+                  if (!disableCurrencySelect) {
+                    setModalOpen(true)
+                  }
+                }}
+              >
+                <TokenNameAligner>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
+                  ) : altCurrency ? (
+                    <CurrencyLogo currency={altCurrency} size={'32px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName
+                      className="token-symbol-container"
+                      active={Boolean(altCurrency && altCurrency.symbol)}
+                    >
+                      {isCrossChain && label === 'To'
+                        ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
+                        : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
+                            ? altCurrency.symbol.slice(0, 4) +
+                              '...' +
+                              altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                            : altCurrency?.symbol) || <StyledTokenNameDeafult>{t('selectToken')}</StyledTokenNameDeafult>}
+                    </StyledTokenName>
+                  )}
+                  {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
+                  {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}
+                </TokenNameAligner>
+              </CurrencySelect>
+            }
           </InputRow>
         </Container>
         {!disableCurrencySelect && onCurrencySelect && (
@@ -360,7 +416,7 @@ export default function CurrencyInputPanel({
           />
         )}
       </InputPanel>
-      {altCurrency && altCurrency?.address && (
+      {/*altCurrency && altCurrency?.address && (
         <CopyRow>
           <CopyToClipboard text={altCurrency?.address}>
             <p>
@@ -373,7 +429,7 @@ export default function CurrencyInputPanel({
             </p>
           </CopyToClipboard>
         </CopyRow>
-      )}
+      )*/}
     </>
   )
 }

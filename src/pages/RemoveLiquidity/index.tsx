@@ -1,10 +1,11 @@
-import { AVAX, BNB, ChainId, Currency, ETHER, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
+import { ClickableText, MaxButton, Wrapper } from '../Legacy_Pool/styleds'
+import { LightCard, StandardCard } from '../../components/Card'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -21,7 +22,6 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { Field } from '../../state/burn/actions'
-import { LightCard } from '../../components/Card'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import { RouteComponentProps } from 'react-router'
 import Slider from '../../components/Slider'
@@ -58,6 +58,9 @@ export default function RemoveLiquidity({
     currencyB,
     chainId
   ])
+
+  const locationState: any = history?.location?.state
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   const theme = useContext(ThemeContext)
 
@@ -107,6 +110,10 @@ export default function RemoveLiquidity({
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
       ? SMART_CHAIN_ROUTER_ADDRESS
+      : chainId === ChainId.MOONBASE_ALPHA
+      ? MOONBASE_ROUTER_ADDRESS
+      : chainId === ChainId.MUMBAI
+      ? MUMBAI_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 
@@ -152,6 +159,10 @@ export default function RemoveLiquidity({
           ? ETH_ROUTER_ADDRESS
           : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
           ? SMART_CHAIN_ROUTER_ADDRESS
+          : chainId === ChainId.MOONBASE_ALPHA
+          ? MOONBASE_ROUTER_ADDRESS
+          : chainId === ChainId.MUMBAI
+          ? MUMBAI_ROUTER_ADDRESS
           : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
@@ -224,8 +235,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB
-    const oneCurrencyIsETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyBIsETH
+    const currencyBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+    const oneCurrencyIsETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -391,6 +402,10 @@ export default function RemoveLiquidity({
         ? 'UNI '
         : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
         ? 'BNB'
+        : chainId === ChainId.MOONBASE_ALPHA
+        ? 'DEV'
+        : chainId === ChainId.MUMBAI
+        ? 'MATIC'
         : 'AVAX '
     return (
       <>
@@ -448,8 +463,12 @@ export default function RemoveLiquidity({
     currencyB === ETHER ||
     currencyB === BNB ||
     currencyB === AVAX ||
+    currencyB === DEV ||
+    currencyB === MATIC ||
     currencyA === AVAX ||
-    currencyA === BNB
+    currencyA === BNB ||
+    currencyA === MATIC ||
+    currencyA === DEV
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -492,10 +511,28 @@ export default function RemoveLiquidity({
     liquidityPercentChangeCallback
   )
 
+  const handleGoBack = () => {
+    if (stakingRewardAddress) {
+      history.replace({
+        pathname: `/manage/${currencyIdA}/${currencyIdB}`,
+        state: { stakingRewardAddress }
+      })
+    }
+    else {
+      history.goBack()
+    }
+  }
+
   return (
     <>
-      <AppBody>
-        <AddRemoveTabs creating={false} adding={false} />
+      <StandardCard style={{
+        paddingTop: '1rem',
+        paddingBottom: '2rem',
+        width: '100%',
+        maxWidth: '600px',
+        marginTop: '3rem'
+      }}>
+        <AddRemoveTabs creating={false} adding={false} onGoBack={handleGoBack} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -586,11 +623,11 @@ export default function RemoveLiquidity({
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
                             to={`/remove/${
-                              currencyA === ETHER || currencyB === AVAX || currencyB === BNB
+                              currencyA === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
                                 ? WETH[chainId].address
                                 : currencyIdA
                             }/${
-                              currencyB === ETHER || currencyB === AVAX || currencyB === BNB
+                              currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
                                 ? WETH[chainId].address
                                 : currencyIdB
                             }`}
@@ -598,6 +635,8 @@ export default function RemoveLiquidity({
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
                             {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
+                            {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
+                            {chainId && chainId === ChainId.MUMBAI && 'Receive WMATIC'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -608,6 +647,8 @@ export default function RemoveLiquidity({
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
                             {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
+                            {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
+                            {chainId && chainId === ChainId.MUMBAI && 'Receive MATIC'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>
@@ -714,10 +755,10 @@ export default function RemoveLiquidity({
             </div>
           </AutoColumn>
         </Wrapper>
-      </AppBody>
+      </StandardCard>
 
       {pair ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '600px', marginTop: '1rem', marginBottom: '2rem' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

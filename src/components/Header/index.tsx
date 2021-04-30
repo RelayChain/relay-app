@@ -1,162 +1,115 @@
-import { BarChart, Book, CreditCard, DollarSign, Menu as MenuIcon, RefreshCw } from 'react-feather'
-import { ExternalLink, TYPE } from '../../theme'
 import React, { useMemo, useState } from 'react'
-import Row, { RowFixed } from '../Row'
+import styled, { css } from 'styled-components'
 
+import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
+import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
-// import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/images/0-icon.png'
-import Menu from '../Menu'
-import Modal from 'components/Modal'
-import { NavLink } from 'react-router-dom'
+import Loader from '../Loader'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
-import PopupItem from 'components/Popups/PopupItem'
-import Settings from '../Settings'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-import styled from 'styled-components'
+import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-import { useTranslation } from 'react-i18next'
-
-// import AvaxLogo from '../../assets/images/avax-logo.png'
-
-
-
-// import { darken } from 'polished'
-
 
 const HeaderFrame = styled.div`
   display: grid;
-  grid-template-columns: 1fr 120px;
+  padding: 0px 64px;
+  grid-template-columns: 1fr 0px;
   align-items: center;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
   width: 100%;
-  top: 0;
+  top: 25px;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0;
     width: calc(100%);
-    position: relative;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
-
-const HeaderControls = styled.div`
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
+const HideSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
+`
+const LogoContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-grow: 1;
+`
+const HeaderControls = styled.div`
+  padding: 22px 19px;
+  display: flex;
   align-items: center;
   justify-self: flex-end;
+  justify-content: space-between;
+  background: rgba(47, 53, 115, 0.32);
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
+  border-radius: 44px;
+  height: 76px;
+  min-width: 525px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
-    padding: 1rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
-    width: 100%;
-    z-index: 99;
-    height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    border-radius: 0;
+    min-width: 0;
   `};
 `
-
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
-    align-items: center;
+    flex-direction: row-reverse;
   `};
 `
-
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
-`
-
-const HeaderExternalLink = styled(ExternalLink)`
-  margin: 0 16px;
-  font-size: 1rem;
-  color: #c3c5cb;
-  transition: all .2s ease-in-out;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 0 6px;
-    font-size: .85rem;
-  `};
-  :hover,
-  :focus {
-    color: ${({ theme }) => theme.primary1};
-    text-decoration: none;
-  }
-`
-
-const HeaderLinks = styled(Row)`
-  justify-content: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: .5rem 0 .5rem .5rem;
-    justify-content: flex-end;
-    svg {
-      display: none;
-    }
-`};
-`
-
 const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
-  white-space: nowrap;
   width: 100%;
+  white-space: nowrap;
   cursor: pointer;
-
   :focus {
     border: 1px solid blue;
   }
 `
-
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
 const NetworkCard = styled(YellowCard)`
-  border-radius: 12px;
-  padding: 8px 12px;
-  transition: all .2s ease-in-out;
+  position: relative;
+  padding-top: 10px;
+  padding-left: 50px;
+  width: 243px;
+  height: 40px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  background: rgba(225, 248, 250, 0.12);
+  border-radius: 54px;
+  transition: all 0.2s ease-in-out;
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 13px;
+  margin-right: 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  `};
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -166,106 +119,48 @@ const NetworkCard = styled(YellowCard)`
     flex-shrink: 1;
   `};
   &:hover {
-    filter: brightness(1.2);
+    background: rgba(225, 248, 250, 0.16);
     cursor: pointer;
   }
 `
-
 const BalanceText = styled(Text)`
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 80%;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-bottom: 5px !important;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
 `
-
-const Title = styled.a`
+const BlockchainLogoWrap = styled.span`
+  position: absolute;
+  left: 5px;
+  top: 5px;
+`
+const ArrowDropWrap = styled.span`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+`
+const NotConnectedWrap = styled.div`
+  padding: 22px 19px;
   display: flex;
   align-items: center;
-  pointer-events: auto;
-  justify-self: flex-start;
-  margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
-  :hover {
-    cursor: pointer;
-  }
-`
-
-// const CurrentChain = styled.div`
-//   position: fixed;
-//   left: 0; right: 0; top: 0;
-//   margin: auto;
-//   width: 300px;
-//   background: #212429;
-//   border-bottom-right-radius: 24px;
-//   border-bottom-left-radius: 24px;
-//   text-align: center;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: center;
-//   align-items: center;
-//   height: 50px;
-//   padding-left: 1.5rem;
-//   padding-right: 1.5rem;
-//   transition: all .2s ease-in-out;
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//     bottom: 100px;
-//     top: auto;
-//     border-radius: 24px;
-//   `};
-//   :hover {
-//     cursor: pointer;
-//     filter: brightness(1.1);
-//   }
-//   p {
-//     margin-right: auto;
-//   }
-// `
-
-const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
-  }
-`
-
-const activeClassName = 'ACTIVE'
-
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 16px;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  &.yellow {
-    color: #fced30;
-  }
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.primary1};
-  }
-  &.yellow {
-    color: #fced30;
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => theme.primary1};
+  justify-self: flex-end;
+  justify-content: space-between;
+  min-width: 0px;
+  height: 0px;
+  &.no-point {
+    pointer-events: none;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: .85rem;
-    margin: 0 6px;
-`};
+    position: relative;
+    top: -10px;
+    margin: 0 auto;
+  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -277,6 +172,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.AVALANCHE]: 'Avalanche',
   [ChainId.SMART_CHAIN]: 'SmartChain',
   [ChainId.SMART_CHAIN_TEST]: 'SmartChain',
+  [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
+  [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MAINNET]: 'Ethereum'
 }
 
@@ -287,32 +184,28 @@ const NETWORK_SYMBOLS: any = {
   Görli: 'ETH',
   Kovan: 'ETH',
   Avalanche: 'AVAX',
-  SmartChain: 'BNB'
+  SmartChain: 'BNB',
+  Moonbeam: 'DEV'
 }
+
 const popupContent: PopupContent = {
   simpleAnnounce: {
-    message: 'please wait to change RPCs'
+    message: 'Please wait 5 seconds to change RPCs again.'
   }
 }
-function NetworkSwitcher() {
+
+const NetworkSwitcher = () => {
   const { chainId } = useActiveWeb3React()
-  const {
-    availableChains: allChains,
-    lastTimeSwitched
-  } = useCrosschainState()
+  const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
   }, [allChains])
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const [crossPopupOpen, setShowPopupModal] = useState(false)
-  const hideCrossChainModal = () => {
-    setShowCrossChainModal(false)
-  }
 
-  const hidePopupModal = () => {
-    setShowPopupModal(false)
-  }
+  const hidePopupModal = () => setShowPopupModal(false)
+  const hideCrossChainModal = () => setShowCrossChainModal(false)
 
   const showCrossChainModal = () => {
     const currentTime = ~~(Date.now() / 1000)
@@ -327,38 +220,38 @@ function NetworkSwitcher() {
   }
 
   return (
-    <>
-      <div onClick={showCrossChainModal}>
-
-        <HideSmall>
-          {chainId && NETWORK_LABELS[chainId] && (
-            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-          )}
-        </HideSmall>
-        <CrossChainModal
-          isOpen={crossChainModalOpen}
-          isTransfer={false}
-          onDismiss={hideCrossChainModal}
-          supportedChains={availableChains}
-          selectTransferChain={() => { }}
-          activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
-        />
-        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
-      </div>
-
-    </>
+    <div onClick={showCrossChainModal}>
+      <HideSmall>
+        {chainId && NETWORK_LABELS[chainId] && (
+          <NetworkCard title={NETWORK_LABELS[chainId]}>
+            <BlockchainLogoWrap>
+              <BlockchainLogo size="28px" blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'} />
+            </BlockchainLogoWrap>
+            <span>{NETWORK_LABELS[chainId]}</span>
+            <ArrowDropWrap>
+              <img src={ArrowDropdown} alt="ArrowDropdown" />
+            </ArrowDropWrap>
+          </NetworkCard>
+        )}
+      </HideSmall>
+      <CrossChainModal
+        isOpen={crossChainModalOpen}
+        isTransfer={false}
+        onDismiss={hideCrossChainModal}
+        supportedChains={availableChains}
+        selectTransferChain={() => {}}
+        activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
+      />
+      <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
+    </div>
   )
 }
-
-export default function Header() {
+const Header = () => {
   const { account, chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
-
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
-  const [isDark] = useDarkModeManager()
-
   let label,
     symbol = ''
+
   if (chainId) {
     label = NETWORK_LABELS[chainId]
     symbol = NETWORK_SYMBOLS[label || 'Ethereum']
@@ -367,58 +260,35 @@ export default function Header() {
   return (
     <HeaderFrame>
       <ClaimModal />
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'54px'} style={{ marginLeft: '1.5rem', marginRight: '1.5rem' }} src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            <RefreshCw size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('Swap')}
-          </StyledNavLink>
-          <StyledNavLink id={`earn-nav-link`} to={'/earn'}>
-            <DollarSign size={16} style={{ marginRight: '4px', marginTop: '2px' }} />
-            {t('Earn')}
-          </StyledNavLink>
-          <HeaderExternalLink href={`https://buy.0.exchange`}>
-            <CreditCard size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
-            Buy
-          </HeaderExternalLink>
-          <HeaderExternalLink href={`https://charts.0.exchange`}>
-            <BarChart size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-3px' }} />
-            Charts
-          </HeaderExternalLink>
-          <HeaderExternalLink href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
-            <Book size={16} style={{ marginRight: '4px', marginTop: '2px', marginBottom: '-2px' }} />
-            Guides
-          </HeaderExternalLink>
-          <StyledNavLink id={`wsb-nav-link`} to={'/wsb-sale'} className="yellow">
-            WSB Sale
-          </StyledNavLink>
-        </HeaderLinks>
-      </HeaderRow>
-
-      <HeaderControls>
-
-        <HeaderElement>
-
-          <NetworkSwitcher />
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+      <HideMedium>
+        <LogoContainer>
+          <img src={ZeroLogo} alt="Zero logotype" />
+        </LogoContainer>
+      </HideMedium>
+      {account && userEthBalance ? (
+        <HeaderControls>
+          <HeaderElement>
+            <NetworkSwitcher />
+            <AccountElement active={!!account}>
+              <BalanceText>
                 {userEthBalance?.toSignificant(4)} {symbol}
               </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-        </HeaderElement>
-        <HeaderElementWrap>
-          <Settings />
-          <Menu />
-        </HeaderElementWrap>
-      </HeaderControls>
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
+        </HeaderControls>
+      ) : account && !userEthBalance ? (
+        <NotConnectedWrap className="no-point">
+          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
+          <Web3Status />
+        </NotConnectedWrap>
+      ) : (
+        <NotConnectedWrap>
+          <Web3Status />
+        </NotConnectedWrap>
+      )}
     </HeaderFrame>
   )
 }
+
+export default Header

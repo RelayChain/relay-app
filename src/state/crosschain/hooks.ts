@@ -178,6 +178,10 @@ function GetChainNameById(chainID: number): string {
     return 'Smart Chain'
   } else if (chainID === ChainId.SMART_CHAIN_TEST) {
     return 'Smart Chain'
+  } else if (chainID === ChainId.MOONBASE_ALPHA) {
+    return 'Moonbeam'
+  } else if (chainID === ChainId.MUMBAI) {
+    return 'Mumbai'
   }
   return ''
 }
@@ -258,7 +262,7 @@ export function useCrosschainHooks() {
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, {
         gasLimit: '500000',
@@ -398,7 +402,7 @@ export function useCrosschainHooks() {
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 470), 9)
+        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -523,7 +527,6 @@ export function useCrossChain() {
   const { account, library } = useActiveWeb3React()
   const chainIdFromWeb3React = useActiveWeb3React().chainId
 
-
   const chainId = library?._network?.chainId || chainIdFromWeb3React
 
   const initAll = () => {
@@ -541,9 +544,9 @@ export function useCrossChain() {
     const newTargetCain = chains.length
       ? targetChain
       : {
-        name: '',
-        chainID: ''
-      }
+          name: '',
+          chainID: ''
+        }
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetCain?.name)
@@ -566,13 +569,11 @@ export function useCrossChain() {
       setCurrentChain({
         chain: GetCurrentChain(currentChainName)
       })
-      
     )
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance().catch(console.error)
-    UpdateFee().catch(console.error)    
+    UpdateFee().catch(console.error)
   }
-  
 
   useEffect(initAll, [])
   useEffect(initAll, [chainId, library])
@@ -594,4 +595,11 @@ export function useCrossChain() {
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
   }, [account, currentToken])
+}
+
+export function toCheckSumAddress(address: string) {
+  const crosschainState = getCrosschainState()
+  const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+  const web3CurrentChain = new Web3(currentChain.rpcUrl)
+  return web3CurrentChain.utils.toChecksumAddress(address)
 }

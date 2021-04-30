@@ -12,12 +12,11 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '18px')};
+  padding: ${({ padding }) => (padding ? padding : '12px 24px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: 12px;
-  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
+  border-radius: ${({ borderRadius }) => borderRadius ? borderRadius :  '44px'};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -29,6 +28,7 @@ const Base = styled(RebassButton)<{
   cursor: pointer;
   position: relative;
   z-index: 1;
+  transition: all .2s ease-in-out;
   &:disabled {
     cursor: auto;
   }
@@ -38,8 +38,10 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)`
+export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
   background-color: ${({ theme }) => theme.primary1};
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
   color: white;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
@@ -53,9 +55,36 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : theme.bg3)};
-    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
-    cursor: auto;
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : darken(3, theme.primary1))};
+    color: ${({ theme }) => theme.text1};
+    cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '.7')};
+  }
+`
+
+export const ButtonSuccess = styled(Base)<{ isPointer?: boolean }>`
+  background-color: #1EF7E7;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+  backdrop-filter: blur(28px);
+  color: rgba(0,0,0,.6);
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, '#1EF7E7')};
+    background-color: ${({ theme }) => darken(0.05, '#1EF7E7')};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, '#1EF7E7')};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#1EF7E7')};
+    background-color: ${({ theme }) => darken(0.1, '#1EF7E7')};
+  }
+  &:disabled {
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? '#1EF7E7' : '#1EF7E7')};
+    color: rgba(0,0,0,.5);
+    cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
@@ -110,12 +139,7 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
-  background-color: transparent;
-  font-size: 16px;
-  border-radius: 12px;
-  padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
@@ -165,7 +189,7 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #1CB0F9 0%, #6752F7 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #1cb0f9 0%, #6752f7 100%), #edeef2;
   width: fit-content;
   position: relative;
   cursor: pointer;
@@ -180,8 +204,19 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: transparent;
+  background: rgba(103, 82, 247, 0.18);
+  border: 1px solid #6752f7;
+  box-sizing: border-box;
+  backdrop-filter: blur(4.79167px);
+  text-decoration: none !important;
+  &.green {
+    background: rgba(30, 247, 231, .18);
+    border: 1px solid #1EF7E7;
+  }
+  &.white {
+    background: rgba(255,255,255,.05);
+    border: 1px solid white;
+  }
   color: ${({ theme }) => theme.text1};
 
   &:focus {
@@ -315,11 +350,11 @@ export function ButtonConfirmed({
   }
 }
 
-export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+export function ButtonError({ error, isPointer, ...rest }: { error?: boolean; isPointer?: boolean } & ButtonProps) {
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest} />
+    return <ButtonPrimary isPointer={isPointer} {...rest} />
   }
 }
 

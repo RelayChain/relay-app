@@ -1,13 +1,13 @@
-import { useDispatch } from 'react-redux'
-import React, { useEffect, useState } from 'react'
-import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
+import React, { useEffect, useState } from 'react'
+
+import { AppDispatch } from 'state'
+import BlockchainLogo from '../BlockchainLogo'
 import Modal from '../Modal'
 import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
-import { AppDispatch } from 'state'
-
+import { useDispatch } from 'react-redux'
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -109,7 +109,7 @@ export default function CrossChainModal({
   const switchChain = async (chain: CrosschainChain) => {
 
     let { ethereum } = window;
-    
+
     if (ethereum) {
       let chainsConfig = null
       for (const item of crosschainConfig.chains) {

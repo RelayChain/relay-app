@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import { Box } from 'rebass/styled-components'
+import styled from 'styled-components'
 
 const Row = styled(Box)<{ align?: string; padding?: string; border?: string; borderRadius?: string }>`
   width: 100%;
@@ -13,6 +13,15 @@ const Row = styled(Box)<{ align?: string; padding?: string; border?: string; bor
 
 export const RowBetween = styled(Row)`
   justify-content: space-between;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    &.is-mobile {
+      flex-direction: column;
+    }
+  `};
+`
+
+export const RowCenter = styled(Row)`
+  justify-content: center;
 `
 
 export const RowFlat = styled.div`

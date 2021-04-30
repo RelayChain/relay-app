@@ -42,20 +42,20 @@ export function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text2: darkMode ? '#A7B1F4' : '#C3C5CB',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg1: darkMode ? '#070511' : '#FFFFFF',
+    bg1: darkMode ? 'rgba(18, 21, 56, 0.54)' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#343052' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#070511' : '#888D9B',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
+    modalBG: darkMode ? 'rgba(0,0,0,.75)' : 'rgba(0,0,0,0.75)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
@@ -79,7 +79,11 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#B368FC',
-    blue1: '#6752F7'
+    blue1: '#6752F7',
+    zeroBlue: '#1CB0F9',
+    zeroGreen: '#1EF7E7',
+    zeroPink: '#B368FC',
+    zeroPurple: '#6752F7',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -177,12 +181,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Poppins', sans-serif;
   font-display: fallback !important;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif !important;
+    font-family: 'Poppins', sans-serif;
   }
 }
 
@@ -213,6 +217,14 @@ html {
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
 
 }
+h1,h2,h3,h4,h5{
+  margin: 0px;
+  font-family: 'Poppins', sans-serif;
+}
+h1{
+  font-weight: 900;
+  font-size: 80px;
+}
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`
@@ -223,6 +235,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #0E1130;
+  background: #2C3168;
+  background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
 }
 `
