@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
+import { isIOS } from 'react-device-detect'
 
 const BackgroundWrap = styled.div`
   position: absolute;
@@ -71,7 +72,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
         </svg>
       ) : variant === 'purple' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g filter="url(#prefix__filter0_bi)">
+          <g filter={isIOS ? '' : 'url(#prefix__filter0_bi)'}>
             <rect width={261} height={162} rx={44} fill="#6752F7" fillOpacity={0.26} />
             <rect
               x={1}
@@ -188,7 +189,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
         </svg>
       ): variant === 'pink' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g filter="url(#prefix__filter0_bi)">
+          <g filter={isIOS ? '' : 'url(#prefix__filter0_bi)'}>
             <rect width={261} height={162} rx={44} fill="#B368FC" fillOpacity={0.26} />
             <rect
               x={1}
