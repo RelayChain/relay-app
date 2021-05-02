@@ -292,7 +292,6 @@ export default function Swap() {
     typedValue
   )
 
-  // const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   // const toggledVersion = useToggledVersion()
@@ -746,7 +745,7 @@ export default function Swap() {
                     <BottomGroupingSwap>
                       {!account ? (
                         <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                      ) : !trade ? (
+                      ) : !(formattedAmounts[Field.INPUT] || formattedAmounts[Field.OUTPUT]) ? (
                         <GreyCard
                           style={{
                             textAlign: 'center',
