@@ -14,8 +14,12 @@ const PhishAlert = styled.div<{ isActive: any }>`
   font-size: 11px;
   justify-content: space-between;
   align-items: center;
+  border-radius: 5px;
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   height: 40px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-bottom: 0.5rem;
+`};
 `
 
 export const StyledClose = styled(X)`
@@ -31,17 +35,16 @@ export default function URLWarning() {
   return false ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>app.0.exchange</code>
+        <AlertTriangle style={{ marginRight: 6 }} size={12} />
+        Make sure the URL is app.0.exchange
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
   ) : window.location.hostname === 'app.0.exchange' ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>app.0.exchange</code> - bookmark it
-        to be safe.
+        <AlertTriangle style={{ marginRight: 6 }} size={12} />
+        Always make sure the URL is app.0.exchange - bookmark it to be safe.
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
