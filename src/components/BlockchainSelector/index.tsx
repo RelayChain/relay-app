@@ -165,6 +165,7 @@ const BlockchainSelector = ({
   if (!blockchain) {
     return <div />
   }
+
   // @ts-ignore
   return (
     <Container>
@@ -209,12 +210,14 @@ const BlockchainSelector = ({
             <SubTitle>Destination Chain</SubTitle>
             <FlexOrder>
               <p className="crosschain" onClick={openTransferModal}>
-                <BlockchainLogo
-                  size="32px"
-                  blockchain={typeof transferTo !== 'string' ? transferTo.name : blockchain}
-                  style={{ marginRight: '0px' }}
-                />
-                <span>{typeof transferTo !== 'string' ? transferTo.name : blockchain}</span>
+                {transferTo && transferTo.name.length > 0 &&
+                  <BlockchainLogo
+                    size="32px"
+                    blockchain={typeof transferTo !== 'string' ? transferTo.name : ''}
+                    style={{ marginRight: '0px' }}
+                  />
+                }
+                <span>{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</span>
                 <ChevronDown size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />
               </p>
             </FlexOrder>

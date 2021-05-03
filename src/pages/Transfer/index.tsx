@@ -290,16 +290,16 @@ export default function Transfer() {
     )
   }
 
-  useEffect(() => {
-    // change logic when we add polka
-    if (chainId) {
-      const label = SUPPORTED_CHAINS.find(x => x !== CHAIN_LABELS[chainId]) || 'Ethereum'
-      onSelectTransferChain({
-        name: label,
-        chainID: chainId.toString()
-      })
-    }
-  }, [chainId, currentChain])
+  // useEffect(() => {
+  //   // change logic when we add polka
+  //   if (chainId) {
+  //     const label: any = SUPPORTED_CHAINS.find(x => x !== CHAIN_LABELS[chainId]);
+  //     onSelectTransferChain({
+  //       name: label,
+  //       chainID: chainId.toString()
+  //     })
+  //   }
+  // }, [chainId, currentChain])
 
   const startNewSwap = () => {
     BreakCrosschainSwap()
@@ -375,6 +375,8 @@ export default function Transfer() {
     }
   }
 
+  console.log("TRANSFER TO ========= ", targetChain);
+
   return (
     <>
       <Title>Transfer</Title>
@@ -390,13 +392,13 @@ export default function Transfer() {
           supportedChains={availableChains}
           isTransfer={true}
           selectTransferChain={onSelectTransferChain}
-          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : undefined}
         />
         <ConfirmTransferModal
           isOpen={confirmTransferModalOpen}
           onDismiss={hideConfirmTransferModal}
           transferTo={targetChain}
-          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : undefined}
           changeTransferState={onChangeTransferState}
           tokenTransferState={crosschainTransferStatus}
           value={formattedAmounts[Field.INPUT]}
@@ -437,7 +439,7 @@ export default function Transfer() {
               <BlockchainSelector
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
-                blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+                blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
                 transferTo={targetChain}
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
@@ -449,7 +451,7 @@ export default function Transfer() {
                 <TextBottom>
                   {transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
                     <SpanAmount>
-                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name}
+                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name.length > 0 ? targetChain.name : '...'}
                     </SpanAmount>
                   ) : (
                     ''
@@ -461,6 +463,8 @@ export default function Transfer() {
                   transferAmount.length &&
                   transferAmount !== '0' &&
                   currentToken &&
+                  targetChain.chainID !== "" &&
+                  targetChain.name.length > 0 &&
                   currencies[Field.INPUT] ? (
                     <>
                       <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px'}}>

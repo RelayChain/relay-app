@@ -5,14 +5,6 @@ import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../
 import { CHAIN_LABELS, ETH_RPCS, NATIVE_CURRENCY } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
-import {
-  ChainTransferState,
-  CrosschainChain,
-  setCrosschainTransferStatus,
-  setCurrentToken,
-  setTargetChain,
-  setTransferAmount
-} from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
 import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
@@ -57,6 +49,9 @@ import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getTokenBalances } from 'api'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import {
+  setCurrentToken,
+} from '../../state/crosschain/actions'
 import { setTokenBalances } from '../../state/user/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -316,26 +311,11 @@ export default function Swap() {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
-  // track the input amount, on change, if crosschain, dispatch
-  const [inputAmountToTrack, setInputAmountToTrack] = useState('')
-  const handleInputAmountChange = useCallback(
-    (amount: string) => {
-      setInputAmountToTrack(amount)
-      dispatch(
-        setTransferAmount({
-          amount: amount
-        })
-      )
-    },
-    [setInputAmountToTrack, dispatch]
-  )
-
   const handleTypeInput = useCallback(
     (value: string) => {
-      handleInputAmountChange(value)
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput, handleInputAmountChange]
+    [onUserInput]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -467,15 +447,9 @@ export default function Swap() {
 
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      handleInputAmountChange(maxAmountInput.toExact())
       onUserInput(Field.INPUT, maxAmountInput.toExact())
     }
-  }, [maxAmountInput, onUserInput, handleInputAmountChange])
-
-  // not sure we need this
-  // const handleMaxInputCrosschain = useCallback(() => {
-  //   return currentBalance
-  // }, [currentBalance, onUserInput])
+  }, [maxAmountInput, onUserInput])
 
   const handleOutputSelect = useCallback(
     outputCurrency => {
@@ -486,79 +460,12 @@ export default function Swap() {
 
   // swaps or cross chain
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
-  const handleSetIsCrossChain = (bool: boolean) => {
-    setIsCrossChain(bool)
-
-    dispatch(
-      setTransferAmount({
-        amount: inputAmountToTrack
-      })
-    )
-  }
-
-  const startNewSwap = () => {
-    BreakCrosschainSwap()
-  }
-
-  const [showChainBridgeModal, setShowChainBridgeModal] = useState(false)
-  const hideChainBridgeModal = () => {
-    if (swapDetails?.status === ProposalStatus.EXECUTED || swapDetails?.status === ProposalStatus.CANCELLED) {
-      startNewSwap()
-    }
-    setShowChainBridgeModal(false)
-  }
-
-  const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
-  const hideTransferChainModal = () => {
-    setShowTransferChainModal(false)
-    // startNewSwap()
-  }
-  const showTransferChainModal = () => {
-    setShowTransferChainModal(true)
-  }
-  const onSelectTransferChain = (chain: CrosschainChain) => {
-    dispatch(
-      setTargetChain({
-        chain
-      })
-    )
-  }
-
-  const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false)
-  const hideConfirmTransferModal = () => {
-    startNewSwap()
-    setConfirmTransferModalOpen(false)
-  }
-  const showConfirmTransferModal = () => {
-    GetAllowance()
-    setConfirmTransferModalOpen(true)
-  }
-
-  // token transfer state
-  const onChangeTransferState = (state: ChainTransferState) => {
-    dispatch(
-      setCrosschainTransferStatus({
-        status: state
-      })
-    )
-    if (state === ChainTransferState.NotStarted && currentTxID.length) {
-      BreakCrosschainSwap()
-    }
-  }
 
   const getChainName = (): string => {
     if (!!chainId && chainId in CHAIN_LABELS) {
       return CHAIN_LABELS[chainId] || ''
     }
     return ''
-  }
-
-  const handleChainBridgeButtonClick = () => {
-    if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
-      setShowChainBridgeModal(true)
-    } else {
-      showConfirmTransferModal()
-    }
   }
 
   const userTokens = useUserAddedTokens()
@@ -889,14 +796,6 @@ export default function Swap() {
                 top: '45%'
               }}
             />
-          )}
-          {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
-            <ChainBridgePending onClick={handleChainBridgeButtonClick}>
-              <p>{`Cross-chain transfer pending`}</p>
-              <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
-            </ChainBridgePending>
-          ) : (
-            ''
           )}
         </SwapOuterWrap>
       </PageContainer>
