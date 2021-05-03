@@ -140,7 +140,9 @@ export default function CrossChainModal({
               dispatch(
                 setCrosschainLastTimeSwitched({})
               )
-              window.location.reload()
+              setTimeout(() => {
+                window.location.reload()
+              }, 1000);
             })
 
         } else {
