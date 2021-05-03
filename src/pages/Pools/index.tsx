@@ -1,24 +1,24 @@
-import styled, { keyframes } from 'styled-components'
-import React, { useEffect, useState } from 'react'
-import { getAllPoolsAPY } from 'api'
-
 import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import { StyledInternalLink, TYPE } from '../../theme'
+import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { StyledInternalLink, TYPE } from '../../theme'
+import styled, { keyframes } from 'styled-components'
+
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
+import DropdownArrow from './../../assets/svg/DropdownArrow'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import WalletMissing from '../../assets/svg/wallet_missing.svg'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
+import { arrayMove } from '../../utils/arrayMove'
+import { getAllPoolsAPY } from 'api'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
-import DropdownArrow from './../../assets/svg/DropdownArrow'
-import { arrayMove } from '../../utils/arrayMove'
 const numeral = require('numeral')
 
 const PageWrapper = styled.div`
@@ -109,6 +109,20 @@ const opacity = keyframes`
   }
 `
 
+const TextLink = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+  color: #6752F7;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+  &.pink {
+    color: #B368FC
+  }
+  &:hover {
+    opacity: .9;
+  }
+`
+
 // Here we create a component that will rotate everything we pass in over two seconds
 const Spinner = styled.img`
   width: 100px;
@@ -142,6 +156,10 @@ const StatsWrapper = styled.div`
     width: 160px;
     margin-left: auto;
     text-decoration: none;
+  }
+  .remove-liquidity-link {
+    text-decoration: none;
+    margin-left: 2rem;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   flex-direction: column;
@@ -499,6 +517,13 @@ export default function Pools() {
               }}
             >
               <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+            </StyledInternalLink>
+            <StyledInternalLink className="remove-liquidity-link"
+              to={{
+                pathname: `/remove`,
+              }}
+            >
+              <TextLink>Remove Liquidity</TextLink>
             </StyledInternalLink>
           </StatsWrapper>
         )}
