@@ -1,8 +1,7 @@
 import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
-import { StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useState } from 'react'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { CountUp } from 'use-count-up'
@@ -18,6 +17,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -205,7 +205,10 @@ export default function PoolRow({
       ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
       : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
-    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings && liquiditySent === liquidityValue) {
+    // this prevents infinite loops / re-renders
+    if (harvestSent === readyToHarvest &&
+        earningsSent === singleWeeklyEarnings &&
+        liquiditySent === liquidityValue) {
       return
     }
 

@@ -207,6 +207,7 @@ export default function PoolCard({
       ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
       : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
+    // this prevents infinite loops / re-renders
     if (harvestSent === readyToHarvest &&
         earningsSent === singleWeeklyEarnings &&
         liquiditySent === liquidityValue) {
