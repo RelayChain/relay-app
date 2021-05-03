@@ -34,10 +34,10 @@ import {
   pngUSDT,
   bscINDA
 } from '../../constants'
-import { NEVER_RELOAD, useMultipleContractSingleData, useMultipleGondolaContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
+import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
-import { STAKING_REWARDS_INTERFACE, STAKING_REWARDS_GONDOLA_INTERFACE } from '../../constants/abis/staking-rewards'
-import { ERC20_GONDOLA_INTERFACE } from '../../constants/abis/erc20'
+import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
+
 import moduleName from 'module';
 import { tryParseAmount } from '../swap/hooks'
 import { useActiveWeb3React } from '../../hooks'
@@ -97,19 +97,14 @@ export const STAKING_REWARDS_INFO: {
   ],
   [ChainId.AVALANCHE]: [
     {
-      tokens: [pngDAI, zDAI],
-      stakingRewardAddress: '0x34C8712Cc527a8E6834787Bd9e3AD4F2537B0f50',
-      rewardInfo: { chain: 'Gondola', tokenId: 9, poolAddress: '0x2036C0EB5C42eF7f1ca06dF57D07F79eb3a2e0C8' }
-    },
-    {
-      tokens: [pngUSDT, zUSDT],
-      stakingRewardAddress: '0x34C8712Cc527a8E6834787Bd9e3AD4F2537B0f50',
-      rewardInfo: { chain: 'Gondola', tokenId: 8, poolAddress: '0xE586dB7Db75B87A3E84110a73b99960F5f106c6A' }
-    },
-    {
       tokens: [pngETH, zETH],
-      stakingRewardAddress: '0x34C8712Cc527a8E6834787Bd9e3AD4F2537B0f50',
-      rewardInfo: { chain: 'Gondola', tokenId: 7, poolAddress: '0xc37ECFA7Bbf1dF92Da7C4A3d92d8CF8657D1FF7f' }
+      stakingRewardAddress: '0x7c815BBc21FED2B97CA163552991A5C30d6a2336', //this case it is the address of the proxy contract for pool
+      // to see https://cchain.explorer.avax.network/address/0x7c815BBc21FED2B97CA163552991A5C30d6a2336
+      rewardInfo: {
+        chain: 'Gondola', tokenId: 7,
+        poolAddress: '0xc37ECFA7Bbf1dF92Da7C4A3d92d8CF8657D1FF7f',
+        masterChefAddress: '0x34C8712Cc527a8E6834787Bd9e3AD4F2537B0f50'
+      }
     },
     {
       tokens: [zZERO, zETH],
@@ -258,7 +253,8 @@ export interface StakingInfo {
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount
   ) => TokenAmount
-  gondolaIdToken?: number
+  gondolaTokenId?: number,
+  gondolaRewardAddress?: string
 }
 
 // gets the staking info from the network for the active chain id
@@ -285,35 +281,15 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
   const uni = chainId ? UNI[chainId] : undefined
 
-  let rewardsAddresses = useMemo(() => info.filter((inf) => {
-    return inf['rewardInfo'] === undefined
+  let rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
-  }).map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
-
-  const gondolaRewardsInstances = useMemo(() => info.filter((inf) => inf['rewardInfo'] !== undefined), [info])
-
-  const gondolaContractsItem = useMemo(() => (gondolaRewardsInstances.length) ?
-    new Contract(gondolaRewardsInstances[0].stakingRewardAddress, STAKING_REWARDS_GONDOLA_INTERFACE) : undefined, [gondolaRewardsInstances])
-
-  const gondolaPoolsAddresses = useMemo(() => info.filter((inf) => {
-    return inf['rewardInfo'] !== undefined
-
-  }).map((item) => item.rewardInfo.poolAddress), [info])
-
-  const gondolaRewardsAddresses = useMemo(() => gondolaRewardsInstances.map(({ stakingRewardAddress }) => stakingRewardAddress), [gondolaRewardsInstances])
   const accountArg = useMemo(() => [account ?? undefined], [account])
-  const gondolaContractArgs = useMemo(() => { return gondolaRewardsInstances.map(inst => [inst.rewardInfo.tokenId, account]) }, [gondolaRewardsInstances, account])
+
   // get all the info from the staking rewards contracts
   let balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
   let earnedAmounts = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'earned', accountArg)
   let totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'totalSupply')
 
-  // gondola
-  const balancesGondola = useMultipleGondolaContractSingleData(gondolaPoolsAddresses, ERC20_GONDOLA_INTERFACE, 'balanceOf', accountArg)
-
-  const earnedAmountsGondola = useSingleContractMultipleData(gondolaContractsItem, 'pendingGondola', gondolaContractArgs)
-
-  const totalSuppliesGondola = useMultipleGondolaContractSingleData(gondolaPoolsAddresses, ERC20_GONDOLA_INTERFACE, 'totalSupply')
 
   // tokens per second, constants
   let rewardRates = useMultipleContractSingleData(
@@ -323,13 +299,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     undefined,
     NEVER_RELOAD
   )
-  const rewardGondolaRates = useMultipleContractSingleData(
-    gondolaRewardsAddresses,
-    STAKING_REWARDS_GONDOLA_INTERFACE,
-    'gondolaPerSec',
-    undefined,
-    NEVER_RELOAD
-  )
+
   let periodFinishes = useMultipleContractSingleData(
     rewardsAddresses,
     STAKING_REWARDS_INTERFACE,
@@ -338,22 +308,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     NEVER_RELOAD
   )
 
-  const periodGondolaFinishes = useMultipleContractSingleData(
-    gondolaRewardsAddresses,
-    STAKING_REWARDS_GONDOLA_INTERFACE,
-    'endAt',
-    undefined,
-    NEVER_RELOAD
-  )
 
   return useMemo(() => {
     if (!chainId || !uni) return []
-    balances = [...balances, ...balancesGondola]
-    earnedAmounts = [...earnedAmounts, ...earnedAmountsGondola]
-    totalSupplies = [...totalSupplies, ...totalSuppliesGondola]
-    rewardsAddresses = [...rewardsAddresses, ...gondolaRewardsAddresses]
-    periodFinishes =  periodFinishes.concat(periodGondolaFinishes)
-    rewardRates = rewardRates.concat(rewardGondolaRates)
     return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
       // these two are dependent on account
       const balanceState = balances[index]
@@ -363,7 +320,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       const totalSupplyState = totalSupplies[index]
       const rewardRateState = rewardRates[index]
       const periodFinishState = periodFinishes[index]
-      const currentItem = info.find(item => item.stakingRewardAddress === rewardsAddress )
+      const currentItem = info.find(item => item.stakingRewardAddress === rewardsAddress)
       if (
         // these may be undefined if not logged in
         !balanceState?.loading &&
@@ -431,7 +388,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           totalStakedAmount: totalStakedAmount,
           getHypotheticalRewardRate,
           active,
-          gondolaIdToken: currentItem?.rewardInfo?.tokenId
+          gondolaTokenId: currentItem?.rewardInfo?.tokenId,
+          gondolaRewardAddress: currentItem?.rewardInfo?.masterChefAddress
         })
       }
       return memo
@@ -446,8 +404,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     rewardRates,
     rewardsAddresses,
     totalSupplies,
-    uni,
-    balancesGondola, earnedAmountsGondola, totalSuppliesGondola, gondolaRewardsAddresses
+    uni
   ])
 }
 

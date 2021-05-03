@@ -37,11 +37,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     setAttempting(false)
     onDismiss()
   }
+  const stakingRewardAddress = (stakingInfo.gondolaTokenId && stakingInfo.gondolaRewardAddress) ?
+    stakingInfo.gondolaRewardAddress :
+    stakingInfo.stakingRewardAddress
 
-  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  const stakingGondolaContract = useStakingGondolaContract(stakingInfo.stakingRewardAddress)
+  const stakingContract = useStakingContract(stakingRewardAddress)
+  const stakingGondolaContract = useStakingGondolaContract(stakingRewardAddress)
   async function onWithdraw() {
-    if (stakingContract && stakingInfo?.stakedAmount && !stakingInfo?.gondolaIdToken) {
+    if (stakingContract && stakingInfo?.stakedAmount && !stakingInfo?.gondolaTokenId) {
       setAttempting(true)
       await stakingContract
         .exit({ gasLimit: 300000 })
@@ -59,7 +62,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
 
       setAttempting(true)
       await stakingGondolaContract
-        .withdraw(stakingInfo?.gondolaIdToken, stakingInfo.stakedAmount, { gasLimit: 300000 })
+        .withdraw(stakingInfo?.gondolaTokenId, stakingInfo.stakedAmount, { gasLimit: 300000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Withdraw deposited liquidity`
