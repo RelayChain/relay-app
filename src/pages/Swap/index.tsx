@@ -121,13 +121,15 @@ const SwapWrap = styled.div`
   border-radius: 44px;
   margin-right: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-top: 20px
-  margin-right: auto;
-  margin-left: auto;
-`};
+    margin-top: 20px
+    margin-right: auto;
+    margin-left: auto;
+  `};
   ${({ theme }) => theme.mediaWidth.upToSmall`
-width: 100%;
-`};
+  width: 100%;
+  `};
+  position: sticky;
+  top: 4rem;
 `
 const SwapFlex = styled.div`
   display: flex;
