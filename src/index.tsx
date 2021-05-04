@@ -22,9 +22,9 @@ import store from './state'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (window.location.hostname.includes('zero')) {
-  window.location.href = window.location.href.replace('zero', '0');
-}
+// if (window.location.hostname.includes('zero')) {
+//   window.location.href = window.location.href.replace('zero', '0');
+// }
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
