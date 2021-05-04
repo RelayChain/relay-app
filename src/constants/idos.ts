@@ -6,6 +6,7 @@ export const IDO_LIST = [
     tierName: 'Platinum', // if no tier, leave blank
     tierLogo: null, // if you include this image, it will override the tierName
     launchDate: new Date('May 05, 2021 06:00:00'),
+    endDate: new Date('May 08, 2021 06:00:00'),
     totalRaise: '$500,000',
     allocationMin: '$10,000',
     allocationMax: '$100,000',
