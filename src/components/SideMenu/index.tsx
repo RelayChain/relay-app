@@ -3,13 +3,13 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
+import LogoDark from './../../assets/images/0-icon.png'
+import MenuBurger from './../MenuBurger'
 import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import MenuBurger from './../MenuBurger'
-import LogoDark from './../../assets/images/0-icon.png'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
@@ -159,9 +159,15 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
-          <MoreLink onClick={() => setIsOpenModal(true)}>
+          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="planet" />
+              <Icon icon="planet" active={pathname === '/zero-gravity'} />
+            </IconLink>
+            {t('Zero Gravity')}
+          </StyledNavLink>
+          <MoreLink onClick={() => setIsOpenModal(true)}>
+            <IconLink style={{ paddingTop: '4px'}}>
+              <Icon icon="more" />
             </IconLink>
             {t('More ...')}
           </MoreLink>
