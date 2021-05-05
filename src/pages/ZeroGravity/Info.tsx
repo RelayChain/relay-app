@@ -1,13 +1,14 @@
-import { ButtonOutlined } from 'components/Button'
+import { FaDiscord, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import PageContainer from 'components/PageContainer';
-import { IDO_LIST } from 'constants/idos';
-import { useParams } from 'react-router';
-import moment from 'moment';
-import { CgAddR } from 'react-icons/cg';
+
 import { BiWorld } from 'react-icons/bi';
-import { FaTelegramPlane, FaTwitter, FaMedium, FaDiscord } from 'react-icons/fa';
+import { ButtonOutlined } from 'components/Button'
+import { CgAddR } from 'react-icons/cg';
+import { IDO_LIST } from 'constants/idos';
+import PageContainer from 'components/PageContainer';
+import moment from 'moment';
+import styled from 'styled-components';
+import { useParams } from 'react-router';
 
 const Title = styled.h1`
   width: 100%;
@@ -179,7 +180,7 @@ export default function ZeroGravityInfo() {
         else if (social.type === 'TWITTER') icon = <FaTwitter/>
         else if (social.type === 'DISCORD') icon = <FaDiscord/>
         else if (social.type === 'MEDIUM') icon = <FaMedium/>
-        
+
         return {
           type: social.type,
           url: social.url,
@@ -205,6 +206,10 @@ export default function ZeroGravityInfo() {
     setIdoData(IDO_LIST.find(item => item.idoURL===idoURL))
   }, [idoURL])
 
+  const goToSite = (str: any) => {
+    window.open(str, "_blank");
+  };
+
   return (
     <>
       <Title>Info</Title>
@@ -222,14 +227,14 @@ export default function ZeroGravityInfo() {
           <p>{launchingString}</p>
         </InfoSection>
         <ButtonsSection>
-          <ButtonOutlined >
+          <ButtonOutlined onClick={() => goToSite('https://docs.google.com/spreadsheets/d/16N4S_VqEfN04hfsfz4SIqZdH-jGqyJynCfZ6bjMBhaE/edit?usp=sharing')} >
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
-            Join Whishlist
+            View Whitelist
           </ButtonOutlined>
           <ButtonsSpacer />
-          <ButtonOutlined disabled>
+          <ButtonOutlined onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
@@ -242,7 +247,7 @@ export default function ZeroGravityInfo() {
               Pool details
             </Heading>
             <SocialLinks>
-              {socialMediaLinks.map(iconDetails => 
+              {socialMediaLinks.map(iconDetails =>
                 <SocialIcon onClick={()=>window.open(iconDetails.url)}>
                   {iconDetails.icon}
                   <Tooltip className="tooltip">{iconDetails.type}</Tooltip>

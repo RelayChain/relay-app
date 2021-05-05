@@ -4,33 +4,21 @@ export const IDO_LIST = [
   {
     idoURL: 'wasder',
     logo: '/images/idos/wasder-logo.png',
-    tierName: 'Platinum', // if no tier, leave blank
+    tierName: '-', // if no tier, leave blank
     tierLogo: null, // if you include this image, it will override the tierName
-    launchDate: new Date('May 09, 2021 06:00:00'),
-    endDate: new Date('May 11, 2021 06:00:00'),
-    totalRaise: '$500,000',
-    allocationMin: '$10,000',
-    allocationMax: '$100,000',
+    launchDate: new Date('May 07, 2021 06:00:00'),
+    endDate: new Date('May 8, 2021 06:00:00'),
+    totalRaise: '$150,000',
+    allocationMin: '$1,000',
+    allocationMax: '$10,000',
     allocationCurrency: 'ETH',
-    description: 'This is the Wasder IDO description',
-    distributionDate: new Date('May 13, 2021 06:00:00'),
-    allocationWinningAmount: '$250',
+    description: 'Wasder - Find friends, join communities, and share content. Wasder brings old and new friends together around your passion for gaming. The Wasder IDO token sale will be May 7, 2021 on 0.exchange.',
+    distributionDate: new Date('May 8, 2021 06:00:00'),
+    allocationWinningAmount: '$500',
     socials: [
       {
         type: 'TELEGRAM',
-        url: 'https://telegram.org/'
-      },
-      {
-        type: 'DISCORD',
-        url: 'https://discord.com/'
-      },
-      {
-        type: 'TWITTER',
-        url: 'https://twitter.com/'
-      },
-      {
-        type: 'MEDIUM',
-        url: 'https://medium.com/'
+        url: 'https://t.me/WasderOfficial'
       },
       {
         type: 'WEBSITE',
