@@ -1,6 +1,7 @@
 // upcoming IDOs
 export const IDO_LIST = [
   {
+    idoName: 'Wasder',
     idoURL: 'wasder',
     logo: '/images/idos/wasder-logo.png',
     tierName: 'Platinum', // if no tier, leave blank
@@ -14,5 +15,9 @@ export const IDO_LIST = [
     description: 'This is the Wasder IDO description',
     distributionDate: new Date('May 10, 2021 06:00:00'),
     allocationWinningAmount: '$250',
+    twitter: '',
+    website: '',
+    blog: '',
+    telegram: '',
   }
 ]
