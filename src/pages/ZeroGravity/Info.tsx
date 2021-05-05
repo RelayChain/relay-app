@@ -238,7 +238,7 @@ export default function ZeroGravityInfo() {
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
-            Join Pool
+            KYC Here
           </ButtonOutlined>
         </ButtonsSection>
         <BgWrapper>
