@@ -1,9 +1,9 @@
+import { CgAddR, CgList } from 'react-icons/cg';
 import { FaDiscord, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { BiWorld } from 'react-icons/bi';
 import { ButtonOutlined } from 'components/Button'
-import { CgAddR } from 'react-icons/cg';
 import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
 import moment from 'moment';
@@ -229,12 +229,12 @@ export default function ZeroGravityInfo() {
         <ButtonsSection>
           <ButtonOutlined onClick={() => goToSite('https://docs.google.com/spreadsheets/d/16N4S_VqEfN04hfsfz4SIqZdH-jGqyJynCfZ6bjMBhaE/edit?usp=sharing')} >
             <ButtonIcon>
-              <CgAddR/>
+              <CgList/>
             </ButtonIcon>
             View Whitelist
           </ButtonOutlined>
           <ButtonsSpacer />
-          <ButtonOutlined onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
+          <ButtonOutlined className="green" onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
