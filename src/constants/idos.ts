@@ -6,7 +6,7 @@ export const IDO_LIST = [
     logo: '/images/idos/wasder-logo.png',
     tierName: '-', // if no tier, leave blank
     tierLogo: null, // if you include this image, it will override the tierName
-    launchDate: new Date('May 07, 2021 14:00:00'),
+    launchDate: new Date('May 06, 2021 14:00:00'),
     endDate: new Date('May 8, 2021 14:00:00'),
     totalRaise: '$150,000',
     allocationMin: 'TBD',
