@@ -383,7 +383,7 @@ export default function Transfer() {
   }
 
   // quick enable or disable of bridge
-  const bridgeEnabled = false;
+  const bridgeEnabled = true;
 
   return (
     <>
