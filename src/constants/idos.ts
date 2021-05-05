@@ -9,12 +9,12 @@ export const IDO_LIST = [
     launchDate: new Date('May 07, 2021 06:00:00'),
     endDate: new Date('May 8, 2021 06:00:00'),
     totalRaise: '$150,000',
-    allocationMin: '$1,000',
-    allocationMax: '$10,000',
-    allocationCurrency: 'ETH',
+    allocationMin: 'TBD',
+    allocationMax: 'TBD',
+    allocationCurrency: 'USDT',
     description: 'Wasder - Find friends, join communities, and share content. Wasder brings old and new friends together around your passion for gaming. The Wasder IDO token sale will be May 7, 2021 on 0.exchange.',
     distributionDate: new Date('May 8, 2021 06:00:00'),
-    allocationWinningAmount: '$500',
+    allocationWinningAmount: 'TBD',
     socials: [
       {
         type: 'TELEGRAM',
