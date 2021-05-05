@@ -325,6 +325,7 @@ export default function Pools() {
       setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue })
     }
   }
+
   //  APR
   if (apyData && apyData.length) {
     arrayToShow.forEach((arrItem, index) => {
@@ -337,15 +338,20 @@ export default function Pools() {
     })
   }
 
+  const [apyRequested, setApyRequested] = useState(false);
   const getAllAPY = async () => {
-    const res = await getAllPoolsAPY()
-    if (!res.hasError) {
-      setApyData(res?.data)
+    if (!apyRequested) {
+      setApyRequested(true);
+      const res = await getAllPoolsAPY()
+      if (!res.hasError) {
+        setApyData(res?.data)
+      }
     }
   }
 
+  getAllAPY()
+
   useEffect(() => {
-    getAllAPY()
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
@@ -362,9 +368,6 @@ export default function Pools() {
     weeklyEarnings,
     readyForHarvest,
     serializePoolControls?.sortedMode,
-    serializePoolControls?.displayMode,
-    serializePoolControls?.isActive,
-    serializePoolControls?.isStaked
   ])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
