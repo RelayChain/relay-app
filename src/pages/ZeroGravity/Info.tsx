@@ -234,12 +234,12 @@ export default function ZeroGravityInfo() {
             View Whitelist
           </ButtonOutlined>
           <ButtonsSpacer />
-          <ButtonOutlined className="green" onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
+          {/*<ButtonOutlined className="green" onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
             KYC Here
-          </ButtonOutlined>
+          </ButtonOutlined>*/}
         </ButtonsSection>
         <BgWrapper>
           <HeadingRow>
