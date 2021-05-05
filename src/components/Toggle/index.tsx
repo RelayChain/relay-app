@@ -8,7 +8,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3)};
   font-size: 1rem;
   font-weight: 400;
-
+  width: 50%;
   padding: 0.35rem 0.6rem;
   border-radius: 12px;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.text4) : 'none')};
@@ -40,16 +40,19 @@ export interface ToggleProps {
   id?: string
   isActive: boolean
   toggle: () => void
+  activeText?: string;
+  inActiveText?: string;
+  width?: string;
 }
 
-export default function Toggle({ id, isActive, toggle }: ToggleProps) {
+export default function Toggle({ id, isActive, toggle, activeText, inActiveText, width }: ToggleProps) {
   return (
-    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
+    <StyledToggle id={id} isActive={isActive} onClick={toggle} style={{ width: width ? width : 'fit-content'}}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
-        On
+        { activeText || 'On'}
       </ToggleElement>
       <ToggleElement isActive={!isActive} isOnSwitch={false}>
-        Off
+        { inActiveText || 'Off'}
       </ToggleElement>
     </StyledToggle>
   )

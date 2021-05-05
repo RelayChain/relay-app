@@ -159,6 +159,12 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
+          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={hanldeSidemenuOpen}>
+            <IconLink>
+              <Icon icon="planet" active={pathname === '/zero-gravity'} />
+            </IconLink>
+            {t('Zero Gravity')}
+          </StyledNavLink>
           <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem'}}>
             <IconLink>
               <DollarSign size={20} />
@@ -166,8 +172,8 @@ export default function SideMenu() {
             Buy ZERO
           </HeaderExternalLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
-            <IconLink>
-              <Icon icon="planet" />
+            <IconLink style={{ paddingTop: '4px'}}>
+              <Icon icon="more" />
             </IconLink>
             {t('More ...')}
           </MoreLink>
