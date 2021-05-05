@@ -108,6 +108,13 @@ const TransferBodyWrapper = styled.div`
   padding: 2rem;
   margin-left: auto;
   margin-right: auto;
+  &.offline {
+    opacity: .25;
+    pointer-events: none;
+    * {
+      pointer-events: none;
+    }
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin-bottom: 50px;
 `};
@@ -375,7 +382,8 @@ export default function Transfer() {
     }
   }
 
-  console.log("TRANSFER TO ========= ", targetChain);
+  // quick enable or disable of bridge
+  const bridgeEnabled = false;
 
   return (
     <>
@@ -408,7 +416,8 @@ export default function Transfer() {
 
         <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
 
-        <TransferBodyWrapper>
+        {!bridgeEnabled && <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>}
+        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
           <BubbleBase />
           <Heading>Cross-Chain Bridge</Heading>
           <Description>Transfer your tokens from one blockchain to another</Description>
