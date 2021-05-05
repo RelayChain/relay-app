@@ -219,8 +219,8 @@ export default function ZeroGravityInfo() {
         </ImageContainer>
         <InfoSection>
           <p>Future</p>
-          <VerticalLine />
-          {/*<MiniImageContainer>
+          {/*<VerticalLine />
+          <MiniImageContainer>
             <img src={idoData?.logo ?? ''} alt={idoData?.idoURL ?? ''}/>
           </MiniImageContainer>*/}
           <VerticalLine />
