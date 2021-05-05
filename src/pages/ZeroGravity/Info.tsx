@@ -164,6 +164,14 @@ const StatTitle = styled.p`
 const StatText = styled.p`
   margin: 0;
 `
+const Disclaimer = styled.div`
+  color: rgba(255,255,255,.5);
+  font-size: .75rem;
+  background: rgba(0,0,0,.25);
+  border-radius: 44px;
+  padding: 2rem;
+  margin-top: -5rem;
+`
 
 export default function ZeroGravityInfo() {
 
@@ -277,6 +285,11 @@ export default function ZeroGravityInfo() {
             </Stat>
           </StatsSection>
         </BgWrapper>
+        { idoData?.disclaimer &&
+          <Disclaimer>
+            {idoData?.disclaimer}
+          </Disclaimer>
+        }
       </PageContainer>
     </>
   )
