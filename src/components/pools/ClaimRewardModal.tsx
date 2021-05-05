@@ -11,11 +11,13 @@ import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
+import toEllipsis from './../../utils/toEllipsis'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
 `
+const MAX_SHOW_WIDTH = 16
 
 interface StakingModalProps {
   isOpen: boolean
@@ -76,7 +78,12 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmount?.toSignificant(6)}
+                {toEllipsis(
+                  stakingInfo?.earnedAmount?.toSignificant(6),
+                  stakingInfo?.earnedAmount?.toSignificant(6).length > MAX_SHOW_WIDTH
+                    ? stakingInfo?.earnedAmount?.toSignificant(6).length - MAX_SHOW_WIDTH
+                    : 0
+                )}
               </TYPE.body>
               <TYPE.body>Unclaimed ZERO</TYPE.body>
             </AutoColumn>
