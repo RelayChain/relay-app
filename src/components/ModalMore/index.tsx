@@ -94,12 +94,6 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
         <Cross onClick={onDismiss} />
-        <MenuItem href={`https://buy.0.exchange`}>
-          <IconLink>
-            <DollarSign size={20} />
-          </IconLink>
-          Buy ZERO
-        </MenuItem>
 
         <MenuItem href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
           <IconLink>
