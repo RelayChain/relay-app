@@ -17,16 +17,24 @@ export const IDO_LIST = [
     allocationWinningAmount: '$250',
     socials: [
       {
-        type: 'INSTAGRAM',
-        url: 'https://instagram.com/'
-      },
-      {
         type: 'TELEGRAM',
         url: 'https://telegram.org/'
       },
       {
+        type: 'DISCORD',
+        url: 'https://discord.com/'
+      },
+      {
         type: 'TWITTER',
         url: 'https://twitter.com/'
+      },
+      {
+        type: 'MEDIUM',
+        url: 'https://medium.com/'
+      },
+      {
+        type: 'WEBSITE',
+        url: 'https://wasder.gg/'
       },
     ]
   }

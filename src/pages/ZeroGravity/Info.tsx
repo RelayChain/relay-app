@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 import moment from 'moment';
 import { CgAddR } from 'react-icons/cg';
 import { BiWorld } from 'react-icons/bi';
-import { FaTelegramPlane, FaTwitter, FaInstagram, FaFacebookSquare, FaYoutube } from 'react-icons/fa';
+import { FaTelegramPlane, FaTwitter, FaMedium, FaDiscord } from 'react-icons/fa';
 
 const Title = styled.h1`
   width: 100%;
@@ -174,11 +174,11 @@ export default function ZeroGravityInfo() {
     if (idoData?.socials) {
       return idoData.socials.map((social:{type:string,url:string}) => {
         let icon = <BiWorld />
-        if (social.type === 'INSTAGRAM') icon = <FaInstagram/>
+        if (social.type === 'WEBSITE') icon = <BiWorld />
         else if (social.type === 'TELEGRAM') icon = <FaTelegramPlane/>
         else if (social.type === 'TWITTER') icon = <FaTwitter/>
-        else if (social.type === 'FACEBOOK') icon = <FaFacebookSquare/>
-        else if (social.type === 'YOUTUBE') icon = <FaYoutube/>
+        else if (social.type === 'DISCORD') icon = <FaDiscord/>
+        else if (social.type === 'MEDIUM') icon = <FaMedium/>
         
         return {
           type: social.type,
