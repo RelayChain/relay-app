@@ -14,7 +14,7 @@ export const IDO_LIST = [
     allocationCurrency: 'USDT',
     description: 'Wasder - Find friends, join communities, and share content. Wasder brings old and new friends together around your passion for gaming. The Wasder IDO token sale will be May 7, 2021 on 0.exchange. If you received a whitelist allocation, please KYC above to be approved for the IDO.',
     distributionDate: new Date('May 7, 2021 14:00:00'),
-    allocationWinningAmount: 'TBD',
+    allocationWinningAmount: '$150',
     socials: [
       {
         type: 'TELEGRAM',
