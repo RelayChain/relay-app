@@ -78,7 +78,7 @@ const BgWrapper = styled.div`
   backdrop-filter: blur(28px);
   border-radius: 44px;
   margin-bottom: 8rem;
-  margin-top: 6rem;
+  margin-top: 4rem;
   padding: 30px;
   width: 100%;
   position: relative;
