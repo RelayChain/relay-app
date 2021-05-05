@@ -16,8 +16,9 @@ export const IDO_LIST = [
     distributionDate: new Date('May 10, 2021 06:00:00'),
     allocationWinningAmount: '$250',
     twitter: '',
-    website: '',
+    website: 'https://www.random-website.com/',
+    medium: 'https://medium.com/',
     blog: '',
-    telegram: '',
+    telegram: 'https://telegram.org/',
   }
 ]
