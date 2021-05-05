@@ -1,12 +1,13 @@
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import React, { useState } from 'react';
+import { ButtonOutlined } from '../../components/Button'
+import React, { useMemo, useState } from 'react';
 
 import { ExternalLink } from '../../theme'
 import { IDO_LIST } from '../../constants/idos';
 import IdoRow from '../../components/ZeroGravity/IdoRow';
 import PageContainer from '../../components/PageContainer'
 import Toggle from '../../components/Toggle';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import moment from 'moment';
 
 const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none !important;
@@ -90,9 +91,19 @@ const HeaderSection = styled.div<{ width?: any }>`
   font-weight: bold;
   color: #A7B1F4;
 `
+
 export default function ZeroGravityList() {
 
   const [showActive, setShowActive] = useState(true);
+
+  const IdoListComplete = IDO_LIST; // fetch this list from the server
+
+  const IdoListFiltered = useMemo(() => {
+    if (showActive) {
+      return IdoListComplete.filter(item => moment(item?.endDate??'').isAfter(moment.now()))
+    }
+    return IdoListComplete.filter(item => moment(item?.endDate??'').isBefore(moment.now()))
+  }, [showActive, IdoListComplete])
 
   const onHandleToggleActive = () => {
     setShowActive(!showActive);
@@ -110,10 +121,11 @@ export default function ZeroGravityList() {
             toggle={onHandleToggleActive}
             activeText="Live"
             inActiveText="Finished"
-            width="186px" />
-            <StyledExternalLink href={`https://0.exchange/partners`}>
-              <ButtonOutlined className="launch-button green">Launch My Token</ButtonOutlined>
-            </StyledExternalLink>
+            width="186px" 
+          />
+          <StyledExternalLink href={`https://0.exchange/partners`}>
+            <ButtonOutlined className="launch-button green">Launch My Token</ButtonOutlined>
+          </StyledExternalLink>
         </ControlsContainer>
 
         <ListContainer>
@@ -137,7 +149,7 @@ export default function ZeroGravityList() {
             <HeaderSection style={{ width: '152px'}}>
             </HeaderSection>
           </HeadersWrap>
-          {IDO_LIST?.map((idoInfo: any) => {
+          {IdoListFiltered?.map((idoInfo: any) => {
             return (
               <IdoRow
                 idoInfo={idoInfo}

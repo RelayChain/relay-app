@@ -1,246 +1,278 @@
-import { BookOpen, Globe, Twitter } from 'react-feather'
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import React, { useState } from 'react';
+import { ButtonOutlined } from 'components/Button'
+import React, { useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import PageContainer from 'components/PageContainer';
+import { IDO_LIST } from 'constants/idos';
+import { useParams } from 'react-router';
+import moment from 'moment';
+import { CgAddR } from 'react-icons/cg';
+import { BiWorld } from 'react-icons/bi';
+import { FaTelegramPlane, FaTwitter, FaInstagram, FaFacebookSquare, FaYoutube } from 'react-icons/fa';
 
-import { ExternalLink } from '../../theme'
-import { IDO_LIST } from '../../constants/idos';
-import IdoRow from '../../components/ZeroGravity/IdoRow';
-import PageContainer from '../../components/PageContainer'
-import { RouteComponentProps } from 'react-router-dom'
-import { RowBetween } from '../../components/Row';
-import Toggle from '../../components/Toggle';
-import styled from 'styled-components'
-
-const moment = require('moment');
-
-const StyledExternalLink = styled(ExternalLink)`
-  text-decoration: none !important;
-  margin-left: auto;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-right: auto;
-  `};
-`
 const Title = styled.h1`
   width: 100%;
   padding: 0px 64px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-padding: 0;
-`};
-`
-const SubTitle = styled.h3`
-  width: 100%;
-  max-width: 600px;
-  padding: 1rem;
-  text-align: center;
-  font-size: 1.5rem;
-  margin-left: auto; margin-right: auto;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  font-size: 1rem;
-`};
-`
-
-const ControlsContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 24px;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  .launch-button {
-    margin-left: auto;
-    max-width: 200px;
-  }
-  .action-button {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  flex-direction: column;
-  max-width: 100%;
-  align-items: flex-start;
-  * {
-    margin-left: auto; margin-right: auto;
-  }
-  .launch-button {
-    margin-right: auto;
-    margin-top: 2rem;
-  }
-`};
-`
-const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-`
-const HeadersWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding-bottom: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
+    padding: 0;
+    text-align: center;
+    font-size: 49px;
+    margin-top: 40px;
+    margin-bottom: 0px;
   `};
 `
-const HeaderSection = styled.div<{ width?: any }>`
-  width: 120px;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: .8rem;
-  font-weight: bold;
-  color: #A7B1F4;
-`
-const LogoImage = styled.div`
-  display: block;
-  margin: auto;
+const ImageContainer = styled.div`
+  margin-top: 1rem;
+  height: 2rem;
   width: 100%;
-  margin-top: 20px;
-  max-width: 300px;
-  img {
-    width: 100%;
+  display: flex;
+  justify-content: center;
+`
+const MiniImageContainer = styled.div`
+  height: 1.2rem;
+  & img {
+    height: 100%;
   }
 `
-const DateTime = styled.h5`
-  display: block;
-  text-align: center;
-  color: #A7B1F4;
-  font-size: 1.25rem;
+const InfoSection = styled.div`
+  margin: 1rem 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
-
-const DetailsContainer = styled.div`
-  border: 2px solid;
-  border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
+const ButtonsSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 24rem;
+  margin: auto;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+  `};
+`
+const ButtonIcon = styled.div`
+  margin-right: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const ButtonsSpacer = styled.div`
+  width: 2rem;
+  height: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 0;
+    height: 1rem;
+  `};
+`
+const VerticalLine = styled.div`
+  height: 1rem;
+  width: 0;
+  border-right: solid 1px white;
+  margin: 0 0.6rem;
+`
+const BgWrapper = styled.div`
   background: rgba(47, 53, 115, 0.32);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
-  padding: 32px;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 120px;
+  margin-bottom: 8rem;
+  margin-top: 6rem;
+  padding: 30px;
+  width: 100%;
+  position: relative;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-
+    border-radius: 16px;
+    padding: 20px;
   `};
 `
-const SocialButtons = styled.div`
+const HeadingRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+const Heading = styled.h2`
+
+`
+const Detail = styled.p`
+  margin: 2rem 0;
+`
+const SocialLinks = styled.div`
+  display: flex;
+`
+const SocialIcon = styled.div`
+  cursor: pointer;
+  font-size: 1.4rem;
+  display: flex;
+  position: relative;
+  padding: .4rem .6rem;
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+`
+const Tooltip = styled.div`
+  cursor: pointer;
+  font-size: .8rem;
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  &:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+`
+const StatsSection = styled.div`
   display: flex;
   flex-direction: row;
-  margin-left: auto;
-  a {
-    margin-left: 14px;
-    color: #A7B1F4;
-    cursor: pointer;
-  }
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+  `};
 `
-
-const InfoItem = styled.div`
+const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  h6 {
-    color: #A7B1F4;
-    margin-bottom: 0;
-    margin-top: 10px;
-  }
+  justify-content: space-between;
+  align-items: center;
 `
-export default function ZeroGravityInfo({
-  match: {
-    params: { idoURL }
-  },
-  ...props
-}: RouteComponentProps<{ idoURL: string }>) {
+const StatTitle = styled.p`
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.4rem;
+`
+const StatText = styled.p`
+  margin: 0;
+`
 
-  const info: any = IDO_LIST.find(x => x.idoURL === idoURL);
+export default function ZeroGravityInfo() {
+
+  const {idoURL} = useParams<{idoURL:string}>();
+
+  const [idoData, setIdoData] = useState<any>();
+
+  const socialMediaLinks = useMemo<Array<{type:string,url:string,icon:any}>>(() => {
+    if (idoData?.socials) {
+      return idoData.socials.map((social:{type:string,url:string}) => {
+        let icon = <BiWorld />
+        if (social.type === 'INSTAGRAM') icon = <FaInstagram/>
+        else if (social.type === 'TELEGRAM') icon = <FaTelegramPlane/>
+        else if (social.type === 'TWITTER') icon = <FaTwitter/>
+        else if (social.type === 'FACEBOOK') icon = <FaFacebookSquare/>
+        else if (social.type === 'YOUTUBE') icon = <FaYoutube/>
+        
+        return {
+          type: social.type,
+          url: social.url,
+          icon
+        }
+      })
+    }
+    return [];
+  }, [idoData]);
+
+  const launchingString = useMemo<string>(() => {
+    if (idoData?.launchDate) {
+      if (moment(idoData.launchDate).isBefore(moment.now())) {
+        return `Launched ${moment(idoData?.launchDate??'').fromNow()}`;
+      }
+      return `Launching ${moment(idoData?.launchDate??'').fromNow()}`;
+    }
+    return '';
+  }, [idoData]);
+
+  useEffect(() => {
+    // fetch data here
+    setIdoData(IDO_LIST.find(item => item.idoURL===idoURL))
+  }, [idoURL])
 
   return (
-    <div style={{ marginTop: '4rem', width: '100%' }}>
+    <>
+      <Title>Info</Title>
       <PageContainer>
-        <LogoImage>
-          <img src={info.logo} />
-        </LogoImage>
-        <SubTitle>{info.idoName} Token Launch</SubTitle>
-        <DateTime>{moment(info.launchDate).fromNow()}</DateTime>
-        <ControlsContainer>
-          <ButtonOutlined className="action-button">Join Waitlist</ButtonOutlined>
-          <ButtonOutlined className="action-button green">Join Pool</ButtonOutlined>
-        </ControlsContainer>
-        <DetailsContainer>
-          <RowBetween>
-            <h4 style={{ fontSize: '1.5rem'}}>Details:</h4>
-            <SocialButtons>
-              <a href={info.twitter} target="_blank">
-                <Twitter size={22} />
-              </a>
-              <a href={info.blog} target="_blank">
-                <BookOpen size={22} />
-              </a>
-              <a href={info.website} target="_blank">
-                <Globe size={22} />
-              </a>
-            </SocialButtons>
-          </RowBetween>
-          <RowBetween style={{ marginTop: '1rem', marginBottom: '1rem'}}>
-            <p>{info.description}</p>
-          </RowBetween>
-          <RowBetween>
-            <InfoItem>
-              <h6>Start Date:</h6>
-              <p>{moment(info.launchDate).fromNow()}</p>
-            </InfoItem>
-            <InfoItem>
-              <h6>End Date:</h6>
-              <p>{moment(info.endDate).fromNow()}</p>
-            </InfoItem>
-            <InfoItem>
-              <h6>Total Raise:</h6>
-              <p>{info.totalRaise}</p>
-            </InfoItem>
-            <InfoItem>
-              <h6>Allocation Min:</h6>
-              <p>{info.allocationMin}</p>
-            </InfoItem>
-            <InfoItem>
-              <h6>Allocation Max:</h6>
-              <p>{info.allocationMax}</p>
-            </InfoItem>
-            <InfoItem>
-              <h6>Winning Ticket Amount:</h6>
-              <p>{info.allocationWinningAmount}</p>
-            </InfoItem>
-          </RowBetween>
-        </DetailsContainer>
+        <ImageContainer>
+          <img src={idoData?.logo ?? ''} alt={idoData?.idoURL ?? ''}/>
+        </ImageContainer>
+        <InfoSection>
+          <p>Future</p>
+          <VerticalLine />
+          <MiniImageContainer>
+            <img src={idoData?.logo ?? ''} alt={idoData?.idoURL ?? ''}/>
+          </MiniImageContainer>
+          <VerticalLine />
+          <p>{launchingString}</p>
+        </InfoSection>
+        <ButtonsSection>
+          <ButtonOutlined >
+            <ButtonIcon>
+              <CgAddR/>
+            </ButtonIcon>
+            Join Whishlist
+          </ButtonOutlined>
+          <ButtonsSpacer />
+          <ButtonOutlined disabled>
+            <ButtonIcon>
+              <CgAddR/>
+            </ButtonIcon>
+            Join Pool
+          </ButtonOutlined>
+        </ButtonsSection>
+        <BgWrapper>
+          <HeadingRow>
+            <Heading>
+              Pool details
+            </Heading>
+            <SocialLinks>
+              {socialMediaLinks.map(iconDetails => 
+                <SocialIcon onClick={()=>window.open(iconDetails.url)}>
+                  {iconDetails.icon}
+                  <Tooltip className="tooltip">{iconDetails.type}</Tooltip>
+                </SocialIcon>
+              )}
+            </SocialLinks>
+          </HeadingRow>
+          <Detail>
+            {idoData?.description ?? ''}
+          </Detail>
+          <StatsSection>
+            <Stat>
+              <StatTitle> Auction Start Date </StatTitle>
+              <StatText>{moment(idoData?.launchDate??"").format('MMM DD, YYYY hh:mm A')}</StatText>
+            </Stat>
+            <Stat>
+              <StatTitle> Token Distribution Date </StatTitle>
+              <StatText>{moment(idoData?.distributionDate??"").format('MMM DD, YYYY hh:mm A')}</StatText>
+            </Stat>
+            <Stat>
+              <StatTitle> Min. Allocation </StatTitle>
+              <StatText>{idoData?.allocationMin??''}</StatText>
+            </Stat>
+            <Stat>
+              <StatTitle> Allocation per Winning Ticket </StatTitle>
+              <StatText>{idoData?.allocationWinningAmount??''}</StatText>
+            </Stat>
+          </StatsSection>
+        </BgWrapper>
       </PageContainer>
-    </div>)
+    </>
+  )
 }
-
-// idoName: 'Wasder',
-// idoURL: 'wasder',
-// logo: '/images/idos/wasder-logo.png',
-// tierName: 'Platinum', // if no tier, leave blank
-// tierLogo: null, // if you include this image, it will override the tierName
-// launchDate: new Date('May 05, 2021 06:00:00'),
-// endDate: new Date('May 08, 2021 06:00:00'),
-// totalRaise: '$500,000',
-// allocationMin: '$10,000',
-// allocationMax: '$100,000',
-// allocationCurrency: 'ETH',
-// description: 'This is the Wasder IDO description',
-// distributionDate: new Date('May 10, 2021 06:00:00'),
-// allocationWinningAmount: '$250',
-// twitter: '',
-// website: '',
-// blog: '',
-// telegram: '',
