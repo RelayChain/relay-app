@@ -1,4 +1,4 @@
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonOutlined } from 'components/Button'
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PageContainer from 'components/PageContainer';
@@ -6,7 +6,8 @@ import { IDO_LIST } from 'constants/idos';
 import { useParams } from 'react-router';
 import moment from 'moment';
 import { CgAddR } from 'react-icons/cg';
-import { FaTelegramPlane, FaTwitter } from 'react-icons/fa';
+import { BiWorld } from 'react-icons/bi';
+import { FaTelegramPlane, FaTwitter, FaInstagram, FaFacebookSquare, FaYoutube } from 'react-icons/fa';
 
 const Title = styled.h1`
   width: 100%;
@@ -44,14 +45,14 @@ const ButtonsSection = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  max-width: 25rem;
+  max-width: 24rem;
   margin: auto;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
   `};
 `
 const ButtonIcon = styled.div`
-  margin-right: 1rem;
+  margin-right: 0.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,8 +101,7 @@ const SocialLinks = styled.div`
   display: flex;
 `
 const SocialIcon = styled.div`
-  /* height: 1.4rem;
-  width: 1.4rem; */
+  cursor: pointer;
   font-size: 1.4rem;
   display: flex;
   position: relative;
@@ -169,18 +169,27 @@ export default function ZeroGravityInfo() {
   const {idoURL} = useParams<{idoURL:string}>();
 
   const [idoData, setIdoData] = useState<any>();
-  const [socialMediaLinks, setSocialMediaLinks] = useState([
-    {
-      name: 'Telegram',
-      icon: <FaTelegramPlane/>,
-      link: 'https://telegram.org/'
-    },
-    {
-      name: 'Twitter',
-      icon: <FaTwitter/>,
-      link: 'https://twitter.com/'
-    },
-  ])
+
+  const socialMediaLinks = useMemo<Array<{type:string,url:string,icon:any}>>(() => {
+    if (idoData?.socials) {
+      return idoData.socials.map((social:{type:string,url:string}) => {
+        let icon = <BiWorld />
+        if (social.type === 'INSTAGRAM') icon = <FaInstagram/>
+        else if (social.type === 'TELEGRAM') icon = <FaTelegramPlane/>
+        else if (social.type === 'TWITTER') icon = <FaTwitter/>
+        else if (social.type === 'FACEBOOK') icon = <FaFacebookSquare/>
+        else if (social.type === 'YOUTUBE') icon = <FaYoutube/>
+        
+        return {
+          type: social.type,
+          url: social.url,
+          icon
+        }
+      })
+    }
+    return [];
+  }, [idoData]);
+
   const launchingString = useMemo<string>(() => {
     if (idoData?.launchDate) {
       if (moment(idoData.launchDate).isBefore(moment.now())) {
@@ -234,9 +243,9 @@ export default function ZeroGravityInfo() {
             </Heading>
             <SocialLinks>
               {socialMediaLinks.map(iconDetails => 
-                <SocialIcon onClick={()=>window.open(iconDetails.link)}>
+                <SocialIcon onClick={()=>window.open(iconDetails.url)}>
                   {iconDetails.icon}
-                  <Tooltip className="tooltip">{iconDetails.name}</Tooltip>
+                  <Tooltip className="tooltip">{iconDetails.type}</Tooltip>
                 </SocialIcon>
               )}
             </SocialLinks>
