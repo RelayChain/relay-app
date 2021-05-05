@@ -25,7 +25,8 @@ export type BubbleChartProps = {
 }
 
 const BubbleChartWrap = styled.div`
-  width: 562px;
+  width: 100%;
+  max-width: 562px;
   height: 309px;
   padding-top: 46px;
   position: relative;
@@ -55,7 +56,7 @@ const FirstHeading = styled.div`
   font-weight: 500;
   font-size: 17px;
   letter-spacing: -0.01em;
-  color: #A7B1F4;
+  color: #a7b1f4;
   opacity: 0.88;
 `
 const SecondHeading = styled.div`
@@ -86,7 +87,6 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
 
   const { width, height } = useResize(componentRef)
 
-
   return (
     <BubbleChartWrap>
       <BubbleBase />
@@ -100,12 +100,12 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
           </SecondHeading>
         </FirstBox>
         {type === 'line' ? (
-            <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width}/>
-          ) : (
-            <SecondBox>
-              <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width}/>
-            </SecondBox>
-          )}
+          <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width} />
+        ) : (
+          <SecondBox>
+            <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width} />
+          </SecondBox>
+        )}
       </Flex>
     </BubbleChartWrap>
   )
