@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
+import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
 import LogoDark from './../../assets/images/0-icon.png'
@@ -89,7 +90,6 @@ const IconLink = styled.span`
 const MoreLink = styled.span`
   display: flex;
   cursor: pointer;
-  margin-top: 3rem;
   color: ${({ theme }) => theme.text2};
 `
 const Title = styled.a`
@@ -165,6 +165,12 @@ export default function SideMenu() {
             </IconLink>
             {t('Zero Gravity')}
           </StyledNavLink>
+          <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem'}}>
+            <IconLink>
+              <DollarSign size={20} />
+            </IconLink>
+            Buy ZERO
+          </HeaderExternalLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px'}}>
               <Icon icon="more" />

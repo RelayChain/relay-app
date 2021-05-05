@@ -170,6 +170,11 @@ const StatsWrapper = styled.div`
     width: 100%;
     max-width: 500px;
   }
+  .remove-liquidity-link {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+  }
 `};
 `
 const Stat = styled.div`
