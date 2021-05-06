@@ -6,7 +6,7 @@ import {
   RedirectPathToSwapOnly,
   RedirectToSwap
 } from './Swap/redirects'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense } from 'react'
 import {
   RedirectDuplicateTokenIds,
   RedirectOldAddLiquidityPathStructure,
@@ -23,14 +23,9 @@ import GraphQLProvider from './../graphql'
 import Guides from './Guides'
 import Header from '../components/Header'
 import Home from './Home'
-import Logo from './../assets/svg/logo.svg'
-import LogoDark from './../assets/images/0-icon.png'
 import Manage from './Pools/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import ModalMore from '../components/ModalMore'
-import Mountains from '../components/Mountains'
-import PageContainer from '../components/PageContainer'
 import Polling from '../components/Header/Polling'
 // import Pool from './Pool'
 import PoolFinder from './PoolFinder'
@@ -49,7 +44,6 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import ZeroGravityInfo from './ZeroGravity/Info';
 import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
-import { useDarkModeManager } from '../state/user/hooks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -84,28 +78,6 @@ const BodyWrapper = styled.div`
   `};
 
   z-index: 1;
-`
-
-const Marginer = styled.div`
-  margin-top: 5rem;
-`
-
-const Title = styled.a`
-  position: absolute;
-  top: 34px;
-  left: 90px;
-  width: 66px;
-  height: 66px;
-  z-index: 2;
-  :hover {
-    cursor: pointer;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  width: 46px;
-  height: 46px;
-  left: 22px;
-  z-index: 3;
-  `};
 `
 
 function TopLevelModals() {

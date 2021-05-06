@@ -1,5 +1,4 @@
 import { ChainId, CurrencyAmount, JSBI, Pair, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
-import { Contract } from '@ethersproject/contracts'
 import {
   DAI,
   MOCK1,
@@ -19,7 +18,6 @@ import {
   bscUNI,
   bscUSDC,
   bscUSDT,
-  bscWBNB,
   bscZERO,
   zBTC,
   zDAI,
@@ -29,16 +27,12 @@ import {
   zUSDC,
   zUSDT,
   zZERO,
-  pngDAI,
   pngETH,
-  pngUSDT,
-  bscINDA
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 
-import moduleName from 'module';
 import { tryParseAmount } from '../swap/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'

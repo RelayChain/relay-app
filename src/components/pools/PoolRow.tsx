@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import React, { useEffect, useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'

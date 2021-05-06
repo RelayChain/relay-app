@@ -1,5 +1,5 @@
 import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { RowBetween } from '../Row'
@@ -14,7 +14,6 @@ import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constant
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
 import ListLoader from '../ListLoader';
-import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
 import { Text } from 'rebass'

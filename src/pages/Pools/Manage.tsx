@@ -1,7 +1,7 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
-import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
+import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
+import { DataCard } from '../../components/pools/styled'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -10,13 +10,10 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import { AutoColumn } from '../../components/Column'
-import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
-import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import FullPositionCard from '../../components/PositionCard'
-import { Link } from 'react-router-dom'
 import PageContainer from './../../components/PageContainer'
 import { RouteComponentProps } from 'react-router-dom'
 import StakingModal from '../../components/pools/StakingModal'
@@ -110,7 +107,7 @@ const StatsWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 2rem;
-  background: rgba(0,0,0,.25);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .add-liquidity-link {
@@ -160,7 +157,7 @@ const StatLabel = styled.h5`
   color: #fff;
   font-size: 1rem;
   span {
-    opacity: .75;
+    opacity: 0.75;
     font-weight: normal;
   }
 `
@@ -172,7 +169,7 @@ const StatValue = styled.h6`
   margin-top: 10px;
   margin-bottom: 0;
   span {
-    opacity: .75;
+    opacity: 0.75;
     font-weight: normal;
     font-size: 1.25rem;
     margin-left: 4px;
@@ -182,7 +179,7 @@ const StatValue = styled.h6`
 `};
 `
 
-const PositionInfo = styled(AutoColumn) <{ dim: any }>`
+const PositionInfo = styled(AutoColumn)<{ dim: any }>`
   position: relative;
   max-width: 640px;
   width: 100%;
@@ -211,14 +208,14 @@ const StyledBox = styled.div`
   }
 `
 
-const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #6752F7 100%);
+const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #6752f7 100%);
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background: #111;
 `
 
-const StyledBottomCard = styled(DataCard) <{ dim: any }>`
+const StyledBottomCard = styled(DataCard)<{ dim: any }>`
   background: ${({ theme }) => theme.bg3};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
@@ -247,7 +244,7 @@ const EmptyProposals = styled.div`
 const VoteCard = styled(DataCard)`
   background: #111;
   overflow: hidden;
-  border: 2px solid rgba(103, 82, 247, .45);
+  border: 2px solid rgba(103, 82, 247, 0.45);
   border-radius: 12px;
 `
 
@@ -275,14 +272,14 @@ const SymbolTitleInner = styled.div`
 const TextLink = styled.div`
   font-size: 1rem;
   font-weight: bold;
-  color: #6752F7;
+  color: #6752f7;
   cursor: pointer;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   &.pink {
-    color: #B368FC
+    color: #b368fc;
   }
   &:hover {
-    opacity: .9;
+    opacity: 0.9;
   }
 `
 
@@ -295,16 +292,24 @@ export default function Manage({
   const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
 
-  const locationState: any = props?.location?.state;
-  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null;
+  const locationState: any = props?.location?.state
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
 
   if (!stakingRewardAddress) {
-    history.push('/pools');
+    history.push('/pools')
   }
   const flatRewards = Object.values(STAKING_REWARDS_INFO).flat(1)
-  const isGongolaRewards = useMemo(() => flatRewards
-    .some(info => info && info['stakingRewardAddress'] === stakingRewardAddress &&
-      info['rewardInfo'] && info['rewardInfo']['chain'] === 'Gondola'), [STAKING_REWARDS_INFO])
+  const isGongolaRewards = useMemo(
+    () =>
+      flatRewards.some(
+        info =>
+          info &&
+          info['stakingRewardAddress'] === stakingRewardAddress &&
+          info['rewardInfo'] &&
+          info['rewardInfo']['chain'] === 'Gondola'
+      ),
+    [STAKING_REWARDS_INFO]
+  )
   const theme = useContext(ThemeContext)
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -313,7 +318,7 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const baseStakingInfo = useStakingInfo(stakingTokenPair)
-  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress);
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress)
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -327,8 +332,14 @@ export default function Manage({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC ? tokenB : tokenA
-  const WETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC ? tokenA : tokenB
+  const token =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenB
+      : tokenA
+  const WETH =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenA
+      : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -445,60 +456,64 @@ export default function Manage({
       )}
       <Title>Manage</Title>
       <PageContainer>
-        {account !== null && <>
-          <SymbolTitleWrapper>
-            <SymbolTitleInner>
-              {currencyA?.symbol}/{currencyB?.symbol}
-              <span style={{ marginLeft: '10px', marginRight: '10px' }}>Liquidity Mining</span>
-              <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
-            </SymbolTitleInner>
-          </SymbolTitleWrapper>
-          <StatsWrapper>
-            <Stat className="weekly">
-              <StatLabel>Total Deposits:</StatLabel>
-              <StatValue>
-                {valueOfTotalStakedAmountInUSDC
-                  ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                  : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}`}
-                <span>{symbol}</span>
-              </StatValue>
-            </Stat>
-            <Stat className="harvest">
-              <StatLabel>Reward Rate:</StatLabel>
-              <StatValue>
-                {stakingInfo?.active
-                  ? stakingInfo?.totalRewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
-                  : '0'}
-                <span>{' ZERO / week'}</span>
-              </StatValue>
-            </Stat>
-            {
-                <StyledInternalLink className="add-liquidity-link"
+        {account !== null && (
+          <>
+            <SymbolTitleWrapper>
+              <SymbolTitleInner>
+                {currencyA?.symbol}/{currencyB?.symbol}
+                <span style={{ marginLeft: '10px', marginRight: '10px' }}>Liquidity Mining</span>
+                <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
+              </SymbolTitleInner>
+            </SymbolTitleWrapper>
+            <StatsWrapper>
+              <Stat className="weekly">
+                <StatLabel>Total Deposits:</StatLabel>
+                <StatValue>
+                  {valueOfTotalStakedAmountInUSDC
+                    ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                    : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}`}
+                  <span>{symbol}</span>
+                </StatValue>
+              </Stat>
+              <Stat className="harvest">
+                <StatLabel>Reward Rate:</StatLabel>
+                <StatValue>
+                  {stakingInfo?.active
+                    ? stakingInfo?.totalRewardRate
+                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                        ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                    : '0'}
+                  <span>{' ZERO / week'}</span>
+                </StatValue>
+              </Stat>
+              {
+                <StyledInternalLink
+                  className="add-liquidity-link"
                   to={{
                     pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
                     state: { stakingRewardAddress }
-                  }
-                  }
+                  }}
                 >
                   <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
                 </StyledInternalLink>
-            }
+              }
 
-
-            {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-              <StyledInternalLink className="remove-liquidity-link"
-                to={{
-                  pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
-                  state: { stakingRewardAddress }
-                }}
-              >
-                <TextLink>Remove Liquidity</TextLink>
-              </StyledInternalLink>
-            )}
-          </StatsWrapper> </>
-        }
+              {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
+                  '0'
+                ) ? null : !stakingInfo?.active ? null : (
+                <StyledInternalLink
+                  className="remove-liquidity-link"
+                  to={{
+                    pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                    state: { stakingRewardAddress }
+                  }}
+                >
+                  <TextLink>Remove Liquidity</TextLink>
+                </StyledInternalLink>
+              )}
+            </StatsWrapper>
+          </>
+        )}
         <PageWrapper>
           <Columns>
             <SingleColumn className="left">
@@ -527,8 +542,8 @@ export default function Manage({
                   <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                       : '0'}
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{' ZERO / week'}</span>
                   </TYPE.white>
@@ -537,7 +552,9 @@ export default function Manage({
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                   <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                    <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO {currencyA?.symbol}-{currencyB?.symbol}</span>
+                    <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
+                      ZERO {currencyA?.symbol}-{currencyB?.symbol}
+                    </span>
                   </TYPE.white>
                 </RowBetween>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
@@ -548,21 +565,29 @@ export default function Manage({
               </Wrapper>
             </SingleColumn>
             {(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
-              (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) &&
+              (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) && (
               <SingleColumn className="right">
                 <Wrapper>
-                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (<>
-                    <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
-                    <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                      <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
-                        {userLiquidityUnstaked?.toSignificant(6)}
-                        <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
-                      </TYPE.white>
-                      <ButtonOutlined className="remove-liquidity-button green" onClick={handleDepositClick} style={{ width: '160px' }}>
-                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
-                      </ButtonOutlined>
-                    </RowBetween>
-                  </>)}
+                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
+                      '0'
+                    ) ? null : !stakingInfo?.active ? null : (
+                    <>
+                      <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
+                      <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
+                        <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                          {userLiquidityUnstaked?.toSignificant(6)}
+                          <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
+                        </TYPE.white>
+                        <ButtonOutlined
+                          className="remove-liquidity-button green"
+                          onClick={handleDepositClick}
+                          style={{ width: '160px' }}
+                        >
+                          {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
+                        </ButtonOutlined>
+                      </RowBetween>
+                    </>
+                  )}
                   {stakingPairs.map(
                     (stakingPair, i) =>
                       stakingPair[1] &&
@@ -575,7 +600,8 @@ export default function Manage({
                       )
                   )}
                 </Wrapper>
-              </SingleColumn>}
+              </SingleColumn>
+            )}
           </Columns>
         </PageWrapper>
       </PageContainer>

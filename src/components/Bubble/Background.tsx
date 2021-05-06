@@ -13,12 +13,10 @@ const BackgroundWrap = styled.div`
 
 export interface BackgroundProps {
   variant: string
-  showMountains?: boolean;
+  showMountains?: boolean
 }
 
 export default function Background({ variant = 'green', showMountains }: BackgroundProps) {
-  const { width } = useWindowDimensions()
-
   const widthSize = '100%'
   const heightSize = '100%'
   return (
@@ -38,7 +36,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               strokeWidth={2}
             />
           </g>
-          { showMountains &&
+          {showMountains && (
             <path
               opacity={0.36}
               fillRule="evenodd"
@@ -46,7 +44,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               d="M0 115l25-21 27-3 26-8 26-16 28 14 25 32 26-30 26 2 26-10 26 16v27c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-3z"
               fill="#1EF7E7"
             />
-          }
+          )}
           <defs>
             <filter
               id="prefix__filter0_bi"
@@ -85,7 +83,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               strokeWidth={2}
             />
           </g>
-          { showMountains &&
+          {showMountains && (
             <path
               opacity={0.36}
               fillRule="evenodd"
@@ -93,7 +91,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               d="M0 100l33 14 32-28 31-11 35 48 32-24 33-11 32 16 33-20v34c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-18z"
               fill="#6752F7"
             />
-          }
+          )}
           <defs>
             <linearGradient
               id="prefix__paint0_linear"
@@ -128,8 +126,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
             </filter>
           </defs>
         </svg>
-      ) : variant === 'blue' ?
-      (
+      ) : variant === 'blue' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#prefix__filter0_bi)">
             <rect width={261} height={162} rx={44} fill="#1CB0F9" fillOpacity={0.26} />
@@ -144,7 +141,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               strokeWidth={2}
             />
           </g>
-          { showMountains &&
+          {showMountains && (
             <path
               opacity={0.36}
               fillRule="evenodd"
@@ -152,7 +149,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               d="M0 100l33 14 32-28 31-11 35 48 32-24 33-11 32 16 33-20v34c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-18z"
               fill="#1CB0F9"
             />
-          }
+          )}
           <defs>
             <linearGradient
               id="prefix__paint0_linear"
@@ -187,7 +184,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
             </filter>
           </defs>
         </svg>
-      ): variant === 'pink' ? (
+      ) : variant === 'pink' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter={isIOS || isFirefox ? '' : 'url(#prefix__filter0_bi)'}>
             <rect width={261} height={162} rx={44} fill="#B368FC" fillOpacity={0.26} />
@@ -202,7 +199,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               strokeWidth={2}
             />
           </g>
-          { showMountains &&
+          {showMountains && (
             <path
               opacity={0.36}
               fillRule="evenodd"
@@ -210,7 +207,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               d="M0 100l33 14 32-28 31-11 35 48 32-24 33-11 32 16 33-20v34c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-18z"
               fill="#B368FC"
             />
-          }
+          )}
           <defs>
             <linearGradient
               id="prefix__paint0_linear"
@@ -245,7 +242,9 @@ export default function Background({ variant = 'green', showMountains }: Backgro
             </filter>
           </defs>
         </svg>
-      ): ''}
+      ) : (
+        ''
+      )}
     </BackgroundWrap>
   )
 }

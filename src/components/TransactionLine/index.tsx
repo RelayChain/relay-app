@@ -124,7 +124,7 @@ const TransactionLine = ({ mints, burns, swaps }: TransactionLineProps) => {
 
   if (!data.transaction) return null
 
-  const { type, totalValue, amount0, amount1, transaction, date, token0, token1 } = data
+  const { type, totalValue, amount1, transaction, date, token0, token1 } = data
 
   return (
     <>

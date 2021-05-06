@@ -15,6 +15,8 @@ import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
+import { dateFormatted } from 'utils/getFormattedMonth'
+
 const Title = styled.h1`
   width: 100%;
   padding: 0px 64px;
@@ -28,17 +30,7 @@ const Title = styled.h1`
 padding: 0;
 `};
 `
-const WalletsWrap = styled.div<{ isColumn: boolean }>`
-  display: flex;
-  justify-content: ${({ isColumn }) => (isColumn ? 'center' : 'flex-end')};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-top: 25px;
-  justify-content: center;
-`};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  justify-content: space-between;
-`};
-`
+
 const BubbleMarginWrap = styled.div`
   display: flex;
   gap: 1rem;
@@ -129,7 +121,7 @@ export default function Home() {
       skip: pagination * 12
     }
   })
- 
+
   const getWalletHoldersData = async () => {
     const res = await getWalletHolderCount()
     setLoadingWC(false)
@@ -169,10 +161,12 @@ export default function Home() {
   }
 
   // make sure to reverse
-  const series = tvlData?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
-  const lastDataPoint = series[series.length - 1];
-  const index = (series.length - 2) || 0;
-  const perc = getPercentageValues(lastDataPoint, series[index]);
+  const reverseSeries = tvlData?.map((item: TVLHistoryData) => Number(item.TVL_total_usd)).reverse()
+  const reverseData = [...tvlData].reverse()
+  const lastDataPoint = reverseSeries[reverseSeries.length - 1]
+  const index = reverseSeries.length - 2 || 0
+  const perc = getPercentageValues(lastDataPoint, reverseSeries[index])
+  const formattedDate = reverseData.map((item: any) => dateFormatted(item.date))
 
   return (
     <>
@@ -185,7 +179,14 @@ export default function Home() {
             </CenterWrap>
           ) : (
             <>
-              <BubbleChart type="line" data={tvlData} title="Liquidity" value={lastDataPoint} percentage={perc} />
+              <BubbleChart
+                type="line"
+                categoriesX={formattedDate}
+                title="Liquidity"
+                value={lastDataPoint}
+                series={reverseSeries}
+                percentage={perc}
+              />
               <BubbleMarginWrap>
                 {loadingTV || loadingWC ? (
                   <CenterWrap>
