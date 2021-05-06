@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import useGasPrice from 'hooks/useGasPrice'
 import { BigNumber, ethers, utils } from 'ethers'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -7,8 +9,7 @@ import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../../components/Column'
 import { ButtonLight } from '../../components/Button'
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
-import styled, { ThemeContext } from 'styled-components'
-import useGasPrice from 'hooks/useGasPrice'
+
 
 const SwapFlexRow = styled.div`
 flex: 1;
@@ -73,7 +74,7 @@ export default function WSDSale() {
   const [amount, setAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
   const [successHash, setSuccessHash] = useState<null | string>(null)
-
+  // const currentGasPrice = await useGasPrice()
   const getLimits = async () => {
     try {
       const res = await buyersLimits(account)
@@ -119,26 +120,30 @@ export default function WSDSale() {
     }
   }
 
-  const currentGasPrice = await useGasPrice()
+  
 
 //   const approve = async () => {
+//     const { account, chainId, library } = useActiveWeb3React()
 //     // @ts-ignore
-//     const signer = library.getSigner() 
+//     const signer = await library.getSigner() 
 //     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
 
 //     const transferAmount = String(Number.MAX_SAFE_INTEGER)
 //     // USDT Rinkeby address
 //     const tokenContract = new ethers.Contract('0xc66227E44bf1E6F043919A65707b826e3E9f1132', USDTTokenABI, signer)
-//     tokenContract // currentChain.erc20HandlerAddress
+//     const callApprove = tokenContract // currentChain.erc20HandlerAddress
+  
 //       .approve('0x083D9DacEb094e2b6C018AEbF58BB7c4D01E17db', BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
 //         gasLimit: '50000',
-//         gasPrice: currentGasPrice,
+//         gasPrice: 225,
 //         nonce: await library.getSigner().getTransactionCount()
 //       })
-//       .then((resultApproveTx: any) => {
-//         console.log("🚀 ~ file: wsdSale.tsx ~ line 138 ~ .then ~ resultApproveTx", resultApproveTx)
-//       }
-//  }
+//       console.log("🚀 ~ file: wsdSale.tsx ~ line 135 ~ approve ~ callApprove", callApprove)
+
+//       // .then((resultApproveTx: any) => {
+//       //   console.log("🚀 ~ file: wsdSale.tsx ~ line 138 ~ .then ~ resultApproveTx", resultApproveTx)
+//       // }
+// }
 
   return (
     <>
