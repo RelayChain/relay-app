@@ -4,7 +4,7 @@ import useGasPrice from 'hooks/useGasPrice'
 import { BigNumber, ethers, utils } from 'ethers'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useZeroFreeClaimContract, useTokenContract } from '../../hooks/useContract'
+import { useWDSDepositContract, useTokenContract } from '../../hooks/useContract'
 import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../../components/Column'
 import { ButtonLight } from '../../components/Button'
@@ -21,7 +21,6 @@ position: relative;
 width: 620px;
 max-width: 100%;
 padding: 28px 34px;
-min-height: 570px;
 background: rgba(47, 53, 115, 0.32);
 box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
 backdrop-filter: blur(28px);
@@ -52,18 +51,17 @@ align-items: center;
 const ButtonsFlex = styled.div`
   display: flex;
 `
+let web3React: any
+const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
 export default function WSDSale() {
-  const { account, chainId, library } = useActiveWeb3React()
-
+  web3React = useActiveWeb3React() 
   const {
     // @ts-ignore
     buyers_limits: buyersLimits,
     // @ts-ignore
-    purchase,
-    // @ts-ignore
-    estimateGas: { purchase: purchaseEstimate }
-  } = useZeroFreeClaimContract('0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7')
+    deposit 
+  } = useWDSDepositContract('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae')
 
   const {
     // @ts-ignore
@@ -77,25 +75,28 @@ export default function WSDSale() {
   // const currentGasPrice = await useGasPrice()
   const getLimits = async () => {
     try {
-      const res = await buyersLimits(account)
-      setLimits(utils.formatUnits(res, 18))
+      const res = await buyersLimits(web3React?.account)
+      setLimits(web3React?.utils.formatUnits(res, 18))
     } catch (e) {
       console.log(e)
     }
   }
 
   useEffect(() => {
-    if (buyersLimits && account) {
+    if (buyersLimits && web3React?.account) {
       getLimits()
     }
-  }, [buyersLimits, account])
+  }, [buyersLimits, web3React?.account])
 
   const onPurchase = async () => {
     try {
       setIsLoading(true)
-      const res = await purchase({
-        gasLimit: 350000
+      const res = await deposit(BigNumber.from(utils.parseUnits('1456', 18)).toHexString(), {
+        gasLimit: '50000',
+        gasPrice: BigNumber.from(utils.parseUnits('225', 10)),
+        nonce: await web3React.library.getSigner().getTransactionCount()
       })
+      console.log("🚀 ~ file: wsdSale.tsx ~ line  104 ~ onPurchase ~ res", res)
       await res.wait()
       setSuccessHash(res.hash)
     } catch (e) {
@@ -105,11 +106,16 @@ export default function WSDSale() {
     }
   }
   const onApprove = async () => {
+
     try {
       setIsLoading(true)
-      const res = await approve(amount, {
-        gasLimit: 350000
-      })
+      const transferAmount = String(Number.MAX_SAFE_INTEGER)
+      const res = await approve('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae', BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
+        gasLimit: '50000',
+        gasPrice: BigNumber.from(utils.parseUnits('225', 10)),
+        nonce: await web3React.library.getSigner().getTransactionCount()
+      }
+      )
 
       await res.wait()
       setSuccessHash(res.hash)
@@ -120,30 +126,6 @@ export default function WSDSale() {
     }
   }
 
-  
-
-//   const approve = async () => {
-//     const { account, chainId, library } = useActiveWeb3React()
-//     // @ts-ignore
-//     const signer = await library.getSigner() 
-//     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
-
-//     const transferAmount = String(Number.MAX_SAFE_INTEGER)
-//     // USDT Rinkeby address
-//     const tokenContract = new ethers.Contract('0xc66227E44bf1E6F043919A65707b826e3E9f1132', USDTTokenABI, signer)
-//     const callApprove = tokenContract // currentChain.erc20HandlerAddress
-  
-//       .approve('0x083D9DacEb094e2b6C018AEbF58BB7c4D01E17db', BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
-//         gasLimit: '50000',
-//         gasPrice: 225,
-//         nonce: await library.getSigner().getTransactionCount()
-//       })
-//       console.log("🚀 ~ file: wsdSale.tsx ~ line 135 ~ approve ~ callApprove", callApprove)
-
-//       // .then((resultApproveTx: any) => {
-//       //   console.log("🚀 ~ file: wsdSale.tsx ~ line 138 ~ .then ~ resultApproveTx", resultApproveTx)
-//       // }
-// }
 
   return (
     <>
@@ -156,7 +138,7 @@ export default function WSDSale() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <p>Claimed successfully</p>
                   <a
-                    href={getEtherscanLink(chainId as number, successHash as string, 'transaction')}
+                    href={getEtherscanLink(web3React.chainId as number, successHash as string, 'transaction')}
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -165,16 +147,16 @@ export default function WSDSale() {
                 </div>
               ) : (
                   <>
-                    {!account && <p>Please connect to wallet</p>}
-                    {account && (
+                    {!web3React.account && <p>Please connect to wallet</p>}
+                    {web3React.account && (
                       <>
                         <input type="number" name="amount" id="amount-wsd" />
                         <p style={{ textAlign: 'center' }}>Your limits {limits} USDT</p>
                         <ButtonsFlex>
-                          <ButtonLight disabled={limits === '0.0' || isLoading} onClick={onApprove}>
+                          <ButtonLight onClick={onApprove}>
                             {isLoading ? '... loading' : 'Approve'}
                           </ButtonLight>
-                          <ButtonLight disabled={limits === '0.0' || isLoading} onClick={onPurchase}>
+                          <ButtonLight onClick={onPurchase}>
                             {isLoading ? '... loading' : 'Buy Tokens'}
                           </ButtonLight>
                         </ButtonsFlex>
