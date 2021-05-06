@@ -76,7 +76,7 @@ export default function WSDSale() {
   const getLimits = async () => {
     try {
       const res = await buyersLimits(web3React?.account)
-      setLimits(web3React?.utils.formatUnits(res, 18))
+      setLimits(web3React?.utils.formatUnits(res, 6))
     } catch (e) {
       console.log(e)
     }
@@ -93,7 +93,7 @@ export default function WSDSale() {
       setIsLoading(true)
       const res = await deposit(BigNumber.from(utils.parseUnits('1456', 18)).toHexString(), {
         gasLimit: '50000',
-        gasPrice: BigNumber.from(utils.parseUnits('225', 10)),
+        gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
       console.log("🚀 ~ file: wsdSale.tsx ~ line  104 ~ onPurchase ~ res", res)
@@ -112,7 +112,7 @@ export default function WSDSale() {
       const transferAmount = String(Number.MAX_SAFE_INTEGER)
       const res = await approve('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae', BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
         gasLimit: '50000',
-        gasPrice: BigNumber.from(utils.parseUnits('225', 10)),
+        gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       }
       )
