@@ -90,6 +90,14 @@ const BuyWrap = styled.div`
       margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
 `
+const MaxButton = styled.p`
+  position: absolute;
+  font-size: .85;
+  right: 45px;
+  margin-top: 54px;
+  color: #1EF7E7;
+  cursor: pointer;
+`
 
 let web3React: any
 const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
@@ -175,7 +183,7 @@ export default function WSDSale() {
     }
   }
 
-  if (limits === '0.0') {
+  if (limits === '0.0' && !approveSuccessHash && !depositSuccessHash) {
     return (<></>)
   }
 
@@ -191,12 +199,13 @@ export default function WSDSale() {
                 {web3React.account && (
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
+                    <MaxButton onClick={() => setAmount(limits)}>MAX</MaxButton>
                     <p style={{ textAlign: 'center' }}>Your limit: {limits} USDT</p>
                     <ButtonsFlex>
-                      <ButtonOutlined className={ approveSuccessHash ? 'disabled' : ''} onClick={onApprove}>
+                      <ButtonOutlined className={ (approveSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''} onClick={onApprove}>
                         {isLoading ? '... pending' : 'Approve'}
                       </ButtonOutlined>
-                      <ButtonOutlined className="green" onClick={onPurchase}>
+                      <ButtonOutlined className={`green ${ (depositSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonOutlined>
                     </ButtonsFlex>
