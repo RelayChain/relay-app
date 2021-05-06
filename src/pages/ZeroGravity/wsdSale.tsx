@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import useGasPrice from 'hooks/useGasPrice'
 import { BigNumber, ethers, utils } from 'ethers'
-
-import { useActiveWeb3React } from '../../hooks'
-import { useWDSDepositContract, useTokenContract } from '../../hooks/useContract'
+import React, { useEffect, useState } from 'react'
 import { calculateGasMargin, getEtherscanLink } from '../../utils'
+import styled, { ThemeContext } from 'styled-components'
+import { useTokenContract, useWDSDepositContract } from '../../hooks/useContract'
+
 import { AutoColumn } from '../../components/Column'
-import { ButtonLight } from '../../components/Button'
+import { ButtonOutlined } from '../../components/Button'
+import { useActiveWeb3React } from '../../hooks'
+import useGasPrice from 'hooks/useGasPrice'
+
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
 
 const SwapFlexRow = styled.div`
 flex: 1;
 width: 100%;
+margin-left: auto;
+margin-right: auto;
 `
 const SwapWrap = styled.div`
 font-family: Poppins;
 position: relative;
-width: 620px;
+width: 400px;
 max-width: 100%;
 padding: 28px 34px;
 background: rgba(47, 53, 115, 0.32);
 box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
 backdrop-filter: blur(28px);
 border-radius: 44px;
-margin-right: 2rem;
+margin-left: auto;
+margin-right: auto;
+margin-top: 2rem;
 ${({ theme }) => theme.mediaWidth.upToMedium`
   margin-top: 20px
   margin-right: auto;
@@ -34,8 +39,6 @@ ${({ theme }) => theme.mediaWidth.upToMedium`
 ${({ theme }) => theme.mediaWidth.upToSmall`
 width: 100%;
 `};
-position: sticky;
-top: 4rem;
 `
 const SwapFlex = styled.div`
 display: flex;
@@ -46,12 +49,48 @@ gap: 1rem;
 ${({ theme }) => theme.mediaWidth.upToMedium`
 flex-direction: column;
 align-items: center;
-margin-left: 140px;
 `};
 `
 const ButtonsFlex = styled.div`
   display: flex;
+  flex-direction: column;
+  * {
+    margin-top: 1rem;
+  }
+  .disabled {
+    opacity: .25;
+    pointer-events: none;
+  }
 `
+const BuyWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  input {
+    color: #FFFFFF;
+    position: relative;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    flex: 1 1 auto;
+    background: transparent;
+    padding: 0px 15px;
+    border-radius: 12px;
+    font-size: 22px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-appearance: textfield;
+    background: rgba(0,0,0,.25);
+    height: 48px;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+`
+
 let web3React: any
 const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
@@ -136,26 +175,30 @@ export default function WSDSale() {
     }
   }
 
+  if (limits === '0.0') {
+    return (<></>)
+  }
+
   return (
     <>
       <SwapFlex>
         <SwapFlexRow>
           <SwapWrap>
-            <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-              <h2 style={{ marginBottom: '0' }}>Wasder Token Sale:</h2>
+            <BuyWrap>
+              <h2 style={{ marginBottom: '.5rem' }}>Wasder Token Sale:</h2>
               <>
                 {!web3React.account && <p>Please connect to wallet</p>}
                 {web3React.account && (
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
-                    <p style={{ textAlign: 'center' }}>Your limits {limits} USDT</p>
+                    <p style={{ textAlign: 'center' }}>Your limit: {limits} USDT</p>
                     <ButtonsFlex>
-                      <ButtonLight onClick={onApprove}>
+                      <ButtonOutlined className={ approveSuccessHash ? 'disabled' : ''} onClick={onApprove}>
                         {isLoading ? '... pending' : 'Approve'}
-                      </ButtonLight>
-                      <ButtonLight onClick={onPurchase}>
+                      </ButtonOutlined>
+                      <ButtonOutlined className="green" onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
-                      </ButtonLight>
+                      </ButtonOutlined>
                     </ButtonsFlex>
                   </>
                 )}
@@ -184,7 +227,7 @@ export default function WSDSale() {
                   </a>
                 </div>
               ) : (<></>)}
-            </AutoColumn>
+            </BuyWrap>
           </SwapWrap>
         </SwapFlexRow>
       </SwapFlex>

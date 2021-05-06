@@ -254,6 +254,7 @@ export default function ZeroGravityInfo() {
             KYC Here
           </ButtonOutlined>
         </ButtonsSection>
+        <WSDSale />
         <BgWrapper>
           <HeadingRow>
             <Heading>
@@ -271,7 +272,6 @@ export default function ZeroGravityInfo() {
           <Detail>
             {idoData?.description ?? ''}
           </Detail>
-          <WSDSale />
           <StatsSection>
             <Stat>
               <StatTitle> Auction Start Date </StatTitle>
