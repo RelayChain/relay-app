@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Row from 'components/Row'
 import styled from 'styled-components'
 

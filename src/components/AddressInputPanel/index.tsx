@@ -3,7 +3,6 @@ import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 import { AutoColumn } from '../Column'
-import { ChainId } from '@zeroexchange/sdk'
 import { RowBetween } from '../Row'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'

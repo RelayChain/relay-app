@@ -4,8 +4,7 @@ import {
   ETH_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS,
   MUMBAI_ROUTER_ADDRESS,
-  SMART_CHAIN_ROUTER_ADDRESS,
-  WBNB
+  SMART_CHAIN_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -44,17 +43,6 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 0;
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-`
 const BodyWrapper = styled.div`
   position: relative;
   max-width: 675px;
@@ -214,15 +202,15 @@ export default function AddLiquidity({
     }
 
     // TODO: export this from SDK
-    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC];
+    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC]
 
-    let estimate;
-    let method: (...args: any) => Promise<TransactionResponse>;
-    let args: Array<string | string[] | number>;
-    let value: BigNumber | null;
+    let estimate
+    let method: (...args: any) => Promise<TransactionResponse>
+    let args: Array<string | string[] | number>
+    let value: BigNumber | null
 
     if ([currencyA, currencyB].some(c => ALL_ETHERS.includes(c))) {
-      const tokenBIsETH = ALL_ETHERS.includes(currencyB);
+      const tokenBIsETH = ALL_ETHERS.includes(currencyB)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -389,15 +377,13 @@ export default function AddLiquidity({
         pathname: `/manage/${curA}/${curB}`,
         state: { stakingRewardAddress }
       })
-    }
-    else {
+    } else {
       history.goBack()
     }
   }
 
   return (
     <>
-      {/*<Title>Add Liquidity</Title>*/}
       <BodyWrapper>
         <AddRemoveTabs creating={isCreate} adding={true} onGoBack={handleGoBack} />
         <Wrapper>

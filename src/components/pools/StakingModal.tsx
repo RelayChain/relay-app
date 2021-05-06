@@ -28,7 +28,6 @@ const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   justify-content: space-between;
   padding-right: 20px;
   padding-left: 20px;
-
   opacity: ${({ dim }) => (dim ? 0.5 : 1)};
 `
 

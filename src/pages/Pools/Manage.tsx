@@ -254,7 +254,6 @@ const VoteCard = styled(DataCard)`
 const DataRow = styled(RowBetween)`
   justify-content: center;
   gap: 12px;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
     gap: 12px;
@@ -576,7 +575,6 @@ export default function Manage({
 }
 
 /* ====
-
 <PageWrapper>
   <RowBetween style={{ gap: '24px' }}>
     <TYPE.mediumHeader style={{ margin: 0 }}>
@@ -584,7 +582,6 @@ export default function Manage({
     </TYPE.mediumHeader>
     <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
   </RowBetween>
-
   <DataRow style={{ gap: '24px' }}>
     <PoolData>
       <AutoColumn gap="sm">
@@ -610,7 +607,6 @@ export default function Manage({
       </AutoColumn>
     </PoolData>
   </DataRow>
-
   {showAddLiquidityButton && (
     <VoteCard>
       <CardSection>
@@ -636,7 +632,6 @@ export default function Manage({
       </CardSection>
     </VoteCard>
   )}
-
   {!showAddLiquidityButton && stakingInfo && (
     <ButtonPrimary
       padding="8px"
@@ -648,7 +643,6 @@ export default function Manage({
       {`Add more ${currencyA?.symbol}/${currencyB?.symbol} liquidity`}
     </ButtonPrimary>
   )}
-
   {stakingInfo && (
     <>
       <StakingModal
@@ -669,7 +663,6 @@ export default function Manage({
       />
     </>
   )}
-
   <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
     <BottomSection gap="lg" justify="center">
       <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
@@ -732,7 +725,6 @@ export default function Manage({
           </RowBetween>
         </AutoColumn>
       </StyledBottomCard>
-
       {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
         <StyledBox>
           <TYPE.main>{userLiquidityUnstaked?.toSignificant(6)} ZERO LP tokens</TYPE.main>
@@ -742,7 +734,6 @@ export default function Manage({
         </StyledBox>
       )}
     </BottomSection>
-
     {!account ? (
       <Card padding="40px">
         <TYPE.body color={theme.text3} textAlign="center">
@@ -776,17 +767,14 @@ export default function Manage({
         </TYPE.body>
       </EmptyProposals>
     )}
-
     <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
       <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
         ⭐️
       </span>
       When you withdraw, the contract will automagically claim ZERO on your behalf!
     </TYPE.main>
-
     {!showAddLiquidityButton && (
       <DataRow style={{ marginBottom: '1rem' }}>
-
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
           <ButtonPrimary
             padding="8px"
@@ -798,7 +786,6 @@ export default function Manage({
             Remove Liquidity
           </ButtonPrimary>
         )}
-
         {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
           <>
             <ButtonPrimary
@@ -816,7 +803,4 @@ export default function Manage({
     )}
   </PositionInfo>
 </PageWrapper>
-
-
-
 */

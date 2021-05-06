@@ -1,6 +1,7 @@
-import { CgAddR, CgList } from 'react-icons/cg';
+import { CgAddR, CgCheckO, CgList } from 'react-icons/cg';
 import { FaDiscord, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
 
 import { BiWorld } from 'react-icons/bi';
 import { ButtonOutlined } from 'components/Button'
@@ -9,7 +10,6 @@ import PageContainer from 'components/PageContainer';
 import moment from 'moment';
 import snsWebSdk from '@sumsub/websdk'
 import styled from 'styled-components';
-import { useParams } from 'react-router';
 
 const Title = styled.h1`
   width: 100%;
@@ -78,8 +78,7 @@ const BgWrapper = styled.div`
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
-  margin-bottom: 8rem;
-  margin-top: 4rem;
+  margin-bottom: 2rem;
   padding: 30px;
   width: 100%;
   position: relative;
@@ -166,49 +165,129 @@ const StatText = styled.p`
   margin: 0;
 `
 const Disclaimer = styled.div`
-  color: rgba(255,255,255,.5);
-  font-size: .75rem;
+  color: rgba(255,255,255,.85);
+  font-size: .9rem;
   background: rgba(0,0,0,.25);
   border-radius: 44px;
   padding: 2rem;
-  margin-top: -5rem;
+  margin-bottom: 2rem;
+  margin-top: 4rem;
 `
 
+const H3 = styled.div`
+  display: block;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem;
+  @media (max-width: 764px) {
+    color: #fff;
+    font-size: 1.25rem;
+  }
+`
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: column;
+  h6 {
+    margin-bottom: 10px;
+  }
+  input {
+    color: #FFFFFF;
+    position: relative;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    flex: 1 1 auto;
+    background: transparent;
+    padding: 0px 15px;
+    border-radius: 12px;
+    font-size: 22px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-appearance: textfield;
+    background: rgba(0,0,0,.25);
+    height: 48px;
+  }
+`
 export default function ZeroGravityKyc() {
 
-  const goToSite = (str: any) => {
-    window.open(str, "_blank");
-  };
+  const [formSent, setFormSent] = useState(false);
 
-  let accessToken = "tst:zl9zlZbjtxjf7SHMpBAwJQ8x"
-  let applicantEmail = "test@example.org"
-  let applicantPhone = "+491758764512"
+  const [emailState, setEmailState] = useState('');
+  const handleEmailState = (input: any) => {
+    const val = input.target.value;
+    setEmailState(val);
+  }
 
-  let snsWebSdkInstance = snsWebSdk.Builder("https://test-api.sumsub.com", "basic-kyc")
-    .withAccessToken(accessToken, () => {
-        // EXPIRATION HANDLER
-        /* generate a new token and launch WebSDK again */
+  const [walletState, setWalletState] = useState('');
+  const handleWalletState = (input: any) => {
+    const val = input.target.value;
+    setWalletState(val);
+  }
+
+  const emailURL = 'https://prod-44.eastus2.logic.azure.com:443/workflows/1756218e802e427aafde6c1b01ea9913/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mhkGIWPGB6EVx4Sw-yMp0Z2b5FfCqEApXFD73J0nb7E'
+  const handleSubmit = () => {
+    fetch(emailURL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ contactEmail: emailState, contactName: walletState })
+    }).then((res) => {
+      setFormSent(true);
+    }).catch(() => {
+      setFormSent(true);
     })
-    .withConf({
-        lang: "en",
-        email: applicantEmail,
-        phone: applicantPhone, // if available
-        onMessage: (type: any, payload: any) => {
-            console.log('WebSDK onMessage', type, payload)
-        },
-        onError: (error: any) => {
-            console.log('WebSDK onError', error)
-        },
-    }).build()
-    setTimeout(() => {
-        snsWebSdkInstance.launch('#sumsub-websdk-container')
-    }, 500)
+  }
 
   return (
     <>
       <Title>KYC</Title>
       <PageContainer>
-        <div id="sumsub-websdk-container"></div>
+        <div style={{ maxWidth: '500px', width: '100%', margin: 'auto'}}>
+          <Disclaimer>
+            <p>Fill in the information below, and a KYC link will be sent to your email within the hour. Once KYC is completed, you can proceed with your allocation for Wasder.</p>
+          </Disclaimer>
+          <BgWrapper>
+            {!formSent && <>
+              <HeadingRow>
+                <Heading>
+                  Enter your info:
+                </Heading>
+              </HeadingRow>
+              <Row>
+                <h6>Email:</h6>
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Name"
+                  onChange={handleEmailState}
+                  value={emailState}
+                />
+              </Row>
+              <Row>
+                <h6>Wallet Address:</h6>
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Wallet Address"
+                  onChange={handleWalletState}
+                  value={walletState}
+                />
+              </Row>
+              <Row style={{ marginTop: '2rem'}}>
+                <ButtonOutlined onClick={handleSubmit}>Submit</ButtonOutlined>
+              </Row>
+            </>}
+
+            {formSent &&
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <CgCheckO style={{ fontSize: '4rem', marginTop: '2rem' }} />
+                <H3>Thank you for submitting, we'll be in touch.</H3>
+              </div>
+            }
+          </BgWrapper>
+        </div>
       </PageContainer>
     </>
   )

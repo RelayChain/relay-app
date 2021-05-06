@@ -1,10 +1,9 @@
-import { AlertTriangle, ArrowUpCircle } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-import {SuccessIllustation, ErrorIllustratiton} from '../IllustationIcons'
+import { SuccessIllustation, ErrorIllustratiton } from '../IllustationIcons'
 import { ButtonPrimary } from '../Button'
 import { ChainId } from '@zeroexchange/sdk'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -58,7 +57,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
             </Text>
           </AutoColumn>
           <Text fontSize={12} color="#565A69" textAlign="center">
-          Your tokens transfer has been successful.
+            Your tokens transfer has been successful.
           </Text>
         </AutoColumn>
       </Section>
@@ -85,14 +84,12 @@ function TransactionSubmittedContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <ConfirmedIcon>
-         <SuccessIllustation/>
+          <SuccessIllustation />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <Title>
-            Success!
-          </Title>
-          <Text fontWeight={600} fontSize={13} textAlign='center'>
-          Your tokens transfer has been successful.
+          <Title>Success!</Title>
+          <Text fontWeight={600} fontSize={13} textAlign="center">
+            Your tokens transfer has been successful.
           </Text>
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
@@ -151,7 +148,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 10, padding: '2rem 0' }} gap="24px" justify="center">
-        <ErrorIllustratiton/>
+          <ErrorIllustratiton />
           <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
             {message}
           </Text>

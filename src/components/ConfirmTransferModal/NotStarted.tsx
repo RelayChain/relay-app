@@ -41,14 +41,6 @@ margin: 10px auto;
 `};
 `
 
-const RowFixedTransfer = styled(RowFixed)`
-  margin: '1.5rem auto'
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  margin: 0;
-  width: 100%;
-  `};
-`
-
 const ChainItem = styled.div`
   display: flex;
   flex-direction: column;

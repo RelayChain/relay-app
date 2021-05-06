@@ -17,7 +17,6 @@ import ReactDOM from 'react-dom'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import getLibrary from './utils/getLibrary'
-import { isMobile } from 'react-device-detect'
 import store from './state'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)

@@ -7,6 +7,7 @@ import { BiWorld } from 'react-icons/bi';
 import { ButtonOutlined } from 'components/Button'
 import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
+import WSDSale from './wsdSale';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -270,6 +271,7 @@ export default function ZeroGravityInfo() {
           <Detail>
             {idoData?.description ?? ''}
           </Detail>
+          {/* <WSDSale /> */}
           <StatsSection>
             <Stat>
               <StatTitle> Auction Start Date </StatTitle>
