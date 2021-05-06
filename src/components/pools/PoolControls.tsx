@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
@@ -7,7 +7,6 @@ import Select from '../../components/Select'
 import { TYPE } from '../../theme'
 import TogglePool from '../../components/TooglePool'
 import styled from 'styled-components'
-
 
 const Controls = styled.div`
   display: flex;

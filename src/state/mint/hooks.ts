@@ -1,7 +1,7 @@
 import { AVAX, BNB, DEV, MATIC, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
-import { PairState, usePair, usePairs } from '../../data/Reserves'
+import { PairState, usePair } from '../../data/Reserves'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'

@@ -136,6 +136,7 @@
   "prepare": "npm run build",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@sumsub/websdk": "^1.1.0",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/yup": "^0.29.11",
     "@uniswap/default-token-list": "^2.0.0",

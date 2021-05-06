@@ -1,7 +1,6 @@
 import { Book, BookOpen, DollarSign, Info, MessageCircle } from 'react-feather'
 
 import { ExternalLink } from '../../theme'
-import Icon from '../Icon'
 import Modal from '../Modal'
 import React from 'react'
 import styled from 'styled-components'
@@ -132,7 +131,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
 
         <MenuItem id="link" href="https://www.coingecko.com/en/coins/zero-exchange">
           <IconLink>
-            <img style={{ float: 'left', width: '20px', height: '20px' }} src="/images/coingecko.png" />
+            <img alt="coingecko" style={{ float: 'left', width: '20px', height: '20px' }} src="/images/coingecko.png" />
           </IconLink>
           CoinGecko
         </MenuItem>

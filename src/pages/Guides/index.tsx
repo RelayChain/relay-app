@@ -2,8 +2,6 @@ import AppBody from '../AppBody'
 import { AutoColumn } from '../../components/Column'
 import { Book } from 'react-feather'
 import React from 'react'
-import { TYPE } from '../../theme'
-import { Wrapper } from '../../components/swap/styleds'
 import styled from 'styled-components'
 
 const GuideItem = styled.div`

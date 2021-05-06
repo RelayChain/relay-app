@@ -1,14 +1,14 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { LiquidityVolumeList } from '../../../graphql/types'
 import React from 'react'
 import getPercentageValues from '../../../utils/getPercentageValues'
 import styled from 'styled-components'
 
 type BarChartProps = {
-  data: any
+  categoriesX: Array<string>
   onSelectedValue(value?: number, perc?: number): void
   lineChartWidth: number
+  series: Array<number>
 }
 
 const Box = styled.div`
@@ -18,9 +18,7 @@ const Box = styled.div`
   justify-content: center;
 `
 
-const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {
-  const series = data?.zeroDayDatas?.map((a:any) => Number(a.dailyVolumeUSD))
-
+const BarChart = ({ categoriesX, onSelectedValue, lineChartWidth, series }: BarChartProps) => {
   const options: Highcharts.Options = {
     title: {
       text: ''
@@ -65,7 +63,7 @@ const BarChart = ({ data, onSelectedValue, lineChartWidth}: BarChartProps) => {
       enabled: false
     },
     xAxis: {
-      categories: data.zeroDayDatas.map((a:any) => new Date(a.date * 1000).getDate().toString()),
+      categories: categoriesX,
       lineColor: 'transparent',
       minorGridLineColor: 'transparent',
       tickColor: 'transparent',

@@ -1,7 +1,7 @@
 import { UNI } from './../../constants/index'
 import { TokenAmount, JSBI, ChainId } from '@zeroexchange/sdk'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useSingleCallResult } from '../multicall/hooks'
