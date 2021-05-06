@@ -71,7 +71,8 @@ export default function WSDSale() {
   const [limits, setLimits] = useState('0.0')
   const [amount, setAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
-  const [successHash, setSuccessHash] = useState<null | string>(null)
+  const [approveSuccessHash, setApproveSuccessHash] = useState<null | string>(null);
+  const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
   // const currentGasPrice = await useGasPrice()
   const getLimits = async () => {
     try {
@@ -98,15 +99,15 @@ export default function WSDSale() {
       })
       console.log("🚀 ~ file: wsdSale.tsx ~ line  104 ~ onPurchase ~ res", res)
       await res.wait()
-      setSuccessHash(res.hash)
+      setDepositSuccessHash(res.hash)
     } catch (e) {
       console.log(e)
     } finally {
       setIsLoading(false)
     }
   }
-  const onApprove = async () => {
 
+  const onApprove = async () => {
     try {
       setIsLoading(true)
       const transferAmount = String(Number.MAX_SAFE_INTEGER)
@@ -114,18 +115,16 @@ export default function WSDSale() {
         gasLimit: '50000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
-      }
-      )
+      })
 
       await res.wait()
-      setSuccessHash(res.hash)
+      setApproveSuccessHash(res.hash)
     } catch (e) {
       console.log(e)
     } finally {
       setIsLoading(false)
     }
   }
-
 
   return (
     <>
@@ -134,37 +133,47 @@ export default function WSDSale() {
           <SwapWrap>
             <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
               <h2 style={{ marginBottom: '0' }}>Wasder Token Sale:</h2>
-              {successHash ? (
+              <>
+                {!web3React.account && <p>Please connect to wallet</p>}
+                {web3React.account && (
+                  <>
+                    <input type="number" name="amount" id="amount-wsd" value={amount} />
+                    <p style={{ textAlign: 'center' }}>Your limits {limits} USDT</p>
+                    <ButtonsFlex>
+                      <ButtonLight onClick={onApprove}>
+                        {isLoading ? '... loading' : 'Approve'}
+                      </ButtonLight>
+                      <ButtonLight onClick={onPurchase}>
+                        {isLoading ? '... loading' : 'Buy Tokens'}
+                      </ButtonLight>
+                    </ButtonsFlex>
+                  </>
+                )}
+              </>
+              {approveSuccessHash ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <p>Claimed successfully</p>
+                  <p>Approved successfully</p>
                   <a
-                    href={getEtherscanLink(web3React.chainId as number, successHash as string, 'transaction')}
+                    href={getEtherscanLink(web3React.chainId as number, approveSuccessHash as string, 'transaction')}
                     rel="noreferrer"
                     target="_blank"
                   >
                     View tx on Ethereum
-            </a>
+                  </a>
                 </div>
-              ) : (
-                  <>
-                    {!web3React.account && <p>Please connect to wallet</p>}
-                    {web3React.account && (
-                      <>
-                        <input type="number" name="amount" id="amount-wsd" />
-                        <p style={{ textAlign: 'center' }}>Your limits {limits} USDT</p>
-                        <ButtonsFlex>
-                          <ButtonLight onClick={onApprove}>
-                            {isLoading ? '... loading' : 'Approve'}
-                          </ButtonLight>
-                          <ButtonLight onClick={onPurchase}>
-                            {isLoading ? '... loading' : 'Buy Tokens'}
-                          </ButtonLight>
-                        </ButtonsFlex>
-
-                      </>
-                    )}
-                  </>
-                )}
+              ) : (<></>)}
+              {depositSuccessHash ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <p>Deposited successfully</p>
+                  <a
+                    href={getEtherscanLink(web3React.chainId as number, depositSuccessHash as string, 'transaction')}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    View tx on Ethereum
+                  </a>
+                </div>
+              ) : (<></>)}
             </AutoColumn>
           </SwapWrap>
         </SwapFlexRow>
