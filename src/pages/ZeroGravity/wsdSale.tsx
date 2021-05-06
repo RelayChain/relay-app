@@ -46,6 +46,7 @@ gap: 1rem;
 ${({ theme }) => theme.mediaWidth.upToMedium`
 flex-direction: column;
 align-items: center;
+margin-left: 140px;
 `};
 `
 const ButtonsFlex = styled.div`
