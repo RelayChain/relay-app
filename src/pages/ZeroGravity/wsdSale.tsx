@@ -76,7 +76,7 @@ export default function WSDSale() {
   const getLimits = async () => {
     try {
       const res = await buyersLimits(web3React?.account)
-      setLimits(web3React?.utils.formatUnits(res, 6))
+      setLimits(ethers.utils.formatUnits(res, 6))
     } catch (e) {
       console.log(e)
     }
