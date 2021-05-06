@@ -54,6 +54,14 @@ const ModalContainer = styled.div`
       transition: all 0.2s ease-in-out;
       border-radius: 12px;
       align-items: center;
+      &.off {
+        opacity: .35;
+        pointer-events: none;
+        user-select: none;
+        &:after {
+          content: '(disabled)';
+        }
+      }
       &.active {
         background: rgba(255, 255, 255, 0.1);
         &:before {
@@ -182,6 +190,7 @@ export default function CrossChainModal({
               ${activeChain === chain.name && !isTransfer ? 'active' : ''}
               ${(activeChain === chain.name && isTransfer) || chain.name === 'Polkadot' ? 'disabled' : ''}
               ${isTransfer && activeChain !== chain.name ? 'selectable' : ''}
+              ${isTransfer && chain.name === 'Avalanche' ? 'off' : ''}
             `}
             >
               <BlockchainLogo size="28px" blockchain={chain.name} />
