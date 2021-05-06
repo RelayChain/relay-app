@@ -55,22 +55,23 @@ let web3React: any
 const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
 export default function WSDSale() {
-  web3React = useActiveWeb3React() 
+  web3React = useActiveWeb3React()
   const {
     // @ts-ignore
     buyers_limits: buyersLimits,
     // @ts-ignore
-    deposit 
+    deposit
   } = useWDSDepositContract('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae')
 
   const {
     // @ts-ignore
     approve
-  } = useTokenContract('0xc66227E44bf1E6F043919A65707b826e3E9f1132')
+  } = useTokenContract('0xeb8f08a975ab53e34d8a0330e0d34de942c95926')
 
   const [limits, setLimits] = useState('0.0')
   const [amount, setAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
+  const [isPendingBuy, setIsPendingBuy] = useState(false)
   const [approveSuccessHash, setApproveSuccessHash] = useState<null | string>(null);
   const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
   // const currentGasPrice = await useGasPrice()
@@ -91,19 +92,20 @@ export default function WSDSale() {
 
   const onPurchase = async () => {
     try {
-      setIsLoading(true)
-      const res = await deposit(BigNumber.from(utils.parseUnits('1456', 18)).toHexString(), {
+      setIsPendingBuy(true)
+      const res = await deposit(BigNumber.from(utils.parseUnits(amount, 18)).toHexString(), {
         gasLimit: '50000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
-      console.log("🚀 ~ file: wsdSale.tsx ~ line  104 ~ onPurchase ~ res", res)
       await res.wait()
       setDepositSuccessHash(res.hash)
     } catch (e) {
+      setIsPendingBuy(false)
       console.log(e)
     } finally {
-      setIsLoading(false)
+      setAmount('0.0')
+      setIsPendingBuy(false)
     }
   }
 
@@ -137,14 +139,14 @@ export default function WSDSale() {
                 {!web3React.account && <p>Please connect to wallet</p>}
                 {web3React.account && (
                   <>
-                    <input type="number" name="amount" id="amount-wsd" value={amount} />
+                    <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
                     <p style={{ textAlign: 'center' }}>Your limits {limits} USDT</p>
                     <ButtonsFlex>
                       <ButtonLight onClick={onApprove}>
-                        {isLoading ? '... loading' : 'Approve'}
+                        {isLoading ? '... pending' : 'Approve'}
                       </ButtonLight>
                       <ButtonLight onClick={onPurchase}>
-                        {isLoading ? '... loading' : 'Buy Tokens'}
+                        {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonLight>
                     </ButtonsFlex>
                   </>
