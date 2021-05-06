@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react'
 import { RowBetween, RowFixed } from '../Row'
-import { Settings, X } from 'react-feather'
+import { X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -17,14 +17,14 @@ import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
-const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
+// const StyledMenuIcon = styled(Settings)`
+//   height: 20px;
+//   width: 20px;
 
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
+//   > * {
+//     stroke: ${({ theme }) => theme.text1};
+//   }
+// `
 
 const StyledCloseIcon = styled(X)`
   height: 20px;

@@ -2,7 +2,6 @@ import { CHAIN_LABELS, NetworkContextName } from '../../constants'
 import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken, lighten } from 'polished'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components'
@@ -28,7 +27,6 @@ import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDispatch } from 'react-redux'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import usePrevious from '../../hooks/usePrevious'
 import { useTranslation } from 'react-i18next'
 import { useWalletModalToggle } from '../../state/application/hooks'
 
@@ -54,16 +52,16 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
     outline: none;
   }
 `
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
-  }
-`
+// const Web3StatusError = styled(Web3StatusGeneric)`
+//   background-color: ${({ theme }) => theme.red1};
+//   border: 1px solid ${({ theme }) => theme.red1};
+//   color: ${({ theme }) => theme.white};
+//   font-weight: 500;
+//   :hover,
+//   :focus {
+//     background-color: ${({ theme }) => darken(0.1, theme.red1)};
+//   }
+// `
 
 const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};

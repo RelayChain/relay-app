@@ -2,16 +2,15 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { CHAIN_LABELS, ETH_RPCS, NATIVE_CURRENCY } from '../../constants'
+import { CHAIN_LABELS, NATIVE_CURRENCY } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import Column, { AutoColumn } from '../../components/Column'
-import { Field, selectCurrency } from '../../state/swap/actions'
+import { Field } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { copyToClipboard, wait } from '../../utils'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -27,7 +26,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
-import BalanceItem from '../../components/BalanceItem';
+import BalanceItem from '../../components/BalanceItem'
 import BubbleBase from '../../components/BubbleBase'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
@@ -47,7 +46,6 @@ import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { getTokenBalances } from 'api'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import {
   setCurrentToken,
@@ -59,7 +57,6 @@ import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useTokenBalances } from '../../state/user/hooks'
 import { useUserAddedTokens } from '../../state/user/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
@@ -192,11 +189,7 @@ const BottomGroupingSwap = styled(BottomGrouping)`
 margin-top: 20px;
 `};
 `
-const SwapText = styled.h3`
-  font-size: 17px;
-  color: #a7b1f4;
-  opacity: 0.88;
-`
+
 const Flex = styled(RowBetween)`
   align-items: center;
   margin-top: 1rem;
@@ -224,13 +217,10 @@ export default function Swap() {
     availableTokens,
     currentChain,
     currentToken,
-    transferAmount,
     crosschainFee,
-    targetChain,
     targetTokens,
     crosschainTransferStatus,
-    swapDetails,
-    lastTimeSwitched
+    swapDetails
   } = useCrosschainState()
 
   const { width } = useWindowDimensions()
@@ -477,19 +467,19 @@ export default function Swap() {
     })
 
   const tokenBalances = availableTokens
-      .map((x: any) => {
-        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-      })
-      .concat(userTokens)
+    .map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
+    .concat(userTokens)
 
-  const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET];
+  const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET]
   const onSelectBalance = (isNative: boolean, token?: any) => {
     if (!currencies[Field.INPUT]) {
-      handleInputSelect(isNative ? nativeCurrency : token);
+      handleInputSelect(isNative ? nativeCurrency : token)
     } else if (!currencies[Field.OUTPUT]) {
-      handleOutputSelect(isNative ? nativeCurrency : token);
+      handleOutputSelect(isNative ? nativeCurrency : token)
     } else {
-      handleInputSelect(isNative ? nativeCurrency : token);
+      handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
 
@@ -776,10 +766,22 @@ export default function Swap() {
             {account && userEthBalance && (
               <BalanceRow isColumn={isColumn}>
                 <TextBalance>{currentChain.name} Balances</TextBalance>
-                <BalanceItem currentChain={currentChain} chainId={chainId} isNative={true} userEthBalance={userEthBalance} selectBalance={() => onSelectBalance(true, currentChain)}></BalanceItem>
+                <BalanceItem
+                  currentChain={currentChain}
+                  chainId={chainId}
+                  isNative={true}
+                  userEthBalance={userEthBalance}
+                  selectBalance={() => onSelectBalance(true, currentChain)}
+                ></BalanceItem>
                 {tokenBalances?.map((token: any, index) => {
                   return (
-                    <BalanceItem key={index} token={token} chainId={chainId} account={account} selectBalance={() => onSelectBalance(false, token)}></BalanceItem>
+                    <BalanceItem
+                      key={index}
+                      token={token}
+                      chainId={chainId}
+                      account={account}
+                      selectBalance={() => onSelectBalance(false, token)}
+                    ></BalanceItem>
                   )
                 })}
               </BalanceRow>

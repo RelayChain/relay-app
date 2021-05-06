@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import styled, { css } from 'styled-components'
 import DropdownArrow from '../../assets/svg/DropdownArrow'
 

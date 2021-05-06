@@ -1,5 +1,5 @@
 import { ChevronDown, Link } from 'react-feather'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { ArrowDown } from '../Arrows'
 import { ArrowRight } from '../Arrows'
@@ -98,25 +98,7 @@ const SubTitle = styled.h3`
  text-align: center;
 `};
 `
-const TransferAmount = styled.div`
-  margin-bottom: 10px;
-  font-weight: 600;
-  font-size: 30px;
-  letter-spacing: -0.01em;
-  color: #c8ceff;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  text-align: center;
-  margin-bottom: 0px;
- `};
-`
-const BottomTitle = styled(SubTitle)`
-  position: absolute;
-  bottom: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  position: relative;
-  text-align: center
- `};
-`
+
 const ShowSmall = styled.div`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`

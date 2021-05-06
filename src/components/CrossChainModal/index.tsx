@@ -1,12 +1,11 @@
 import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { AppDispatch } from 'state'
 import BlockchainLogo from '../BlockchainLogo'
 import Modal from '../Modal'
 import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
-import { useActiveWeb3React } from 'hooks'
 import { useDispatch } from 'react-redux'
 
 interface CrossChainModalProps {
@@ -49,7 +48,7 @@ const ModalContainer = styled.div`
     li {
       display: flex;
       flex-direction: row;
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
       position: relative;
       padding: 12px;
       transition: all 0.2s ease-in-out;
@@ -89,12 +88,9 @@ const ModalContainer = styled.div`
       }
       span {
       }
-
     }
   }
 `
-
-
 
 export default function CrossChainModal({
   isOpen,
@@ -107,8 +103,7 @@ export default function CrossChainModal({
   const dispatch = useDispatch<AppDispatch>()
   const [isMetamaskError, setMetamaskError] = useState(false)
   const switchChain = async (chain: CrosschainChain) => {
-
-    let { ethereum } = window;
+    let { ethereum } = window
 
     if (ethereum) {
       let chainsConfig = null
@@ -118,21 +113,25 @@ export default function CrossChainModal({
         }
       }
       if (chainsConfig) {
-        const hexChainId = "0x" + Number(chainsConfig.networkId).toString(16);
-        const data = [{
-          chainId: hexChainId,
-          chainName: chainsConfig.name,
-          nativeCurrency:
+        const hexChainId = '0x' + Number(chainsConfig.networkId).toString(16)
+        const data = [
           {
-            name: chainsConfig.nativeTokenSymbol,
-            symbol: chainsConfig.nativeTokenSymbol,
-            decimals: 18
-          },
-          rpcUrls: [chainsConfig.rpcUrl],
-          blockExplorerUrls: [chainsConfig.blockExplorer],
-        }]
+            chainId: hexChainId,
+            chainName: chainsConfig.name,
+            nativeCurrency: {
+              name: chainsConfig.nativeTokenSymbol,
+              symbol: chainsConfig.nativeTokenSymbol,
+              decimals: 18
+            },
+            rpcUrls: [chainsConfig.rpcUrl],
+            blockExplorerUrls: [chainsConfig.blockExplorer]
+          }
+        ]
         /* eslint-disable */
-        const tx = (ethereum && ethereum.request) ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch() : ''
+        const tx =
+          ethereum && ethereum.request
+            ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch()
+            : ''
 
         if (tx !== '') {
           tx
@@ -169,10 +168,10 @@ export default function CrossChainModal({
                   selectTransferChain(chain)
                   onDismiss()
                 } else if (+chain.chainID === 1) {
-                  alert('To switch back to Ethereum, please change your RPC inside your wallet.');
+                  alert('To switch back to Ethereum, please change your RPC inside your wallet.')
                   onDismiss()
-                } else if(isMetamaskError){
-                  alert('The wallet is not responding now. Please try to change your RPC inside your wallet.');
+                } else if (isMetamaskError) {
+                  alert('The wallet is not responding now. Please try to change your RPC inside your wallet.')
                   onDismiss()
                 } else {
                   switchChain(chain)
@@ -190,7 +189,6 @@ export default function CrossChainModal({
             </li>
           ))}
         </ul>
-
       </ModalContainer>
     </Modal>
   )

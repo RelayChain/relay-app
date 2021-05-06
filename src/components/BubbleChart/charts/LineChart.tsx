@@ -1,15 +1,14 @@
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import React from 'react'
-import { TVLHistoryData } from '../../../graphql/types'
-import { dateFormatted } from '../../../utils/getFormattedMonth'
 import getPercentageValues from './../../../utils/getPercentageValues'
 import styled from 'styled-components'
 
 type LineChartProps = {
-  data: TVLHistoryData[] | any
+  categoriesX: Array<string>
   onSelectedValue(value?: number, perc?: number): void
   lineChartWidth: number
+  series: Array<number>
 }
 
 const Box = styled.div`
@@ -17,17 +16,10 @@ const Box = styled.div`
   padding-bottom: 54px;
 `
 
-const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) => {
-
-  // NOTE:
-  // reverse series
-  const series = data?.map((item:TVLHistoryData) => Number(item.TVL_total_usd)).reverse();
-  // reverse data
-  const reverseData = [...data].reverse()
-
+const LineChart = ({ categoriesX, onSelectedValue, lineChartWidth, series }: LineChartProps) => {
   const options: Highcharts.Options = {
     title: {
-      text: '',
+      text: ''
     },
     series: [
       {
@@ -35,7 +27,7 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
         data: series,
         point: {
           events: {
-            mouseOver: function () {
+            mouseOver: function() {
               const index = Number(this.index) - 1 > 0 ? Number(this.index) - 1 : 0
               const value = this.y || 0
               const perc = getPercentageValues(value, series[index])
@@ -43,15 +35,15 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
             },
             mouseOut: () => {
               onSelectedValue()
-            },
-          },
-        },
-      },
+            }
+          }
+        }
+      }
     ],
     tooltip: { enabled: false },
     plotOptions: {
       series: {
-        showInLegend: false,
+        showInLegend: false
       },
       areaspline: {
         lineWidth: 4,
@@ -62,26 +54,26 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
           stops: [
             [0, '#6752F7'],
             [0.5, 'rgba(34,39,89, 0)'],
-            [1, 'rgba(34,39,89, 0)'],
-          ],
+            [1, 'rgba(34,39,89, 0)']
+          ]
         },
         marker: {
-          enabled: false,
-        },
-      },
+          enabled: false
+        }
+      }
     },
     chart: {
       backgroundColor: 'transparent',
       height: 181,
       width: lineChartWidth,
       spacingBottom: 0,
-      spacingLeft: 5,
+      spacingLeft: 5
     },
     credits: {
-      enabled: false,
+      enabled: false
     },
     xAxis: {
-      categories: dateFormatted(reverseData),
+      categories: categoriesX,
       lineColor: 'transparent',
       minorGridLineColor: 'transparent',
       tickColor: 'transparent',
@@ -92,16 +84,16 @@ const LineChart = ({ data, onSelectedValue, lineChartWidth }: LineChartProps) =>
           fontWeight: '600',
           //@ts-ignore
           fontFamily: 'Poppins'
-        },
-      },
+        }
+      }
     },
     yAxis: {
-      visible: false,
-    },
+      visible: false
+    }
   }
 
   return (
-    <Box >
+    <Box>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </Box>
   )

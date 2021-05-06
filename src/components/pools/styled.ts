@@ -1,8 +1,5 @@
 import { AutoColumn } from '../Column'
-import noise from '../../assets/images/noise.png'
 import styled from 'styled-components'
-import uImage from '../../assets/images/mountain_wide.png'
-import xlUnicorn from '../../assets/images/mountain.png'
 
 export const TextBox = styled.div`
   display: flex;
@@ -15,8 +12,8 @@ export const TextBox = styled.div`
   justify-self: flex-end;
 `
 
-export const DataCard = styled(AutoColumn) <{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(103, 82, 247, .1) 0%, rgb1(103, 82, 247, .3) 100%);
+export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(103, 82, 247, 0.1) 0%, rgb1(103, 82, 247, 0.3) 100%);
   border-radius: 12px;
   width: 100%;
   position: relative;
@@ -65,7 +62,7 @@ export const CardNoise = styled.span`
   user-select: none;
 `
 
-export const CardSection = styled(AutoColumn) <{ disabled?: boolean }>`
+export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};

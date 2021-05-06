@@ -1,11 +1,7 @@
-import { Check, Copy } from 'react-feather'
 import { Currency, Pair } from '@zeroexchange/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-
-// import BlockchainLogo from '../BlockchainLogo'
 import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import CurrencyLogo from '../CurrencyLogo'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -220,7 +216,7 @@ const TokenNameAligner = styled(Aligner)`
 `};
 `
 const RowBetweenTransfer = styled(RowBetween)`
-${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
 flex-direction: column;
 gap: 1rem;
 `};
@@ -367,7 +363,7 @@ export default function CurrencyInputPanel({
                 )}
               </>
             )}
-            { !hideCurrencySelect &&
+            {!hideCurrencySelect && (
               <CurrencySelect
                 style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
                 selected={!!altCurrency}
@@ -406,10 +402,12 @@ export default function CurrencyInputPanel({
                     </StyledTokenName>
                   )}
                   {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
-                  {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}
+                  {!disableCurrencySelect && !disableBlockchainSelect && (
+                    <SmallStyledDropDown selected={!!altCurrency} />
+                  )}
                 </TokenNameAligner>
               </CurrencySelect>
-            }
+            )}
           </InputRow>
         </Container>
         {!disableCurrencySelect && onCurrencySelect && (
