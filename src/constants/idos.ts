@@ -12,8 +12,8 @@ export const IDO_LIST = [
     allocationMin: 'TBD',
     allocationMax: 'TBD',
     allocationCurrency: 'USDT',
-    description: 'Wasder - Find friends, join communities, and share content. Wasder brings old and new friends together around your passion for gaming. The Wasder IDO token sale will be May 7, 2021 on 0.exchange. If you received a whitelist allocation, please KYC above to be approved for the IDO.',
-    distributionDate: new Date('May 10, 2021 14:00:00'),
+    description: 'Wasder - Find friends, join communities, and share content. Wasder brings old and new friends together around your passion for gaming. The Wasder IDO token sale will be May 11, 2021 on 0.exchange. If you received a whitelist allocation, please KYC above to be approved for the IDO.',
+    distributionDate: new Date('May 11, 2021 14:00:00'),
     allocationWinningAmount: '$150',
     disclaimer: `Restricted countries for Wasder - Afghanistan, Albania, US, Botswana, Cambodia, Cuba, Ghana, Iran, Iraq, Jamaica, Korea, Libya, Mauritius, Myanmar, Nicaragua, Panama, Pakistan, South Sudan, North Sudan, Syria, Crimea, Trinidad and Tobago, Uganda, Vanuatu, Yemen, Zimbabwe, Jurisdictions in which participation or ownership of tokens is prohibited by an applicable law AND-OR jurisdictions which are subject to United States of America, United Nations, or other applicable sanctions or embargoes. If you are from a restricted country, but won an allocation, your allocation will be automatically by our market maker as part of our ZeroID offering. You will be able to claim your allocation at a later time.`,
     socials: [
