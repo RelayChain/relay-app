@@ -1,6 +1,7 @@
 import { CgAddR, CgList } from 'react-icons/cg';
 import { FaDiscord, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
 
 import { BiWorld } from 'react-icons/bi';
 import { ButtonOutlined } from 'components/Button'
@@ -8,7 +9,6 @@ import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
 import moment from 'moment';
 import styled from 'styled-components';
-import { useParams } from 'react-router';
 
 const Title = styled.h1`
   width: 100%;
@@ -176,7 +176,7 @@ const Disclaimer = styled.div`
 export default function ZeroGravityInfo() {
 
   const {idoURL} = useParams<{idoURL:string}>();
-
+  const history = useHistory();
   const [idoData, setIdoData] = useState<any>();
 
   const socialMediaLinks = useMemo<Array<{type:string,url:string,icon:any}>>(() => {
@@ -218,6 +218,10 @@ export default function ZeroGravityInfo() {
     window.open(str, "_blank");
   };
 
+  const goToKyc = () => {
+    history.push(`/zero-gravity/${idoURL}/kyc`);
+  }
+
   return (
     <>
       <Title>Info</Title>
@@ -242,12 +246,12 @@ export default function ZeroGravityInfo() {
             View Whitelist
           </ButtonOutlined>
           <ButtonsSpacer />
-          {/*<ButtonOutlined className="green" onClick={() => goToSite('https://api.sumsub.com/idensic/l/#/mV0MxyEpZS4ucuCv')}>
+          <ButtonOutlined className="green" onClick={() => goToKyc()}>
             <ButtonIcon>
               <CgAddR/>
             </ButtonIcon>
             KYC Here
-          </ButtonOutlined>*/}
+          </ButtonOutlined>
         </ButtonsSection>
         <BgWrapper>
           <HeadingRow>

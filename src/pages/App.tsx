@@ -47,6 +47,7 @@ import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
 import ZeroGravityInfo from './ZeroGravity/Info';
+import ZeroGravityKyc from './ZeroGravity/Kyc';
 import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
 import { useDarkModeManager } from '../state/user/hooks'
@@ -163,6 +164,7 @@ export default function App() {
                 <Route exact strict path="/transfer" component={Transfer} />
                 <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
                 <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
+                <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
             </Web3ReactManager>
