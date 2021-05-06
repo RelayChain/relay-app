@@ -267,7 +267,7 @@ export default function ZeroGravityInfo() {
           <Detail>
             {idoData?.description ?? ''}
           </Detail>
-          {/* <WSDSale /> */}
+          <WSDSale />
           <StatsSection>
             <Stat>
               <StatTitle> Auction Start Date </StatTitle>
