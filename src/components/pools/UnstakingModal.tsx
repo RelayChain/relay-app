@@ -6,7 +6,7 @@ import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useStakingContract, useStakingGondolaContract } from '../../hooks/useContract'
+import { useStakingContract } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -37,32 +37,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     setAttempting(false)
     onDismiss()
   }
-  const stakingRewardAddress = (stakingInfo.gondolaTokenId && stakingInfo.gondolaRewardAddress) ?
-    stakingInfo.gondolaRewardAddress :
-    stakingInfo.stakingRewardAddress
 
-  const stakingContract = useStakingContract(stakingRewardAddress)
-  const stakingGondolaContract = useStakingGondolaContract(stakingRewardAddress)
+  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
+
   async function onWithdraw() {
-    if (stakingContract && stakingInfo?.stakedAmount && !stakingInfo?.gondolaTokenId) {
+    if (stakingContract && stakingInfo?.stakedAmount) {
       setAttempting(true)
       await stakingContract
         .exit({ gasLimit: 300000 })
-        .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: `Withdraw deposited liquidity`
-          })
-          setHash(response.hash)
-        })
-        .catch((error: any) => {
-          setAttempting(false)
-          console.log(error)
-        })
-    } else if (stakingGondolaContract) {
-
-      setAttempting(true)
-      await stakingGondolaContract
-        .withdraw(stakingInfo?.gondolaTokenId, stakingInfo.stakedAmount, { gasLimit: 300000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Withdraw deposited liquidity`

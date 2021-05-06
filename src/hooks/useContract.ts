@@ -19,7 +19,6 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
-import { abi as GONDOLA_STAKING_REWARDS} from '../constants/abis/gondola-master.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { getContract } from '../utils'
@@ -139,10 +138,6 @@ export function useUniContract(): Contract | null {
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
-}
-
-export function useStakingGondolaContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(stakingAddress, GONDOLA_STAKING_REWARDS, withSignerIfPossible)
 }
 
 export function useSocksController(): Contract | null {

@@ -102,9 +102,6 @@ export const zUSDT = new Token(ChainId.AVALANCHE, '0x650CECaFE61f3f65Edd21eFacCa
 export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D056871125452', 8, 'zBTC', 'zBTC')
 export const zUNI = new Token(ChainId.AVALANCHE, '0xBa9aF11661520129Af69d233E92d69BD40CD90AF', 18, 'zUNI', 'zUNI')
 export const zSUSHI = new Token(ChainId.AVALANCHE, '0xD4feE2e3F88B9138B74a323B40bC63bcc1A1B9eC', 18, 'zSUSHI', 'zSUSHI')
-export const pngDAI = new Token(ChainId.AVALANCHE, '0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a', 18, 'pngDAI', 'pngDAI')
-export const pngUSDT = new Token(ChainId.AVALANCHE, '0xde3A24028580884448a5397872046a019649b084', 6, 'pngUSDT', 'pngUSDT')
-export const pngETH = new Token(ChainId.AVALANCHE, '0xf20d962a6c8f70c731bd838a3a388D7d48fA6e15', 18, 'pngETH', 'pngETH')
 
 export const WBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'SMART_CHAIN')
 

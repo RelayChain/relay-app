@@ -6,7 +6,7 @@ import { LoadingView, SubmittedView } from '../ModalViews'
 import React, { useCallback, useState } from 'react'
 import { RowBetween, RowCenter } from '../Row'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { usePairContract, useStakingContract, useStakingGondolaContract } from '../../hooks/useContract'
+import { usePairContract, useStakingContract } from '../../hooks/useContract'
 
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -28,7 +28,6 @@ const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   justify-content: space-between;
   padding-right: 20px;
   padding-left: 20px;
-
   opacity: ${({ dim }) => (dim ? 0.5 : 1)};
 `
 
@@ -74,18 +73,14 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
   const pairContract = usePairContract(dummyPair.liquidityToken.address)
-  const isGondolaPair = (stakingInfo.gondolaTokenId && stakingInfo.gondolaRewardAddress) ? true : false
-  const stakingRewardAddress = (isGondolaPair) ?
-    stakingInfo.gondolaRewardAddress :
-    stakingInfo.stakingRewardAddress
+
   // approval data for stake
   const deadline = useTransactionDeadline()
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingRewardAddress)
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const isArgentWallet = useIsArgentWallet()
-  const stakingContract = useStakingContract(stakingRewardAddress)
-  const stakingGondolaContract = useStakingGondolaContract(stakingRewardAddress)
+  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
   async function onStake() {
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
@@ -101,19 +96,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             signatureData.s,
             { gasLimit: 350000 }
           )
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              summary: `Deposit liquidity`
-            })
-            setHash(response.hash)
-          })
-          .catch((error: any) => {
-            setAttempting(false)
-            console.log(error)
-          })
-      } else if (isGondolaPair && stakingGondolaContract) {
-        await stakingGondolaContract
-          .deposit(stakingInfo.gondolaTokenId, `0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: `Deposit liquidity`
@@ -163,8 +145,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
-        }`,
+      name: `${
+        chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
+      }`,
       version: '1',
       chainId: chainId,
       verifyingContract: pairContract.address
