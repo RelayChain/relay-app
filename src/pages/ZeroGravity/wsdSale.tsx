@@ -55,6 +55,13 @@ const ButtonsFlex = styled.div`
 let web3React: any
 const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
+const DEPOSIT_CONTRACT_ADDR = process.env.REACT_APP_TESTNET
+  ? '0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae'
+  : '0xea83fcee5875c8f09b0a9b999cbbb1ced26a462b';
+const TOKEN_CONTRACT_ADDR = process.env.REACT_APP_TESTNET
+  ? '0xeb8f08a975ab53e34d8a0330e0d34de942c95926'
+  : '0xdac17f958d2ee523a2206206994597c13d831ec7';
+
 export default function WSDSale() {
   web3React = useActiveWeb3React()
   const {
@@ -62,12 +69,12 @@ export default function WSDSale() {
     buyers_limits: buyersLimits,
     // @ts-ignore
     deposit
-  } = useWDSDepositContract('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae')
+  } = useWDSDepositContract(DEPOSIT_CONTRACT_ADDR)
 
   const {
     // @ts-ignore
     approve
-  } = useTokenContract('0xeb8f08a975ab53e34d8a0330e0d34de942c95926')
+  } = useTokenContract(TOKEN_CONTRACT_ADDR);
 
   const [limits, setLimits] = useState('0.0')
   const [amount, setAmount] = useState('0.0')
@@ -114,7 +121,7 @@ export default function WSDSale() {
     try {
       setIsLoading(true)
       const transferAmount = String(Number.MAX_SAFE_INTEGER)
-      const res = await approve('0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae', BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
+      const res = await approve(DEPOSIT_CONTRACT_ADDR, BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
         // gasLimit: '50000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
