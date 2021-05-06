@@ -32,7 +32,7 @@ if ('ethereum' in window) {
 function Updaters() {
   return (
     <>
-      <ListsUpdater />
+      {/*<ListsUpdater />*/}
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
