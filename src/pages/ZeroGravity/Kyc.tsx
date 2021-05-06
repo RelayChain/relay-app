@@ -180,7 +180,7 @@ export default function ZeroGravityKyc() {
     window.open(str, "_blank");
   };
 
-  let accessToken = "{accessToken}"
+  let accessToken = "tst:zl9zlZbjtxjf7SHMpBAwJQ8x"
   let applicantEmail = "test@example.org"
   let applicantPhone = "+491758764512"
 
