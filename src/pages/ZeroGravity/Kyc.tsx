@@ -135,7 +135,7 @@ export default function ZeroGravityKyc() {
                 <input
                   className="input"
                   type="text"
-                  placeholder="Name"
+                  placeholder="Email"
                   onChange={handleEmailState}
                   value={emailState}
                 />
