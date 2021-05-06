@@ -9,6 +9,7 @@ import PageContainer from 'components/PageContainer';
 import moment from 'moment';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
+import WSDSale from './wsdSale';
 
 const Title = styled.h1`
   width: 100%;
@@ -266,6 +267,7 @@ export default function ZeroGravityInfo() {
           <Detail>
             {idoData?.description ?? ''}
           </Detail>
+          {/* <WSDSale /> */}
           <StatsSection>
             <Stat>
               <StatTitle> Auction Start Date </StatTitle>
