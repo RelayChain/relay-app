@@ -177,7 +177,7 @@ export default function PoolCard({
     )
   }
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   // get the USD value of staked WETH
@@ -190,7 +190,7 @@ export default function PoolCard({
   useEffect(() => {
     const contract = stakingInfo?.stakingRewardAddress
     const singleWeeklyEarnings = stakingInfo?.active
-      ? stakingInfo?.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+      ? stakingInfo?.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
       : '0'
     const readyToHarvest = countUpAmount
     const liquidityValue = valueOfTotalStakedAmountInUSDC
@@ -252,10 +252,10 @@ export default function PoolCard({
           </TYPE.main>
           <TYPE.main fontWeight={500} fontSize={15}>
             {stakingInfo?.active
-              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
+              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed( 0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
-            {' ZERO / week'}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
           </TYPE.main>
         </Row>
         <Row style={{ marginBottom: '10px' }}>
@@ -264,7 +264,7 @@ export default function PoolCard({
           </TYPE.main>
           <TYPE.main fontWeight={500} fontSize={15}>
             {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed( 0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
           </TYPE.main>
         </Row>

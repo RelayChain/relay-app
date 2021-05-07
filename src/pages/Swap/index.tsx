@@ -489,7 +489,7 @@ export default function Swap() {
 
   const handleStakedTokens = useCallback(() => {
     const stakedPools = stakingInfos.filter(
-      item => parseFloat(item?.earnedAmount?.toFixed(18)) > 0 || parseFloat(item?.stakedAmount?.toFixed(18)) > 0
+      item => parseFloat(item?.earnedAmount?.toFixed(Math.min(6, item?.earnedAmount?.currency.decimals))) > 0
     )
     stakedPools.forEach(item => {
       const tokens = stakedTokens
