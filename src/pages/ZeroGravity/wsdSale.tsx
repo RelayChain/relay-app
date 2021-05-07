@@ -149,7 +149,7 @@ export default function WSDSale() {
     try {
       setIsPendingBuy(true)
       const res = await deposit(BigNumber.from(utils.parseUnits(amount, 6)).toHexString(), {
-        gasLimit: '55000',
+        // gasLimit: '55000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
@@ -169,7 +169,7 @@ export default function WSDSale() {
       setIsLoading(true)
       const transferAmount = String(Number.MAX_SAFE_INTEGER)
       const res = await approve(DEPOSIT_CONTRACT_ADDR, BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
-        gasLimit: '55000',
+        // gasLimit: '55000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
