@@ -344,7 +344,7 @@ export default function Manage({
     )
   }
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   // get the USD value of staked WETH
@@ -465,7 +465,7 @@ export default function Manage({
               {stakingInfo?.active
                 ? stakingInfo?.totalRewardRate
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                    ?.toFixed( 0, { groupSeparator: ',' }) ?? '-'
                 : '0'}
                 <span>{` ${(stakingInfo && stakingInfo?.lpTokenName) ? stakingInfo?.lpTokenName : 'ZERO'} / week`}</span>
             </StatValue>
@@ -519,7 +519,7 @@ export default function Manage({
                   {stakingInfo?.active
                     ? stakingInfo?.rewardRate
                         ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                        ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{` ${(stakingInfo && stakingInfo?.lpTokenName) ? stakingInfo?.lpTokenName : 'ZERO'} / week`}</span>
                 </TYPE.white>
@@ -527,7 +527,7 @@ export default function Manage({
               <StatLabel style={{ color: '#A7B1F4' }}>Current Liquidity Deposits:</StatLabel>
               <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
                 <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
-                  {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
+                  {stakingInfo?.stakedAmount?.toSignificant(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '-'}
                   <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO {currencyA?.symbol}-{currencyB?.symbol}</span>
                 </TYPE.white>
               </RowBetween>
@@ -546,7 +546,7 @@ export default function Manage({
                 <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem'}}>
                   <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
-                    {userLiquidityUnstaked?.toSignificant(6)}
+                    {userLiquidityUnstaked?.toSignificant(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals))}
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
                   </TYPE.white>
                   <ButtonOutlined className="remove-liquidity-button green" onClick={handleDepositClick} style={{ width: '160px'}}>
