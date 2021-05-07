@@ -164,6 +164,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'INDA',
           decimals: 2,
           resourceId: '0x0000000000000000000000433d86336dB759855A66cCAbe4338313a8A7fc7701'
+        },
+        {
+          address: '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
         }
       ]
     },
