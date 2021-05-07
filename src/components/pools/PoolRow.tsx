@@ -207,8 +207,8 @@ export default function PoolRow({
 
     // this prevents infinite loops / re-renders
     if (harvestSent === readyToHarvest &&
-        earningsSent === singleWeeklyEarnings &&
-        liquiditySent === liquidityValue) {
+      earningsSent === singleWeeklyEarnings &&
+      liquiditySent === liquidityValue) {
       return
     }
 
@@ -257,7 +257,7 @@ export default function PoolRow({
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
               '-'
               : '0'}
-            {' ZERO / week'}
+            {` ${(stakingInfo && stakingInfo?.lpTokenName) ? stakingInfo?.lpTokenName : 'ZERO'} / week`}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

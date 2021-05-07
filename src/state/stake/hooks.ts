@@ -55,7 +55,8 @@ export const REWARDS_DURATION_DAYS = 30
 export const STAKING_REWARDS_INFO: {
   [chainId in ChainId]?: {
     tokens: [Token, Token]
-    stakingRewardAddress: string
+    stakingRewardAddress: string,
+    rewardInfo?: any
   }[]
 } = {
   [ChainId.MAINNET]: [
@@ -205,7 +206,11 @@ export const STAKING_REWARDS_INFO: {
     // },
     {
       tokens: [bscZERO, bscINDA],
-      stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6'
+      stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
+      rewardInfo: {
+        lpToken: 'INDA', decimals: 2
+      }
+
     },
   ]
 }
@@ -230,6 +235,7 @@ export interface StakingInfo {
   periodFinish: Date | undefined
   // if pool is active
   active: boolean
+  lpTokenName?: string | undefined
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -354,7 +360,10 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         // compare period end timestamp vs current block timestamp (in seconds)
         const active =
           periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
-
+        const currentPair = info.find(pair => pair.stakingRewardAddress === rewardsAddress)
+          const lpToken = (currentPair?.rewardInfo && currentPair?.rewardInfo.lpToken)? currentPair?.rewardInfo.lpToken : undefined
+    
+          console.log("🚀 ~ file: hooks.ts ~ line 365 ~ returnuseMemo ~ lpToken", lpToken)
         memo.push({
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
@@ -365,7 +374,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
           getHypotheticalRewardRate,
-          active
+          active,
+          lpTokenName: lpToken
         })
       }
       return memo
