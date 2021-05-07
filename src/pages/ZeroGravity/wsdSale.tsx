@@ -205,9 +205,9 @@ export default function WSDSale() {
                       <ButtonOutlined className={ (approveSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''} onClick={onApprove}>
                         {isLoading ? '... pending' : 'Approve'}
                       </ButtonOutlined>
-                      <ButtonOutlined className={`green ${ (depositSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''}`} onClick={onPurchase}>
+                      {/* <ButtonOutlined className={`green ${ (depositSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
-                      </ButtonOutlined>
+                      </ButtonOutlined> */}
                     </ButtonsFlex>
                   </>
                 )}
