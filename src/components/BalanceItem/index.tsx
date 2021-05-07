@@ -107,14 +107,18 @@ export default function BalanceItem({
   isNative,
   currentChain,
   userEthBalance,
+  isStaked,
+  tokenBalances,
   selectBalance
 }: {
   account?: any
   chainId?: any
   token?: any
   isNative?: boolean
+  isStaked?: boolean
   currentChain?: any
   userEthBalance?: any
+  tokenBalances? : any[]
   selectBalance?: any
 }) {
   // const weiToEthNum = (balance: any, decimals = 18) => {
@@ -152,7 +156,7 @@ export default function BalanceItem({
     await wait(1)
   }
 
-  return isNative || (!isNative && hasABalance) ? (
+  return isNative || (!isStaked && !isNative && hasABalance) || (isStaked && !hasABalance)? (
     <BalanceCard onClick={selectBalance}>
       <BubbleBase />
       <BoxFlex>
