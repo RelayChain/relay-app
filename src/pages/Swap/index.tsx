@@ -486,18 +486,22 @@ export default function Swap() {
   }
   const [stakedTokens, setStakedTokens] = useState<Token[]>([])
   const stakingInfos = useStakingInfo()
-  const stakedPools = stakingInfos.filter(
-    item => parseFloat(item?.earnedAmount?.toFixed(6)) > 0 || parseFloat(item?.earnedAmount?.toFixed(6)) > 0
-  )
+
+  const handleStakedTokens = useCallback(() => {
+    const stakedPools = stakingInfos.filter(
+      item => parseFloat(item?.earnedAmount?.toFixed(6)) > 0 || parseFloat(item?.earnedAmount?.toFixed(6)) > 0
+    )
+    stakedPools.forEach(item => {
+      const tokens = [...stakedTokens, ...item?.tokens]
+      setStakedTokens([...new Set(tokens)])
+    })
+  }, [stakingInfos])
 
   useEffect(() => {
-    if (stakedPools?.length > 0) {
-      stakedPools.forEach(item => {
-        const tokens = [...stakedTokens, ...item?.tokens]
-        setStakedTokens([...new Set(tokens)])
-      })
+    if (stakingInfos?.length > 0) {
+      handleStakedTokens()
     }
-  }, [stakedPools])
+  }, [stakingInfos])
 
   return (
     <>
@@ -808,7 +812,7 @@ export default function Swap() {
                       chainId={chainId}
                       account={account}
                       isStaked={true}
-                      tokenBalances={tokenBalances}
+                      tokenBalances={tokenBalances.map(item => item?.address)}
                       selectBalance={() => onSelectBalance(false, token)}
                     ></BalanceItem>
                   )
