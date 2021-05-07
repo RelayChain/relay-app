@@ -257,7 +257,7 @@ export default function PoolRow({
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
               '-'
               : '0'}
-            {` ${stakingInfo?.lpTokenName ?? 'ZERO'} / week`}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

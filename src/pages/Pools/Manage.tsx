@@ -467,7 +467,7 @@ export default function Manage({
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toFixed( 0, { groupSeparator: ',' }) ?? '-'
                 : '0'}
-                <span>{` ${stakingInfo?.lpTokenName ?? 'ZERO'} / week`}</span>
+                <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
             </StatValue>
           </Stat>
           <StyledInternalLink className="add-liquidity-link"
@@ -521,7 +521,7 @@ export default function Manage({
                         ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                         ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
                     : '0'}
-                  <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{` ${stakingInfo?.lpTokenName ?? 'ZERO'} / week`}</span>
+                  <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
                 </TYPE.white>
               </RowBetween>
               <StatLabel style={{ color: '#A7B1F4' }}>Current Liquidity Deposits:</StatLabel>

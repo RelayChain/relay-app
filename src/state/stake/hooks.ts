@@ -207,10 +207,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [bscZERO, bscINDA],
       stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
-      rewardInfo: {
-        lpToken: 'INDA', decimals: 2, rewardToken: bscINDA
-      }
-
+      rewardInfo: { rewardToken: bscINDA }
     },
   ]
 }
@@ -235,8 +232,7 @@ export interface StakingInfo {
   periodFinish: Date | undefined
   // if pool is active
   active: boolean
-  lpTokenName?: string | undefined
-  tokenDecimals?: number | undefined
+  rewardsTokenSymbol?: string | undefined
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -337,7 +333,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         // check for account, if no account set to 0
         const currentPair = info.find(pair => pair.stakingRewardAddress === rewardsAddress)
 
-        const rewardsToken = currentPair?.rewardInfo?.rewardToken ?? uni;
+        const rewardsToken = currentPair?.rewardInfo?.rewardToken ?? ZERO;
         const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
         const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
         const totalRewardRate = new TokenAmount(rewardsToken, JSBI.BigInt(rewardRateState.result?.[0]))
@@ -364,8 +360,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const active =
           periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
 
-        const lpToken = (currentPair?.rewardInfo && currentPair?.rewardInfo.lpToken) ? currentPair?.rewardInfo.lpToken : undefined
-        const decimals = (currentPair?.rewardInfo && currentPair?.rewardInfo.decimals) ? currentPair?.rewardInfo.decimals : undefined
+        const lpToken = currentPair?.rewardInfo?.lpToken
 
         memo.push({
           stakingRewardAddress: rewardsAddress,
@@ -378,8 +373,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           totalStakedAmount: totalStakedAmount,
           getHypotheticalRewardRate,
           active,
-          lpTokenName: lpToken,
-          tokenDecimals: decimals
+          rewardsTokenSymbol: rewardsToken.symbol,
         })
       }
       return memo
