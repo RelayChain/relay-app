@@ -192,7 +192,7 @@ export default function PoolRow({
 
   const symbol = WETH?.symbol
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
@@ -257,7 +257,7 @@ export default function PoolRow({
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
               '-'
               : '0'}
-            {` ${(stakingInfo && stakingInfo?.lpTokenName) ? stakingInfo?.lpTokenName : 'ZERO'} / week`}
+            {` ${stakingInfo?.lpTokenName ?? 'ZERO'} / week`}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

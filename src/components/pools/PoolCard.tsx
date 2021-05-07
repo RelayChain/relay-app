@@ -255,7 +255,7 @@ export default function PoolCard({
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed( 0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
-            {` ${(stakingInfo && stakingInfo?.lpTokenName) ? stakingInfo?.lpTokenName : 'ZERO'} / week`}
+            {` ${stakingInfo?.lpTokenName ?? 'ZERO'} / week`}
           </TYPE.main>
         </Row>
         <Row style={{ marginBottom: '10px' }}>
