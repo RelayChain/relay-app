@@ -112,14 +112,14 @@ const opacity = keyframes`
 const TextLink = styled.div`
   font-size: 1rem;
   font-weight: bold;
-  color: #6752F7;
+  color: #6752f7;
   cursor: pointer;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   &.pink {
-    color: #B368FC
+    color: #b368fc;
   }
   &:hover {
-    opacity: .9;
+    opacity: 0.9;
   }
 `
 
@@ -251,6 +251,7 @@ export default function Pools() {
   const { width } = useWindowDimensions()
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
+  console.log(stakingInfos)
   const toggleWalletModal = useWalletModalToggle()
   const [displayMode, setDisplayMode] = useState(
     localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
@@ -338,10 +339,10 @@ export default function Pools() {
     })
   }
 
-  const [apyRequested, setApyRequested] = useState(false);
+  const [apyRequested, setApyRequested] = useState(false)
   const getAllAPY = async () => {
     if (!apyRequested) {
-      setApyRequested(true);
+      setApyRequested(true)
       const res = await getAllPoolsAPY()
       if (!res.hasError) {
         setApyData(res?.data)
@@ -364,11 +365,7 @@ export default function Pools() {
     if (serializePoolControls && serializePoolControls?.sortedMode) {
       handleSelectSort(serializePoolControls?.sortedMode)
     }
-  }, [
-    weeklyEarnings,
-    readyForHarvest,
-    serializePoolControls?.sortedMode,
-  ])
+  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.sortedMode])
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
@@ -381,15 +378,19 @@ export default function Pools() {
   // filter array by staked
   if (showStaked) {
     arrayToShow = arrayToShow.map(item => {
-      if (
-        readyForHarvest[item.stakingRewardAddress] !== undefined &&
-        parseFloat(readyForHarvest[item.stakingRewardAddress]) !== 0
-      ) {
+      if (readyForHarvest[item.stakingRewardAddress] !== undefined && Boolean(item?.stakedAmount?.greaterThan('0'))) {
         return item
       } else {
         return { ...item, isHidden: true }
       }
     })
+  } else {
+    arrayToShow
+      .sort((a, b) => parseFloat(b?.stakedAmount?.toSignificant(6)) - parseFloat(a?.stakedAmount?.toSignificant(6)))
+      .sort(
+        (a, b) =>
+          parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
+      )
   }
 
   // search items
@@ -526,9 +527,10 @@ export default function Pools() {
             >
               <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
             </StyledInternalLink>
-            <StyledInternalLink className="remove-liquidity-link"
+            <StyledInternalLink
+              className="remove-liquidity-link"
               to={{
-                pathname: `/remove`,
+                pathname: `/remove`
               }}
             >
               <TextLink>Remove Liquidity</TextLink>

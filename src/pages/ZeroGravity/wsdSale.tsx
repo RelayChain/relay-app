@@ -104,7 +104,7 @@ const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.fro
 
 const DEPOSIT_CONTRACT_ADDR = process.env.REACT_APP_TESTNET
   ? '0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae'
-  : '0xea83fcee5875c8f09b0a9b999cbbb1ced26a462b';
+  : '0x9894b0f28ccfa0f5c5f74eac88f161110c5f8027';
 const TOKEN_CONTRACT_ADDR = process.env.REACT_APP_TESTNET
   ? '0xeb8f08a975ab53e34d8a0330e0d34de942c95926'
   : '0xdac17f958d2ee523a2206206994597c13d831ec7';
@@ -149,7 +149,7 @@ export default function WSDSale() {
     try {
       setIsPendingBuy(true)
       const res = await deposit(BigNumber.from(utils.parseUnits(amount, 6)).toHexString(), {
-        // gasLimit: '50000',
+        // gasLimit: '55000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
@@ -169,7 +169,7 @@ export default function WSDSale() {
       setIsLoading(true)
       const transferAmount = String(Number.MAX_SAFE_INTEGER)
       const res = await approve(DEPOSIT_CONTRACT_ADDR, BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
-        // gasLimit: '50000',
+        // gasLimit: '55000',
         gasPrice: await web3React.library.getSigner().getGasPrice(),
         nonce: await web3React.library.getSigner().getTransactionCount()
       })
