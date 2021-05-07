@@ -21,6 +21,7 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
@@ -47,9 +48,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import {
-  setCurrentToken,
-} from '../../state/crosschain/actions'
+import { setCurrentToken } from '../../state/crosschain/actions'
 import { setTokenBalances } from '../../state/user/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -59,6 +58,7 @@ import { useETHBalances } from '../../state/wallet/hooks'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUserAddedTokens } from '../../state/user/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
+import { toCheckSumAddress } from '../../state/crosschain/hooks'
 
 const CrossChainLabels = styled.div`
   p {
@@ -468,7 +468,9 @@ export default function Swap() {
 
   const tokenBalances = availableTokens
     .map((x: any) => {
-      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+      const address = toCheckSumAddress(x?.address)
+      const tokenData = { ...x, address }
+      return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
     })
     .concat(userTokens)
 
@@ -482,6 +484,24 @@ export default function Swap() {
       handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
+  const [stakedTokens, setStakedTokens] = useState<Token[]>([])
+  const stakingInfos = useStakingInfo()
+
+  const handleStakedTokens = useCallback(() => {
+    const stakedPools = stakingInfos.filter(
+      item => parseFloat(item?.earnedAmount?.toFixed(6)) > 0 || parseFloat(item?.earnedAmount?.toFixed(6)) > 0
+    )
+    stakedPools.forEach(item => {
+      const tokens = [...stakedTokens, ...item?.tokens]
+      setStakedTokens([...new Set(tokens)])
+    })
+  }, [stakingInfos])
+
+  useEffect(() => {
+    if (stakingInfos?.length > 0) {
+      handleStakedTokens()
+    }
+  }, [stakingInfos])
 
   return (
     <>
@@ -780,6 +800,19 @@ export default function Swap() {
                       token={token}
                       chainId={chainId}
                       account={account}
+                      selectBalance={() => onSelectBalance(false, token)}
+                    ></BalanceItem>
+                  )
+                })}
+                {stakedTokens?.map((token: any, index) => {
+                  return (
+                    <BalanceItem
+                      key={index}
+                      token={token}
+                      chainId={chainId}
+                      account={account}
+                      isStaked={true}
+                      tokenBalances={tokenBalances.map(item => item?.address)}
                       selectBalance={() => onSelectBalance(false, token)}
                     ></BalanceItem>
                   )
