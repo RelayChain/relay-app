@@ -251,7 +251,6 @@ export default function Pools() {
   const { width } = useWindowDimensions()
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
-  console.log(stakingInfos)
   const toggleWalletModal = useWalletModalToggle()
   const [displayMode, setDisplayMode] = useState(
     localStorage.getItem('PoolControls') && serializePoolControls?.displayMode

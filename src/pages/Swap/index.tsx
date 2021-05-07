@@ -489,11 +489,13 @@ export default function Swap() {
 
   const handleStakedTokens = useCallback(() => {
     const stakedPools = stakingInfos.filter(
-      item => parseFloat(item?.earnedAmount?.toFixed(6)) > 0 || parseFloat(item?.earnedAmount?.toFixed(6)) > 0
+      item => parseFloat(item?.earnedAmount?.toFixed(18)) > 0 || parseFloat(item?.stakedAmount?.toFixed(18)) > 0
     )
     stakedPools.forEach(item => {
-      const tokens = [...stakedTokens, ...item?.tokens]
-      setStakedTokens([...new Set(tokens)])
+      const tokens = stakedTokens
+      stakedTokens?.indexOf(item?.tokens[0]) <0 && tokens.push(item?.tokens[0])
+      stakedTokens?.indexOf(item?.tokens[1]) <0 && tokens.push(item?.tokens[1])
+      setStakedTokens(tokens)
     })
   }, [stakingInfos])
 
@@ -502,7 +504,6 @@ export default function Swap() {
       handleStakedTokens()
     }
   }, [stakingInfos])
-
   return (
     <>
       <Title>Trade</Title>
