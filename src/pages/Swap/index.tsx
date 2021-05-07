@@ -492,8 +492,10 @@ export default function Swap() {
       item => parseFloat(item?.earnedAmount?.toFixed(Math.min(6, item?.earnedAmount?.currency.decimals))) > 0
     )
     stakedPools.forEach(item => {
-      const tokens = [...stakedTokens, ...item?.tokens]
-      setStakedTokens([...new Set(tokens)])
+      const tokens = stakedTokens
+      stakedTokens?.indexOf(item?.tokens[0]) <0 && tokens.push(item?.tokens[0])
+      stakedTokens?.indexOf(item?.tokens[1]) <0 && tokens.push(item?.tokens[1])
+      setStakedTokens(tokens)
     })
   }, [stakingInfos])
 
@@ -502,7 +504,6 @@ export default function Swap() {
       handleStakedTokens()
     }
   }, [stakingInfos])
-
   return (
     <>
       <Title>Trade</Title>
