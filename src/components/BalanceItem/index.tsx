@@ -128,7 +128,7 @@ export default function BalanceItem({
 
   const balance = useCurrencyBalance(account ?? undefined, token, chainId)
   const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
-  const isContained = tokenBalances.indexOf(token?.address) > 0 ? true : false
+  const isContained = tokenBalances.indexOf(token?.address) >= 0 ? true : false
 
   const returnChainLogo = () => {
     switch (chainId) {
