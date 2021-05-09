@@ -1,6 +1,6 @@
 import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -213,8 +213,8 @@ export default function PoolRow({
     }
 
     if (
-      parseFloat(singleWeeklyEarnings) !== 0 ||
-      parseFloat(readyToHarvest) !== 0 ||
+      parseFloat(singleWeeklyEarnings) !== 0 &&
+      parseFloat(readyToHarvest) !== 0 &&
       parseFloat(liquidityValue) !== 0
     ) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })

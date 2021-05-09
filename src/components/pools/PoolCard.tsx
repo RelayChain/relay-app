@@ -1,9 +1,8 @@
 import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
-import { StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useState } from 'react'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { CountUp } from 'use-count-up'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -18,6 +17,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -205,8 +205,8 @@ export default function PoolCard({
     }
 
     if (
-      parseFloat(singleWeeklyEarnings) !== 0 ||
-      parseFloat(readyToHarvest) !== 0 ||
+      parseFloat(singleWeeklyEarnings) !== 0 &&
+      parseFloat(readyToHarvest) !== 0 &&
       parseFloat(liquidityValue) !== 0
     ) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
