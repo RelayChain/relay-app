@@ -1,7 +1,6 @@
-import React from 'react'
-
 import CardMode from '../../assets/svg/CardMode'
 import ListMode from '../../assets/svg/ListMode'
+import React from 'react'
 import SearchBar from '../../components/SearchBar'
 import Select from '../../components/Select'
 import { TYPE } from '../../theme'
@@ -116,6 +115,7 @@ export interface PoolControlsProps {
   onSelectFilter: any
   setFilteredMode: any
   sortedData: any
+  serializePoolControls: any
 }
 
 function PoolControls({
@@ -129,14 +129,9 @@ function PoolControls({
   setShowStaked,
   onSelectFilter,
   setFilteredMode,
-  sortedData
+  sortedData,
+  serializePoolControls
 }: PoolControlsProps) {
-  let serializePoolsControl = {}
-  //@ts-ignore
-  if (JSON.parse(localStorage.getItem('PoolControls'))) {
-    //@ts-ignore
-    serializePoolsControl = JSON.parse(localStorage.getItem('PoolControls'))
-  }
 
   const selectFilter = (e: any) => {
     onSelectFilter(e.value)
@@ -154,6 +149,7 @@ function PoolControls({
           toggle={setShowFinished}
           isStaked={showStaked}
           setShowStaked={setShowStaked}
+          serializePoolControls={serializePoolControls}
         />
       </ToggleGroup>
       <Group>
@@ -167,7 +163,7 @@ function PoolControls({
             options={sortedData}
             onChange={e => {
               selectFilter(e)
-              const clone = { ...serializePoolsControl, sortedMode: e.value }
+              const clone = { ...serializePoolControls, sortedMode: e.value }
               localStorage.setItem('PoolControls', JSON.stringify(clone))
             }}
             sortedData={sortedData}
@@ -185,7 +181,7 @@ function PoolControls({
               isSelected={displayMode === 'table'}
               onClick={() => {
                 setDisplayMode('table')
-                const clone = { ...serializePoolsControl, displayMode: 'table' }
+                const clone = { ...serializePoolControls, displayMode: 'table' }
                 localStorage.setItem('PoolControls', JSON.stringify(clone))
               }}
             >
@@ -195,7 +191,7 @@ function PoolControls({
               isSelected={displayMode === 'grid'}
               onClick={() => {
                 setDisplayMode('grid')
-                const clone = { ...serializePoolsControl, displayMode: 'grid' }
+                const clone = { ...serializePoolControls, displayMode: 'grid' }
                 localStorage.setItem('PoolControls', JSON.stringify(clone))
               }}
             >

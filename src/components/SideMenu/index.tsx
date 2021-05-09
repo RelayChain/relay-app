@@ -63,8 +63,10 @@ const StyledNavLink = styled(NavLink).attrs({
   transition: all 0.2s ease-in-out;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 1.5rem;
-  &.${activeClassName} {
-    color: ${({ theme }) => theme.white};
+  span {
+    &.active {
+      color: ${({ theme }) => theme.white};
+    }
   }
 `
 const HeaderExternalLink = styled(ExternalLink)`
@@ -133,25 +135,25 @@ export default function SideMenu() {
             <IconLink>
               <Icon icon="home" active={pathname === '/home'} />
             </IconLink>
-            {t('Home')}
+            <span className={ pathname === '/home' ? 'active' : ''}>{t('Home')}</span>
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="swap" active={pathname === '/swap'} />
             </IconLink>
-            {t('Swap')}
+            <span className={ pathname === '/swap' ? 'active' : ''}>{t('Swap')}</span>
           </StyledNavLink>
           <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="bridges" active={pathname === '/transfer'} />
             </IconLink>
-            {t('Transfer')}
+            <span className={ pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
-            {t('Pools')}
+            <span className={ pathname === '/pools' ? 'active' : ''}>{t('Pools')}</span>
           </StyledNavLink>
           <HeaderExternalLink href={`https://charts.0.exchange`}>
             <IconLink>
@@ -163,7 +165,7 @@ export default function SideMenu() {
             <IconLink>
               <Icon icon="planet" active={pathname === '/zero-gravity'} />
             </IconLink>
-            {t('Zero Gravity')}
+            <span className={ pathname === '/zero-gravity' ? 'active' : ''}>{t('Zero Gravity')}</span>
           </StyledNavLink>
           <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem'}}>
             <IconLink>

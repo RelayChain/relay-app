@@ -246,6 +246,7 @@ export type SortedTitleProps = {
 }
 
 export default function Pools() {
+
   //@ts-ignore
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'))
   const { width } = useWindowDimensions()
@@ -447,8 +448,6 @@ export default function Pools() {
 
   const onSortedChange = (sortedMode: string) => {
     setFilteredMode(sortedMode)
-    const clone = { ...serializePoolControls, sortedMode: sortedMode }
-    localStorage.setItem('PoolControls', JSON.stringify(clone))
   }
 
   getAllAPY()
@@ -541,6 +540,7 @@ export default function Pools() {
               setShowStaked={() => setShowStaked(!showStaked)}
               setFilteredMode={setFilteredMode}
               sortedData={data || defaultOptions}
+              serializePoolControls={serializePoolControls}
             />
           )}
           {account !== null &&
