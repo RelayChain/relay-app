@@ -1,4 +1,4 @@
-import { AVAX, BNB, MATIC, DEV, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, Currency, DEV, ETHER, MATIC, Token, currencyEquals } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -53,7 +53,9 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
-  const address = isAddress(tokenAddress)
+  const address = useMemo(() => {
+    return isAddress(tokenAddress)
+  }, [tokenAddress]);
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
