@@ -6,10 +6,10 @@ import { CHAIN_LABELS, NATIVE_CURRENCY } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import Column, { AutoColumn } from '../../components/Column'
-import { Field } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import styled, { ThemeContext } from 'styled-components'
 import {
@@ -21,7 +21,6 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
@@ -36,6 +35,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { ArrowDown as CustomArrowDown } from '../../components/Arrows'
 import { CustomLightSpinner } from '../../theme/components'
+import { Field } from '../../state/swap/actions'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
@@ -50,6 +50,7 @@ import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpa
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { setCurrentToken } from '../../state/crosschain/actions'
 import { setTokenBalances } from '../../state/user/actions'
+import { toCheckSumAddress } from '../../state/crosschain/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
@@ -58,7 +59,6 @@ import { useETHBalances } from '../../state/wallet/hooks'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUserAddedTokens } from '../../state/user/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
-import { toCheckSumAddress } from '../../state/crosschain/hooks'
 
 const CrossChainLabels = styled.div`
   p {
@@ -139,6 +139,7 @@ const TextBalance = styled.h3`
   white-space: nowrap;
   margin-bottom: 1rem;
   text-align: center;
+  margin-bottom: -4px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   font-size: 24px;
 `};
@@ -150,6 +151,34 @@ const BalanceRow = styled.div<{ isColumn?: boolean }>`
   flex-direction: ${({ isColumn }) => (isColumn ? 'column' : 'row')};
   align-items: ${({ isColumn }) => (isColumn ? 'center' : '')};
   min-width: 300px;
+  max-height: 570px;
+  border-radius: 44px;
+  overflow-y: scroll;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  #style-7::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,.5);
+	border-radius: 10px;
+}
+
+&::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: rgba(0,0,0,.5);
+}
+
+&::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+									   left bottom,
+									   left top,
+                     color-stop(0.44, rgb(41, 32, 98)),
+									   color-stop(0.72, rgb(51, 40, 123)),
+									   color-stop(0.86, rgb(61, 49, 148)));
+}
 `
 const ChainBridgePending = styled.div`
   display: flex;
@@ -460,20 +489,6 @@ export default function Swap() {
     return ''
   }
 
-  const userTokens = useUserAddedTokens()
-    ?.filter((x: any) => x.chainId === chainId)
-    ?.map((x: any) => {
-      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-    })
-
-  const tokenBalances = availableTokens
-    .map((x: any) => {
-      const address = toCheckSumAddress(x?.address)
-      const tokenData = { ...x, address }
-      return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
-    })
-    .concat(userTokens)
-
   const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET]
   const onSelectBalance = (isNative: boolean, token?: any) => {
     if (!currencies[Field.INPUT]) {
@@ -491,12 +506,14 @@ export default function Swap() {
     const stakedPools = stakingInfos.filter(
       item => parseFloat(item?.earnedAmount?.toFixed(Math.min(6, item?.earnedAmount?.currency.decimals))) > 0
     )
-    stakedPools.forEach(item => {
-      const tokens = stakedTokens
-      stakedTokens?.indexOf(item?.tokens[0]) <0 && tokens.push(item?.tokens[0])
-      stakedTokens?.indexOf(item?.tokens[1]) <0 && tokens.push(item?.tokens[1])
-      setStakedTokens(tokens)
-    })
+    // use set to avoid duplicates
+    // reset array to [] each time
+    const arr: any = new Set();
+    for (let st of stakedPools) {
+      arr.add(st?.tokens[0])
+      arr.add(st?.tokens[1]);
+    }
+    setStakedTokens([...arr]);
   }, [stakingInfos])
 
   useEffect(() => {
@@ -504,6 +521,24 @@ export default function Swap() {
       handleStakedTokens()
     }
   }, [stakingInfos])
+
+  const userTokens = useUserAddedTokens()
+    ?.filter((x: any) => x.chainId === chainId)
+    ?.map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+    })
+
+  const tokenBalances = useMemo(() => {
+    return availableTokens
+      .map((x: any) => {
+        const address = toCheckSumAddress(x?.address)
+        const tokenData = { ...x, address }
+        return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
+      })
+      .concat(userTokens)
+  }, [availableTokens, userTokens])
+
+
   return (
     <>
       <Title>Trade</Title>
@@ -784,7 +819,7 @@ export default function Swap() {
                 )}
               </SwapWrap>
             </SwapFlexRow>
-            {account && userEthBalance && (
+            {account && userEthBalance && tokenBalances && (
               <BalanceRow isColumn={isColumn}>
                 <TextBalance>{currentChain.name} Balances</TextBalance>
                 <BalanceItem
@@ -802,10 +837,11 @@ export default function Swap() {
                       chainId={chainId}
                       account={account}
                       selectBalance={() => onSelectBalance(false, token)}
+                      isLast={index === tokenBalances.length - 1}
                     ></BalanceItem>
                   )
                 })}
-                {stakedTokens?.map((token: any, index) => {
+                {stakedTokens?.filter((x: any) => x.chainId === chainId).map((token: any, index: any) => {
                   return (
                     <BalanceItem
                       key={index}
@@ -815,6 +851,8 @@ export default function Swap() {
                       isStaked={true}
                       tokenBalances={tokenBalances.map(item => item?.address)}
                       selectBalance={() => onSelectBalance(false, token)}
+                      isLast={index === stakedTokens.length - 1}
+                      isFirst={index === 0 && tokenBalances?.length === 0}
                     ></BalanceItem>
                   )
                 })}

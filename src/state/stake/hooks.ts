@@ -14,6 +14,7 @@ import {
   bscBUSD,
   bscDAI,
   bscETH,
+  bscINDA,
   bscSUSHI,
   bscUNI,
   bscUSDC,
@@ -27,8 +28,7 @@ import {
   zUNI,
   zUSDC,
   zUSDT,
-  zZERO,
-  bscINDA
+  zZERO
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -233,6 +233,8 @@ export interface StakingInfo {
   // if pool is active
   active: boolean
   rewardsTokenSymbol?: string | undefined
+  // chainId
+  chainId?: ChainId
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -374,6 +376,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           getHypotheticalRewardRate,
           active,
           rewardsTokenSymbol: rewardsToken.symbol,
+          chainId,
         })
       }
       return memo

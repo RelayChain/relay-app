@@ -15,21 +15,23 @@ import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 const BalanceCard = styled.div`
-  margin-bottom: 20px;
+  margin-top: 20px;
   position: relative;
   height: 111.5px;
   width: 100%;
   background: rgba(47, 53, 115, 0.32);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
-  backdrop-filter: blur(28px);
   border-radius: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 34px;
   transition: all 0.2s ease-in-out;
+  &.first {
+    margin-top: 0px;
+  }
   &:hover {
-    filter: brightness(1.2);
+    opacity: .9;
     cursor: pointer;
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -109,7 +111,9 @@ export default function BalanceItem({
   userEthBalance,
   isStaked,
   tokenBalances = [],
-  selectBalance
+  selectBalance,
+  isLast,
+  isFirst,
 }: {
   account?: any
   chainId?: any
@@ -120,6 +124,8 @@ export default function BalanceItem({
   userEthBalance?: any
   tokenBalances?: string[]
   selectBalance?: any
+  isLast?: boolean;
+  isFirst?: boolean;
 }) {
   // const weiToEthNum = (balance: any, decimals = 18) => {
   //   const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
@@ -160,7 +166,7 @@ export default function BalanceItem({
   return isNative ||
     (!isStaked && !isNative && hasABalance) ||
     (isStaked && ((isContained && !hasABalance) || !isContained)) ? (
-    <BalanceCard onClick={selectBalance}>
+    <BalanceCard onClick={selectBalance} className={ isLast ? 'last' : isFirst ? 'first' : ''}>
       <BubbleBase />
       <BoxFlex>
         {isNative ? <StyledEthereumLogo src={returnChainLogo()} /> : <CurrencyLogo size="48px" currency={token} />}
@@ -175,7 +181,7 @@ export default function BalanceItem({
             </AddressWallet>
           ) : (
             <AddressWallet>
-              {balance?.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}
+              {hasABalance && balance?.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}
             </AddressWallet>
           )}
         </Box>
