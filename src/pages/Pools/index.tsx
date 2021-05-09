@@ -252,8 +252,7 @@ export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState(
-    localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
+  const [displayMode, setDisplayMode] = useState(serializePoolControls?.displayMode
       ? serializePoolControls?.displayMode
       : 'table'
   )
@@ -264,10 +263,10 @@ export default function Pools() {
 
   // filters & sorting
   const [showFinished, setShowFinished] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false
+    serializePoolControls?.isActive ? serializePoolControls.isActive : false
   )
   const [showStaked, setShowStaked] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
+    serializePoolControls?.isStaked ? serializePoolControls.isStaked : false
   )
 
   let arrayToShow: any[] = []
@@ -349,23 +348,6 @@ export default function Pools() {
     }
   }
 
-  getAllAPY()
-
-  useEffect(() => {
-    let earnings: any = 0
-    let harvest: any = 0
-    Object.keys(weeklyEarnings).forEach(key => {
-      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
-    })
-    Object.keys(readyForHarvest).forEach(key => {
-      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
-    })
-    setStatsDisplay({ earnings, harvest })
-    if (serializePoolControls && serializePoolControls?.sortedMode) {
-      handleSelectSort(serializePoolControls?.sortedMode)
-    }
-  }, [weeklyEarnings, readyForHarvest, serializePoolControls?.sortedMode])
-
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
 
@@ -424,12 +406,8 @@ export default function Pools() {
     }
   }
 
-  if (selectedSort) {
-    visibleItems = sortItems(selectedSort)
-  }
-
   const [filteredMode, setFilteredMode] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls?.sortedMode : 'hot'
+    serializePoolControls?.sortedMode ? serializePoolControls?.sortedMode : 'hot'
   )
   const defaultOptions = [
     {
@@ -464,18 +442,31 @@ export default function Pools() {
         return defaultOptions
     }
   }
-  let data: any
-  //@ts-ignore
-  if (JSON.parse(localStorage.getItem('PoolControls'))) {
-    //@ts-ignore
-    data = setStartOptions(JSON.parse(localStorage.getItem('PoolControls')).sortedMode)
-  }
+
+  let data = setStartOptions(filteredMode);
 
   const onSortedChange = (sortedMode: string) => {
     setFilteredMode(sortedMode)
     const clone = { ...serializePoolControls, sortedMode: sortedMode }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
   }
+
+  getAllAPY()
+
+  useEffect(() => {
+    let earnings: any = 0
+    let harvest: any = 0
+    Object.keys(weeklyEarnings).forEach(key => {
+      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
+    })
+    Object.keys(readyForHarvest).forEach(key => {
+      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
+    })
+    setStatsDisplay({ earnings, harvest })
+    handleSelectSort(filteredMode)
+  }, [weeklyEarnings, readyForHarvest, filteredMode])
+
+  visibleItems = sortItems(filteredMode)
 
   const SortedTitle = ({ title, sortedMode }: SortedTitleProps) => (
     <HeaderCellSpan>

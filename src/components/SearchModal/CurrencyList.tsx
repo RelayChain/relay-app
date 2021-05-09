@@ -1,8 +1,7 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
 import BigNumber from 'bignumber.js'
@@ -13,6 +12,7 @@ import Loader from '../Loader'
 import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 import { isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
@@ -132,7 +132,10 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  const hasABalance = balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
+  const hasABalance = useMemo(() => {
+    return balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false;
+  }, [balance])
+
   // only show add or remove buttons if not on selected list
   const isNative = () => {
     return currency === ETHER || currency === AVAX || currency === BNB || currency === DEV
@@ -265,6 +268,7 @@ export default function CurrencyList({
       itemCount={itemData.length}
       itemSize={56}
       itemKey={itemKey}
+      overscanCount={30}
     >
       {Row}
     </FixedSizeList>
