@@ -8,6 +8,7 @@ import { ButtonOutlined } from 'components/Button'
 import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
 import WSDSale from './wsdSale';
+import WISESale from './wiseSale';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -254,7 +255,11 @@ export default function ZeroGravityInfo() {
             KYC Here
           </ButtonOutlined>
         </ButtonsSection>
-        <WSDSale />
+        {
+          idoData?.idoURL == 'wise' ? <WISESale /> 
+          : idoData?.idoURL == 'wasder' ? <WSDSale />
+          : <></>
+        }
         <BgWrapper>
           <HeadingRow>
             <Heading>
