@@ -26,5 +26,30 @@ export const IDO_LIST = [
         url: 'https://wasder.gg/'
       },
     ]
+  },
+  {
+    idoURL: 'wise',
+    logo: '/images/idos/wise-logo-text.png',
+    tierName: '', // if no tier, leave blank
+    tierLogo: null, // if you include this image, it will override the tierName
+    launchDate: new Date('May 10, 2021 15:00:00'),
+    endDate: new Date('May 17, 2021 21:00:00'),
+    totalRaise: 'uncapped',
+    allocationMin: 'uncapped',
+    allocationMax: 'uncapped',
+    allocationCurrency: 'BNB',
+    description: 'Wise token is setting a new, ethical standard for DeFi. It is a fairly launched, fairly distributed, fully decentralized, audited, crypto-backed, and highly liquid asset',
+    distributionDate: new Date('May 11, 2021 15:00:00'),
+    allocationWinningAmount: 'n/a',
+    socials: [
+      {
+        type: 'TELEGRAM',
+        url: 'https://t.me/WiseToken'
+      },
+      {
+        type: 'WEBSITE',
+        url: 'https://wisetoken.net/'
+      },
+    ]
   }
 ]

@@ -35,6 +35,7 @@ const LogoWrapper = styled.div`
   margin-right: auto;
   img {
     max-height: 120px;
+    max-width: 100%;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: auto;

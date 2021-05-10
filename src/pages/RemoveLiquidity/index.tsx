@@ -538,10 +538,7 @@ export default function RemoveLiquidity({
       history.goBack()
     }
   }
-
-  console.log("CURRENCY ID A ======== ", currencyIdA);
-  console.log("CURRENCY ID B ======== ", currencyIdB);
-
+  
   return (
     <>
       <StandardCard style={{
