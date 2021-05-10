@@ -169,7 +169,7 @@ export default function WSDSale() {
                     rel="noreferrer"
                     target="_blank"
                   >
-                    View tx on Ethereum
+                    View tx on the block explorer
                   </a>
                 </div>
               ) : (<></>)}
