@@ -16,6 +16,7 @@ export const IDO_LIST = [
     distributionDate: new Date('May 06, 2021 21:00:00'),
     allocationWinningAmount: '$150',
     disclaimer: `Restricted countries for Wasder - Afghanistan, Albania, US, Botswana, Cambodia, Cuba, Ghana, Iran, Iraq, Jamaica, Korea, Libya, Mauritius, Myanmar, Nicaragua, Panama, Pakistan, South Sudan, North Sudan, Syria, Crimea, Trinidad and Tobago, Uganda, Vanuatu, Yemen, Zimbabwe, Jurisdictions in which participation or ownership of tokens is prohibited by an applicable law AND-OR jurisdictions which are subject to United States of America, United Nations, or other applicable sanctions or embargoes. If you are from a restricted country, but won an allocation, your allocation will be automatically by our market maker as part of our ZeroID offering. You will be able to claim your allocation at a later time.`,
+    buttonSectionEnabled: true,
     socials: [
       {
         type: 'TELEGRAM',
@@ -41,6 +42,7 @@ export const IDO_LIST = [
     description: 'Wise token is setting a new, ethical standard for DeFi. It is a fairly launched, fairly distributed, fully decentralized, audited, crypto-backed, and highly liquid asset',
     distributionDate: new Date('May 11, 2021 15:00:00'),
     allocationWinningAmount: 'n/a',
+    buttonSectionEnabled: false,
     socials: [
       {
         type: 'TELEGRAM',

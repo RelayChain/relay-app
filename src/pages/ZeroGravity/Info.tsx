@@ -7,8 +7,8 @@ import { BiWorld } from 'react-icons/bi';
 import { ButtonOutlined } from 'components/Button'
 import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
-import WSDSale from './wsdSale';
 import WISESale from './wiseSale';
+import WSDSale from './wsdSale';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -240,23 +240,26 @@ export default function ZeroGravityInfo() {
           <VerticalLine />
           <p>{launchingString}</p>
         </InfoSection>
-        <ButtonsSection>
-          <ButtonOutlined onClick={() => goToSite('https://docs.google.com/spreadsheets/d/16N4S_VqEfN04hfsfz4SIqZdH-jGqyJynCfZ6bjMBhaE/edit?usp=sharing')} >
-            <ButtonIcon>
-              <CgList/>
-            </ButtonIcon>
-            View Whitelist
-          </ButtonOutlined>
-          <ButtonsSpacer />
-          <ButtonOutlined className="green" onClick={() => goToKyc()}>
-            <ButtonIcon>
-              <CgAddR/>
-            </ButtonIcon>
-            KYC Here
-          </ButtonOutlined>
-        </ButtonsSection>
         {
-          idoData?.idoURL == 'wise' ? <WISESale /> 
+          moment(idoData?.endDate??'').isAfter(moment.now()) && idoData?.buttonSectionEnabled &&
+          <ButtonsSection>
+            <ButtonOutlined onClick={() => goToSite('https://docs.google.com/spreadsheets/d/16N4S_VqEfN04hfsfz4SIqZdH-jGqyJynCfZ6bjMBhaE/edit?usp=sharing')} >
+              <ButtonIcon>
+                <CgList/>
+              </ButtonIcon>
+              View Whitelist
+            </ButtonOutlined>
+            <ButtonsSpacer />
+            <ButtonOutlined className="green" onClick={() => goToKyc()}>
+              <ButtonIcon>
+                <CgAddR/>
+              </ButtonIcon>
+              KYC Here
+            </ButtonOutlined>
+          </ButtonsSection>
+        }
+        {
+          idoData?.idoURL == 'wise' ? <WISESale />
           : idoData?.idoURL == 'wasder' ? <WSDSale />
           : <></>
         }

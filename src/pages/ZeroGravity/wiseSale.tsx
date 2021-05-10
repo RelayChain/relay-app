@@ -6,9 +6,9 @@ import { useTokenContract, useWDSDepositContract, useWISESaleContract } from '..
 
 import { AutoColumn } from '../../components/Column'
 import { ButtonOutlined } from '../../components/Button'
+import { ChainId } from '@zeroexchange/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import useGasPrice from 'hooks/useGasPrice'
-import { ChainId } from '@zeroexchange/sdk'
 
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
@@ -154,7 +154,7 @@ export default function WSDSale() {
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
                     <ButtonsFlex>
-                      <ButtonOutlined className={`green ${ depositSuccessHash }`} onClick={onPurchase}>
+                      <ButtonOutlined className={`green ${ depositSuccessHash } ${ parseFloat(amount) === 0 || !amount ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonOutlined>
                     </ButtonsFlex>
