@@ -154,7 +154,7 @@ export default function WSDSale() {
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
                     <ButtonsFlex>
-                      <ButtonOutlined className={`green ${ depositSuccessHash } ${ parseFloat(amount) === 0 || !amount ? 'disabled' : ''}`} onClick={onPurchase}>
+                      <ButtonOutlined className={`green ${ depositSuccessHash } ${ parseFloat(amount) === 0 || !amount || isPendingBuy ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonOutlined>
                     </ButtonsFlex>
