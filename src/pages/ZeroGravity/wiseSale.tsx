@@ -137,7 +137,7 @@ export default function WSDSale() {
 
   if (web3React.chainId != ChainId.SMART_CHAIN) {
     return (<>
-      <div>Switch to Binance Smart Chain!</div>
+      <div style={{ textAlign: 'center', fontSize: '1.5rem', display: 'block', background: 'rgba(0,0,0,.25)', borderRadius: '44px', padding: '2rem'}}>Switch to Binance Smart Chain!</div>
     </>);
   }
 
