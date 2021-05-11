@@ -1,6 +1,6 @@
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { CustomLightSpinner, StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useMemo, useState } from 'react'
+import { ButtonOutlined } from '../../components/Button'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import styled, { keyframes } from 'styled-components'
 
@@ -11,14 +11,13 @@ import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
-import WalletMissing from '../../assets/svg/wallet_missing.svg'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
-import { arrayMove } from '../../utils/arrayMove'
 import { getAllPoolsAPY } from 'api'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import useWindowDimensions from './../../hooks/useWindowDimensions'
+import { searchItems } from 'utils/searchItems'
+import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
+import { NoWalletConnected } from '../../components/NoWalletConnected'
 
 const numeral = require('numeral')
 
@@ -135,10 +134,6 @@ const Spinner = styled.img`
   font-size: 1.2rem;
 `
 
-const NoAccount = styled.img``
-const Message = styled.div`
-  padding: 32px;
-`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -256,27 +251,40 @@ export type SortedTitleProps = {
 export default function Pools() {
 
   //@ts-ignore
-  const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls'))
-  const { width } = useWindowDimensions()
+  const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
-  const [displayMode, setDisplayMode] = useState(serializePoolControls?.displayMode
+
+  // filters & sorting
+  const [searchText, setSearchText] = useState('')
+  const [showStaked, setShowStaked] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
+  )
+  const [showFinished, setShowFinished] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false
+  )
+  const [filteredMode, setFilteredMode] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls?.sortedMode : 'Hot'
+  )
+  const [displayMode, setDisplayMode] = useState(
+    localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
       ? serializePoolControls?.displayMode
       : 'table'
   )
-  const [searchText, setSearchText] = useState('')
+
+  const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
+  const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
+
+  const [apyData, setApyData] = useState([{}])
+  const [weeklyEarnings, setWeeklyEarnings] = useState({})
+  const [readyForHarvest, setReadyForHarvest] = useState({})
+  const [totalLiquidity, setTotalLiquidity] = useState({})
+  const [statsDisplay, setStatsDisplay] = useState<any>({})
+  const [loadingPools, setLoadingPools] = useState(true)
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
-
-  // filters & sorting
-  const [showFinished, setShowFinished] = useState(
-    serializePoolControls?.isActive ? serializePoolControls.isActive : false
-  )
-  const [showStaked, setShowStaked] = useState(
-    serializePoolControls?.isStaked ? serializePoolControls.isStaked : false
-  )
 
   let arrayToShow: any[] = []
 
@@ -288,7 +296,6 @@ export default function Pools() {
   }
 
   // do search logic, filtering, and sorting logic here on arrayToShow
-
   let timeToStakingFinish = stakingInfos?.[0]?.periodFinish
   stakingInfos.map(item => {
     const period = item ? item.periodFinish : timeToStakingFinish
@@ -296,35 +303,9 @@ export default function Pools() {
       timeToStakingFinish = period
     }
   })
+
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
-
-  const searchItems = (items: any[], term: string) => {
-    if (term.length == 0 || term === '' || term.trim().length === 0) {
-      return items
-    }
-    return items.map(item => {
-      const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId)
-      const secondCurrencySymbol = unwrappedToken(item.tokens[1], chainId)
-
-      if (firstCurrencySymbol.symbol && secondCurrencySymbol.symbol) {
-        if (
-          firstCurrencySymbol.symbol.toLowerCase().indexOf(searchText.toLowerCase().trim()) > -1 ||
-          secondCurrencySymbol.symbol.toLowerCase().indexOf(searchText.toLowerCase().trim()) > -1
-        ) {
-          return item
-        }
-      } else {
-        return { ...item, isHidden: true }
-      }
-    })
-  }
-
-  const [apyData, setApyData] = useState([{}])
-  const [weeklyEarnings, setWeeklyEarnings] = useState({})
-  const [readyForHarvest, setReadyForHarvest] = useState({})
-  const [totalLiquidity, setTotalLiquidity] = useState({})
-  const [statsDisplay, setStatsDisplay] = useState<any>({})
 
   const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract }: any) => {
     setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings })
@@ -357,9 +338,6 @@ export default function Pools() {
     }
   }
 
-  const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
-  const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
-
   const handleHarvest = (stakingInfo: any) => {
     setClaimRewardStaking(stakingInfo)
     setShowClaimRewardModal(true)
@@ -383,80 +361,8 @@ export default function Pools() {
       )
   }
 
-  // search items
-  let visibleItems: any = searchItems(arrayToShow, searchText)
-
   // lastly, if there is a sort, sort
-  const [selectedSort, setSelectedSort] = useState<string | null>(null)
-  const handleSelectSort = (val: string) => {
-    setSelectedSort(val)
-  }
-
-  const sortItems = (str: string, arr: any) => {
-    switch (str) {
-      case 'earned':
-        return arr.sort((a: any, b: any) => {
-          const aVal = parseFloat(readyForHarvest[a.stakingRewardAddress]) || 0
-          const bVal = parseFloat(readyForHarvest[b.stakingRewardAddress]) || 0
-          return bVal - aVal
-        })
-      case 'liquidity':
-        return arr.sort((a: any, b: any) => {
-          const aVal = parseFloat(totalLiquidity[a.stakingRewardAddress]) || 0
-          const bVal = parseFloat(totalLiquidity[b.stakingRewardAddress]) || 0
-          return bVal - aVal
-        })
-      case 'apr':
-        return arr.sort((a: any, b: any) => {
-          return (b.APR || 0) - (a.APR || 0)
-        })
-      default:
-        return arr
-    }
-  }
-
-  const [filteredMode, setFilteredMode] = useState(
-    serializePoolControls?.sortedMode ? serializePoolControls?.sortedMode : 'hot'
-  )
-  const defaultOptions = [
-    {
-      label: 'Hot',
-      value: 'hot'
-    },
-    {
-      label: 'APR',
-      value: 'apr'
-    },
-    {
-      label: 'Earned',
-      value: 'earned'
-    },
-    {
-      label: 'Liquidity',
-      value: 'liquidity'
-    }
-  ]
-
-  const setStartOptions = (str: string) => {
-    switch (str) {
-      case 'liquidity':
-        return arrayMove(defaultOptions, 3, 0)
-      case 'hot':
-        return defaultOptions
-      case 'apr':
-        return arrayMove(defaultOptions, 1, 0)
-      case 'earned':
-        return arrayMove(defaultOptions, 2, 0)
-      default:
-        return defaultOptions
-    }
-  }
-
-  let data = setStartOptions(filteredMode);
-
-  const onSortedChange = (sortedMode: string) => {
-    setFilteredMode(sortedMode)
-  }
+  let visibleItems: any = searchItems(arrayToShow, searchText, chainId)
 
   getAllAPY()
 
@@ -470,17 +376,28 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
     })
     setStatsDisplay({ earnings, harvest })
-    handleSelectSort(filteredMode)
+    setFilteredMode(filteredMode)
   }, [weeklyEarnings, readyForHarvest, filteredMode])
 
   visibleItems = useMemo(() => {
-    return sortItems(filteredMode, visibleItems);
+    return sortPoolsItems(filteredMode, visibleItems,readyForHarvest,totalLiquidity);
   }, [filteredMode, visibleItems])
+
+  const onLayoutChange = (displayMode: string) => {
+    setDisplayMode(displayMode)
+    const clone = { ...serializePoolControls, displayMode: displayMode }
+    localStorage.setItem('PoolControls', JSON.stringify(clone))
+  }
+  const onSortedChange = (sortedMode: string) => {
+    setFilteredMode(sortedMode)
+    const clone = { ...serializePoolControls, sortedMode: sortedMode }
+    localStorage.setItem('PoolControls', JSON.stringify(clone))
+  }
 
   const SortedTitle = ({ title, sortedMode }: SortedTitleProps) => (
     <HeaderCellSpan>
       {title}
-      {filteredMode === sortedMode && (
+      {sortedMode && (
         <DropDownWrap>
           <DropdownArrow />
         </DropDownWrap>
@@ -503,176 +420,141 @@ export default function Pools() {
         </>
       )}
       <Title>Pools</Title>
-        { !visibleItems || !apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />}
-        <PageContainer>
-          {account !== null && visibleItems?.length > 0 && apyRequested && (
-            <StatsWrapper>
-              <Stat className="weekly">
-                <StatLabel>Weekly Earnings:</StatLabel>
-                <StatValue>
-                  {numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span>
-                </StatValue>
-              </Stat>
-              <Stat className="harvest">
-                <StatLabel>Ready To Harvest:</StatLabel>
-                <StatValue>
-                  {numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span>
-                </StatValue>
-              </Stat>
-              <StyledInternalLink
-                className="add-liquidity-link"
-                to={{
-                  pathname: `/add`
-                }}
-              >
-                <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
-              </StyledInternalLink>
-              <StyledInternalLink
-                className="remove-liquidity-link"
-                to={{
-                  pathname: `/remove`
-                }}
-              >
-                <TextLink>Remove Liquidity</TextLink>
-              </StyledInternalLink>
-            </StatsWrapper>
+      { !visibleItems || !apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />}
+      <PageContainer>
+      {account !== null && visibleItems?.length > 0 && apyRequested && (
+          <StatsWrapper>
+            <Stat className="weekly">
+              <StatLabel>Weekly Earnings:</StatLabel>
+              <StatValue>
+                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span>
+              </StatValue>
+            </Stat>
+            <Stat className="harvest">
+              <StatLabel>Ready To Harvest:</StatLabel>
+              <StatValue>
+                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span>
+              </StatValue>
+            </Stat>
+            <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>
+              <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+            </StyledInternalLink>
+            <StyledInternalLink className="remove-liquidity-link" to={{ pathname: `/remove` }}>
+              <TextLink>Remove Liquidity</TextLink>
+            </StyledInternalLink>
+          </StatsWrapper>
+        )}
+        <PageWrapper>
+          {account !== null && (
+            <PoolControls
+              setShowFinished={() => setShowFinished(!showFinished)}
+              showFinished={showFinished}
+              displayMode={displayMode}
+              setDisplayMode={onLayoutChange}
+              searchText={searchText}
+              setSearchText={setSearchText}
+              showStaked={showStaked}
+              setShowStaked={() => setShowStaked(!showStaked)}
+              setFilteredMode={onSortedChange}
+              options={setOptions(filteredMode)}
+              activeFilteredMode={filteredMode}
+              serializePoolControls={serializePoolControls}
+            />
           )}
-          <PageWrapper>
-            {account !== null && (
-              <PoolControls
-                setShowFinished={() => setShowFinished(!showFinished)}
-                showFinished={showFinished}
-                displayMode={displayMode}
-                setDisplayMode={setDisplayMode}
-                searchText={searchText}
-                setSearchText={setSearchText}
-                showStaked={showStaked}
-                onSelectFilter={handleSelectSort}
-                setShowStaked={() => setShowStaked(!showStaked)}
-                setFilteredMode={setFilteredMode}
-                sortedData={data || defaultOptions}
-                serializePoolControls={serializePoolControls}
-              />
-            )}
-            {account !== null &&
-              stakingInfos?.length > 0 &&
-              visibleItems?.length > 0 &&
-              (displayMode === 'table' ? (
-                <Wrapper>
-                  <PoolsTable style={{ width: '100%' }}>
-                    <thead>
-                      <tr style={{ verticalAlign: 'top', height: '30px' }}>
-                        <HeaderCell style={{ width: '45px' }}></HeaderCell>
-                        <HeaderCell>
-                          <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                            Type
-                          </TYPE.main>
-                        </HeaderCell>
-                        <HeaderCell mobile={false}>
-                          <TYPE.main fontWeight={600} fontSize={12}>
-                            Reward
-                          </TYPE.main>
-                        </HeaderCell>
-                        <HeaderCell
-                          style={{ cursor: 'pointer' }}
-                          mobile={false}
-                          onClick={() => {
-                            onSortedChange('apr')
-                          }}
-                        >
-                          <TYPE.main fontWeight={600} fontSize={12}>
-                            <SortedTitle title="APR" sortedMode="apr" />
-                          </TYPE.main>
-                        </HeaderCell>
-                        <HeaderCell
-                          style={{ cursor: 'pointer' }}
-                          mobile={false}
-                          onClick={() => {
-                            onSortedChange('liquidity')
-                          }}
-                        >
-                          <TYPE.main fontWeight={600} fontSize={12}>
-                            <SortedTitle title="Liquidity" sortedMode="liquidity" />
-                          </TYPE.main>
-                        </HeaderCell>
-                        <HeaderCell
-                          style={{ cursor: 'pointer' }}
-                          mobile={false}
-                          onClick={() => {
-                            onSortedChange('earned')
-                          }}
-                        >
-                          <TYPE.main fontWeight={600} fontSize={12}>
-                            <SortedTitle title="Earned" sortedMode="earned" />
-                          </TYPE.main>
-                        </HeaderCell>
-                        <HeaderCell style={{ width: '45px' }}></HeaderCell>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {visibleItems?.map((stakingInfo: any) => {
-                        if (!stakingInfo) {
-                          return <></>
-                        }
-                        return (
-                          <PoolRow
-                            onHarvest={() => handleHarvest(stakingInfo)}
-                            harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                            earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                            liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                            key={stakingInfo.stakingRewardAddress}
-                            stakingInfoTop={stakingInfo}
-                            stakingInfoAPR={stakingInfo.APR}
-                            sendDataUp={onSendDataUp}
-                          />
-                        )
-                      })}
-                    </tbody>
-                  </PoolsTable>
-                </Wrapper>
-              ) : (
-                <GridContainer>
-                  {visibleItems?.map((stakingInfo: any) => {
-                    if (!stakingInfo) {
-                      return <></>
-                    }
-                    return (
-                      <PoolCard
-                        onHarvest={() => handleHarvest(stakingInfo)}
-                        harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                        earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                        liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                        key={stakingInfo.stakingRewardAddress}
-                        stakingInfoTop={stakingInfo}
-                        stakingInfoAPR={stakingInfo.APR}
-                        sendDataUp={onSendDataUp}
-                      />
-                    )
-                  })}
-                </GridContainer>
-              ))}
-            {account !== null && stakingRewardsExist && stakingInfos?.length === 0 && (
-              <EmptyData>
-                <Spinner src={ZeroIcon} />
-              </EmptyData>
-            )}
-            {account === null && (
-              <EmptyData>
-                <NoAccount src={WalletMissing} />
-                <Message>
-                  <TYPE.main fontWeight={600} fontSize={24} style={{ textAlign: 'center' }}>
-                    No Wallet Connected!
-                  </TYPE.main>
-                </Message>
-                <div style={{ display: 'flex', flexGrow: 0 }}>
-                  <ButtonPrimary padding="8px" borderRadius="8px" onClick={toggleWalletModal}>
-                    Connect a Wallet
-                  </ButtonPrimary>
-                </div>
-              </EmptyData>
-            )}
-          </PageWrapper>
-        </PageContainer>
+          {account !== null &&
+            stakingInfos?.length > 0 &&
+            visibleItems?.length > 0 &&
+            (displayMode === 'table' ? (
+              <Wrapper>
+                <PoolsTable style={{ width: '100%' }}>
+                  <thead>
+                    <tr style={{ verticalAlign: 'top', height: '30px' }}>
+                      <HeaderCell style={{ width: '45px' }}></HeaderCell>
+                      <HeaderCell>
+                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                          Type
+                        </TYPE.main>
+                      </HeaderCell>
+                      <HeaderCell mobile={false}>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          Reward
+                        </TYPE.main>
+                      </HeaderCell>
+                      <HeaderCell style={{ cursor: 'pointer' }} mobile={false} onClick={() => onSortedChange('APR')}>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          <SortedTitle title="APR" sortedMode="APR" />
+                        </TYPE.main>
+                      </HeaderCell>
+                      <HeaderCell
+                        style={{ cursor: 'pointer' }}
+                        mobile={false}
+                        onClick={e => {
+                          console.log(e)
+                          onSortedChange('Liquidity')
+                        }}
+                      >
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          <SortedTitle title="Liquidity" sortedMode="Liquidity" />
+                        </TYPE.main>
+                      </HeaderCell>
+                      <HeaderCell style={{ cursor: 'pointer' }} mobile={false} onClick={() => onSortedChange('Earned')}>
+                        <TYPE.main fontWeight={600} fontSize={12}>
+                          <SortedTitle title="Earned" sortedMode="Earned" />
+                        </TYPE.main>
+                      </HeaderCell>
+                      <HeaderCell style={{ width: '45px' }}></HeaderCell>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleItems?.map((stakingInfo: any) => {
+                      if (!stakingInfo) {
+                        return <></>
+                      }
+                      return (
+                        <PoolRow
+                          onHarvest={() => handleHarvest(stakingInfo)}
+                          harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                          earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                          liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
+                          key={stakingInfo.stakingRewardAddress}
+                          stakingInfoTop={stakingInfo}
+                          stakingInfoAPR={stakingInfo.APR}
+                          sendDataUp={onSendDataUp}
+                        />
+                      )
+                    })}
+                  </tbody>
+                </PoolsTable>
+              </Wrapper>
+            ) : (
+              <GridContainer>
+                {visibleItems?.map((stakingInfo: any) => {
+                  if (!stakingInfo) {
+                    return <></>
+                  }
+                  return (
+                    <PoolCard
+                      onHarvest={() => handleHarvest(stakingInfo)}
+                      harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
+                      earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
+                      liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
+                      key={stakingInfo.stakingRewardAddress}
+                      stakingInfoTop={stakingInfo}
+                      stakingInfoAPR={stakingInfo.APR}
+                      sendDataUp={onSendDataUp}
+                    />
+                  )
+                })}
+              </GridContainer>
+            ))}
+          {account !== null && stakingRewardsExist && stakingInfos?.length === 0 && (
+            <EmptyData>
+              <Spinner src={ZeroIcon} />
+            </EmptyData>
+          )}
+          {account === null && <NoWalletConnected handleWalletModal={toggleWalletModal} />}
+        </PageWrapper>
+      </PageContainer>
     </>
   )
 }
