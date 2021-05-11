@@ -172,7 +172,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'WAS',
           decimals: 18,
           resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
-        }
+        },
+        // {
+        //   address: '0x1d37986F252d0e349522EA6C3B98Cb935495E63E',
+        //   name: 'ChartEx',
+        //   symbol: 'CHART',
+        //   assetBase: 'CHART',
+        //   decimals: 18,
+        //   resourceId: '0x00000000000000000000001d37986F252d0e349522EA6C3B98Cb935495E63E01'
+        // }
       ]
     },
     {
@@ -229,7 +237,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
         {
           address: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-          name: 'ZERO(AVAX)',
+          name: 'ZERO',
           symbol: 'ZERO',
           assetBase: 'ZERO',
           decimals: 18,
@@ -306,7 +314,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'INDA',
           decimals: 2,
           resourceId: '0x0000000000000000000000791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D02'
-        }
+        },
+        // {
+        //   address: '0xD769bDFc0CaEe933dc0a047C7dBad2Ec42CFb3E2',
+        //   name: 'ChartEx',
+        //   symbol: 'CHART',
+        //   assetBase: 'CHART',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000D769bDFc0CaEe933dc0a047C7dBad2Ec42CFb3E202'
+        // }
       ]
     },
     {
@@ -449,7 +465,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'INDA',
           decimals: 2,
           resourceId: '0x0000000000000000000000C878A79B63A41a831E469AE1A830A765eFd9d46803'
-        }
+        },
+        // {
+        //   address: '0xc33A42C9D19f944FA12ff46f27B3B85e18a13778',
+        //   name: 'ChartEx',
+        //   symbol: 'CHART',
+        //   assetBase: 'CHART',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000c33A42C9D19f944FA12ff46f27B3B85e18a1377803'
+        // }
       ]
     },
   ]

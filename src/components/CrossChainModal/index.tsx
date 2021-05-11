@@ -190,7 +190,6 @@ export default function CrossChainModal({
               ${activeChain === chain.name && !isTransfer ? 'active' : ''}
               ${(activeChain === chain.name && isTransfer) || chain.name === 'Polkadot' ? 'disabled' : ''}
               ${isTransfer && activeChain !== chain.name ? 'selectable' : ''}
-              ${isTransfer && chain.name === 'Avalanche' ? 'off' : ''}
             `}
             >
               <BlockchainLogo size="28px" blockchain={chain.name} />
