@@ -225,13 +225,6 @@ const DropDownWrap = styled.span`
   }
 `
 
-const CenterWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 1rem 0;
-`
-
 const HeaderCellSpan = styled.span`
   position: relative;
 `
@@ -249,7 +242,6 @@ export type SortedTitleProps = {
 }
 
 export default function Pools() {
-
   //@ts-ignore
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const { account, chainId } = useActiveWeb3React()
@@ -281,7 +273,6 @@ export default function Pools() {
   const [readyForHarvest, setReadyForHarvest] = useState({})
   const [totalLiquidity, setTotalLiquidity] = useState({})
   const [statsDisplay, setStatsDisplay] = useState<any>({})
-  const [loadingPools, setLoadingPools] = useState(true)
 
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
@@ -380,7 +371,7 @@ export default function Pools() {
   }, [weeklyEarnings, readyForHarvest, filteredMode])
 
   visibleItems = useMemo(() => {
-    return sortPoolsItems(filteredMode, visibleItems,readyForHarvest,totalLiquidity);
+    return sortPoolsItems(filteredMode, visibleItems, readyForHarvest, totalLiquidity)
   }, [filteredMode, visibleItems])
 
   const onLayoutChange = (displayMode: string) => {
@@ -391,12 +382,6 @@ export default function Pools() {
   const onSortedChange = (sortedMode: string) => {
     setFilteredMode(sortedMode)
     const clone = { ...serializePoolControls, sortedMode: sortedMode }
-    localStorage.setItem('PoolControls', JSON.stringify(clone))
-  }
-
-  const onLayoutChange = (displayMode: string) => {
-    setDisplayMode(displayMode)
-    const clone = { ...serializePoolControls, displayMode: displayMode }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
   }
 
@@ -426,9 +411,9 @@ export default function Pools() {
         </>
       )}
       <Title>Pools</Title>
-      { !visibleItems || !apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />}
+      {!visibleItems || (!apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
       <PageContainer>
-      {account !== null && visibleItems?.length > 0 && apyRequested && (
+        {account !== null && visibleItems?.length > 0 && apyRequested && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
