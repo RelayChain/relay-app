@@ -297,7 +297,7 @@ export default function PoolCard({
                   </TYPE.white>
                   <div style={{ display: 'flex', flexGrow: 1, marginTop: '1rem', width: '100%' }}>
                     <ButtonPrimary style={{ width: '100%' }} onClick={onHarvest}>
-                      Harvest
+                      Claim
                     </ButtonPrimary>
                   </div>
                 </div>

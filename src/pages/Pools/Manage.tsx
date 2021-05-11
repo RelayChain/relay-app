@@ -509,7 +509,7 @@ export default function Manage({
                 </TYPE.white>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
                   <ButtonPrimary onClick={() => setShowClaimRewardModal(true)} style={{ width: '160px'}}>
-                    Harvest
+                    Claim
                   </ButtonPrimary>
                 )}
               </RowBetween>

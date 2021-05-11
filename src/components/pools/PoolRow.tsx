@@ -311,7 +311,7 @@ export default function PoolRow({
                   </div>
                   {countUpAmount && parseFloat(countUpAmount) > 0 && (
                     <div style={{ display: 'flex', flexGrow: 0 }}>
-                      <ButtonPrimary onClick={onHarvest}>Harvest</ButtonPrimary>
+                      <ButtonPrimary onClick={onHarvest}>Claim</ButtonPrimary>
                     </div>
                   )}
                 </div>
