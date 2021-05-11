@@ -146,7 +146,7 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De'
     },
     {
-      tokens: [zZERO, zCHART],
+      tokens: [zUSDC, zCHART],
       stakingRewardAddress: '0x9894B0F28CcfA0F5c5F74EAC88f161110C5F8027',
       rewardInfo: { rewardToken: zCHART },
     },
