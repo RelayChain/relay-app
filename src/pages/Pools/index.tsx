@@ -394,6 +394,12 @@ export default function Pools() {
     localStorage.setItem('PoolControls', JSON.stringify(clone))
   }
 
+  const onLayoutChange = (displayMode: string) => {
+    setDisplayMode(displayMode)
+    const clone = { ...serializePoolControls, displayMode: displayMode }
+    localStorage.setItem('PoolControls', JSON.stringify(clone))
+  }
+
   const SortedTitle = ({ title, sortedMode }: SortedTitleProps) => (
     <HeaderCellSpan>
       {title}
