@@ -28,7 +28,8 @@ import {
   zUNI,
   zUSDC,
   zUSDT,
-  zZERO
+  zZERO,
+  zCHART
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -143,7 +144,22 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zDAI],
       stakingRewardAddress: '0xAfE2d3154bd3eC5601b610145923cb0ECA1937De'
-    }
+    },
+    {
+      tokens: [zZERO, zCHART],
+      stakingRewardAddress: '0x9894B0F28CcfA0F5c5F74EAC88f161110C5F8027',
+      rewardInfo: { rewardToken: zCHART },
+    },
+    {
+      tokens: [zZERO, zCHART],
+      stakingRewardAddress: '0xE1B49C53EBD6F001C01351B8762B26fbd8e3d6AA',
+      rewardInfo: { rewardToken: zCHART },
+    },
+    {
+      tokens: [WAVAX, zCHART],
+      stakingRewardAddress: '0x8D607CE623BE63a017ED32229A2AA918e4f67264',
+      rewardInfo: { rewardToken: zCHART },
+    },
   ],
   [ChainId.FUJI]: [
     {

@@ -43,13 +43,7 @@ export const returnBalanceNum = (obj?: any, decimals?: number) => {
   }
 }
 
-export const ZERO = new Token(
-  ChainId.MAINNET,
-  '0xf0939011a9bb95c3b791f0cb546377ed2693a574',
-  18,
-  'ZERO',
-  'Zero Exchange'
-)
+export const ZERO = new Token(ChainId.MAINNET, '0xf0939011a9bb95c3b791f0cb546377ed2693a574', 18, 'ZERO', 'Zero Exchange')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USDC')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -57,51 +51,19 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
-export const SUSHI = new Token(
-  ChainId.MAINNET,
-  '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
-  18,
-  'SUSHI',
-  'Wrapped BTC'
-)
+export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
+export const CHART = new Token(ChainId.AVALANCHE, '0x1d37986F252d0e349522EA6C3B98Cb935495E63E', 18, 'CHART', 'ChartEx')
 
-export const rinkebyZERO = new Token(
-  ChainId.RINKEBY,
-  '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a',
-  18,
-  'ZERO',
-  'Zero Exchange'
-)
-
-export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
-
-export const WAVAX = new Token(
-  ChainId.AVALANCHE,
-  '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
-  18,
-  'WAVAX',
-  'Avalanche'
-)
-export const zZERO = new Token(
-  ChainId.AVALANCHE,
-  '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-  18,
-  'ZERO',
-  'Zero Exchange'
-)
-export const zDAI = new Token(
-  ChainId.AVALANCHE,
-  '0x12f108E6138d4A9c58511e042399cF8f90D5673f',
-  18,
-  'zDAI',
-  'Dai Stablecoin'
-)
+export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche')
+export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange')
+export const zDAI = new Token(ChainId.AVALANCHE, '0x12f108E6138d4A9c58511e042399cF8f90D5673f', 18, 'zDAI', 'Dai Stablecoin')
 export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'zUSDC')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
 export const zUSDT = new Token(ChainId.AVALANCHE, '0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7', 6, 'zUSDT', 'zUSDT')
 export const zBTC = new Token(ChainId.AVALANCHE, '0xc4f4Ff34A2e2cF5e4c892476BB2D056871125452', 8, 'zBTC', 'zBTC')
 export const zUNI = new Token(ChainId.AVALANCHE, '0xBa9aF11661520129Af69d233E92d69BD40CD90AF', 18, 'zUNI', 'zUNI')
 export const zSUSHI = new Token(ChainId.AVALANCHE, '0xD4feE2e3F88B9138B74a323B40bC63bcc1A1B9eC', 18, 'zSUSHI', 'zSUSHI')
+export const zCHART = new Token(ChainId.AVALANCHE, '0xD769bDFc0CaEe933dc0a047C7dBad2Ec42CFb3E2', 18, 'CHART', 'ChartEx')
 
 export const WBNB = new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'SMART_CHAIN')
 
@@ -116,21 +78,12 @@ export const bscSUSHI = new Token(ChainId.SMART_CHAIN, '0x2D6d5bc58adEDa28f62B0a
 export const bscDAI = new Token(ChainId.SMART_CHAIN, '0x7e7bAFF135c42ed90C0EdAb16eAe48ecEa417018', 18, 'zDAI', 'zDAI')
 export const bscETH = new Token(ChainId.SMART_CHAIN, '0x7c815BBc21FED2B97CA163552991A5C30d6a2336', 18, 'zETH', 'zETH');
 export const bscINDA = new Token(ChainId.SMART_CHAIN, '0xc878a79b63a41a831e469ae1a830a765efd9d468', 2, 'INDA', 'INDA');
+export const bscCHART = new Token(ChainId.AVALANCHE, '0xc33A42C9D19f944FA12ff46f27B3B85e18a13778', 18, 'CHART', 'ChartEx')
 
-export const MOCK1 = new Token(
-  ChainId.FUJI,
-  '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351',
-  18,
-  'MOCK1',
-  'MOCK1 in Avalanche'
-)
-export const MOCK2 = new Token(
-  ChainId.FUJI,
-  '0x5300A4834F1995828B99bE23bcD99C80002DE9c8',
-  18,
-  'MOCK2',
-  'MOCK2 in Avalanche'
-)
+export const rinkebyZERO = new Token(ChainId.RINKEBY, '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a', 18, 'ZERO', 'Zero Exchange')
+export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
+export const MOCK1 = new Token(ChainId.FUJI, '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351', 18, 'MOCK1', 'MOCK1 in Avalanche')
+export const MOCK2 = new Token(ChainId.FUJI, '0x5300A4834F1995828B99bE23bcD99C80002DE9c8', 18, 'MOCK2', 'MOCK2 in Avalanche')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
