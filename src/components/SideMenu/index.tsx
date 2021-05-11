@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
+import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
+import LogoDark from './../../assets/images/0-icon.png'
+import MenuBurger from './../MenuBurger'
 import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import MenuBurger from './../MenuBurger'
-import LogoDark from './../../assets/images/0-icon.png'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
@@ -62,8 +63,10 @@ const StyledNavLink = styled(NavLink).attrs({
   transition: all 0.2s ease-in-out;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 1.5rem;
-  &.${activeClassName} {
-    color: ${({ theme }) => theme.white};
+  span {
+    &.active {
+      color: ${({ theme }) => theme.white};
+    }
   }
 `
 const HeaderExternalLink = styled(ExternalLink)`
@@ -89,7 +92,6 @@ const IconLink = styled.span`
 const MoreLink = styled.span`
   display: flex;
   cursor: pointer;
-  margin-top: 3rem;
   color: ${({ theme }) => theme.text2};
 `
 const Title = styled.a`
@@ -133,25 +135,25 @@ export default function SideMenu() {
             <IconLink>
               <Icon icon="home" active={pathname === '/home'} />
             </IconLink>
-            {t('Home')}
+            <span className={ pathname === '/home' ? 'active' : ''}>{t('Home')}</span>
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="swap" active={pathname === '/swap'} />
             </IconLink>
-            {t('Swap')}
+            <span className={ pathname === '/swap' ? 'active' : ''}>{t('Swap')}</span>
           </StyledNavLink>
           <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="bridges" active={pathname === '/transfer'} />
             </IconLink>
-            {t('Transfer')}
+            <span className={ pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
-            {t('Pools')}
+            <span className={ pathname === '/pools' ? 'active' : ''}>{t('Pools')}</span>
           </StyledNavLink>
           <HeaderExternalLink href={`https://charts.0.exchange`}>
             <IconLink>
@@ -159,15 +161,21 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
-          <StyledNavLink id={`lottery-nav-link`} to={'/lottery'} onClick={handleSideMenuOpen}>
+          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
             <IconLink>
-              <Icon icon="lottery" active={pathname === '/lottery'} />
+              <Icon icon="planet" active={pathname === '/zero-gravity'} />
             </IconLink>
-            {t('Lottery')}
+            <span className={ pathname === '/zero-gravity' ? 'active' : ''}>{t('Zero Gravity')}</span>
           </StyledNavLink>
-          <MoreLink onClick={() => setIsOpenModal(true)}>
+          <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem'}}>
             <IconLink>
-              <Icon icon="planet" />
+              <DollarSign size={20} />
+            </IconLink>
+            Buy ZERO
+          </HeaderExternalLink>
+          <MoreLink onClick={() => setIsOpenModal(true)}>
+            <IconLink style={{ paddingTop: '4px'}}>
+              <Icon icon="more" />
             </IconLink>
             {t('More ...')}
           </MoreLink>

@@ -1,4 +1,3 @@
-import DropDown from './../DropDown'
 import React from 'react'
 import TransactionLine from './../TransactionLine'
 import { TransactionTypes } from './../../graphql/types'

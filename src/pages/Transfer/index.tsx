@@ -1,9 +1,5 @@
-import { BottomGrouping } from '../../components/swap/styleds'
-import { RowBetween } from '../../components/Row'
 import { ButtonLight, ButtonPrimary } from '../../components/Button'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
-import { GreyCard } from '../../components/Card'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -12,10 +8,8 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { AutoColumn } from '../../components/Column'
-import { Field } from '../../state/swap/actions'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import { TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import {
@@ -24,10 +18,12 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
+
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
+import { AutoColumn } from '../../components/Column'
 import BlockchainSelector from '../../components/BlockchainSelector'
+import { BottomGrouping } from '../../components/swap/styleds'
 import BubbleBase from '../../components/BubbleBase'
 import ChainBridgeModal from '../../components/ChainBridgeModal'
 import Circle from '../../assets/images/circle-grey.svg'
@@ -36,13 +32,18 @@ import ConfirmTransferModal from '../../components/ConfirmTransferModal'
 import CrossChainModal from '../../components/CrossChainModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
+import { Field } from '../../state/swap/actions'
+import { GreyCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
+import { RowBetween } from '../../components/Row'
+import { TYPE } from '../../theme'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -107,6 +108,13 @@ const TransferBodyWrapper = styled.div`
   padding: 2rem;
   margin-left: auto;
   margin-right: auto;
+  &.offline {
+    opacity: .25;
+    pointer-events: none;
+    * {
+      pointer-events: none;
+    }
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin-bottom: 50px;
 `};
@@ -120,6 +128,7 @@ const RowBetweenTransfer = styled(RowBetween)`
 `};
 `
 const BottomGroupingTransfer = styled(BottomGrouping)`
+  margin-top: 0;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
 `};
@@ -131,7 +140,7 @@ const SpanAmount = styled.span`
 `
 const TransferButton = styled(GreyCard)`
   text-align: center;
-  min-width: 230px;
+  min-width: 180px;
   border-radius: 100px;
   height: 58px;
   padding-top: 0;
@@ -288,16 +297,16 @@ export default function Transfer() {
     )
   }
 
-  useEffect(() => {
-    // change logic when we add polka
-    if (chainId) {
-      const label = SUPPORTED_CHAINS.find(x => x !== CHAIN_LABELS[chainId]) || 'Ethereum'
-      onSelectTransferChain({
-        name: label,
-        chainID: chainId.toString()
-      })
-    }
-  }, [chainId, currentChain])
+  // useEffect(() => {
+  //   // change logic when we add polka
+  //   if (chainId) {
+  //     const label: any = SUPPORTED_CHAINS.find(x => x !== CHAIN_LABELS[chainId]);
+  //     onSelectTransferChain({
+  //       name: label,
+  //       chainID: chainId.toString()
+  //     })
+  //   }
+  // }, [chainId, currentChain])
 
   const startNewSwap = () => {
     BreakCrosschainSwap()
@@ -373,6 +382,9 @@ export default function Transfer() {
     }
   }
 
+  // quick enable or disable of bridge
+  const bridgeEnabled = true;
+
   return (
     <>
       <Title>Transfer</Title>
@@ -388,13 +400,13 @@ export default function Transfer() {
           supportedChains={availableChains}
           isTransfer={true}
           selectTransferChain={onSelectTransferChain}
-          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : undefined}
         />
         <ConfirmTransferModal
           isOpen={confirmTransferModalOpen}
           onDismiss={hideConfirmTransferModal}
           transferTo={targetChain}
-          activeChain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+          activeChain={chainId ? CHAIN_LABELS[chainId] : undefined}
           changeTransferState={onChangeTransferState}
           tokenTransferState={crosschainTransferStatus}
           value={formattedAmounts[Field.INPUT]}
@@ -404,7 +416,8 @@ export default function Transfer() {
 
         <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
 
-        <TransferBodyWrapper>
+        {!bridgeEnabled && <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>}
+        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
           <BubbleBase />
           <Heading>Cross-Chain Bridge</Heading>
           <Description>Transfer your tokens from one blockchain to another</Description>
@@ -435,16 +448,19 @@ export default function Transfer() {
               <BlockchainSelector
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
-                blockchain={chainId ? CHAIN_LABELS[chainId] : 'Ethereum'}
+                blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
                 transferTo={targetChain}
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
+              <RowBetweenTransfer style={{ marginBottom: '1rem', marginTop: '-1.5rem' }}>
+                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
+              </RowBetweenTransfer>
               <RowBetweenTransfer>
                 <TextBottom>
                   {transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
                     <SpanAmount>
-                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name}
+                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name.length > 0 ? targetChain.name : '...'}
                     </SpanAmount>
                   ) : (
                     ''
@@ -456,14 +472,16 @@ export default function Transfer() {
                   transferAmount.length &&
                   transferAmount !== '0' &&
                   currentToken &&
+                  targetChain.chainID !== "" &&
+                  targetChain.name.length > 0 &&
                   currencies[Field.INPUT] ? (
                     <>
-                      <ButtonPrimary onClick={showConfirmTransferModal}>
+                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px'}}>
                         <TYPE.white>Transfer</TYPE.white>
                       </ButtonPrimary>
                     </>
                   ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px'}}>Connect Wallet</ButtonLight>
                   ) : (
                     <TransferButton>
                       <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>

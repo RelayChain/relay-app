@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'
 import { BlockchainSearch } from './BlockchainSearch'
-import { ListSelect } from './ListSelect'
 
 interface BlockchainSearchModalProps {
   isOpen: boolean
@@ -48,19 +47,15 @@ export default function BlockchainSearchModal({
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>
-      {listView ? (
-        <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
-      ) : (
-        <BlockchainSearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          onChangeList={handleClickChangeList}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
-        />
-      )}
+      <BlockchainSearch
+        isOpen={isOpen}
+        onDismiss={onDismiss}
+        onCurrencySelect={handleCurrencySelect}
+        onChangeList={handleClickChangeList}
+        selectedCurrency={selectedCurrency}
+        otherSelectedCurrency={otherSelectedCurrency}
+        showCommonBases={showCommonBases}
+      />
     </Modal>
   )
 }

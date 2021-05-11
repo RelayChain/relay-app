@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react'
 import BarChart from './charts/BarChart'
 import BubbleBase from './../BubbleBase'
 import LineChart from './charts/LineChart'
-import { TVLHistoryData } from './../../graphql/types'
 import Percentage from './../Percantage'
 import styled from 'styled-components'
 import toCurrency from './../../utils/toCurrency'
@@ -18,10 +17,11 @@ export type BubbleChartProps = {
   title: string
   value: number
   percentage: number
+  series: Array<number>
   date?: DateBoxType
   flipMonthWeek?: boolean
   type: 'line' | 'bar'
-  data: TVLHistoryData[]
+  categoriesX: Array<string>
 }
 
 const BubbleChartWrap = styled.div`
@@ -69,7 +69,7 @@ const SecondHeading = styled.div`
   }
 `
 
-const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps) => {
+const BubbleChart = ({ title, value, percentage, type, categoriesX, series }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
 
@@ -85,7 +85,7 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
 
   const componentRef = useRef()
 
-  const { width, height } = useResize(componentRef)
+  const { width } = useResize(componentRef)
 
   return (
     <BubbleChartWrap>
@@ -100,10 +100,20 @@ const BubbleChart = ({ title, value, percentage, type, data }: BubbleChartProps)
           </SecondHeading>
         </FirstBox>
         {type === 'line' ? (
-          <LineChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width} />
+          <LineChart
+            onSelectedValue={onSelectedValue}
+            categoriesX={categoriesX}
+            series={series}
+            lineChartWidth={width}
+          />
         ) : (
           <SecondBox>
-            <BarChart onSelectedValue={onSelectedValue} data={data} lineChartWidth={width} />
+            <BarChart
+              onSelectedValue={onSelectedValue}
+              categoriesX={categoriesX}
+              series={series}
+              lineChartWidth={width}
+            />
           </SecondBox>
         )}
       </Flex>

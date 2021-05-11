@@ -1,3 +1,5 @@
+import { isFirefox, isIOS } from 'react-device-detect'
+
 import React from 'react'
 import styled from 'styled-components'
 
@@ -12,7 +14,6 @@ const BubbleBaseWrap = styled.div`
   z-index: -1;
   width: 100%;
   height: 100%;
-  filter: brightness(.75);
 `
 
 const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
@@ -29,12 +30,12 @@ const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
           transform: mode !== 'normal' ? 'rotate(180deg)' : 'none'
         }}
       >
-        <g filter={`url(#${prefixGradient})`}>
+        <g filter={isIOS || isFirefox ? '' : `url(#${prefixGradient})`}>
           <rect
             width="100%"
             height="100%"
             rx={44}
-            fill={mode === 'normal' ? '#2F3573' : '#121538'}
+            fill={mode === 'normal' ? '#202550' : '#121538'}
             fillOpacity={mode === 'normal' ? 0.72 : 0.54}
           />
           <rect

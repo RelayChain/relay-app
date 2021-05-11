@@ -1,20 +1,13 @@
 import {
-  AVAX,
-  BNB,
-  DEV,
-  MATIC,
   BigintIsh,
   Currency,
   CurrencyAmount,
-  ETHER,
   JSBI,
   Pair,
   Percent,
-  Route,
   Token,
   TokenAmount,
   Trade,
-  TradeType,
   WETH,
   currencyEquals
 } from '@zeroexchange/sdk'
@@ -41,20 +34,20 @@ export class MockV1Pair extends Pair {
   }
 }
 
-function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
-  const token = inputCurrency instanceof Token ? inputCurrency : undefined
+// function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
+//   const token = inputCurrency instanceof Token ? inputCurrency : undefined
 
-  const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
-  const tokenBalance = useTokenBalance(v1PairAddress, token)
-  const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
-  return useMemo(() => {
-    if (token && tokenBalance && ETHBalance && inputCurrency) {
-      return new MockV1Pair(ETHBalance.raw, tokenBalance)
-    }
-    return undefined
-  }, [ETHBalance, inputCurrency, token, tokenBalance])
-}
+//   const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
+//   const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
+//   const tokenBalance = useTokenBalance(v1PairAddress, token)
+//   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
+//   return useMemo(() => {
+//     if (token && tokenBalance && ETHBalance && inputCurrency) {
+//       return new MockV1Pair(ETHBalance.raw, tokenBalance)
+//     }
+//     return undefined
+//   }, [ETHBalance, inputCurrency, token, tokenBalance])
+// }
 
 // returns all v1 exchange addresses in the user's token list
 export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {

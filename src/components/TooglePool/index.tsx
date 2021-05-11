@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Row from 'components/Row'
 import styled from 'styled-components'
 
@@ -118,19 +118,14 @@ export interface ToggleProps {
   toggle: () => void
   isStaked: boolean
   setShowStaked: () => void
+  serializePoolControls: any
 }
 
-export default function Toggle({ isActive, toggle, isStaked, setShowStaked }: ToggleProps) {
-  let serializePoolsControl = {}
-  //@ts-ignore
-  if (JSON.parse(localStorage.getItem('PoolControls'))) {
-    //@ts-ignore
-    serializePoolsControl = JSON.parse(localStorage.getItem('PoolControls'))
-  }
+export default function Toggle({ isActive, toggle, isStaked, setShowStaked, serializePoolControls }: ToggleProps) {
 
   const onHandleChange = (callback: any, key: string, value: boolean) => {
     callback()
-    const clone = { ...serializePoolsControl, [key]: !value }
+    const clone = { ...serializePoolControls, [key]: !value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
   }
 

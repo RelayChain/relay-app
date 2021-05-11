@@ -1,13 +1,12 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useState } from 'react'
-import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { CountUp } from 'use-count-up'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import SettingIcon from '../Settings/SettingIcon';
+import SettingIcon from '../Settings/SettingIcon'
 import { StakingInfo } from '../../state/stake/hooks'
 import { currencyId } from '../../utils/currencyId'
 import styled from 'styled-components'
@@ -18,6 +17,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -36,7 +36,7 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   flex-direction: column;
   align-items: center;
   &.active {
-    background: rgba(179, 104, 252, .2);
+    background: rgba(179, 104, 252, 0.2);
   }
 `
 
@@ -53,20 +53,21 @@ const Icons = styled(DoubleCurrencyLogo)`
 const ManageButton = styled(StyledInternalLink)`
   postion: absolute;
   width: 140px;
-  padding: .25rem;
+  padding: 0.25rem;
   text-decoration: none !important;
   position: absolute;
-  right: 0; top: 28px;
+  right: 0;
+  top: 28px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6752F7;
-  transition: all .2s ease-in-out;
+  color: #6752f7;
+  transition: all 0.2s ease-in-out;
   &:hover {
-    color: #6752F7;
+    color: #6752f7;
     filter: brightness(1.2);
   }
 `
@@ -74,21 +75,7 @@ const ManageButton = styled(StyledInternalLink)`
 const Label = styled.div`
   margin-bottom: 16px;
 `
-const DetailsButton = styled.div<{ showDetails?: boolean }>`
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-bottom: 16px;
-  svg {
-    ${({ showDetails }) => showDetails && `transform: rotate(180deg);`}
-    margin-left: 8px;
-    g {
-      fill: #727bba;
-    }
-  }
-`
+
 const Details = styled.div<{ showDetails?: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
@@ -96,7 +83,6 @@ const Details = styled.div<{ showDetails?: boolean }>`
   margin-top: 16px;
   width: 100%;
   ${({ showDetails }) => !showDetails && `display: none;`}
-
 `
 const DetailsBox = styled.div`
   width: 100%;
@@ -119,12 +105,12 @@ export default function PoolCard({
   onHarvest,
   stakingInfoAPR
 }: {
-  stakingInfoTop: StakingInfo | any,
-  sendDataUp: any,
-  harvestSent: any,
-  earningsSent: any,
-  liquiditySent: any,
-  onHarvest: any,
+  stakingInfoTop: StakingInfo | any
+  sendDataUp: any
+  harvestSent: any
+  earningsSent: any
+  liquiditySent: any
+  onHarvest: any
   stakingInfoAPR: any
 }) {
   const { chainId, account } = useActiveWeb3React()
@@ -164,8 +150,14 @@ export default function PoolCard({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV  || currencyA === MATIC ? tokenB : tokenA
-  const WETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC ? tokenA : tokenB
+  const token =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenB
+      : tokenA
+  const WETH =
+    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
+      ? tokenA
+      : tokenB
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -185,7 +177,7 @@ export default function PoolCard({
     )
   }
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   // get the USD value of staked WETH
@@ -196,124 +188,156 @@ export default function PoolCard({
   const symbol = WETH?.symbol
 
   useEffect(() => {
-    const contract = stakingInfo?.stakingRewardAddress;
+    const contract = stakingInfo?.stakingRewardAddress
     const singleWeeklyEarnings = stakingInfo?.active
-      ? stakingInfo?.rewardRate
-          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
-      : '0';
-    const readyToHarvest = countUpAmount;
+      ? stakingInfo?.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
+      : '0'
+    const readyToHarvest = countUpAmount
     const liquidityValue = valueOfTotalStakedAmountInUSDC
       ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
       : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
+    // this prevents infinite loops / re-renders
     if (harvestSent === readyToHarvest &&
         earningsSent === singleWeeklyEarnings &&
         liquiditySent === liquidityValue) {
       return;
     }
 
-    if (parseFloat(singleWeeklyEarnings) !== 0 ||
-        parseFloat(readyToHarvest) !== 0 ||
-        parseFloat(liquidityValue) !== 0) {
+    if (
+      parseFloat(singleWeeklyEarnings) !== 0 &&
+      parseFloat(readyToHarvest) !== 0 &&
+      parseFloat(liquidityValue) !== 0
+    ) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
     }
-  }, [countUpAmount, stakingInfo, harvestSent, earningsSent, liquiditySent, valueOfTotalStakedAmountInUSDC, valueOfTotalStakedAmountInWETH])
+  }, [
+    countUpAmount,
+    stakingInfo,
+    harvestSent,
+    earningsSent,
+    liquiditySent,
+    valueOfTotalStakedAmountInUSDC,
+    valueOfTotalStakedAmountInWETH
+  ])
 
   if (stakingInfoTop.isHidden) {
-    return (<></>);
+    return <></>
   }
 
   return (
     <>
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor} className={parseFloat(countUpAmount) !== 0 ? 'active' : ''}>
-      <Icons currency0={currency0} currency1={currency1} size={38} />
-      <Label>
-        <TYPE.main fontWeight={600} fontSize={18}>
-          {currency0.symbol}-{currency1.symbol}
-        </TYPE.main>
-      </Label>
-      <Row style={{ marginBottom: '10px'}}>
-        <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
-          APR
-        </TYPE.main>
-        <TYPE.main fontWeight={500} fontSize={15}>
-        {stakingInfoAPR ? stakingInfoAPR +'%' : '-'}
-        </TYPE.main>
-      </Row>
-      <Row style={{ marginBottom: '10px'}}>
-        <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
-          Reward
-        </TYPE.main>
-        <TYPE.main fontWeight={500} fontSize={15}>
-          {stakingInfo?.active
-            ? stakingInfo?.totalRewardRate
-                ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
-            : '0'}
-          {' ZERO / week'}
-        </TYPE.main>
-      </Row>
-      <Row style={{ marginBottom: '10px'}}>
-        <TYPE.main fontWeight={600} fontSize={12} style={{ flexGrow: 1 }}>
-          Liquidity
-        </TYPE.main>
-        <TYPE.main fontWeight={500} fontSize={15}>
-        {valueOfTotalStakedAmountInUSDC
-          ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-          : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
-        </TYPE.main>
-      </Row>
+      <Wrapper
+        showBackground={isStaking}
+        bgColor={backgroundColor}
+        className={parseFloat(countUpAmount) !== 0 ? 'active' : ''}
+      >
+        <Icons currency0={currency0} currency1={currency1} size={38} />
+        <Label>
+          <TYPE.main fontWeight={600} fontSize={18}>
+            {currency0.symbol}-{currency1.symbol}
+          </TYPE.main>
+        </Label>
+        <Row style={{ marginBottom: '10px' }}>
+          <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
+            APR
+          </TYPE.main>
+          <TYPE.main fontWeight={500} fontSize={15}>
+            {stakingInfoAPR ? stakingInfoAPR + '%' : '-'}
+          </TYPE.main>
+        </Row>
+        <Row style={{ marginBottom: '10px' }}>
+          <TYPE.main fontWeight={600} fontSize={12} style={{ display: 'flex', flexGrow: 1 }}>
+            Reward
+          </TYPE.main>
+          <TYPE.main fontWeight={500} fontSize={15}>
+            {stakingInfo?.active
+              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed( 0, { groupSeparator: ',' }) ??
+                '-'
+              : '0'}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
+          </TYPE.main>
+        </Row>
+        <Row style={{ marginBottom: '10px' }}>
+          <TYPE.main fontWeight={600} fontSize={12} style={{ flexGrow: 1 }}>
+            Liquidity
+          </TYPE.main>
+          <TYPE.main fontWeight={500} fontSize={15}>
+            {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed( 0, { groupSeparator: ',' })}`
+              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
+          </TYPE.main>
+        </Row>
 
-      <Details showDetails={showDetails}>
-        <DetailsBox>
-          {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) ?
-          <>
-          <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem'}}>
-            Earned:
-          </TYPE.white>
-          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'flex-start' }}>
-            <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
-              <CountUp
-                key={countUpAmount}
-                isCounting
-                decimalPlaces={4}
-                start={parseFloat(countUpAmountPrevious)}
-                end={parseFloat(countUpAmount)}
-                thousandsSeparator={','}
-                duration={1}
-              />
-            </TYPE.white>
-            <div style={{ display: 'flex', flexGrow: 1, marginTop: '1rem', width: '100%' }}>
-              <ButtonPrimary style={{ width: '100%'}} onClick={onHarvest}>Harvest</ButtonPrimary>
-            </div>
-          </div>
-          <ManageButton
-            to={{
-              pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
-              state: { stakingRewardAddress }
-            }}
-          >
-            <span style={{ marginRight: '10px'}}>Manage</span>
-            <SettingIcon stroke="#6752F7"/>
-          </ManageButton>
-          </> :
-          <div style={{ display: 'flex', flexGrow: 1, height: '100%', justifyContent: 'flex-start', flexDirection: 'column' }}>
-            <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
-              Start Farming:
-            </TYPE.white>
-            <StyledInternalLink style={{ textDecoration: 'none', width: '100%', marginTop: 'auto' }}
-              to={{
-                pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
-                state: { stakingRewardAddress }
-              }}
-            >
-              <ButtonOutlined>Select</ButtonOutlined>
-            </StyledInternalLink>
-          </div>}
-        </DetailsBox>
-      </Details>
-    </Wrapper>
-  </>
+        <Details showDetails={showDetails}>
+          <DetailsBox>
+            {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) ? (
+              <>
+                <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                  Earned:
+                </TYPE.white>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start'
+                  }}
+                >
+                  <TYPE.white fontWeight={600} fontSize={32} style={{ textOverflow: 'ellipsis' }}>
+                    <CountUp
+                      key={countUpAmount}
+                      isCounting
+                      decimalPlaces={4}
+                      start={parseFloat(countUpAmountPrevious)}
+                      end={parseFloat(countUpAmount)}
+                      thousandsSeparator={','}
+                      duration={1}
+                    />
+                  </TYPE.white>
+                  <div style={{ display: 'flex', flexGrow: 1, marginTop: '1rem', width: '100%' }}>
+                    <ButtonPrimary style={{ width: '100%' }} onClick={onHarvest}>
+                      Harvest
+                    </ButtonPrimary>
+                  </div>
+                </div>
+                <ManageButton
+                  to={{
+                    pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
+                    state: { stakingRewardAddress }
+                  }}
+                >
+                  <span style={{ marginRight: '10px' }}>Manage</span>
+                  <SettingIcon stroke="#6752F7" />
+                </ManageButton>
+              </>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  flexGrow: 1,
+                  height: '100%',
+                  justifyContent: 'flex-start',
+                  flexDirection: 'column'
+                }}
+              >
+                <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                  Start Farming:
+                </TYPE.white>
+                <StyledInternalLink
+                  style={{ textDecoration: 'none', width: '100%', marginTop: 'auto' }}
+                  to={{
+                    pathname: `/manage/${currencyId(currency0)}/${currencyId(currency1)}`,
+                    state: { stakingRewardAddress }
+                  }}
+                >
+                  <ButtonOutlined>Select</ButtonOutlined>
+                </StyledInternalLink>
+              </div>
+            )}
+          </DetailsBox>
+        </Details>
+      </Wrapper>
+    </>
   )
 }

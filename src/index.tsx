@@ -17,14 +17,13 @@ import ReactDOM from 'react-dom'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import getLibrary from './utils/getLibrary'
-import { isMobile } from 'react-device-detect'
 import store from './state'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (window.location.hostname.includes('zero')) {
-  window.location.href = window.location.href.replace('zero', '0');
-}
+// if (window.location.hostname.includes('zero')) {
+//   window.location.href = window.location.href.replace('zero', '0');
+// }
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
@@ -33,7 +32,7 @@ if ('ethereum' in window) {
 function Updaters() {
   return (
     <>
-      <ListsUpdater />
+      {/*<ListsUpdater />*/}
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />

@@ -1,8 +1,7 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
-import React, { useEffect, useState } from 'react'
-import { useTokenBalance } from '../../state/wallet/hooks'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { CountUp } from 'use-count-up'
@@ -18,6 +17,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -192,7 +192,7 @@ export default function PoolRow({
 
   const symbol = WETH?.symbol
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
@@ -205,13 +205,16 @@ export default function PoolRow({
       ? `${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
       : `${valueOfTotalStakedAmountInWETH?.toSignificant(4)}`
 
-    if (harvestSent === readyToHarvest && earningsSent === singleWeeklyEarnings && liquiditySent === liquidityValue) {
+    // this prevents infinite loops / re-renders
+    if (harvestSent === readyToHarvest &&
+      earningsSent === singleWeeklyEarnings &&
+      liquiditySent === liquidityValue) {
       return
     }
 
     if (
-      parseFloat(singleWeeklyEarnings) !== 0 ||
-      parseFloat(readyToHarvest) !== 0 ||
+      parseFloat(singleWeeklyEarnings) !== 0 &&
+      parseFloat(readyToHarvest) !== 0 &&
       parseFloat(liquidityValue) !== 0
     ) {
       sendDataUp({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract })
@@ -225,6 +228,7 @@ export default function PoolRow({
     valueOfTotalStakedAmountInUSDC,
     valueOfTotalStakedAmountInWETH
   ])
+
 
   if (stakingInfoTop.isHidden) {
     return <></>
@@ -251,9 +255,9 @@ export default function PoolRow({
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
-                '-'
+              '-'
               : '0'}
-            {' ZERO / week'}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>
@@ -283,7 +287,7 @@ export default function PoolRow({
         </Cell>
         <Cell></Cell>
       </Wrapper>
-      {showDetails && (
+      { showDetails && (
         <tr>
           <td colSpan={8}>
             <Details>

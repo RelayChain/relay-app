@@ -1,4 +1,4 @@
-import { Link as HistoryLink, NavLink, useHistory } from 'react-router-dom'
+import { Link as HistoryLink, NavLink } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import QuestionHelper from '../QuestionHelper'

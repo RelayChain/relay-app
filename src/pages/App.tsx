@@ -6,7 +6,7 @@ import {
   RedirectPathToSwapOnly,
   RedirectToSwap
 } from './Swap/redirects'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense } from 'react'
 import {
   RedirectDuplicateTokenIds,
   RedirectOldAddLiquidityPathStructure,
@@ -23,14 +23,9 @@ import GraphQLProvider from './../graphql'
 import Guides from './Guides'
 import Header from '../components/Header'
 import Home from './Home'
-import Logo from './../assets/svg/logo.svg'
-import LogoDark from './../assets/images/0-icon.png'
 import Manage from './Pools/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import ModalMore from '../components/ModalMore'
-import Mountains from '../components/Mountains'
-import PageContainer from '../components/PageContainer'
 import Polling from '../components/Header/Polling'
 // import Pool from './Pool'
 import PoolFinder from './PoolFinder'
@@ -46,9 +41,10 @@ import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
+import ZeroGravityInfo from './ZeroGravity/Info';
+import ZeroGravityKyc from './ZeroGravity/Kyc';
+import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
-import { useDarkModeManager } from '../state/user/hooks'
-import Lottery from './Lottery'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -85,28 +81,6 @@ const BodyWrapper = styled.div`
   z-index: 1;
 `
 
-const Marginer = styled.div`
-  margin-top: 5rem;
-`
-
-const Title = styled.a`
-  position: absolute;
-  top: 34px;
-  left: 90px;
-  width: 66px;
-  height: 66px;
-  z-index: 2;
-  :hover {
-    cursor: pointer;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  width: 46px;
-  height: 46px;
-  left: 22px;
-  z-index: 3;
-  `};
-`
-
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
@@ -123,9 +97,9 @@ export default function App() {
           <SideMenu />
           <div className="snow-bg"></div>
           <div className="bg-darken"></div>
-          {/*<URLWarning />*/}
 
           <BodyWrapper>
+            <URLWarning />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
@@ -136,7 +110,6 @@ export default function App() {
               <Switch>
                 <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/swap" component={Swap} />
-                <Route exact strict path="/lottery" component={Lottery} />
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -155,11 +128,15 @@ export default function App() {
                 <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
                 <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                <Route exact strict path="/remove" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route exact strict path="/vote/:id" component={VotePage} />
                 <Route exact strict path="/transfer" component={Transfer} />
+                <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
+                <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
+                <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
             </Web3ReactManager>

@@ -14,6 +14,7 @@ import {
   bscBUSD,
   bscDAI,
   bscETH,
+  bscINDA,
   bscSUSHI,
   bscUNI,
   bscUSDC,
@@ -27,8 +28,7 @@ import {
   zUNI,
   zUSDC,
   zUSDT,
-  zZERO,
-  bscINDA
+  zZERO
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -55,7 +55,8 @@ export const REWARDS_DURATION_DAYS = 30
 export const STAKING_REWARDS_INFO: {
   [chainId in ChainId]?: {
     tokens: [Token, Token]
-    stakingRewardAddress: string
+    stakingRewardAddress: string,
+    rewardInfo?: any
   }[]
 } = {
   [ChainId.MAINNET]: [
@@ -195,10 +196,6 @@ export const STAKING_REWARDS_INFO: {
       tokens: [bscZERO, bscDAI],
       stakingRewardAddress: '0xa8630279dBFb97a92a7C477c17FF4466b619A3d2'
     },
-    {
-      tokens: [bscZERO, bscINDA],
-      stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6'
-    },
     // {
     //   tokens: [WBNB, bscINDA],
     //   stakingRewardAddress: '0x2624f69F15Fa828a21e8Ff6eE58F050840bb60D4'
@@ -207,6 +204,11 @@ export const STAKING_REWARDS_INFO: {
     //   tokens: [bscBUSD, bscINDA],
     //   stakingRewardAddress: '0x337BDB3197e705c5E2b2630dC571d08608204001'
     // },
+    {
+      tokens: [bscZERO, bscINDA],
+      stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
+      rewardInfo: { rewardToken: bscINDA }
+    },
   ]
 }
 
@@ -230,6 +232,9 @@ export interface StakingInfo {
   periodFinish: Date | undefined
   // if pool is active
   active: boolean
+  rewardsTokenSymbol?: string | undefined
+  // chainId
+  chainId?: ChainId
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -249,13 +254,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -328,10 +333,12 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
 
         // check for account, if no account set to 0
+        const currentPair = info.find(pair => pair.stakingRewardAddress === rewardsAddress)
 
+        const rewardsToken = currentPair?.rewardInfo?.rewardToken ?? ZERO;
         const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
         const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
-        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
+        const totalRewardRate = new TokenAmount(rewardsToken, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
           stakedAmount: TokenAmount,
@@ -339,7 +346,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           totalRewardRate: TokenAmount
         ): TokenAmount => {
           return new TokenAmount(
-            uni,
+            rewardsToken,
             JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
               ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
               : JSBI.BigInt(0)
@@ -355,17 +362,21 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const active =
           periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
 
+        const lpToken = currentPair?.rewardInfo?.lpToken
+
         memo.push({
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+          earnedAmount: new TokenAmount(rewardsToken, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
           rewardRate: individualRewardRate,
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
           getHypotheticalRewardRate,
-          active
+          active,
+          rewardsTokenSymbol: rewardsToken.symbol,
+          chainId,
         })
       }
       return memo

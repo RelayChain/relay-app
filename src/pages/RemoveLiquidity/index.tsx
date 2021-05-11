@@ -11,6 +11,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import styled, { keyframes } from 'styled-components'
 import { useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -43,6 +44,15 @@ import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
+const CurrencyInputRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+`};
+`
+
 export default function RemoveLiquidity({
   history,
   match: {
@@ -73,9 +83,15 @@ export default function RemoveLiquidity({
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
 
+  const missingTokenRoutes = (tokenA: any, tokenB: any) => {
+    if (tokenA === undefined || tokenB === undefined || tokenA === 'undefined' || tokenB === 'undefined') {
+      return true;
+    }
+    return false;
+  }
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [showDetailed, setShowDetailed] = useState<boolean>(false)
+  const [showDetailed, setShowDetailed] = useState<boolean>(missingTokenRoutes(currencyIdA, currencyIdB) ? true : false)
   const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
 
   // txn values
@@ -522,7 +538,7 @@ export default function RemoveLiquidity({
       history.goBack()
     }
   }
-
+  
   return (
     <>
       <StandardCard style={{
@@ -671,35 +687,44 @@ export default function RemoveLiquidity({
                   currency={pair?.liquidityToken}
                   pair={pair}
                   id="liquidity-amount"
+                  grayedOut={ currencyIdA === undefined ||
+                              currencyIdB === undefined ||
+                              currencyIdA === 'undefined' ||
+                              currencyIdB === 'undefined'
+                            }
                 />
                 <ColumnCenter>
                   <ArrowDown size="16" color={theme.text2} />
                 </ColumnCenter>
-                <CurrencyInputPanel
-                  hideBalance={true}
-                  value={formattedAmounts[Field.CURRENCY_A]}
-                  onUserInput={onCurrencyAInput}
-                  onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
-                  currency={currencyA}
-                  label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyA}
-                  id="remove-liquidity-tokena"
-                />
-                <ColumnCenter>
-                  <Plus size="16" color={theme.text2} />
-                </ColumnCenter>
-                <CurrencyInputPanel
-                  hideBalance={true}
-                  value={formattedAmounts[Field.CURRENCY_B]}
-                  onUserInput={onCurrencyBInput}
-                  onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
-                  currency={currencyB}
-                  label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyB}
-                  id="remove-liquidity-tokenb"
-                />
+                <CurrencyInputRow>
+                  <CurrencyInputPanel
+                    hideBalance={true}
+                    hideInput={true}
+                    value={formattedAmounts[Field.CURRENCY_A]}
+                    onUserInput={onCurrencyAInput}
+                    onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
+                    showMaxButton={!atMaxAmount}
+                    currency={currencyA}
+                    label={'Output'}
+                    onCurrencySelect={handleSelectCurrencyA}
+                    id="remove-liquidity-tokena"
+                  />
+                  <ColumnCenter>
+                    <Plus size="16" color={theme.text2} />
+                  </ColumnCenter>
+                  <CurrencyInputPanel
+                    hideBalance={true}
+                    hideInput={true}
+                    value={formattedAmounts[Field.CURRENCY_B]}
+                    onUserInput={onCurrencyBInput}
+                    onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
+                    showMaxButton={!atMaxAmount}
+                    currency={currencyB}
+                    label={'Output'}
+                    onCurrencySelect={handleSelectCurrencyB}
+                    id="remove-liquidity-tokenb"
+                  />
+                </CurrencyInputRow>
               </>
             )}
             {pair && (

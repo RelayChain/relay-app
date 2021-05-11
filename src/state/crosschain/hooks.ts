@@ -1,5 +1,4 @@
 import { BigNumber, ethers, utils } from 'ethers'
-import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import {
   BridgeConfig,
   TokenConfig,
@@ -31,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
+import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
@@ -541,15 +541,13 @@ export function useCrossChain() {
       })
     )
 
-    const newTargetCain = chains.length
-      ? targetChain
-      : {
-          name: '',
-          chainID: ''
-        }
+    const newTargetChain = {
+      name: '',
+      chainID: ''
+    }
 
     const tokens = GetAvailableTokens(currentChainName)
-    const targetTokens = GetAvailableTokens(newTargetCain?.name)
+    const targetTokens = GetAvailableTokens(newTargetChain?.name)
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
@@ -562,7 +560,7 @@ export function useCrossChain() {
     )
     dispatch(
       setTargetChain({
-        chain: newTargetCain
+        chain: newTargetChain
       })
     )
     dispatch(

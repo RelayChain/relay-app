@@ -1,15 +1,11 @@
 import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import Row, { RowBetween } from '../Row'
-import { removeList, selectList } from '../../state/lists/actions'
+import { RowBetween } from '../Row'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { AppDispatch } from '../../state'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { COINGECKO_LIST } from 'constants/lists'
 import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
@@ -18,7 +14,6 @@ import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constant
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
 import ListLoader from '../ListLoader';
-import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
@@ -27,8 +22,6 @@ import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
-import { useSelectedListInfo } from '../../state/lists/hooks'
-import { useSelectedListUrl } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 import { useUserAddedTokens } from '../../state/user/hooks'
@@ -100,23 +93,6 @@ export function CurrencySearch({
     if (isAddressSearch) {
     }
   }, [isAddressSearch])
-
-  const selectedListUrl = useSelectedListUrl()
-  const dispatch = useDispatch<AppDispatch>()
-
-  const isCoingeckoSelected = selectedListUrl?.includes(COINGECKO_LIST) || false
-
-  const handleCoingeckoList = useCallback(() => {
-    if (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) {
-      !isCoingeckoSelected && dispatch(selectList(COINGECKO_LIST))
-    } else {
-      isCoingeckoSelected && dispatch(removeList(COINGECKO_LIST))
-    }
-  }, [dispatch])
-
-  useEffect(() => {
-    handleCoingeckoList()
-  }, [selectedListUrl])
 
   // const showETH: boolean = useMemo(() => {
   //   const s = searchQuery.toLowerCase().trim()
@@ -197,8 +173,6 @@ export function CurrencySearch({
     },
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
-
-  const selectedListInfo = useSelectedListInfo()
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>

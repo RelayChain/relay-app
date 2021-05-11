@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { Currency } from '@zeroexchange/sdk'
 import { CurrencySearch } from './CurrencySearch'
-import { ListSelect } from './ListSelect'
 import Modal from '../Modal'
 import useLast from '../../hooks/useLast'
 
@@ -50,21 +49,17 @@ export default function CurrencySearchModal({
   }, [])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>
-      {listView ? (
-        <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
-      ) : (
-        <CurrencySearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          onChangeList={handleClickChangeList}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
-          isCrossChain={isCrossChain}
-        />
-      )}
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={84} minHeight={listView ? 40 : 84}>
+      <CurrencySearch
+        isOpen={isOpen}
+        onDismiss={onDismiss}
+        onCurrencySelect={handleCurrencySelect}
+        onChangeList={handleClickChangeList}
+        selectedCurrency={selectedCurrency}
+        otherSelectedCurrency={otherSelectedCurrency}
+        showCommonBases={showCommonBases}
+        isCrossChain={isCrossChain}
+      />
     </Modal>
   )
 }

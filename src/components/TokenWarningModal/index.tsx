@@ -1,5 +1,5 @@
 import { AutoRow, RowBetween } from '../Row'
-import { ChainId, Token } from '@zeroexchange/sdk'
+import { Token } from '@zeroexchange/sdk'
 import { ExternalLink, TYPE } from '../../theme'
 import React, { useCallback, useMemo, useState } from 'react'
 import { getEtherscanLink, shortenAddress } from '../../utils'

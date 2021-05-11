@@ -419,13 +419,6 @@ export const Lottery = () => {
             </FlexRowButton>
           </LotteryWrap>
           <HighChartWrap>
-            <BubbleChart
-              type="line"
-              data={[{ TVL_total_usd: 3, date: 'string' }]}
-              title="History"
-              value={443}
-              percentage={23}
-            />
           </HighChartWrap>
         </LotteryFlex>
       </>

@@ -1,17 +1,15 @@
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import Row, { RowBetween } from '../Row'
+import { RowBetween } from '../Row'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 
 import AutoSizer from 'react-virtualized-auto-sizer'
-import Card from '../Card'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { FixedSizeList } from 'react-window'
-import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
@@ -19,7 +17,6 @@ import { ThemeContext } from 'styled-components'
 import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { useSelectedListInfo } from '../../state/lists/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 
@@ -131,9 +128,6 @@ export function BlockchainSearch({
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
-  const selectedListInfo = useSelectedListInfo()
-
-
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn gap="14px">
@@ -184,29 +178,6 @@ export function BlockchainSearch({
       </div>
 
       <Separator />
-      <Card>
-        <RowBetween>
-          {selectedListInfo.current ? (
-            <Row>
-              {selectedListInfo.current.logoURI ? (
-                <ListLogo
-                  style={{ marginRight: 12 }}
-                  logoURI={selectedListInfo.current.logoURI}
-                  alt={`${selectedListInfo.current.name} list logo`}
-                />
-              ) : null}
-              <TYPE.main id="currency-search-selected-list-name">{selectedListInfo.current.name}</TYPE.main>
-            </Row>
-          ) : null}
-          <LinkStyledButton
-            style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
-            onClick={onChangeList}
-            id="currency-search-change-list-button"
-          >
-            {selectedListInfo.current ? 'Change' : 'Select a list'}
-          </LinkStyledButton>
-        </RowBetween>
-      </Card>
     </Column>
   )
 }

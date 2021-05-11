@@ -13,6 +13,7 @@ import UNILogo from '../../assets/images/uni-logo.png'
 // import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
+import WASLogo from '../../assets/images/crosschain/WAS.jpeg'
 import GDLLogo from '../../assets/images/crosschain/GDL.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
@@ -122,6 +123,11 @@ export default function CurrencyLogo({
   if (['INDA'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={INDALogo} size={size} style={style} />
   }
+
+  if (['WAS'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={WASLogo} size={size} style={style} />
+  }
+
 
   if (['GDL'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />

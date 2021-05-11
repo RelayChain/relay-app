@@ -181,14 +181,15 @@ const swap = ({ color = 'white' }) => (
   </>
 )
 
-const lottery = ({ color = 'white' }) => (
+const more = ({ color = 'white' }) => (
   <>
-    <path
-      d="M0.696334 5.6643C0.583741 5.29126 0.833068 4.90781 1.25328 4.80786L17.2311 1.00714C17.6513 0.907184 18.0832 1.12857 18.1958 1.50161L18.6035 2.85252C18.7161 3.22557 18.4541 3.60021 18.0939 3.8167C17.2831 4.30397 16.8688 5.21039 17.1365 6.09724C17.4042 6.98412 18.2734 7.58521 19.25 7.64732C19.684 7.67492 20.1219 7.88306 20.2345 8.2561L20.6423 9.60698C20.7549 9.98002 20.5055 10.3635 20.0853 10.4634L4.10744 14.2641C3.68723 14.3641 3.25535 14.1427 3.14275 13.7696L2.73501 12.4188C2.62242 12.0457 2.88444 11.6711 3.24469 11.4546C4.0555 10.9673 4.46973 10.0608 4.20206 9.174C3.93438 8.28716 3.06514 7.68603 2.0885 7.62396C1.65458 7.59636 1.21663 7.38822 1.10403 7.01518L0.696334 5.6643Z"
-      stroke={color}
-      strokeWidth={2}
-    />
-    <path d="M13.033 2.04153L15.7899 11.4817" stroke={color} strokeLinecap="round" strokeDasharray="3.4 3.4" strokeWidth={2}/>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g fill={color}>
+            <rect id="Rectangle" x="0" y="0" width="20" height="3" rx="1.5"></rect>
+            <rect id="Rectangle" x="0" y="6" width="20" height="3" rx="1.5"></rect>
+            <rect id="Rectangle" x="0" y="12" width="20" height="3" rx="1.5"></rect>
+        </g>
+    </g>
   </>
 )
 
@@ -206,7 +207,7 @@ const Icons = {
   settings,
   copyClipboard,
   arrowDown,
-  lottery
+  more
 }
 
 export default Icons

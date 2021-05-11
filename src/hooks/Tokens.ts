@@ -1,4 +1,4 @@
-import { AVAX, BNB, MATIC, DEV, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, Currency, DEV, ETHER, MATIC, Token, currencyEquals } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -6,13 +6,11 @@ import { isAddress } from '../utils'
 import { parseBytes32String } from '@ethersproject/strings'
 import { useActiveWeb3React } from './index'
 import { useMemo } from 'react'
-import { useSelectedTokenList } from '../state/lists/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-  const allTokens = useSelectedTokenList()
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -26,10 +24,10 @@ export function useAllTokens(): { [address: string]: Token } {
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { ...allTokens[chainId] }
+          { }
         )
     )
-  }, [chainId, userAddedTokens, allTokens])
+  }, [chainId, userAddedTokens])
 }
 
 // Check if currency is included in custom list from user storage
@@ -55,7 +53,9 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
-  const address = isAddress(tokenAddress)
+  const address = useMemo(() => {
+    return isAddress(tokenAddress)
+  }, [tokenAddress]);
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)

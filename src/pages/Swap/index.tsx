@@ -2,24 +2,15 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { CHAIN_LABELS, ETH_RPCS, NATIVE_CURRENCY } from '../../constants'
+import { CHAIN_LABELS, NATIVE_CURRENCY } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
-import {
-  ChainTransferState,
-  CrosschainChain,
-  setCrosschainTransferStatus,
-  setCurrentToken,
-  setTargetChain,
-  setTransferAmount
-} from '../../state/crosschain/actions'
 import Column, { AutoColumn } from '../../components/Column'
-import { Field, selectCurrency } from '../../state/swap/actions'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { copyToClipboard, wait } from '../../utils'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -35,7 +26,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
-import BalanceItem from '../../components/BalanceItem';
+import BalanceItem from '../../components/BalanceItem'
 import BubbleBase from '../../components/BubbleBase'
 import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
@@ -44,6 +35,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { ArrowDown as CustomArrowDown } from '../../components/Arrows'
 import { CustomLightSpinner } from '../../theme/components'
+import { Field } from '../../state/swap/actions'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
@@ -55,16 +47,16 @@ import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { getTokenBalances } from 'api'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { setCurrentToken } from '../../state/crosschain/actions'
 import { setTokenBalances } from '../../state/user/actions'
+import { toCheckSumAddress } from '../../state/crosschain/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useTokenBalances } from '../../state/user/hooks'
 import { useUserAddedTokens } from '../../state/user/hooks'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 
@@ -121,13 +113,15 @@ const SwapWrap = styled.div`
   border-radius: 44px;
   margin-right: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-top: 20px
-  margin-right: auto;
-  margin-left: auto;
-`};
+    margin-top: 20px
+    margin-right: auto;
+    margin-left: auto;
+  `};
   ${({ theme }) => theme.mediaWidth.upToSmall`
-width: 100%;
-`};
+  width: 100%;
+  `};
+  position: sticky;
+  top: 4rem;
 `
 const SwapFlex = styled.div`
   display: flex;
@@ -145,6 +139,7 @@ const TextBalance = styled.h3`
   white-space: nowrap;
   margin-bottom: 1rem;
   text-align: center;
+  margin-bottom: -4px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   font-size: 24px;
 `};
@@ -156,6 +151,34 @@ const BalanceRow = styled.div<{ isColumn?: boolean }>`
   flex-direction: ${({ isColumn }) => (isColumn ? 'column' : 'row')};
   align-items: ${({ isColumn }) => (isColumn ? 'center' : '')};
   min-width: 300px;
+  max-height: 570px;
+  border-radius: 44px;
+  overflow-y: scroll;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  #style-7::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,.5);
+	border-radius: 10px;
+}
+
+&::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: rgba(0,0,0,.5);
+}
+
+&::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+									   left bottom,
+									   left top,
+                     color-stop(0.44, rgb(41, 32, 98)),
+									   color-stop(0.72, rgb(51, 40, 123)),
+									   color-stop(0.86, rgb(61, 49, 148)));
+}
 `
 const ChainBridgePending = styled.div`
   display: flex;
@@ -195,11 +218,7 @@ const BottomGroupingSwap = styled(BottomGrouping)`
 margin-top: 20px;
 `};
 `
-const SwapText = styled.h3`
-  font-size: 17px;
-  color: #a7b1f4;
-  opacity: 0.88;
-`
+
 const Flex = styled(RowBetween)`
   align-items: center;
   margin-top: 1rem;
@@ -227,13 +246,10 @@ export default function Swap() {
     availableTokens,
     currentChain,
     currentToken,
-    transferAmount,
     crosschainFee,
-    targetChain,
     targetTokens,
     crosschainTransferStatus,
-    swapDetails,
-    lastTimeSwitched
+    swapDetails
   } = useCrosschainState()
 
   const { width } = useWindowDimensions()
@@ -292,7 +308,6 @@ export default function Swap() {
     typedValue
   )
 
-  // const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   // const toggledVersion = useToggledVersion()
@@ -317,26 +332,11 @@ export default function Swap() {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
-  // track the input amount, on change, if crosschain, dispatch
-  const [inputAmountToTrack, setInputAmountToTrack] = useState('')
-  const handleInputAmountChange = useCallback(
-    (amount: string) => {
-      setInputAmountToTrack(amount)
-      dispatch(
-        setTransferAmount({
-          amount: amount
-        })
-      )
-    },
-    [setInputAmountToTrack, dispatch]
-  )
-
   const handleTypeInput = useCallback(
     (value: string) => {
-      handleInputAmountChange(value)
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput, handleInputAmountChange]
+    [onUserInput]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -468,15 +468,9 @@ export default function Swap() {
 
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      handleInputAmountChange(maxAmountInput.toExact())
       onUserInput(Field.INPUT, maxAmountInput.toExact())
     }
-  }, [maxAmountInput, onUserInput, handleInputAmountChange])
-
-  // not sure we need this
-  // const handleMaxInputCrosschain = useCallback(() => {
-  //   return currentBalance
-  // }, [currentBalance, onUserInput])
+  }, [maxAmountInput, onUserInput])
 
   const handleOutputSelect = useCallback(
     outputCurrency => {
@@ -487,65 +481,6 @@ export default function Swap() {
 
   // swaps or cross chain
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
-  const handleSetIsCrossChain = (bool: boolean) => {
-    setIsCrossChain(bool)
-
-    dispatch(
-      setTransferAmount({
-        amount: inputAmountToTrack
-      })
-    )
-  }
-
-  const startNewSwap = () => {
-    BreakCrosschainSwap()
-  }
-
-  const [showChainBridgeModal, setShowChainBridgeModal] = useState(false)
-  const hideChainBridgeModal = () => {
-    if (swapDetails?.status === ProposalStatus.EXECUTED || swapDetails?.status === ProposalStatus.CANCELLED) {
-      startNewSwap()
-    }
-    setShowChainBridgeModal(false)
-  }
-
-  const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
-  const hideTransferChainModal = () => {
-    setShowTransferChainModal(false)
-    // startNewSwap()
-  }
-  const showTransferChainModal = () => {
-    setShowTransferChainModal(true)
-  }
-  const onSelectTransferChain = (chain: CrosschainChain) => {
-    dispatch(
-      setTargetChain({
-        chain
-      })
-    )
-  }
-
-  const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false)
-  const hideConfirmTransferModal = () => {
-    startNewSwap()
-    setConfirmTransferModalOpen(false)
-  }
-  const showConfirmTransferModal = () => {
-    GetAllowance()
-    setConfirmTransferModalOpen(true)
-  }
-
-  // token transfer state
-  const onChangeTransferState = (state: ChainTransferState) => {
-    dispatch(
-      setCrosschainTransferStatus({
-        status: state
-      })
-    )
-    if (state === ChainTransferState.NotStarted && currentTxID.length) {
-      BreakCrosschainSwap()
-    }
-  }
 
   const getChainName = (): string => {
     if (!!chainId && chainId in CHAIN_LABELS) {
@@ -554,13 +489,38 @@ export default function Swap() {
     return ''
   }
 
-  const handleChainBridgeButtonClick = () => {
-    if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
-      setShowChainBridgeModal(true)
+  const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET]
+  const onSelectBalance = (isNative: boolean, token?: any) => {
+    if (!currencies[Field.INPUT]) {
+      handleInputSelect(isNative ? nativeCurrency : token)
+    } else if (!currencies[Field.OUTPUT]) {
+      handleOutputSelect(isNative ? nativeCurrency : token)
     } else {
-      showConfirmTransferModal()
+      handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
+  const [stakedTokens, setStakedTokens] = useState<Token[]>([])
+  const stakingInfos = useStakingInfo()
+
+  const handleStakedTokens = useCallback(() => {
+    const stakedPools = stakingInfos.filter(
+      item => parseFloat(item?.earnedAmount?.toFixed(Math.min(6, item?.earnedAmount?.currency.decimals))) > 0
+    )
+    // use set to avoid duplicates
+    // reset array to [] each time
+    const arr: any = new Set();
+    for (let st of stakedPools) {
+      arr.add(st?.tokens[0])
+      arr.add(st?.tokens[1]);
+    }
+    setStakedTokens([...arr]);
+  }, [stakingInfos])
+
+  useEffect(() => {
+    if (stakingInfos?.length > 0) {
+      handleStakedTokens()
+    }
+  }, [stakingInfos])
 
   const userTokens = useUserAddedTokens()
     ?.filter((x: any) => x.chainId === chainId)
@@ -568,22 +528,16 @@ export default function Swap() {
       return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
     })
 
-  const tokenBalances = availableTokens
+  const tokenBalances = useMemo(() => {
+    return availableTokens
       .map((x: any) => {
-        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+        const address = toCheckSumAddress(x?.address)
+        const tokenData = { ...x, address }
+        return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
       })
       .concat(userTokens)
+  }, [availableTokens, userTokens])
 
-  const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET];
-  const onSelectBalance = (isNative: boolean, token?: any) => {
-    if (!currencies[Field.INPUT]) {
-      handleInputSelect(isNative ? nativeCurrency : token);
-    } else if (!currencies[Field.OUTPUT]) {
-      handleOutputSelect(isNative ? nativeCurrency : token);
-    } else {
-      handleInputSelect(isNative ? nativeCurrency : token);
-    }
-  }
 
   return (
     <>
@@ -746,7 +700,7 @@ export default function Swap() {
                     <BottomGroupingSwap>
                       {!account ? (
                         <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                      ) : !trade ? (
+                      ) : !(formattedAmounts[Field.INPUT] || formattedAmounts[Field.OUTPUT]) ? (
                         <GreyCard
                           style={{
                             textAlign: 'center',
@@ -865,13 +819,41 @@ export default function Swap() {
                 )}
               </SwapWrap>
             </SwapFlexRow>
-            {account && userEthBalance && (
+            {account && userEthBalance && tokenBalances && (
               <BalanceRow isColumn={isColumn}>
                 <TextBalance>{currentChain.name} Balances</TextBalance>
-                <BalanceItem currentChain={currentChain} chainId={chainId} isNative={true} userEthBalance={userEthBalance} selectBalance={() => onSelectBalance(true, currentChain)}></BalanceItem>
+                <BalanceItem
+                  currentChain={currentChain}
+                  chainId={chainId}
+                  isNative={true}
+                  userEthBalance={userEthBalance}
+                  selectBalance={() => onSelectBalance(true, currentChain)}
+                ></BalanceItem>
                 {tokenBalances?.map((token: any, index) => {
                   return (
-                    <BalanceItem key={index} token={token} chainId={chainId} account={account} selectBalance={() => onSelectBalance(false, token)}></BalanceItem>
+                    <BalanceItem
+                      key={index}
+                      token={token}
+                      chainId={chainId}
+                      account={account}
+                      selectBalance={() => onSelectBalance(false, token)}
+                      isLast={index === tokenBalances.length - 1}
+                    ></BalanceItem>
+                  )
+                })}
+                {stakedTokens?.filter((x: any) => x.chainId === chainId).map((token: any, index: any) => {
+                  return (
+                    <BalanceItem
+                      key={index}
+                      token={token}
+                      chainId={chainId}
+                      account={account}
+                      isStaked={true}
+                      tokenBalances={tokenBalances.map(item => item?.address)}
+                      selectBalance={() => onSelectBalance(false, token)}
+                      isLast={index === stakedTokens.length - 1}
+                      isFirst={index === 0 && tokenBalances?.length === 0}
+                    ></BalanceItem>
                   )
                 })}
               </BalanceRow>
@@ -890,14 +872,6 @@ export default function Swap() {
                 top: '45%'
               }}
             />
-          )}
-          {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
-            <ChainBridgePending onClick={handleChainBridgeButtonClick}>
-              <p>{`Cross-chain transfer pending`}</p>
-              <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
-            </ChainBridgePending>
-          ) : (
-            ''
           )}
         </SwapOuterWrap>
       </PageContainer>

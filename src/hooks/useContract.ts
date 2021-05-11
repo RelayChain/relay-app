@@ -12,6 +12,8 @@ import { Contract } from '@ethersproject/contracts'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ZERO_FREE_CLAIM from '../constants/abis/zerro-free-claim.json'
+import WDS_DEPOSIT_ABI from '../constants/abis/wds-deposit.json';
+import WISE_SALE_ABI from '../constants/abis/wise-sale.json';
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
@@ -153,4 +155,12 @@ export function useSocksController(): Contract | null {
 
 export function useZeroFreeClaimContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(address, ZERO_FREE_CLAIM, withSignerIfPossible)
+}
+
+export function useWDSDepositContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, WDS_DEPOSIT_ABI, withSignerIfPossible)
+}
+
+export function useWISESaleContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, WISE_SALE_ABI, withSignerIfPossible)
 }
