@@ -163,9 +163,9 @@ export default function SideMenu() {
           </HeaderExternalLink>
           <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={hanldeSidemenuOpen}>
             <IconLink>
-              <Icon icon="planet" active={pathname === '/zero-gravity'} />
+              <Icon icon="planet" active={pathname.includes('zero-gravity')} />
             </IconLink>
-            <span className={ pathname === '/zero-gravity' ? 'active' : ''}>{t('Zero Gravity')}</span>
+            <span className={ pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
           </StyledNavLink>
           <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem'}}>
             <IconLink>
