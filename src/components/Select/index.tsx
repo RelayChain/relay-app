@@ -87,8 +87,8 @@ const ListItem = styled.li`
 
 export interface SelectProps {
   options: OptionProps[]
-  onChange?: (option: OptionProps) => void
-  sortedData?: any
+  onChange?: (option: string) => void
+  activeOption: string
 }
 
 export interface OptionProps {
@@ -96,27 +96,23 @@ export interface OptionProps {
   value: any
 }
 
-const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, sortedData }) => {
+const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, activeOption }) => {
   const containerRef = useRef(null)
   const dropdownRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(options[0])
+
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
 
-  const toggling = () => setIsOpen(!isOpen)
+  // const toggling = () => setIsOpen(!isOpen)
 
-  const onOptionClicked = (option: OptionProps) => () => {
-    setSelectedOption(option)
+  const onOptionClicked = (option: string) => () => {
     setIsOpen(false)
-
     if (onChange) {
       onChange(option)
     }
   }
+
   useEffect(() => {
-    if (sortedData) {
-      setSelectedOption(sortedData[0])
-    }
     const container = dropdownRef.current
     if (container) {
       setContainerSize({
@@ -124,15 +120,15 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, sorte
         height: container['offsetHeight']
       })
     }
-  }, [sortedData])
+  }, [dropdownRef])
 
   return (
     <DropDownContainer isOpen={isOpen} ref={containerRef} {...containerSize}>
       {containerSize.width !== 0 && (
-        <DropDownHeader onClick={toggling}>
+        <DropDownHeader onClick={() => setIsOpen(!isOpen)}>
           <ListItem>
             <TYPE.main fontWeight={600} fontSize={13}>
-              {selectedOption.label}{' '}
+              {activeOption}{' '}
             </TYPE.main>
             <DropdownArrow />
           </ListItem>
@@ -141,8 +137,8 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, sorte
       <DropDownListContainer>
         <DropDownList ref={dropdownRef}>
           {options.map(option =>
-            option.label !== selectedOption.label ? (
-              <ListItem onClick={onOptionClicked(option)} key={option.label}>
+            option.label !== activeOption ? (
+              <ListItem onClick={onOptionClicked(option.label)} key={option.label}>
                 <TYPE.main fontWeight={600} fontSize={13}>
                   {option.label}{' '}
                 </TYPE.main>

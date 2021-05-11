@@ -112,9 +112,9 @@ export interface PoolControlsProps {
   setShowFinished: () => void
   showStaked: boolean
   setShowStaked: () => void
-  onSelectFilter: any
   setFilteredMode: any
-  sortedData: any
+  options: any
+  activeFilteredMode: string
   serializePoolControls: any
 }
 
@@ -127,17 +127,11 @@ function PoolControls({
   setShowFinished,
   showStaked,
   setShowStaked,
-  onSelectFilter,
   setFilteredMode,
-  sortedData,
+  options,
+  activeFilteredMode,
   serializePoolControls
 }: PoolControlsProps) {
-
-  const selectFilter = (e: any) => {
-    onSelectFilter(e.value)
-    setFilteredMode(e.value)
-  }
-
   return (
     <Controls>
       <SearchGroup>
@@ -156,45 +150,23 @@ function PoolControls({
         <ControlGroup>
           <ControlLabel>
             <TYPE.main fontWeight={600} fontSize={12}>
-              {`Sort by: `}
+              Sort by:
             </TYPE.main>
           </ControlLabel>
-          <Select
-            options={sortedData}
-            onChange={e => {
-              selectFilter(e)
-              const clone = { ...serializePoolControls, sortedMode: e.value }
-              localStorage.setItem('PoolControls', JSON.stringify(clone))
-            }}
-            sortedData={sortedData}
-          />
+          <Select options={options} onChange={e => setFilteredMode(e)} activeOption={activeFilteredMode} />
         </ControlGroup>
 
         <ControlGroup>
           <ControlLabel>
             <TYPE.main fontWeight={600} fontSize={12}>
-              {`Mode: `}
+              Mode:
             </TYPE.main>
           </ControlLabel>
           <InputContainer>
-            <Button
-              isSelected={displayMode === 'table'}
-              onClick={() => {
-                setDisplayMode('table')
-                const clone = { ...serializePoolControls, displayMode: 'table' }
-                localStorage.setItem('PoolControls', JSON.stringify(clone))
-              }}
-            >
+            <Button isSelected={displayMode === 'table'} onClick={() => setDisplayMode('table')}>
               <ListMode />
             </Button>
-            <Button
-              isSelected={displayMode === 'grid'}
-              onClick={() => {
-                setDisplayMode('grid')
-                const clone = { ...serializePoolControls, displayMode: 'grid' }
-                localStorage.setItem('PoolControls', JSON.stringify(clone))
-              }}
-            >
+            <Button isSelected={displayMode === 'grid'} onClick={() => setDisplayMode('grid')}>
               <CardMode />
             </Button>
           </InputContainer>
