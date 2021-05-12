@@ -216,11 +216,11 @@ export default function ZeroGravityInfo() {
     setIdoData(IDO_LIST.find(item => item.idoURL===idoURL))
   }, [idoURL])
 
-  const goToSite = (str: any) => {
+  const goToSite = (str: string) => {
     window.open(str, "_blank");
   };
 
-  const goToKyc = () => {
+  const goToKyc = (idoURL: string) => {
     history.push(`/zero-gravity/${idoURL}/kyc`);
   }
 
@@ -243,14 +243,14 @@ export default function ZeroGravityInfo() {
         {
           moment(idoData?.endDate??'').isAfter(moment.now()) && idoData?.buttonSectionEnabled &&
           <ButtonsSection>
-            <ButtonOutlined onClick={() => goToSite('https://docs.google.com/spreadsheets/d/16N4S_VqEfN04hfsfz4SIqZdH-jGqyJynCfZ6bjMBhaE/edit?usp=sharing')} >
+            <ButtonOutlined onClick={() => goToSite(idoData.whiteListUrl)} >
               <ButtonIcon>
                 <CgList/>
               </ButtonIcon>
               View Whitelist
             </ButtonOutlined>
             <ButtonsSpacer />
-            <ButtonOutlined className="green" onClick={() => goToKyc()}>
+            <ButtonOutlined className="green" onClick={() => goToKyc(idoData.idoURL)}>
               <ButtonIcon>
                 <CgAddR/>
               </ButtonIcon>
@@ -270,7 +270,7 @@ export default function ZeroGravityInfo() {
             </Heading>
             <SocialLinks>
               {socialMediaLinks.map(iconDetails =>
-                <SocialIcon onClick={()=>window.open(iconDetails.url)}>
+                <SocialIcon key={iconDetails.url} onClick={()=>window.open(iconDetails.url)}>
                   {iconDetails.icon}
                   <Tooltip className="tooltip">{iconDetails.type}</Tooltip>
                 </SocialIcon>
