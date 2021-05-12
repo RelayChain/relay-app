@@ -11,6 +11,7 @@ const PageWrapper = styled.div`
   margin-bottom: 3rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   padding: 0;
+  margin-top: 0.5rem;
 `};
 `
 

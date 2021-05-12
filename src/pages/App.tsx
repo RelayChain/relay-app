@@ -73,11 +73,9 @@ const BodyWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 16px;
+    padding: 0px 16px 16px 16px;
   `};
-
   z-index: 1;
 `
 

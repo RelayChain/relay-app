@@ -1,7 +1,7 @@
 import { ButtonOutlined } from '../../components/Button'
 import React, { useMemo, useState } from 'react';
 
-import { ExternalLink } from '../../theme'
+import { ExternalLink, Title } from '../../theme'
 import { IDO_LIST } from '../../constants/idos';
 import IdoRow from '../../components/ZeroGravity/IdoRow';
 import PageContainer from '../../components/PageContainer'
@@ -16,19 +16,7 @@ const StyledExternalLink = styled(ExternalLink)`
     margin-right: auto;
   `};
 `
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-padding: 0;
-`};
-`
+
 const SubTitle = styled.h3`
   width: 100%;
   max-width: 600px;
