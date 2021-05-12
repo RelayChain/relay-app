@@ -1,23 +1,23 @@
 import { CustomLightSpinner, StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ButtonOutlined } from '../../components/Button'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
+import { ButtonOutlined } from '../../components/Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import DropdownArrow from './../../assets/svg/DropdownArrow'
+import { NoWalletConnected } from '../../components/NoWalletConnected'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
+import { searchItems } from 'utils/searchItems'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { searchItems } from 'utils/searchItems'
-import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
-import { NoWalletConnected } from '../../components/NoWalletConnected'
 
 const numeral = require('numeral')
 
@@ -417,13 +417,13 @@ export default function Pools() {
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span>
+                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <Stat className="harvest">
               <StatLabel>Ready To Harvest:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span>
+                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>

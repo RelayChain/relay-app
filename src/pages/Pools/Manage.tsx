@@ -56,14 +56,14 @@ const Columns = styled.div`
 const SingleColumn = styled.div`
   display: flex;
   flex-grow: 1;
-  max-width: 50%;
-  min-width: 50%;
-  width: 50%;
+  max-width: calc(50% - 20px);
+  min-width: calc(50% - 20px);
+  width: calc(50% - 20px);
   &.left {
-    margin-right: 1rem;
+    margin-right: 20px;
   }
   &.right {
-    margin-left: 1rem;
+    margin-left: 20px;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     &.left {
