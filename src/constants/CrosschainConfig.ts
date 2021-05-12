@@ -473,6 +473,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CHART',
           decimals: 18,
           resourceId: '0x0000000000000000000000c33A42C9D19f944FA12ff46f27B3B85e18a1377803'
+        },
+        {
+          address: '0x4f491d389A5bF7C56bd1e4d8aF2280fD217C8543',
+          name: 'Wise Token',
+          symbol: 'WISB',
+          assetBase: 'WISB',
+          decimals: 18,
+          // resourceId: '0x00000000000000000000004f491d389A5bF7C56bd1e4d8aF2280fD217C854303'
+          resourceId: ""
         }
       ]
     },
