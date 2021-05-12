@@ -37,7 +37,7 @@ import { GreyCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { RowBetween } from '../../components/Row'
-import { TYPE } from '../../theme'
+import { TYPE, Title } from '../../theme'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
@@ -90,17 +90,6 @@ const Description = styled.p`
   letter-spacing: 0.1em;
 `
 
-const Title = styled.h1`
-  padding: 0 64px;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 0;
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-`
 const TransferBodyWrapper = styled.div`
   width: 100%;
   max-width: 600px;

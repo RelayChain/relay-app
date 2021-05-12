@@ -4,18 +4,7 @@ import { ButtonOutlined } from 'components/Button'
 import { CgCheckO } from 'react-icons/cg';
 import PageContainer from 'components/PageContainer';
 import styled from 'styled-components';
-
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0;
-    text-align: center;
-    font-size: 49px;
-    margin-top: 40px;
-    margin-bottom: 0px;
-  `};
-`
+import { Title } from '../../theme'
 
 const BgWrapper = styled.div`
   background: rgba(47, 53, 115, 0.32);

@@ -11,18 +11,8 @@ import WISESale from './wiseSale';
 import WSDSale from './wsdSale';
 import moment from 'moment';
 import styled from 'styled-components';
+import { Title } from '../../theme'
 
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0;
-    text-align: center;
-    font-size: 49px;
-    margin-top: 40px;
-    margin-bottom: 0px;
-  `};
-`
 const ImageContainer = styled.div`
   margin-top: 1rem;
   height: 2rem;

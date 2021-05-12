@@ -4,7 +4,7 @@ import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/B
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { StyledInternalLink, TYPE, Title } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -78,17 +78,7 @@ const SingleColumn = styled.div`
     }
   `};
 `
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 0;
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-`
+
 const Wrapper = styled.div`
   background: rgba(47, 53, 115, 0.32);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
