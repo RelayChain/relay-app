@@ -1,23 +1,29 @@
 import { CustomLightSpinner, StyledInternalLink, TYPE } from '../../theme'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ButtonOutlined } from '../../components/Button'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
+import { useDispatch } from 'react-redux'
 
+import { ButtonOutlined } from '../../components/Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import DropdownArrow from './../../assets/svg/DropdownArrow'
+import { NoWalletConnected } from '../../components/NoWalletConnected'
 import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
+import { searchItems } from 'utils/searchItems'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { searchItems } from 'utils/searchItems'
-import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
-import { NoWalletConnected } from '../../components/NoWalletConnected'
+
+import { AppDispatch } from '../../state'
+import { setAprData } from './../../state/pools/actions'
+import { usePoolsState } from './../../state/pools/hooks'
+import { AprObjectProps } from './../../state/pools/actions'
 
 const numeral = require('numeral')
 
@@ -229,13 +235,6 @@ const HeaderCellSpan = styled.span`
   position: relative;
 `
 
-export type APYObjectProps = {
-  APY: number
-  name: String
-  chain: String
-  contract_addr: String
-}
-
 export type SortedTitleProps = {
   title: String
 }
@@ -243,6 +242,9 @@ export type SortedTitleProps = {
 export default function Pools() {
   //@ts-ignore
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
+  const dispatch = useDispatch<AppDispatch>()
+  const aprAllData = usePoolsState()
+  const { aprData } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -267,7 +269,6 @@ export default function Pools() {
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
 
-  const [apyData, setApyData] = useState([{}])
   const [weeklyEarnings, setWeeklyEarnings] = useState({})
   const [readyForHarvest, setReadyForHarvest] = useState({})
   const [totalLiquidity, setTotalLiquidity] = useState({})
@@ -306,10 +307,9 @@ export default function Pools() {
   }
 
   //  APR
-  if (apyData && apyData.length) {
+  if (aprData && aprData.length) {
     arrayToShow.forEach((arrItem, index) => {
-      //@ts-ignore
-      apyData.forEach((dataItem: APYObjectProps) => {
+      aprData.forEach((dataItem: AprObjectProps) => {
         if (dataItem?.contract_addr === arrItem.stakingRewardAddress) {
           arrayToShow[index]['APR'] = dataItem.APY
         }
@@ -319,12 +319,11 @@ export default function Pools() {
 
   const [apyRequested, setApyRequested] = useState(false)
   const getAllAPY = async () => {
-    if (!apyRequested) {
-      setApyRequested(true)
-      const res = await getAllPoolsAPY()
-      if (!res.hasError) {
-        setApyData(res?.data)
-      }
+    const res = await getAllPoolsAPY()
+    setApyRequested(true)
+    if (!res.hasError) {
+      dispatch(setAprData({ aprData: res?.data }))
+      setApyRequested(false)
     }
   }
 
@@ -354,9 +353,8 @@ export default function Pools() {
   // lastly, if there is a sort, sort
   let visibleItems: any = searchItems(arrayToShow, searchText, chainId)
 
-  getAllAPY()
-
   useEffect(() => {
+    !aprData.length && getAllAPY()
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
@@ -410,20 +408,20 @@ export default function Pools() {
         </>
       )}
       <Title>Pools</Title>
-      {!visibleItems || (!apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
+      {!visibleItems || (apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
       <PageContainer>
-        {account !== null && visibleItems?.length > 0 && apyRequested && (
+        {account !== null && visibleItems?.length > 0 && !apyRequested && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>ZERO</span>
+                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <Stat className="harvest">
               <StatLabel>Ready To Harvest:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>ZERO</span>
+                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>

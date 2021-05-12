@@ -529,13 +529,14 @@ export default function Swap() {
     })
 
   const tokenBalances = useMemo(() => {
-    return availableTokens
+    const arr = availableTokens
       .map((x: any) => {
         const address = toCheckSumAddress(x?.address)
         const tokenData = { ...x, address }
         return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
       })
       .concat(userTokens)
+    return [...new Set(arr)];
   }, [availableTokens, userTokens])
 
 
