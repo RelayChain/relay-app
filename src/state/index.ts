@@ -7,6 +7,7 @@ import crosschain from './crosschain/reducer'
 import lists from './lists/reducer'
 import mint from './mint/reducer'
 import multicall from './multicall/reducer'
+import pools from './pools/reducer'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import { updateVersion } from './global/actions'
@@ -20,6 +21,7 @@ const store = configureStore({
     user,
     transactions,
     swap,
+    pools,
     mint,
     burn,
     multicall,
