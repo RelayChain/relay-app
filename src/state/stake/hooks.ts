@@ -29,7 +29,8 @@ import {
   zUSDC,
   zUSDT,
   zZERO,
-  zCHART
+  zCHART,
+  bscWISB
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -224,6 +225,16 @@ export const STAKING_REWARDS_INFO: {
       tokens: [bscZERO, bscINDA],
       stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
       rewardInfo: { rewardToken: bscINDA }
+    },
+    {
+      tokens: [bscWISB, bscWBNB],
+      stakingRewardAddress: '0x065422cd8e4903A1F188cef09a3A7702769AEE71',
+      rewardInfo: { rewardToken: bscWISB }
+    },
+    {
+      tokens: [bscWISB, bscZERO],
+      stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
+      rewardInfo: { rewardToken: bscWISB }
     },
   ]
 }
