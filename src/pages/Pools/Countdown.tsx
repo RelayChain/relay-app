@@ -1,10 +1,10 @@
 import { REWARDS_DURATION_DAYS_CHAINS, STAKING_GENESIS_CHAINS } from '../../state/stake/hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 
+import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
-import { CHAIN_LABELS } from '../../constants'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -45,15 +45,15 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   let timeRemaining: number
   let message: string
   if (timeUntilGenesis >= 0) {
-    message = `${chainId && CHAIN_LABELS[chainId]} lifts open in`
+    message = `${chainId && CHAIN_LABELS[chainId]} pools open in`
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
     if (ongoing) {
-      message = `${chainId && CHAIN_LABELS[chainId]} lifts close in`
+      message = `${chainId && CHAIN_LABELS[chainId]} pools close in`
       timeRemaining = timeUntilEnd
     } else {
-      message = `${chainId && CHAIN_LABELS[chainId]} lifts are closed!`
+      message = `${chainId && CHAIN_LABELS[chainId]} pools are closed!`
       timeRemaining = Infinity
     }
   }

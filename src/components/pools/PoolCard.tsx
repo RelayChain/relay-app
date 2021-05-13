@@ -21,6 +21,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+const moment = require('moment');
 
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   border: 2px solid;
@@ -266,6 +267,14 @@ export default function PoolCard({
             {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed( 0, { groupSeparator: ',' })}`
               : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
+          </TYPE.main>
+        </Row>
+        <Row style={{ marginBottom: '10px' }}>
+          <TYPE.main fontWeight={600} fontSize={12} style={{ flexGrow: 1 }}>
+            Ending:
+          </TYPE.main>
+          <TYPE.main fontWeight={500} fontSize={15}>
+            {moment(stakingInfo?.periodFinish).fromNow()}
           </TYPE.main>
         </Row>
 

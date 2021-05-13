@@ -35,6 +35,8 @@ import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
+const moment = require('moment');
+
 const PageWrapper = styled.div`
   flex-direction: column;
   display: flex;
@@ -469,6 +471,15 @@ export default function Manage({
                 <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
               </SymbolTitleInner>
             </SymbolTitleWrapper>
+            <span style={{
+              display: 'block',
+              textAlign: 'center',
+              marginTop: '-1.5rem',
+              marginBottom: '2rem',
+              color: 'rgb(167, 177, 244)',
+            }}>
+              ( Ending in {moment(stakingInfo?.periodFinish).fromNow()} )
+            </span>
             <StatsWrapper>
               <Stat className="weekly">
                 <StatLabel style={{ textAlign: 'left' }}>Total Deposits:</StatLabel>

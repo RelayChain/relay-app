@@ -22,6 +22,8 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
+const moment = require('moment');
+
 const Wrapper = styled.tr<{ showBackground: boolean; bgColor: any; showDetails: boolean }>`
   cursor: pointer;
   border-bottom: 0px solid rgba(167, 177, 244, 0.1);
@@ -82,7 +84,8 @@ const DetailsCell = styled.div<{ showDetails?: boolean }>`
   display: flex;
   height: 100%;
   align-items: center;
-  justify-content: flex-end;
+  text-align: left;
+  justify-content: flex-start;
   ${({ theme }) =>
     theme.mediaWidth.upToMedium`
       div{
@@ -277,12 +280,12 @@ export default function PoolRow({
             {countUpAmount}
           </TYPE.main>
         </Cell>
-        <Cell>
+        <Cell style={{ width: '150px'}}>
           <DetailsCell showDetails={showDetails}>
-            <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'right' }}>
-              Details
+            <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'left', marginRight: 'auto' }}>
+              {moment(stakingInfo?.periodFinish).fromNow()}
             </TYPE.main>
-            <DropdownArrow />
+            <DropdownArrow  />
           </DetailsCell>
         </Cell>
         <Cell></Cell>
