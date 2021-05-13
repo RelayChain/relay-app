@@ -10,6 +10,7 @@ export type TokenConfig = {
   resourceId: string
   isNativeWrappedToken?: boolean
   assetBase: string
+  disableTransfer?: boolean;
 }
 
 export type BridgeConfig = {
@@ -481,7 +482,8 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'WISB',
           decimals: 18,
           // resourceId: '0x00000000000000000000004f491d389A5bF7C56bd1e4d8aF2280fD217C854303'
-          resourceId: ""
+          resourceId: "",
+          disableTransfer: true,
         }
       ]
     },
