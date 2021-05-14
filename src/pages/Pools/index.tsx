@@ -266,9 +266,20 @@ export default function Pools() {
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 
+  const [apyRequested, setApyRequested] = useState(false)
+  const getAllAPY = async () => {
+    const res = await getAllPoolsAPY()
+    setApyRequested(true)
+    if (!res.hasError) {
+      dispatch(setAprData({ aprData: res?.data }))
+      setApyRequested(false)
+    }
+  }
+
   let arrayToShow: any[] = []
 
   const setArrayToShow = () => {
+    !aprData.length && getAllAPY()
     // live or finished pools?
     if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
       arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
@@ -303,8 +314,8 @@ export default function Pools() {
         )
     }
     arrayToShow = sortPoolsItems(filteredMode, arrayToShow, readyForHarvest, totalLiquidity)
+    
   }
-
 
   if (!poolsData.length || isTouchable) {
     setArrayToShow()
@@ -313,9 +324,8 @@ export default function Pools() {
   arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
 
   useEffect(() => {
-    !aprData.length && getAllAPY();
     (!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
-    dispatch(setToggle({isTouchable: true}))
+    dispatch(setToggle({ isTouchable: true }))
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
@@ -326,8 +336,8 @@ export default function Pools() {
     })
     setStatsDisplay({ earnings, harvest })
     setFilteredMode(filteredMode)
-    dispatch(setToggle({isTouchable: false}))
-  }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable])
+    dispatch(setToggle({ isTouchable: false }))
+  }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable, aprData])
 
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
@@ -337,16 +347,6 @@ export default function Pools() {
     setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest })
     if (parseFloat(liquidityValue) !== 0) {
       setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue })
-    }
-  }
-
-  const [apyRequested, setApyRequested] = useState(false)
-  const getAllAPY = async () => {
-    const res = await getAllPoolsAPY()
-    setApyRequested(true)
-    if (!res.hasError) {
-      dispatch(setAprData({ aprData: res?.data }))
-      setApyRequested(false)
     }
   }
 
@@ -364,7 +364,7 @@ export default function Pools() {
     setFilteredMode(sortedMode)
     const clone = { ...serializePoolControls, sortedMode: sortedMode }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
-    dispatch(setToggle({isTouchable: true}))
+    dispatch(setToggle({ isTouchable: true }))
   }
 
   const SortedTitle = ({ title }: SortedTitleProps) => (
@@ -395,7 +395,7 @@ export default function Pools() {
       <Title>Pools</Title>
       {!arrayToShow || (apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
       <PageContainer>
-        {account !== null && arrayToShow?.length > 0 && !apyRequested && (
+        {account !== null && arrayToShow?.length > 0 && aprData?.length > 0 && !apyRequested && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
