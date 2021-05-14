@@ -1,7 +1,10 @@
 import React from 'react'
 import Row from 'components/Row'
 import styled from 'styled-components'
-
+import { AppDispatch } from '../../state'
+import { setToggle } from './../../state/pools/actions'
+import { useDispatch } from 'react-redux'
+import { usePoolsState } from './../../state/pools/hooks'
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   display: flex;
   justify-content: center;
@@ -122,11 +125,15 @@ export interface ToggleProps {
 }
 
 export default function Toggle({ isActive, toggle, isStaked, setShowStaked, serializePoolControls }: ToggleProps) {
+  const dispatch = useDispatch<AppDispatch>()
+  const aprAllData = usePoolsState()
+  const { poolsData } = aprAllData
 
   const onHandleChange = (callback: any, key: string, value: boolean) => {
     callback()
     const clone = { ...serializePoolControls, [key]: !value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
+    dispatch(setToggle({isTouchable: true}))
   }
 
   return (
