@@ -312,16 +312,10 @@ export default function Pools() {
   // lastly, if there is a sort, sort
   arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
 
-  const refreshStackingInfo = () => {
-    if( !poolStackingInfo.length || (JSON.stringify(poolStackingInfo) !== JSON.stringify(stakingInfos))) {
-      dispatch(setStackingInfo({ poolStackingInfo: stakingInfos }))
-    }
-  }
-
   useEffect(() => {
     !aprData.length && getAllAPY();
     (!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
-    refreshStackingInfo()
+    dispatch(setToggle({isTouchable: true}))
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
