@@ -5,11 +5,10 @@ import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
-import { AprObjectProps } from './../../state/pools/actions'
 import { ButtonOutlined } from '../../components/Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
-import { Countdown } from './Countdown';
+import { Countdown } from './Countdown'
 import DropdownArrow from './../../assets/svg/DropdownArrow'
 import { NoWalletConnected } from '../../components/NoWalletConnected'
 import PageContainer from './../../components/PageContainer'
@@ -19,11 +18,12 @@ import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
 import { searchItems } from 'utils/searchItems'
-import { setAprData } from './../../state/pools/actions'
+import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackingInfo } from './../../state/pools/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { CgArrowsExpandDownLeft } from 'react-icons/cg'
 
 const numeral = require('numeral')
 
@@ -234,7 +234,7 @@ export default function Pools() {
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
   const aprAllData = usePoolsState()
-  const { aprData } = aprAllData
+  const { aprData, poolsData, isTouchable, poolStackingInfo } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -258,7 +258,6 @@ export default function Pools() {
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
-
   const [weeklyEarnings, setWeeklyEarnings] = useState({})
   const [readyForHarvest, setReadyForHarvest] = useState({})
   const [totalLiquidity, setTotalLiquidity] = useState({})
@@ -267,14 +266,78 @@ export default function Pools() {
   const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
   const finishedPools = stakingInfos.filter(x => !x.active)
 
+  const [apyRequested, setApyRequested] = useState(false)
+  const getAllAPY = async () => {
+    const res = await getAllPoolsAPY()
+    setApyRequested(true)
+    if (!res.hasError) {
+      dispatch(setAprData({ aprData: res?.data }))
+      setApyRequested(false)
+    }
+  }
+
   let arrayToShow: any[] = []
 
-  // live or finished pools?
-  if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
-    arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
-  } else if (showFinished && finishedPools && finishedPools.length > 0) {
-    arrayToShow = stakingInfos.map(x => (!x.active ? x : { ...x, isHidden: true }))
+  const setArrayToShow = () => {
+    !aprData.length && getAllAPY()
+    // live or finished pools?
+    if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
+      arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
+    } else if (showFinished && finishedPools && finishedPools.length > 0) {
+      arrayToShow = stakingInfos.map(x => (!x.active ? x : { ...x, isHidden: true }))
+    }
+    //  APR
+    if (aprData && aprData.length) {
+      arrayToShow.forEach(arrItem => {
+        aprData.forEach((dataItem: AprObjectProps) => {
+          if (dataItem?.contract_addr === arrItem.stakingRewardAddress && !arrItem['APR']) {
+            arrItem['APR'] = dataItem.APY
+          }
+        })
+      })
+    }
+    // filter array by staked
+    if (showStaked) {
+      arrayToShow = arrayToShow.map(item => {
+        if (readyForHarvest[item.stakingRewardAddress] !== undefined && Boolean(item?.stakedAmount?.greaterThan('0'))) {
+          return item
+        } else {
+          return { ...item, isHidden: true }
+        }
+      })
+    } else {
+      arrayToShow
+        .sort((a, b) => parseFloat(b?.stakedAmount?.toSignificant(6)) - parseFloat(a?.stakedAmount?.toSignificant(6)))
+        .sort(
+          (a, b) =>
+            parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
+        )
+    }
+    arrayToShow = sortPoolsItems(filteredMode, arrayToShow, readyForHarvest, totalLiquidity)
+    
   }
+
+  if (!poolsData.length || isTouchable) {
+    setArrayToShow()
+  }
+  // lastly, if there is a sort, sort
+  arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
+
+  useEffect(() => {
+    (!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
+    dispatch(setToggle({ isTouchable: true }))
+    let earnings: any = 0
+    let harvest: any = 0
+    Object.keys(weeklyEarnings).forEach(key => {
+      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
+    })
+    Object.keys(readyForHarvest).forEach(key => {
+      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
+    })
+    setStatsDisplay({ earnings, harvest })
+    setFilteredMode(filteredMode)
+    dispatch(setToggle({ isTouchable: false }))
+  }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable, aprData])
 
   // toggle copy if rewards are inactive
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
@@ -287,70 +350,10 @@ export default function Pools() {
     }
   }
 
-  //  APR
-  if (aprData && aprData.length) {
-    arrayToShow.forEach((arrItem, index) => {
-      aprData.forEach((dataItem: AprObjectProps) => {
-        if (dataItem?.contract_addr === arrItem.stakingRewardAddress) {
-          arrayToShow[index]['APR'] = dataItem.APY
-        }
-      })
-    })
-  }
-
-  const [apyRequested, setApyRequested] = useState(false)
-  const getAllAPY = async () => {
-    const res = await getAllPoolsAPY()
-    setApyRequested(true)
-    if (!res.hasError) {
-      dispatch(setAprData({ aprData: res?.data }))
-      setApyRequested(false)
-    }
-  }
-
   const handleHarvest = (stakingInfo: any) => {
     setClaimRewardStaking(stakingInfo)
     setShowClaimRewardModal(true)
   }
-
-  // filter array by staked
-  if (showStaked) {
-    arrayToShow = arrayToShow.map(item => {
-      if (readyForHarvest[item.stakingRewardAddress] !== undefined && Boolean(item?.stakedAmount?.greaterThan('0'))) {
-        return item
-      } else {
-        return { ...item, isHidden: true }
-      }
-    })
-  } else {
-    arrayToShow
-      .sort((a, b) => parseFloat(b?.stakedAmount?.toSignificant(6)) - parseFloat(a?.stakedAmount?.toSignificant(6)))
-      .sort(
-        (a, b) =>
-          parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
-      )
-  }
-
-  // lastly, if there is a sort, sort
-  let visibleItems: any = searchItems(arrayToShow, searchText, chainId)
-
-  useEffect(() => {
-    !aprData.length && getAllAPY()
-    let earnings: any = 0
-    let harvest: any = 0
-    Object.keys(weeklyEarnings).forEach(key => {
-      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
-    })
-    Object.keys(readyForHarvest).forEach(key => {
-      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
-    })
-    setStatsDisplay({ earnings, harvest })
-    setFilteredMode(filteredMode)
-  }, [weeklyEarnings, readyForHarvest, filteredMode])
-
-  visibleItems = useMemo(() => {
-    return sortPoolsItems(filteredMode, visibleItems, readyForHarvest, totalLiquidity)
-  }, [filteredMode, visibleItems])
 
   const onLayoutChange = (displayMode: string) => {
     setDisplayMode(displayMode)
@@ -361,6 +364,7 @@ export default function Pools() {
     setFilteredMode(sortedMode)
     const clone = { ...serializePoolControls, sortedMode: sortedMode }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
+    dispatch(setToggle({ isTouchable: true }))
   }
 
   const SortedTitle = ({ title }: SortedTitleProps) => (
@@ -389,9 +393,9 @@ export default function Pools() {
         </>
       )}
       <Title>Pools</Title>
-      {!visibleItems || (apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
+      {!arrayToShow || (apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
       <PageContainer>
-        {account !== null && visibleItems?.length > 0 && !apyRequested && (
+        {account !== null && arrayToShow?.length > 0 && aprData?.length > 0 && !apyRequested && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
@@ -432,7 +436,7 @@ export default function Pools() {
           )}
           {account !== null &&
             stakingInfos?.length > 0 &&
-            visibleItems?.length > 0 &&
+            arrayToShow?.length > 0 &&
             (displayMode === 'table' ? (
               <Wrapper>
                 <PoolsTable style={{ width: '100%' }}>
@@ -468,7 +472,7 @@ export default function Pools() {
                           <SortedTitle title="Earned" />
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell style={{ width: '150px'}}>
+                      <HeaderCell style={{ width: '150px' }}>
                         <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
                           Ending:
                         </TYPE.main>
@@ -476,19 +480,19 @@ export default function Pools() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleItems?.map((stakingInfo: any) => {
-                      if (!stakingInfo) {
+                    {arrayToShow?.map((item: any) => {
+                      if (!item) {
                         return <></>
                       }
                       return (
                         <PoolRow
-                          onHarvest={() => handleHarvest(stakingInfo)}
-                          harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                          earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                          liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                          key={stakingInfo.stakingRewardAddress}
-                          stakingInfoTop={stakingInfo}
-                          stakingInfoAPR={stakingInfo.APR}
+                          onHarvest={() => handleHarvest(item)}
+                          harvestSent={readyForHarvest[item.stakingRewardAddress]}
+                          earningsSent={weeklyEarnings[item.stakingRewardAddress]}
+                          liquiditySent={totalLiquidity[item.stakingRewardAddress]}
+                          key={item.stakingRewardAddress}
+                          stakingInfoTop={item}
+                          stakingInfoAPR={item.APR}
                           sendDataUp={onSendDataUp}
                         />
                       )
@@ -498,19 +502,19 @@ export default function Pools() {
               </Wrapper>
             ) : (
               <GridContainer>
-                {visibleItems?.map((stakingInfo: any) => {
-                  if (!stakingInfo) {
+                {arrayToShow?.map((item: any) => {
+                  if (!item) {
                     return <></>
                   }
                   return (
                     <PoolCard
-                      onHarvest={() => handleHarvest(stakingInfo)}
-                      harvestSent={readyForHarvest[stakingInfo.stakingRewardAddress]}
-                      earningsSent={weeklyEarnings[stakingInfo.stakingRewardAddress]}
-                      liquiditySent={totalLiquidity[stakingInfo.stakingRewardAddress]}
-                      key={stakingInfo.stakingRewardAddress}
-                      stakingInfoTop={stakingInfo}
-                      stakingInfoAPR={stakingInfo.APR}
+                      onHarvest={() => handleHarvest(item)}
+                      harvestSent={readyForHarvest[item.stakingRewardAddress]}
+                      earningsSent={weeklyEarnings[item.stakingRewardAddress]}
+                      liquiditySent={totalLiquidity[item.stakingRewardAddress]}
+                      key={item.stakingRewardAddress}
+                      stakingInfoTop={item}
+                      stakingInfoAPR={item.APR}
                       sendDataUp={onSendDataUp}
                     />
                   )
