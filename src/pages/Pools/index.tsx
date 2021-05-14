@@ -23,6 +23,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { CgArrowsExpandDownLeft } from 'react-icons/cg'
 
 const numeral = require('numeral')
 
@@ -312,7 +313,9 @@ export default function Pools() {
   arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
 
   const refreshStackingInfo = () => {
-    !poolStackingInfo.length || (JSON.stringify(poolStackingInfo) !== JSON.stringify(stakingInfos)) && dispatch(setStackingInfo({ poolStackingInfo: stakingInfos }))
+    if( !poolStackingInfo.length || (JSON.stringify(poolStackingInfo) !== JSON.stringify(stakingInfos))) {
+      dispatch(setStackingInfo({ poolStackingInfo: stakingInfos }))
+    }
   }
 
   useEffect(() => {
