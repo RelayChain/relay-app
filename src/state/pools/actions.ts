@@ -8,6 +8,6 @@ export type AprObjectProps = {
 }
 
 export const setAprData = createAction<{ aprData: AprObjectProps[] }>('pools/setAprData') //apr data api 
-export const setPoolsData = createAction<{ poolsData: any[] }>('pools/setPoolsData') 
-export const setToggle = createAction<{ isTouchable: boolean }>('pools/setToggle') 
-export const setStackinInfo = createAction<{ poolStackingInfo: any[] }>('pools/setStackinInfo') 
+export const setPoolsData = createAction<{ poolsData: any[] }>('pools/setPoolsData') // arrayToShow
+export const setToggle = createAction<{ isTouchable: boolean }>('pools/setToggle') // isTouchable
+export const setStackingInfo = createAction<{ poolStackingInfo: any[] }>('pools/setStackingInfo') // stackingInfo

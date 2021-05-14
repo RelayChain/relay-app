@@ -18,7 +18,7 @@ import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
 import { searchItems } from 'utils/searchItems'
-import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackinInfo } from './../../state/pools/actions'
+import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackingInfo } from './../../state/pools/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
@@ -255,10 +255,8 @@ export default function Pools() {
       : 'table'
   )
 
-  console.log(Date.now())
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
-
   const [weeklyEarnings, setWeeklyEarnings] = useState({})
   const [readyForHarvest, setReadyForHarvest] = useState({})
   const [totalLiquidity, setTotalLiquidity] = useState({})
@@ -270,14 +268,12 @@ export default function Pools() {
   let arrayToShow: any[] = []
 
   const setArrayToShow = () => {
-
     // live or finished pools?
     if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
       arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
     } else if (showFinished && finishedPools && finishedPools.length > 0) {
       arrayToShow = stakingInfos.map(x => (!x.active ? x : { ...x, isHidden: true }))
     }
-
     //  APR
     if (aprData && aprData.length) {
       arrayToShow.forEach(arrItem => {
@@ -288,7 +284,6 @@ export default function Pools() {
         })
       })
     }
-
     // filter array by staked
     if (showStaked) {
       arrayToShow = arrayToShow.map(item => {
@@ -306,8 +301,6 @@ export default function Pools() {
             parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
         )
     }
-
-
     arrayToShow = sortPoolsItems(filteredMode, arrayToShow, readyForHarvest, totalLiquidity)
   }
 
@@ -315,19 +308,17 @@ export default function Pools() {
   if (!poolsData.length || isTouchable) {
     setArrayToShow()
   }
-
   // lastly, if there is a sort, sort
   arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
 
-  const qwertyui = () => {
-    console.log(123)
-    !poolStackingInfo.length || (JSON.stringify(poolStackingInfo) !== JSON.stringify(stakingInfos)) && dispatch(setStackinInfo({ poolStackingInfo: stakingInfos }))
+  const refreshStackingInfo = () => {
+    !poolStackingInfo.length || (JSON.stringify(poolStackingInfo) !== JSON.stringify(stakingInfos)) && dispatch(setStackingInfo({ poolStackingInfo: stakingInfos }))
   }
 
   useEffect(() => {
     !aprData.length && getAllAPY();
     (!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
-    qwertyui()
+    refreshStackingInfo()
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {

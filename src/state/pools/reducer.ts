@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { setAprData, AprObjectProps, setPoolsData, setToggle, setStackinInfo } from './actions'
+import { setAprData, AprObjectProps, setPoolsData, setToggle, setStackingInfo } from './actions'
 
 export interface PoolsState {
   aprData: AprObjectProps[]
@@ -34,7 +34,7 @@ export default createReducer<PoolsState>(initialState, builder =>
         ...state,
         isTouchable
       }
-    }).addCase(setStackinInfo, (state, { payload: { poolStackingInfo } }) => {
+    }).addCase(setStackingInfo, (state, { payload: { poolStackingInfo } }) => {
       return {
         ...state,
         poolStackingInfo
