@@ -478,7 +478,7 @@ export default function Manage({
               marginBottom: '2rem',
               color: 'rgb(167, 177, 244)',
             }}>
-              ( Ending in {moment(stakingInfo?.periodFinish).fromNow()} )
+              ( Ending: {moment(stakingInfo?.periodFinish).fromNow()} )
             </span>
             <StatsWrapper>
               <Stat className="weekly">
