@@ -1,7 +1,8 @@
+import { AprObjectProps, setAprData, setPoolsData, setStackingInfo, setToggle } from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { setOptions, filterPoolsItems, searchItems } from 'utils/sortPoolsPage'
+import { filterPoolsItems, searchItems, setOptions } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
@@ -16,7 +17,6 @@ import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
-import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackingInfo } from './../../state/pools/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
@@ -238,17 +238,17 @@ export default function Pools() {
 
   // filters & sorting
   const [searchText, setSearchText] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.searchText : ''
+    serializePoolControls ? serializePoolControls.searchText : ''
   )
   const [isStaked, setShowStaked] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
+    serializePoolControls ? serializePoolControls.isStaked : false
   )
-  const [isLive, setShowLive] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isLive : true)
+  const [isLive, setShowLive] = useState(serializePoolControls ? serializePoolControls.isLive : true)
   const [filteredMode, setFilteredMode] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls?.filteredMode : 'Hot'
+    serializePoolControls ? serializePoolControls?.filteredMode : 'Hot'
   )
   const [displayMode, setDisplayMode] = useState(
-    localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
+    serializePoolControls && serializePoolControls?.displayMode
       ? serializePoolControls?.displayMode
       : 'table'
   )

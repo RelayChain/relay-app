@@ -1,7 +1,7 @@
-import { arrayMove } from './arrayMove'
 import { ChainId } from '@zeroexchange/sdk'
-import { unwrappedToken } from './wrappedCurrency'
 import { StakingInfo } from 'state/stake/hooks'
+import { arrayMove } from './arrayMove'
+import { unwrappedToken } from './wrappedCurrency'
 
 const defaultOptions = [
   {
@@ -81,35 +81,29 @@ export const searchItems = (array: any[], searchText: string, chainId?: ChainId)
 
 export const showStakedItems = (array: any[], isStaked: boolean, readyForHarvest: any) => {
   if (isStaked) {
-    return (array = array.slice().map(item => {
+    return array.map(item => {
       if (readyForHarvest[item.stakingRewardAddress] !== undefined && Boolean(item?.stakedAmount?.greaterThan('0'))) {
         return item
       } else {
         return { ...item, isHidden: true }
       }
-    }))
+    })
   } else {
-    return (array = array
-      .slice()
+    return array
       .sort((a, b) => parseFloat(b?.stakedAmount?.toSignificant(6)) - parseFloat(a?.stakedAmount?.toSignificant(6)))
       .sort(
         (a, b) =>
           parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
-      ))
+      )
   }
 }
 
 export const showLiveOrFinishedItems = (stakingInfos: StakingInfo[], isLive: boolean) => {
-  const stakingInfosWithBalance = stakingInfos.filter(item => item.active)
-  const finishedPools = stakingInfos.filter(item => !item.active)
-  // live or finished pools?
-  if (isLive && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
+  if (isLive) {
     return stakingInfos.map(item => (item.active ? item : { ...item, isHidden: true }))
-  } else if (!isLive && finishedPools && finishedPools.length > 0) {
+  } else {
     return stakingInfos.map(item => (!item.active ? item : { ...item, isHidden: true }))
-  } else if (!isLive && finishedPools.length === 0) {
-    return stakingInfos.map(item => (!item.active ? item : { ...item, isHidden: true }))
-  } else return stakingInfos
+  }
 }
 
 export const filterPoolsItems = (
@@ -122,13 +116,11 @@ export const filterPoolsItems = (
   // chainId: any,
   totalLiquidity: any
 ) => {
+
   let sortedArray: any[] = []
   sortedArray = showLiveOrFinishedItems(stakingInfos, isLive)
-
   sortedArray = showStakedItems(sortedArray, isStaked, readyForHarvest)
-
   sortedArray = sortPoolsItems(sortedArray, filteredMode, readyForHarvest, totalLiquidity)
 
-  // sortedArray = searchItems(sortedArray, searchText, chainId)
   return sortedArray
 }

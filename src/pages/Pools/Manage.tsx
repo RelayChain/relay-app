@@ -117,9 +117,8 @@ const StatsWrapper = styled.div`
   background: rgba(0, 0, 0, 0.25);
   border-radius: 24px;
   margin-bottom: 1.5rem;
-  .add-liquidity-link {
+  .add-liquidity-link, .trade-button-link {
     width: 188px;
-    margin-left: auto;
     text-decoration: none;
   }
   .remove-liquidity-link {
@@ -129,11 +128,15 @@ const StatsWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
   flex-direction: column;
   align-items: flex-start;
-  .add-liquidity-link {
+  .add-liquidity-link, .trade-button-link {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
     max-width: 500px;
+  }
+  .trade-button-link {
+    margin-top: .5rem;
+    margin-bottom: 1rem;
   }
   .remove-liquidity-link {
     margin-left: auto;
@@ -439,9 +442,10 @@ export default function Manage({
               </Stat>
               <StyledButtonsWrap>
                 <StyledTradelLink
-                  className="add-liquidity-link"
+                  className="trade-button-link"
                   to={{
-                    pathname: `/swap/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`
+                    pathname: `/swap`,
+                    state: { token0: `${currencyA && currencyId(currencyA)}`, token1: `${currencyB && currencyId(currencyB)}` }
                   }}
                 >
                   <ButtonOutlined className="add-liquidity-button">Trade</ButtonOutlined>
