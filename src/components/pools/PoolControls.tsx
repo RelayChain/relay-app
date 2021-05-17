@@ -106,45 +106,29 @@ const ToggleGroup = styled(Group)`
 export interface PoolControlsProps {
   displayMode: string
   searchText: string
-  setDisplayMode: (p: string) => void
-  setSearchText: (p: string) => void
-  showFinished: boolean
-  setShowFinished: () => void
-  showStaked: boolean
-  setShowStaked: () => void
-  setFilteredMode: any
+  onSortChange: (key: string, value: string | boolean) => void
+  isLive: boolean
+  isStaked: boolean
   options: any
   activeFilteredMode: string
-  serializePoolControls: any
 }
 
 function PoolControls({
   displayMode,
-  setDisplayMode,
   searchText,
-  setSearchText,
-  showFinished,
-  setShowFinished,
-  showStaked,
-  setShowStaked,
-  setFilteredMode,
+  onSortChange,
+  isLive,
+  isStaked,
   options,
-  activeFilteredMode,
-  serializePoolControls
+  activeFilteredMode
 }: PoolControlsProps) {
   return (
     <Controls>
       <SearchGroup>
-        <SearchBar value={searchText} onChange={e => setSearchText(e.target.value)} />
+        <SearchBar value={searchText} onChange={e => onSortChange('searchText', e.target.value)} />
       </SearchGroup>
       <ToggleGroup>
-        <TogglePool
-          isActive={showFinished}
-          toggle={setShowFinished}
-          isStaked={showStaked}
-          setShowStaked={setShowStaked}
-          serializePoolControls={serializePoolControls}
-        />
+        <TogglePool isLive={isLive} onSortChange={onSortChange} isStaked={isStaked} />
       </ToggleGroup>
       <Group>
         <ControlGroup>
@@ -153,7 +137,7 @@ function PoolControls({
               Sort by:
             </TYPE.main>
           </ControlLabel>
-          <Select options={options} onChange={e => setFilteredMode(e)} activeOption={activeFilteredMode} />
+          <Select options={options} onChange={e => onSortChange('filteredMode', e)} activeOption={activeFilteredMode} />
         </ControlGroup>
 
         <ControlGroup>
@@ -163,10 +147,10 @@ function PoolControls({
             </TYPE.main>
           </ControlLabel>
           <InputContainer>
-            <Button isSelected={displayMode === 'table'} onClick={() => setDisplayMode('table')}>
+            <Button isSelected={displayMode === 'table'} onClick={() => onSortChange('displayMode', 'table')}>
               <ListMode />
             </Button>
-            <Button isSelected={displayMode === 'grid'} onClick={() => setDisplayMode('grid')}>
+            <Button isSelected={displayMode === 'grid'} onClick={() => onSortChange('displayMode', 'grid')}>
               <CardMode />
             </Button>
           </InputContainer>

@@ -5,7 +5,7 @@ import { AppDispatch } from '../../state'
 import { setToggle } from './../../state/pools/actions'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
-const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
+const ToggleElement = styled.span<{ isLive?: boolean; isOnSwitch?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,8 +14,8 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   font-size: 13px;
   padding: 0.35rem 0.6rem;
   border-radius: 12px;
-  background: ${({ isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#6752F7' : '#6752F7') : 'none')};
-  color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.white) : theme.text2)};
+  background: ${({ isLive, isOnSwitch }) => (isLive ? (isOnSwitch ? '#6752F7' : '#6752F7') : 'none')};
+  color: ${({ theme, isLive, isOnSwitch }) => (isLive ? (isOnSwitch ? theme.white : theme.white) : theme.text2)};
   font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
@@ -27,7 +27,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   `};
 `
 
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ isLive?: boolean; activeElement?: boolean }>`
   border-radius: 12px;
   border: none;
   height: 48px;
@@ -117,36 +117,23 @@ const StyledStacked = styled.div`
 `
 
 export interface ToggleProps {
-  isActive: boolean
-  toggle: () => void
+  isLive: boolean
+  onSortChange: (key: string, value: string | boolean) => void
   isStaked: boolean
-  setShowStaked: () => void
-  serializePoolControls: any
 }
 
-export default function Toggle({ isActive, toggle, isStaked, setShowStaked, serializePoolControls }: ToggleProps) {
-  const dispatch = useDispatch<AppDispatch>()
-  const aprAllData = usePoolsState()
-  const { poolsData } = aprAllData
-
-  const onHandleChange = (callback: any, key: string, value: boolean) => {
-    callback()
-    const clone = { ...serializePoolControls, [key]: !value }
-    localStorage.setItem('PoolControls', JSON.stringify(clone))
-    dispatch(setToggle({isTouchable: true}))
-  }
-
+export default function Toggle({ isLive, onSortChange, isStaked }: ToggleProps) {
   return (
     <Row>
-      <StyledStacked onClick={() => onHandleChange(setShowStaked, 'isStaked', isStaked)}>
+      <StyledStacked onClick={() => onSortChange('isStaked', !isStaked)}>
         <input type="checkbox" checked={isStaked} readOnly />
         <label>Staked only</label>
       </StyledStacked>
-      <StyledToggle isActive={isActive} onClick={() => onHandleChange(toggle, 'isActive', isActive)}>
-        <ToggleElement isActive={!isActive} isOnSwitch={false}>
+      <StyledToggle isLive={isLive} onClick={() => onSortChange('isLive', !isLive)}>
+        <ToggleElement isLive={isLive} isOnSwitch={true}>
           Live
         </ToggleElement>
-        <ToggleElement isActive={isActive} isOnSwitch={true}>
+        <ToggleElement isLive={!isLive} isOnSwitch={false}>
           Finished
         </ToggleElement>
       </StyledToggle>

@@ -1,7 +1,7 @@
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useMemo, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { setOptions, sortPoolsItems } from 'utils/sortPoolsPage'
+import { setOptions, filterPoolsItems, searchItems } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
@@ -17,7 +17,6 @@ import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
-import { searchItems } from 'utils/searchItems'
 import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackingInfo } from './../../state/pools/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
@@ -240,15 +239,15 @@ export default function Pools() {
   const toggleWalletModal = useWalletModalToggle()
 
   // filters & sorting
-  const [searchText, setSearchText] = useState('')
-  const [showStaked, setShowStaked] = useState(
+  const [searchText, setSearchText] = useState(
+    localStorage.getItem('PoolControls') ? serializePoolControls.searchText : ''
+  )
+  const [isStaked, setShowStaked] = useState(
     localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
   )
-  const [showFinished, setShowFinished] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.isActive : false
-  )
+  const [isLive, setShowLive] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isLive : true)
   const [filteredMode, setFilteredMode] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls?.sortedMode : 'Hot'
+    localStorage.getItem('PoolControls') ? serializePoolControls?.filteredMode : 'Hot'
   )
   const [displayMode, setDisplayMode] = useState(
     localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
@@ -280,15 +279,9 @@ export default function Pools() {
 
   const setArrayToShow = () => {
     !aprData.length && getAllAPY()
-    // live or finished pools?
-    if (!showFinished && stakingInfosWithBalance && stakingInfosWithBalance.length > 0) {
-      arrayToShow = stakingInfos.map(x => (x.active ? x : { ...x, isHidden: true }))
-    } else if (showFinished && finishedPools && finishedPools.length > 0) {
-      arrayToShow = stakingInfos.map(x => (!x.active ? x : { ...x, isHidden: true }))
-    }
     //  APR
     if (aprData && aprData.length) {
-      arrayToShow.forEach(arrItem => {
+      stakingInfos.forEach(arrItem => {
         aprData.forEach((dataItem: AprObjectProps) => {
           if (dataItem?.contract_addr === arrItem.stakingRewardAddress && !arrItem['APR']) {
             arrItem['APR'] = dataItem.APY
@@ -296,25 +289,7 @@ export default function Pools() {
         })
       })
     }
-    // filter array by staked
-    if (showStaked) {
-      arrayToShow = arrayToShow.map(item => {
-        if (readyForHarvest[item.stakingRewardAddress] !== undefined && Boolean(item?.stakedAmount?.greaterThan('0'))) {
-          return item
-        } else {
-          return { ...item, isHidden: true }
-        }
-      })
-    } else {
-      arrayToShow
-        .sort((a, b) => parseFloat(b?.stakedAmount?.toSignificant(6)) - parseFloat(a?.stakedAmount?.toSignificant(6)))
-        .sort(
-          (a, b) =>
-            parseFloat(readyForHarvest[b?.stakingRewardAddress]) - parseFloat(readyForHarvest[a?.stakingRewardAddress])
-        )
-    }
-    arrayToShow = sortPoolsItems(filteredMode, arrayToShow, readyForHarvest, totalLiquidity)
-    
+    arrayToShow = filterPoolsItems(stakingInfos, isLive, isStaked, readyForHarvest, filteredMode, totalLiquidity)
   }
 
   if (!poolsData.length || isTouchable) {
@@ -324,7 +299,7 @@ export default function Pools() {
   arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
 
   useEffect(() => {
-    (!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
+    ;(!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
     dispatch(setToggle({ isTouchable: true }))
     let earnings: any = 0
     let harvest: any = 0
@@ -355,14 +330,25 @@ export default function Pools() {
     setShowClaimRewardModal(true)
   }
 
-  const onLayoutChange = (displayMode: string) => {
-    setDisplayMode(displayMode)
-    const clone = { ...serializePoolControls, displayMode: displayMode }
-    localStorage.setItem('PoolControls', JSON.stringify(clone))
-  }
-  const onSortedChange = (sortedMode: string) => {
-    setFilteredMode(sortedMode)
-    const clone = { ...serializePoolControls, sortedMode: sortedMode }
+  const onSortChange = (key: string, value: string | boolean) => {
+    switch (key) {
+      case 'searchText':
+        setSearchText(value)
+        break
+      case 'isStaked':
+        setShowStaked(value)
+        break
+      case 'isLive':
+        setShowLive(value)
+        break
+      case 'filteredMode':
+        setFilteredMode(value)
+        break
+      case 'displayMode':
+        setDisplayMode(value)
+        break
+    }
+    const clone = { ...serializePoolControls, [key]: value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
     dispatch(setToggle({ isTouchable: true }))
   }
@@ -420,18 +406,13 @@ export default function Pools() {
         <PageWrapper>
           {account !== null && (
             <PoolControls
-              setShowFinished={() => setShowFinished(!showFinished)}
-              showFinished={showFinished}
+              isLive={isLive}
               displayMode={displayMode}
-              setDisplayMode={onLayoutChange}
               searchText={searchText}
-              setSearchText={setSearchText}
-              showStaked={showStaked}
-              setShowStaked={() => setShowStaked(!showStaked)}
-              setFilteredMode={onSortedChange}
+              onSortChange={onSortChange}
+              isStaked={isStaked}
               options={setOptions(filteredMode)}
               activeFilteredMode={filteredMode}
-              serializePoolControls={serializePoolControls}
             />
           )}
           {account !== null &&
@@ -453,7 +434,11 @@ export default function Pools() {
                           Reward
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell style={{ cursor: 'pointer' }} mobile={false} onClick={() => onSortedChange('APR')}>
+                      <HeaderCell
+                        style={{ cursor: 'pointer' }}
+                        mobile={false}
+                        onClick={() => onSortChange('filteredMode', 'APR')}
+                      >
                         <TYPE.main fontWeight={600} fontSize={12}>
                           <SortedTitle title="APR" />
                         </TYPE.main>
@@ -461,13 +446,17 @@ export default function Pools() {
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
-                        onClick={() => onSortedChange('Liquidity')}
+                        onClick={() => onSortChange('filteredMode', 'Liquidity')}
                       >
                         <TYPE.main fontWeight={600} fontSize={12}>
                           <SortedTitle title="Liquidity" />
                         </TYPE.main>
                       </HeaderCell>
-                      <HeaderCell style={{ cursor: 'pointer' }} mobile={false} onClick={() => onSortedChange('Earned')}>
+                      <HeaderCell
+                        style={{ cursor: 'pointer' }}
+                        mobile={false}
+                        onClick={() => onSortChange('filteredMode', 'Earned')}
+                      >
                         <TYPE.main fontWeight={600} fontSize={12}>
                           <SortedTitle title="Earned" />
                         </TYPE.main>
