@@ -455,7 +455,9 @@ export default function Manage({
                 >
                   <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
                 </StyledInternalLink>
-                {false ? null : (
+                {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
+                    '0'
+                  ) ? null : !stakingInfo?.active ? null : (
                   <StyledInternalLink
                     className="remove-liquidity-link"
                     to={{
