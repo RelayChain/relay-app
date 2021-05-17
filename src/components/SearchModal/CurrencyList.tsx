@@ -113,7 +113,8 @@ function CurrencyRow({
   style,
   isEnd,
   hasQuery,
-  tokenBalances
+  tokenBalances,
+  unseenCustomToken = false
 }: {
   currency: any
   onSelect: () => void
@@ -123,6 +124,7 @@ function CurrencyRow({
   isEnd: boolean
   hasQuery: any
   tokenBalances: any
+  unseenCustomToken?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -139,6 +141,10 @@ function CurrencyRow({
   // only show add or remove buttons if not on selected list
   const isNative = () => {
     return currency === ETHER || currency === AVAX || currency === BNB || currency === DEV
+  }
+
+  if (unseenCustomToken && customAdded) {
+    return null
   }
 
   return (
@@ -206,7 +212,8 @@ export default function CurrencyList({
   otherCurrency,
   fixedListRef,
   showETH,
-  searchQuery
+  searchQuery,
+  unseenCustomToken = false
 }: {
   height: number
   currencies: Currency[]
@@ -216,6 +223,7 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
   searchQuery: string | undefined
+  unseenCustomToken?: boolean
 }) {
   const { chainId } = useActiveWeb3React()
   const tokenBalances = useTokenBalances()
@@ -235,8 +243,10 @@ export default function CurrencyList({
     showETH,
     nativeToken
   ])
+  
   const Row = useCallback(
     ({ data, index, style }) => {
+     
       const currency: Currency = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
@@ -251,6 +261,7 @@ export default function CurrencyList({
           tokenBalances={tokenBalances}
           isEnd={index === data.length - 1}
           hasQuery={searchQuery && searchQuery.length > 0}
+          unseenCustomToken={unseenCustomToken}
         />
       )
     },
