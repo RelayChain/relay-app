@@ -1,3 +1,4 @@
+import { RouteComponentProps } from 'react-router-dom'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -225,7 +226,12 @@ const Header = styled.div`
   margin-bottom: 1rem;
 `
 
-export default function Swap() {
+export default function Swap({
+  match: {
+    params: { currencyIdA, currencyIdB }
+  },
+  ...props
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   useCrossChain()
 
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -249,6 +255,8 @@ export default function Swap() {
     isColumn = true
   }
 
+  const currencyA = useCurrency(currencyIdA)
+  const currencyB = useCurrency(currencyIdB)
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -374,7 +382,9 @@ export default function Swap() {
     if (approval === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
-  }, [approval, approvalSubmitted])
+    handleInputSelect(currencyA)
+    handleOutputSelect(currencyB)
+  }, [approval, approvalSubmitted, currencyA, currencyB])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
