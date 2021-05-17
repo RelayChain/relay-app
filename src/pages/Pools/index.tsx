@@ -1,5 +1,5 @@
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { setOptions, filterPoolsItems, searchItems } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
@@ -8,7 +8,6 @@ import { AppDispatch } from '../../state'
 import { ButtonOutlined } from '../../components/Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
-import { Countdown } from './Countdown'
 import DropdownArrow from './../../assets/svg/DropdownArrow'
 import { NoWalletConnected } from '../../components/NoWalletConnected'
 import PageContainer from './../../components/PageContainer'
@@ -22,7 +21,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { CgArrowsExpandDownLeft } from 'react-icons/cg'
 
 const numeral = require('numeral')
 
@@ -233,7 +231,7 @@ export default function Pools() {
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
   const aprAllData = usePoolsState()
-  const { aprData, poolsData, isTouchable, poolStackingInfo } = aprAllData
+  const { aprData, poolsData, isTouchable, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -257,13 +255,7 @@ export default function Pools() {
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
-  const [weeklyEarnings, setWeeklyEarnings] = useState({})
-  const [readyForHarvest, setReadyForHarvest] = useState({})
-  const [totalLiquidity, setTotalLiquidity] = useState({})
   const [statsDisplay, setStatsDisplay] = useState<any>({})
-
-  const stakingInfosWithBalance = stakingInfos.filter(x => x.active)
-  const finishedPools = stakingInfos.filter(x => !x.active)
 
   const [apyRequested, setApyRequested] = useState(false)
   const getAllAPY = async () => {
@@ -314,22 +306,6 @@ export default function Pools() {
     dispatch(setToggle({ isTouchable: false }))
   }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable, aprData])
 
-  // toggle copy if rewards are inactive
-  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
-
-  const onSendDataUp = ({ singleWeeklyEarnings, readyToHarvest, liquidityValue, contract }: any) => {
-    setWeeklyEarnings({ ...weeklyEarnings, [contract]: singleWeeklyEarnings })
-    setReadyForHarvest({ ...readyForHarvest, [contract]: readyToHarvest })
-    if (parseFloat(liquidityValue) !== 0) {
-      setTotalLiquidity({ ...totalLiquidity, [contract]: liquidityValue })
-    }
-  }
-
-  const handleHarvest = (stakingInfo: any) => {
-    setClaimRewardStaking(stakingInfo)
-    setShowClaimRewardModal(true)
-  }
-
   const onSortChange = (key: string, value: string | boolean) => {
     switch (key) {
       case 'searchText':
@@ -351,6 +327,14 @@ export default function Pools() {
     const clone = { ...serializePoolControls, [key]: value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
     dispatch(setToggle({ isTouchable: true }))
+  }
+
+  // toggle copy if rewards are inactive
+  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+
+  const handleHarvest = (stakingInfo: any) => {
+    setClaimRewardStaking(stakingInfo)
+    setShowClaimRewardModal(true)
   }
 
   const SortedTitle = ({ title }: SortedTitleProps) => (
@@ -482,7 +466,6 @@ export default function Pools() {
                           key={item.stakingRewardAddress}
                           stakingInfoTop={item}
                           stakingInfoAPR={item.APR}
-                          sendDataUp={onSendDataUp}
                         />
                       )
                     })}
@@ -504,7 +487,6 @@ export default function Pools() {
                       key={item.stakingRewardAddress}
                       stakingInfoTop={item}
                       stakingInfoAPR={item.APR}
-                      sendDataUp={onSendDataUp}
                     />
                   )
                 })}
