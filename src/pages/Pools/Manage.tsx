@@ -216,10 +216,11 @@ const TextLink = styled.div`
 `
 const StyledTradelLink = styled(StyledInternalLink)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-margin-bottom: 10px;
+    margin-bottom: 10px;
 `};
   button {
-    border: none !important;
+    background: rgba(30, 247, 231, 0.18);
+    border: 1px solid #1ef7e7;
   }
 `
 const StyledButtonsWrap = styled.div`
