@@ -241,14 +241,14 @@ export default function Pools() {
     serializePoolControls ? serializePoolControls.searchText : ''
   )
   const [isStaked, setShowStaked] = useState(
-    serializePoolControls ? serializePoolControls.isStaked : false
+    serializePoolControls?.isStaked ? serializePoolControls.isStaked : false
   )
-  const [isLive, setShowLive] = useState(serializePoolControls ? serializePoolControls.isLive : true)
+  const [isLive, setShowLive] = useState(serializePoolControls?.isLive ? serializePoolControls.isLive : true)
   const [filteredMode, setFilteredMode] = useState(
-    serializePoolControls ? serializePoolControls?.filteredMode : 'Hot'
+    serializePoolControls?.filteredMode ? serializePoolControls?.filteredMode : 'Hot'
   )
   const [displayMode, setDisplayMode] = useState(
-    serializePoolControls && serializePoolControls?.displayMode
+    serializePoolControls?.displayMode
       ? serializePoolControls?.displayMode
       : 'table'
   )
