@@ -500,14 +500,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       blockExplorer: 'https://explorer-mainnet.maticvigil.com/',
       nativeTokenSymbol: 'MATIC',
       tokens: [
-        {
-          address: '0xBF7e0761417F49b3FAFae564C842823f5f79DB15',
-          name: 'zUSDT',
-          symbol: 'zUSDT',
-          assetBase: 'USDT',
-          decimals: 6,
-          resourceId: '0x0000000000000000000000BF7e0761417F49b3FAFae564C842823f5f79DB1503'
-        },
+        
       ]
     }
   ]
