@@ -112,15 +112,15 @@ export const filterPoolsItems = (
   isStaked: any,
   readyForHarvest: any,
   filteredMode: any,
-  // searchText: any,
-  // chainId: any,
+  searchText: any,
+  chainId: any,
   totalLiquidity: any
 ) => {
-
   let sortedArray: any[] = []
   sortedArray = showLiveOrFinishedItems(stakingInfos, isLive)
   sortedArray = showStakedItems(sortedArray, isStaked, readyForHarvest)
   sortedArray = sortPoolsItems(sortedArray, filteredMode, readyForHarvest, totalLiquidity)
+  sortedArray = searchItems(sortedArray, searchText, chainId)
 
   return sortedArray
 }

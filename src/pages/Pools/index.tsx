@@ -237,20 +237,18 @@ export default function Pools() {
   const toggleWalletModal = useWalletModalToggle()
 
   // filters & sorting
-  const [searchText, setSearchText] = useState(
-    serializePoolControls ? serializePoolControls.searchText : ''
-  )
+  const [searchText, setSearchText] = useState(serializePoolControls ? serializePoolControls.searchText : '')
   const [isStaked, setShowStaked] = useState(
     serializePoolControls?.hasOwnProperty('isStaked') ? serializePoolControls.isStaked : false
   )
-  const [isLive, setShowLive] = useState(serializePoolControls?.hasOwnProperty('isLive') ? serializePoolControls.isLive : true)
+  const [isLive, setShowLive] = useState(
+    serializePoolControls?.hasOwnProperty('isLive') ? serializePoolControls.isLive : true
+  )
   const [filteredMode, setFilteredMode] = useState(
     serializePoolControls?.filteredMode ? serializePoolControls?.filteredMode : 'Hot'
   )
   const [displayMode, setDisplayMode] = useState(
-    serializePoolControls?.displayMode
-      ? serializePoolControls?.displayMode
-      : 'table'
+    serializePoolControls?.displayMode ? serializePoolControls?.displayMode : 'table'
   )
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
@@ -270,7 +268,7 @@ export default function Pools() {
   let arrayToShow: any[] = []
 
   const setArrayToShow = async () => {
-    !aprData.length && await getAllAPY()
+    !aprData.length && (await getAllAPY())
     //  APR
     if (aprData && aprData.length) {
       stakingInfos.forEach(arrItem => {
@@ -281,13 +279,18 @@ export default function Pools() {
         })
       })
     }
-    arrayToShow = filterPoolsItems(stakingInfos, isLive, isStaked, readyForHarvest, filteredMode, totalLiquidity)
+    arrayToShow = filterPoolsItems(
+      stakingInfos,
+      isLive,
+      isStaked,
+      readyForHarvest,
+      filteredMode,
+      searchText,
+      chainId,
+      totalLiquidity
+    )
   }
-
-    setArrayToShow()
-  
-  // lastly, if there is a sort, sort
-  arrayToShow = searchItems(arrayToShow, searchText, chainId)
+  setArrayToShow()
 
   useEffect(() => {
     let earnings: any = 0
