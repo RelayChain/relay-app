@@ -269,8 +269,8 @@ export default function Pools() {
 
   let arrayToShow: any[] = []
 
-  const setArrayToShow = () => {
-    !aprData.length && getAllAPY()
+  const setArrayToShow = async () => {
+    !aprData.length && await getAllAPY()
     //  APR
     if (aprData && aprData.length) {
       stakingInfos.forEach(arrItem => {
