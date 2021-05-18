@@ -1,7 +1,8 @@
+import { AprObjectProps, setAprData, setPoolsData, setStackingInfo, setToggle } from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { setOptions, filterPoolsItems, searchItems } from 'utils/sortPoolsPage'
+import { filterPoolsItems, searchItems, setOptions } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
@@ -16,7 +17,6 @@ import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
 import ZeroIcon from '../../assets/svg/zero_icon.svg'
 import { getAllPoolsAPY } from 'api'
-import { setAprData, setPoolsData, AprObjectProps, setToggle, setStackingInfo } from './../../state/pools/actions'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
@@ -231,26 +231,24 @@ export default function Pools() {
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
   const aprAllData = usePoolsState()
-  const { aprData, poolsData, isTouchable, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
+  const { aprData, poolsData, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
 
   // filters & sorting
-  const [searchText, setSearchText] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.searchText : ''
-  )
+  const [searchText, setSearchText] = useState(serializePoolControls ? serializePoolControls.searchText : '')
   const [isStaked, setShowStaked] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls.isStaked : false
+    serializePoolControls?.hasOwnProperty('isStaked') ? serializePoolControls.isStaked : false
   )
-  const [isLive, setShowLive] = useState(localStorage.getItem('PoolControls') ? serializePoolControls.isLive : true)
+  const [isLive, setShowLive] = useState(
+    serializePoolControls?.hasOwnProperty('isLive') ? serializePoolControls.isLive : true
+  )
   const [filteredMode, setFilteredMode] = useState(
-    localStorage.getItem('PoolControls') ? serializePoolControls?.filteredMode : 'Hot'
+    serializePoolControls?.filteredMode ? serializePoolControls?.filteredMode : 'Hot'
   )
   const [displayMode, setDisplayMode] = useState(
-    localStorage.getItem('PoolControls') && serializePoolControls?.displayMode
-      ? serializePoolControls?.displayMode
-      : 'table'
+    serializePoolControls?.displayMode ? serializePoolControls?.displayMode : 'table'
   )
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
@@ -269,8 +267,8 @@ export default function Pools() {
 
   let arrayToShow: any[] = []
 
-  const setArrayToShow = () => {
-    !aprData.length && getAllAPY()
+  const setArrayToShow = async () => {
+    !aprData.length && (await getAllAPY())
     //  APR
     if (aprData && aprData.length) {
       stakingInfos.forEach(arrItem => {
@@ -281,18 +279,20 @@ export default function Pools() {
         })
       })
     }
-    arrayToShow = filterPoolsItems(stakingInfos, isLive, isStaked, readyForHarvest, filteredMode, totalLiquidity)
+    arrayToShow = filterPoolsItems(
+      stakingInfos,
+      isLive,
+      isStaked,
+      readyForHarvest,
+      filteredMode,
+      searchText,
+      chainId,
+      totalLiquidity
+    )
   }
-
-  if (!poolsData.length || isTouchable) {
-    setArrayToShow()
-  }
-  // lastly, if there is a sort, sort
-  arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
+  setArrayToShow()
 
   useEffect(() => {
-    ;(!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
-    dispatch(setToggle({ isTouchable: true }))
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
@@ -302,9 +302,7 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
     })
     setStatsDisplay({ earnings, harvest })
-    setFilteredMode(filteredMode)
-    dispatch(setToggle({ isTouchable: false }))
-  }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable, aprData])
+  }, [weeklyEarnings, readyForHarvest, stakingInfos])
 
   const onSortChange = (key: string, value: string | boolean) => {
     switch (key) {
@@ -326,7 +324,6 @@ export default function Pools() {
     }
     const clone = { ...serializePoolControls, [key]: value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
-    dispatch(setToggle({ isTouchable: true }))
   }
 
   // toggle copy if rewards are inactive
