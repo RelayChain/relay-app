@@ -173,7 +173,7 @@ export default function Pool() {
                       ? 'BNB'
                       : chainId === ChainId.MOONBASE_ALPHA
                       ? 'DEV'
-                      : chainId === ChainId.MUMBAI
+                      : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
                       ? 'MATIC'
                       : 'AVAX'
                   }`}

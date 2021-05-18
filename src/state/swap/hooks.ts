@@ -96,23 +96,25 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
       return currency instanceof Token
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
         : CurrencyAmount.ether(
-            JSBI.BigInt(typedValueParsed),
-            process.env.REACT_APP_TESTNET
-              ? currency?.symbol === 'ETH'
-                ? ChainId.RINKEBY
-                : currency?.symbol === 'BNB'
+          JSBI.BigInt(typedValueParsed),
+          process.env.REACT_APP_TESTNET
+            ? currency?.symbol === 'ETH'
+              ? ChainId.RINKEBY
+              : currency?.symbol === 'BNB'
                 ? ChainId.SMART_CHAIN_TEST
                 : currency?.symbol === 'DEV'
-                ? ChainId.MOONBASE_ALPHA
-                : currency?.symbol === 'MATIC'
-                ? ChainId.MUMBAI
-                : ChainId.FUJI
-              : currency?.symbol === 'ETH'
+                  ? ChainId.MOONBASE_ALPHA
+                  : currency?.symbol === 'MATIC'
+                    ? ChainId.MUMBAI
+                    : ChainId.FUJI
+            : currency?.symbol === 'ETH'
               ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
-              ? ChainId.SMART_CHAIN
-              : ChainId.AVALANCHE
-          )
+                ? ChainId.SMART_CHAIN
+                :currency?.symbol === 'MATIC'
+                ? ChainId.MATIC
+                : ChainId.AVALANCHE
+        )
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -234,8 +236,8 @@ export function useDerivedSwapInfo(): {
         ? slippageAdjustedAmountsV1[Field.INPUT]
         : null
       : slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+        ? slippageAdjustedAmounts[Field.INPUT]
+        : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {

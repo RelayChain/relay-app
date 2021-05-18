@@ -19,17 +19,19 @@ export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount 
       ? currencyAmount?.currency === ETHER
         ? ChainId.RINKEBY
         : currencyAmount?.currency === BNB
-        ? ChainId.SMART_CHAIN_TEST
-        : currencyAmount?.currency === DEV
-        ? ChainId.MOONBASE_ALPHA
-        : currencyAmount?.currency === MATIC
-        ? ChainId.MUMBAI
-        : ChainId.FUJI
+          ? ChainId.SMART_CHAIN_TEST
+          : currencyAmount?.currency === DEV
+            ? ChainId.MOONBASE_ALPHA
+            : currencyAmount?.currency === MATIC
+              ? ChainId.MUMBAI
+              : ChainId.FUJI
       : currencyAmount?.currency === ETHER
-      ? ChainId.MAINNET
-      : currencyAmount?.currency === BNB
-      ? ChainId.SMART_CHAIN
-      : ChainId.AVALANCHE
+        ? ChainId.MAINNET
+        : currencyAmount?.currency === BNB
+          ? ChainId.SMART_CHAIN
+          : currencyAmount?.currency === MATIC
+            ? ChainId.MATIC
+            : ChainId.AVALANCHE
 
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH), chainId)

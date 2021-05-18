@@ -487,6 +487,29 @@ export const crosschainConfig: ChainbridgeConfig = {
         }
       ]
     },
+    {
+      chainId: 5,
+      networkId: 137,
+      name: 'Matic',
+      bridgeAddress: "0xF82B6C89A1D3340733eA4f74F9D111b5D7127876",
+      erc20HandlerAddress: "0xD02408A62ED3708429ccFb04d9dEA302884ab6a7",
+      rpcUrl: 'https://rpc-mainnet.matic.network',
+      type: 'Ethereum',
+      gasLimit: 6721975,
+      defaultGasPrice: 12.5,
+      blockExplorer: 'https://explorer-mainnet.maticvigil.com/',
+      nativeTokenSymbol: 'MATIC',
+      tokens: [
+        {
+          address: '0xBF7e0761417F49b3FAFae564C842823f5f79DB15',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000BF7e0761417F49b3FAFae564C842823f5f79DB1503'
+        },
+      ]
+    }
   ]
 
   // rinkeby - FUJI

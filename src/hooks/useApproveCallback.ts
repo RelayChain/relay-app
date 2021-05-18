@@ -4,7 +4,8 @@ import {
   ETH_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS,
-  MUMBAI_ROUTER_ADDRESS
+  MUMBAI_ROUTER_ADDRESS,
+  MATIC_ROUTER_ADDRESS
 } from '../constants'
 // import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
@@ -133,6 +134,9 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
       ? MOONBASE_ROUTER_ADDRESS
       : chainId === ChainId.MUMBAI
       ? MUMBAI_ROUTER_ADDRESS
+      : chainId === ChainId.MATIC
+      ? MATIC_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
+
   )
 }

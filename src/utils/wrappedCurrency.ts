@@ -22,6 +22,6 @@ export function unwrappedToken(token: Token, chainId?: ChainId): Currency {
   if ((token.equals(WETH[token.chainId]) && chainId === ChainId.SMART_CHAIN) || chainId === ChainId.SMART_CHAIN_TEST)
     return BNB
   if (token.equals(WETH[token.chainId]) && chainId === ChainId.MOONBASE_ALPHA) return DEV
-  if (token.equals(WETH[token.chainId]) && chainId === ChainId.MUMBAI) return MATIC
+  if (token.equals(WETH[token.chainId]) && (chainId === ChainId.MUMBAI || chainId === ChainId.MATIC)) return MATIC
   return token
 }

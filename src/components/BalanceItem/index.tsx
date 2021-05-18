@@ -1,6 +1,7 @@
 import { copyToClipboard, wait } from '../../utils'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
+import maticLogo from '../../assets/images/matic-logo.png'
 // import BigNumber from 'bignumber.js'
 import BinanceLogo from '../../assets/images/binance-logo.png'
 // import MoonbaseLogo from '../../assets/images/moonbase-logo.png'
@@ -152,6 +153,8 @@ export default function BalanceItem({
         return 'Moonbeam Logo'
       case ChainId.MUMBAI:
         return 'Mumbai logo'
+        case ChainId.MATIC:
+          return maticLogo  
       default:
         return EthereumLogo
     }

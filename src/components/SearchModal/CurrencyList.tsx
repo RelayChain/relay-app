@@ -235,7 +235,7 @@ export default function CurrencyList({
       ? Currency.BNB
       : chainId === ChainId.MOONBASE_ALPHA
       ? Currency.DEV
-      : chainId === ChainId.MUMBAI
+      : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
       ? Currency.MATIC
       : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
