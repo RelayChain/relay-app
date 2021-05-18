@@ -231,7 +231,7 @@ export default function Pools() {
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
   const aprAllData = usePoolsState()
-  const { aprData, poolsData, isTouchable, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
+  const { aprData, poolsData, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -284,15 +284,12 @@ export default function Pools() {
     arrayToShow = filterPoolsItems(stakingInfos, isLive, isStaked, readyForHarvest, filteredMode, totalLiquidity)
   }
 
-  if (!poolsData.length || isTouchable) {
     setArrayToShow()
-  }
+  
   // lastly, if there is a sort, sort
-  arrayToShow = searchItems(poolsData.length && !isTouchable ? poolsData : arrayToShow, searchText, chainId)
+  arrayToShow = searchItems(arrayToShow, searchText, chainId)
 
   useEffect(() => {
-    ;(!poolsData.length || isTouchable) && dispatch(setPoolsData({ poolsData: arrayToShow }))
-    dispatch(setToggle({ isTouchable: true }))
     let earnings: any = 0
     let harvest: any = 0
     Object.keys(weeklyEarnings).forEach(key => {
@@ -302,9 +299,7 @@ export default function Pools() {
       harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
     })
     setStatsDisplay({ earnings, harvest })
-    setFilteredMode(filteredMode)
-    dispatch(setToggle({ isTouchable: false }))
-  }, [weeklyEarnings, readyForHarvest, filteredMode, stakingInfos, isTouchable, aprData])
+  }, [weeklyEarnings, readyForHarvest, stakingInfos])
 
   const onSortChange = (key: string, value: string | boolean) => {
     switch (key) {
@@ -326,7 +321,6 @@ export default function Pools() {
     }
     const clone = { ...serializePoolControls, [key]: value }
     localStorage.setItem('PoolControls', JSON.stringify(clone))
-    dispatch(setToggle({ isTouchable: true }))
   }
 
   // toggle copy if rewards are inactive
