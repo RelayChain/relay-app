@@ -479,10 +479,16 @@ export default function Swap({
   const curA = useCurrency(token0);
   const curB = useCurrency(token1);
 
+  const [curAState, setCurAState] = useState(curA) // state for first token from Manage page
+  const [curBState, setCurBState] = useState(curB) // state for second token from Manage page
+
   useEffect(() => {
-    if (token0 && token1) {
-      handleInputSelect(curA)
+    if (curAState && curBState) {
+      // If there are tokens pair from Manage page set it on start and set null state to not force it again
+      handleInputSelect(curA)  
       handleOutputSelect(curB)
+      setCurAState(null)
+      setCurBState(null)
     }
   }, [token0, token1, curA, curB])
 
