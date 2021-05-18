@@ -375,13 +375,14 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           return new TokenAmount(
             rewardsToken,
             JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-              ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
+              ? JSBI.divide(
+                JSBI.divide(JSBI.multiply(JSBI.multiply(JSBI.BigInt(10 ** 15),totalRewardRate.raw), JSBI.multiply(JSBI.BigInt(10 ** 15),stakedAmount.raw)), JSBI.BigInt(10 ** 15)),
+                totalStakedAmount.raw)
               : JSBI.BigInt(0)
           )
         }
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
-
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
 
