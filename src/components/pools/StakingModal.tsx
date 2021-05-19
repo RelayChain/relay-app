@@ -57,7 +57,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       stakingInfo.stakedAmount.add(parsedAmountWrapped),
       stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
       stakingInfo.totalRewardRate,
-      60 * 60 * 24 * 7
+      60 * 60 * 24 * 7,
+      1
     )
   }
 

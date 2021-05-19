@@ -505,7 +505,8 @@ export default function Manage({
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRateWeekly
-                          ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
+                          ?.divide(JSBI.BigInt(10**15))
+                          .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
                             groupSeparator: ','
                           }) ?? '-'
                       : '0'}

@@ -283,6 +283,7 @@ export interface StakingInfo {
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount,
     seconds: number,
+    decimals:number,
   ) => TokenAmount
 }
 
@@ -387,7 +388,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakedAmount: TokenAmount,
           totalStakedAmount: TokenAmount,
           totalRewardRate: TokenAmount,
-          seconds: number
+          seconds: number,
+          decimals: number
 
         ): TokenAmount => {
           let amount = JSBI.BigInt(0);
@@ -395,7 +397,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
             const rr = JSBI.multiply(totalRewardRate.raw, JSBI.BigInt(seconds));
             const sa = stakedAmount.raw;
             const tsa = totalStakedAmount.raw;
-            const urr = JSBI.multiply(rr, sa);
+            const urr = JSBI.multiply(JSBI.multiply(rr, sa), JSBI.BigInt(decimals));
             amount = JSBI.divide(urr, tsa);
           }
           return new TokenAmount(
@@ -404,8 +406,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           )
         }
 
-        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1)
-        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7)
+        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1, 1)
+        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10**15)
 
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
