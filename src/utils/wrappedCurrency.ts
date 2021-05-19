@@ -1,7 +1,7 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && (currency === ETHER || currency === AVAX || currency === BNB || currency === DEV || currency === MATIC)
+  return chainId && currency && ETHER_CURRENCIES.includes(currency)
     ? WETH[chainId]
     : currency instanceof Token
     ? currency

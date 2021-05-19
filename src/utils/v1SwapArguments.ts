@@ -9,7 +9,8 @@ import {
   Token,
   Trade,
   TradeOptionsDeadline,
-  TradeType
+  TradeType,
+  ETHER_CURRENCIES
 } from '@zeroexchange/sdk'
 
 import { MaxUint256 } from '@ethersproject/constants'
@@ -36,18 +37,8 @@ export default function v1SwapArguments(
     throw new Error('too many pairs')
   }
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const inputETH =
-    trade.inputAmount.currency === ETHER ||
-    trade.inputAmount.currency === AVAX ||
-    trade.inputAmount.currency === BNB ||
-    trade.inputAmount.currency === MATIC ||
-    trade.inputAmount.currency === DEV
-  const outputETH =
-    trade.outputAmount.currency === ETHER ||
-    trade.outputAmount.currency === AVAX ||
-    trade.outputAmount.currency === BNB ||
-    trade.outputAmount.currency === MATIC ||
-    trade.outputAmount.currency === DEV
+  const inputETH = ETHER_CURRENCIES.includes(trade.inputAmount.currency)
+  const outputETH = ETHER_CURRENCIES.includes(trade.outputAmount.currency)
   if (inputETH && outputETH) throw new Error('ETHER to ETHER')
   const minimumAmountOut = toHex(trade.minimumAmountOut(options.allowedSlippage))
   const maximumAmountIn = toHex(trade.maximumAmountIn(options.allowedSlippage))

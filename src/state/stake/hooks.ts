@@ -240,10 +240,10 @@ export const STAKING_REWARDS_INFO: {
     },
   ],
   [ChainId.MATIC]: [
-    {
-      tokens: [WMATIC, MZERO],
-      stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
-    },
+    // {
+    //   tokens: [WMATIC, MZERO],
+    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
+    // },
   ]
 }
 

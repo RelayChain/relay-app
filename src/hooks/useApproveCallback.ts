@@ -7,7 +7,6 @@ import {
   MUMBAI_ROUTER_ADDRESS,
   MATIC_ROUTER_ADDRESS
 } from '../constants'
-// import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 
@@ -118,8 +117,6 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  // const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
   return useApproveCallback(
     amountToApprove,
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY

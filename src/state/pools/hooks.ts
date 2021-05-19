@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
-import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -59,14 +59,10 @@ export function useStakingInfoTop(
   const stakingRewardAddress = stakingInfoTop.stakingRewardAddress
   const isStaking = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
-  const token =
-    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
-      ? tokenB
-      : tokenA
-  const WETH =
-    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
-      ? tokenA
-      : tokenB
+  const [token, WETH] =
+      currencyA && ETHER_CURRENCIES.includes(currencyA)
+      ? [tokenB, tokenA]
+      : [tokenA, tokenB]
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens

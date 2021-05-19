@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, CurrencyAmount, ETHER, JSBI } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, CurrencyAmount, ETHER, JSBI, ETHER_CURRENCIES, Currency, CHAIN_IDS_AND_CURRENCIES } from '@zeroexchange/sdk'
 
 import { MIN_ETH } from '../constants'
 
@@ -8,28 +8,22 @@ import { MIN_ETH } from '../constants'
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (
-    currencyAmount.currency === ETHER ||
-    currencyAmount.currency === AVAX ||
-    currencyAmount.currency === BNB ||
-    currencyAmount.currency === DEV ||
-    currencyAmount.currency === MATIC
-  ) {
+  if (ETHER_CURRENCIES.includes(currencyAmount.currency)) {
     const chainId = process.env.REACT_APP_TESTNET
-      ? currencyAmount?.currency === ETHER
+      ? currencyAmount.currency === ETHER
         ? ChainId.RINKEBY
-        : currencyAmount?.currency === BNB
+        : currencyAmount.currency === BNB
           ? ChainId.SMART_CHAIN_TEST
-          : currencyAmount?.currency === DEV
+          : currencyAmount.currency === DEV
             ? ChainId.MOONBASE_ALPHA
-            : currencyAmount?.currency === MATIC
+            : currencyAmount.currency === MATIC
               ? ChainId.MUMBAI
               : ChainId.FUJI
-      : currencyAmount?.currency === ETHER
+      : currencyAmount.currency === ETHER
         ? ChainId.MAINNET
-        : currencyAmount?.currency === BNB
+        : currencyAmount.currency === BNB
           ? ChainId.SMART_CHAIN
-          : currencyAmount?.currency === MATIC
+          : currencyAmount.currency === MATIC
             ? ChainId.MATIC
             : ChainId.AVALANCHE
 

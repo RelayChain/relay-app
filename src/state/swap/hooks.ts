@@ -18,7 +18,6 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
-import { useV1Trade } from '../../data/V1'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -194,8 +193,6 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
 
-  // get link to trade on v1, if a better rate exists
-  // const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
   const v1Trade = undefined
 
   let inputError: string | undefined

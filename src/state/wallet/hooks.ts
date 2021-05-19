@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
@@ -119,7 +119,7 @@ export function useCurrencyBalances(
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER || currency === AVAX || currency === BNB || currency === DEV || currency === MATIC) return ethBalance[account]
+        if (ETHER_CURRENCIES.includes(currency)) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]

@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, Currency, ETHER, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, Currency, ETHER, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 
 import { tryParseAmount } from '../state/swap/hooks'
 import { useActiveWeb3React } from './index'
@@ -35,12 +35,6 @@ export default function useWrapCallback(
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
-    // console.log('WETH[chainId]', WETH[chainId])
-    // console.log('outputCurrency', outputCurrency)
-    // console.log('outputCurrency', inputCurrency)
-    // console.log('currencyEquals outputCurrency=', currencyEquals(WETH[chainId], outputCurrency))
-    // console.log('currencyEquals inputCurrency=', currencyEquals(WETH[chainId], inputCurrency))
-    // console.log('asdasdasd=', inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB)
     if (
       ([ETHER, AVAX, BNB, DEV, MATIC].includes(inputCurrency)) &&
       currencyEquals(WETH[chainId], outputCurrency)
@@ -62,7 +56,7 @@ export default function useWrapCallback(
       }
     } else if (
       currencyEquals(WETH[chainId], inputCurrency) &&
-      ([ETHER, AVAX, BNB, DEV, MATIC].includes(outputCurrency))
+      (ETHER_CURRENCIES.includes(outputCurrency))
     ) {
       return {
         wrapType: WrapType.UNWRAP,

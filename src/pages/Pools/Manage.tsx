@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
@@ -270,15 +270,10 @@ export default function Manage({
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-
-  const token =
-    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
-      ? tokenB
-      : tokenA
-  const WETH =
-    currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC
-      ? tokenA
-      : tokenB
+  
+  const [token, WETH] = currencyA && ETHER_CURRENCIES.includes(currencyA)
+      ? [tokenB, tokenA]
+      : [tokenA, tokenB];
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens

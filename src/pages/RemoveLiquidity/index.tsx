@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS
@@ -255,8 +255,9 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
-    const oneCurrencyIsETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC || currencyBIsETH
+    const currencyAIsETH = ETHER_CURRENCIES.includes(currencyA)
+    const currencyBIsETH = ETHER_CURRENCIES.includes(currencyB)
+    const oneCurrencyIsETH = currencyAIsETH || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -477,17 +478,9 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH =
-    currencyA === ETHER ||
-    currencyB === ETHER ||
-    currencyB === BNB ||
-    currencyB === AVAX ||
-    currencyB === DEV ||
-    currencyB === MATIC ||
-    currencyA === AVAX ||
-    currencyA === BNB ||
-    currencyA === MATIC ||
-    currencyA === DEV
+  const currencyAIsETH = currencyA && ETHER_CURRENCIES.includes(currencyA);
+  const currencyBIsETH = currencyB && ETHER_CURRENCIES.includes(currencyB);
+  const oneCurrencyIsETH = currencyAIsETH || currencyBIsETH;
   const oneCurrencyIsWETH = Boolean(
     chainId &&
     ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -641,10 +634,10 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+                            to={`/remove/${currencyA && ETHER_CURRENCIES.includes(currencyA)
                               ? WETH[chainId].address
                               : currencyIdA
-                              }/${currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+                              }/${currencyB && ETHER_CURRENCIES.includes(currencyB)
                                 ? WETH[chainId].address
                                 : currencyIdB
                               }`}
