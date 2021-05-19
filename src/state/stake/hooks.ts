@@ -64,6 +64,10 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], ZERO],
       stakingRewardAddress: '0x6c32Eac6Cc240d507aC88ca73183c5CcC135b09C'
     },
     {
