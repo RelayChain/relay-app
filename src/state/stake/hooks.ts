@@ -272,6 +272,8 @@ export interface StakingInfo {
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
   rewardRate: TokenAmount
+  
+  rewardRateWeekly: TokenAmount
   // when the period ends
   periodFinish: Date | undefined
   // if pool is active
@@ -283,7 +285,9 @@ export interface StakingInfo {
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
     totalStakedAmount: TokenAmount,
-    totalRewardRate: TokenAmount
+    totalRewardRate: TokenAmount,
+    seconds: number,
+    decimals:number,
   ) => TokenAmount
 }
 
@@ -387,19 +391,28 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const getHypotheticalRewardRate = (
           stakedAmount: TokenAmount,
           totalStakedAmount: TokenAmount,
-          totalRewardRate: TokenAmount
+          totalRewardRate: TokenAmount,
+          seconds: number,
+          decimals: number
+
         ): TokenAmount => {
+          let amount = JSBI.BigInt(0);
+          if (JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))) {
+            const rr = JSBI.multiply(totalRewardRate.raw, JSBI.BigInt(seconds));
+            const sa = stakedAmount.raw;
+            const tsa = totalStakedAmount.raw;
+            const urr = JSBI.multiply(JSBI.multiply(rr, sa), JSBI.BigInt(decimals));
+            amount = JSBI.divide(urr, tsa);
+          }
           return new TokenAmount(
             rewardsToken,
-            JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-              ? JSBI.divide(
-                JSBI.divide(JSBI.multiply(JSBI.multiply(JSBI.BigInt(10 ** 15),totalRewardRate.raw), JSBI.multiply(JSBI.BigInt(10 ** 15),stakedAmount.raw)), JSBI.BigInt(10 ** 15)),
-                totalStakedAmount.raw)
-              : JSBI.BigInt(0)
+            amount
           )
         }
 
-        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
+        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1, 1)
+        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10**15)
+
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
 
@@ -415,6 +428,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
           earnedAmount: new TokenAmount(rewardsToken, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
           rewardRate: individualRewardRate,
+          rewardRateWeekly: individualRewardRateWeekly,
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
