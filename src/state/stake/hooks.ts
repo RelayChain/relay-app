@@ -107,6 +107,11 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, WAVAX],
       // new one:
+      stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
+    },
+    {
+      tokens: [zZERO, WAVAX],
+      // new one:
       stakingRewardAddress: '0x45eD4A1f9D573A6bFec9B9fDCE2954aDD62D8e77'
     },
     {
@@ -125,6 +130,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zETH],
       stakingRewardAddress: '0x869bE5d543226e0Cda93416aaC093b472c99c3A8'
+    },
+    {
+      tokens: [zZERO, zUSDT],
+      stakingRewardAddress: '0x51b53dDAd48bcCfb23f9091Ad2bC87Aa9417eb85'
     },
     {
       tokens: [zZERO, zUSDT],
@@ -192,6 +201,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [bscZERO, bscUSDC],
       stakingRewardAddress: '0x0Ff36b5F7B87Bb61BE8305F9b47c83910560DF95'
+    },
+    {
+      tokens: [bscZERO, bscUSDT],
+      stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575'
     },
     {
       tokens: [bscZERO, bscUSDT],
