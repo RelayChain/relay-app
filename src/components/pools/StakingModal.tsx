@@ -56,7 +56,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount.add(parsedAmountWrapped),
       stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalRewardRate
+      stakingInfo.totalRewardRate,
+      60 * 60 * 24 * 7
     )
   }
 
@@ -226,7 +227,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             </div>
 
             <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
+              {hypotheticalRewardRate.toSignificant(4, { groupSeparator: ',' })}{' '}
               {stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week
             </TYPE.black>
           </HypotheticalRewardRate>

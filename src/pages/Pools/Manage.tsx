@@ -504,9 +504,7 @@ export default function Manage({
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
-                      ? stakingInfo?.rewardRate
-                          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                          ?.divide(JSBI.BigInt(10 ** 15))
+                      ? stakingInfo?.rewardRateWeekly
                           ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
                             groupSeparator: ','
                           }) ?? '-'
