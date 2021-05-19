@@ -32,7 +32,9 @@ function currencyKey(currency: Currency): string {
     return 'BNB'
   } else if (currency === DEV) {
     return 'DEV'
-  } else {
+  } else if (currency === MATIC) {
+    return 'MATIC'
+  }else {
     return ''
   }
 }
@@ -140,7 +142,7 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
-    return currency === ETHER || currency === AVAX || currency === BNB || currency === DEV
+    return [ETHER, AVAX, BNB, DEV, MATIC].includes(currency)
   }
 
   if (unseenCustomToken && customAdded) {

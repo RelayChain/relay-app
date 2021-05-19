@@ -185,7 +185,7 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.MUMBAI) {
     return 'Mumbai'
   } else if (chainID === ChainId.MATIC) {
-    return 'Matic'
+    return 'Polygon'
   }
   return ''
 }

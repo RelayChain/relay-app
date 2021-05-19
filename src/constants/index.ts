@@ -86,6 +86,7 @@ export const bscCHART = new Token(ChainId.SMART_CHAIN, '0xc33A42C9D19f944FA12ff4
 export const bscWISB = new Token(ChainId.SMART_CHAIN, '0x4f491d389A5bF7C56bd1e4d8aF2280fD217C8543', 18, 'WISB', 'Wise Token')
 
 export const WMATIC = new Token(ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped Matic (WMATIC)')
+export const MZERO = new Token(ChainId.MATIC, '0xb67176655e7919a27aA34C279157124619aDFd4B', 18, 'MZERO', 'ZERO in Polygon')
 
 export const rinkebyZERO = new Token(ChainId.RINKEBY, '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a', 18, 'ZERO', 'Zero Exchange')
 export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
@@ -328,7 +329,7 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.SMART_CHAIN_TEST]: 'Smart Chain',
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.MATIC]: 'Matic'
+  [ChainId.MATIC]: 'Polygon'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic']

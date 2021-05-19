@@ -175,7 +175,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.MATIC]: 'Matic'
+  [ChainId.MATIC]: 'Polygon'
 }
 
 const NETWORK_SYMBOLS: any = {
@@ -187,7 +187,7 @@ const NETWORK_SYMBOLS: any = {
   Avalanche: 'AVAX',
   SmartChain: 'BNB',
   Moonbeam: 'DEV',
-  Matic: 'MATIC'
+  Polygon: 'MATIC'
 }
 
 const popupContent: PopupContent = {

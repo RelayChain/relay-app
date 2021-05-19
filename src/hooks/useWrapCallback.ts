@@ -42,7 +42,7 @@ export default function useWrapCallback(
     // console.log('currencyEquals inputCurrency=', currencyEquals(WETH[chainId], inputCurrency))
     // console.log('asdasdasd=', inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB)
     if (
-      (inputCurrency === ETHER || inputCurrency === AVAX || inputCurrency === BNB || inputCurrency === DEV || inputCurrency === MATIC) &&
+      ([ETHER, AVAX, BNB, DEV, MATIC].includes(inputCurrency)) &&
       currencyEquals(WETH[chainId], outputCurrency)
     ) {
       return {
@@ -62,7 +62,7 @@ export default function useWrapCallback(
       }
     } else if (
       currencyEquals(WETH[chainId], inputCurrency) &&
-      (outputCurrency === ETHER || outputCurrency === AVAX || outputCurrency === BNB || outputCurrency === DEV || outputCurrency === MATIC)
+      ([ETHER, AVAX, BNB, DEV, MATIC].includes(outputCurrency))
     ) {
       return {
         wrapType: WrapType.UNWRAP,
