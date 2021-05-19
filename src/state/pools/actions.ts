@@ -17,3 +17,8 @@ export const replacePoolsState = createAction<{
   liquidityValue: any
   contract: any
 }>('pools/replacePoolsState')
+
+export const setPoolEarnings = createAction<{
+  weeklyEarningsTotalValue: any
+  readyForHarvestTotalValue: any  
+}>('pools/setPoolEarnings')

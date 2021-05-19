@@ -3,7 +3,8 @@ import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import React from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
-
+import { CustomLightSpinner} from '../../theme'
+import Circle from '../../assets/images/blue-loader.svg'
 import { CountUp } from 'use-count-up'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import SettingIcon from '../Settings/SettingIcon'
@@ -87,21 +88,7 @@ const DetailsBox = styled.div`
   position: relative;
 `
 
-export default function PoolCard({
-  stakingInfoTop,
-  harvestSent,
-  earningsSent,
-  liquiditySent,
-  onHarvest,
-  stakingInfoAPR
-}: {
-  stakingInfoTop: StakingInfo | any
-  harvestSent: any
-  earningsSent: any
-  liquiditySent: any
-  onHarvest: any
-  stakingInfoAPR: any
-}) {
+export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop: StakingInfo | any; onHarvest: any }) {
   const {
     countUpAmount,
     isStaking,
@@ -114,7 +101,7 @@ export default function PoolCard({
     valueOfTotalStakedAmountInWETH,
     countUpAmountPrevious,
     symbol
-  } = useStakingInfoTop(stakingInfoTop, harvestSent, earningsSent, liquiditySent)
+  } = useStakingInfoTop(stakingInfoTop)
 
   if (stakingInfoTop.isHidden) {
     return <></>
@@ -138,7 +125,7 @@ export default function PoolCard({
             APR
           </TYPE.main>
           <TYPE.main fontWeight={500} fontSize={15}>
-            {stakingInfoAPR ? stakingInfoAPR + '%' : '-'}
+            {stakingInfoTop.APR ? stakingInfoTop.APR + '%' : '-'}
           </TYPE.main>
         </Row>
         <Row style={{ marginBottom: '10px' }}>
@@ -158,9 +145,11 @@ export default function PoolCard({
             Liquidity
           </TYPE.main>
           <TYPE.main fontWeight={500} fontSize={15}>
-            {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
+          {valueOfTotalStakedAmountInUSDC || valueOfTotalStakedAmountInWETH
+              ? valueOfTotalStakedAmountInUSDC
+                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' })} ${symbol}`
+              : <CustomLightSpinner src={Circle} alt="loader" size={'15px'} />}
           </TYPE.main>
         </Row>
         <Row style={{ marginBottom: '10px' }}>
