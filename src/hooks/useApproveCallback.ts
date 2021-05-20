@@ -4,9 +4,9 @@ import {
   ETH_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS,
-  MUMBAI_ROUTER_ADDRESS
+  MUMBAI_ROUTER_ADDRESS,
+  MATIC_ROUTER_ADDRESS
 } from '../constants'
-// import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 
@@ -41,11 +41,7 @@ export function useApproveCallback(
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
-    if (amountToApprove.currency === AVAX) return ApprovalState.APPROVED
-    if (amountToApprove.currency === BNB) return ApprovalState.APPROVED
-    if (amountToApprove.currency === DEV) return ApprovalState.APPROVED
-    if (amountToApprove.currency === MATIC) return ApprovalState.APPROVED
+    if([ETHER, AVAX, BNB, DEV, MATIC].includes(amountToApprove.currency)) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -121,8 +117,6 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  // const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
   return useApproveCallback(
     amountToApprove,
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
@@ -133,6 +127,9 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
       ? MOONBASE_ROUTER_ADDRESS
       : chainId === ChainId.MUMBAI
       ? MUMBAI_ROUTER_ADDRESS
+      : chainId === ChainId.MATIC
+      ? MATIC_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
+
   )
 }

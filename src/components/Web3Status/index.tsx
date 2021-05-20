@@ -220,13 +220,11 @@ function Web3StatusInner() {
   const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
 
   useEffect(() => {
-    console.log('207chainIdError:>> ', chainIdError);
     chainIdErrorPrev.current = (chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}') ?
       chainIdErrorPrev.current = chainIdError : chainIdErrorPrev.current
   }, [chainIdError])
 
   const checkCrossChainId = useCallback(() => {
-    console.log('213chainIdErrorPrev.current = chainIdError :>> ', chainIdErrorPrev.current, chainIdError);
     if (chainIdErrorPrev.current !== chainIdError) {
       setShowCrossChainModal(true)
       chainIdErrorPrev.current = chainIdError

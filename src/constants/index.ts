@@ -13,6 +13,10 @@ export const ETH_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
   ? '0x70Ee974E2339E41D582593622c8a653842d9d52d'
   : '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
+export const MATIC_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
+  ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0'
+  : '0x9894B0F28CcfA0F5c5F74EAC88f161110C5F8027'
+
 export const MOONBASE_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0xaD3eE6686B40655b34e0D150f99715c87A75DF37' : ''
 
 export const MUMBAI_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
@@ -81,6 +85,9 @@ export const bscINDA = new Token(ChainId.SMART_CHAIN, '0xc878a79b63a41a831e469ae
 export const bscCHART = new Token(ChainId.SMART_CHAIN, '0xc33A42C9D19f944FA12ff46f27B3B85e18a13778', 18, 'CHART', 'ChartEx')
 export const bscWISB = new Token(ChainId.SMART_CHAIN, '0x4f491d389A5bF7C56bd1e4d8aF2280fD217C8543', 18, 'WISB', 'Wise Token')
 
+export const WMATIC = new Token(ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped Matic (WMATIC)')
+export const MZERO = new Token(ChainId.MATIC, '0xb67176655e7919a27aA34C279157124619aDFd4B', 18, 'MZERO', 'ZERO in Polygon')
+
 export const rinkebyZERO = new Token(ChainId.RINKEBY, '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a', 18, 'ZERO', 'Zero Exchange')
 export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
 export const MOCK1 = new Token(ChainId.FUJI, '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351', 18, 'MOCK1', 'MOCK1 in Avalanche')
@@ -107,7 +114,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.SMART_CHAIN]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.SMART_CHAIN_TEST]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -133,7 +141,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.SMART_CHAIN]: [WETH[ChainId.SMART_CHAIN]],
   [ChainId.SMART_CHAIN_TEST]: [WETH[ChainId.SMART_CHAIN_TEST]],
   [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
-  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
+  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
+  [ChainId.MATIC]: [WETH[ChainId.MATIC]]
 }
 
 // used to construct intermediary pairs for trading
@@ -143,7 +152,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.RINKEBY]: [...WETH_ONLY[ChainId.RINKEBY], rinkebyZERO, rinkebyUSDC],
   // [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2],
   [ChainId.SMART_CHAIN]: [...WETH_ONLY[ChainId.SMART_CHAIN], WBNB, bscZERO, bscBUSD, bscUSDC],
-  [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], WAVAX, zZERO, zUSDC]
+  [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], WAVAX, zZERO, zUSDC],
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], WMATIC]
 }
 
 /**
@@ -170,7 +180,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.SMART_CHAIN_TEST]: [],
   [ChainId.FUJI]: [],
   [ChainId.MOONBASE_ALPHA]: [],
-  [ChainId.MUMBAI]: []
+  [ChainId.MUMBAI]: [],
+  [ChainId.MATIC]: []
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -317,10 +328,11 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.SMART_CHAIN]: 'Smart Chain',
   [ChainId.SMART_CHAIN_TEST]: 'Smart Chain',
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
-  [ChainId.MUMBAI]: 'Mumbai'
+  [ChainId.MUMBAI]: 'Mumbai',
+  [ChainId.MATIC]: 'Polygon'
 }
 
-export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot']
+export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
 
@@ -332,5 +344,6 @@ export const NATIVE_CURRENCY = {
   [ChainId.SMART_CHAIN]: BNB,
   [ChainId.SMART_CHAIN_TEST]: BNB,
   [ChainId.MOONBASE_ALPHA]: DEV,
-  [ChainId.MUMBAI]: MATIC
+  [ChainId.MUMBAI]: MATIC,
+  [ChainId.MATIC]: MATIC
 }

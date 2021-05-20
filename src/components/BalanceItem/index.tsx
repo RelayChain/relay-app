@@ -1,6 +1,7 @@
 import { copyToClipboard, wait } from '../../utils'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
+import MaticLogo from '../../assets/images/matic-logo.png'
 // import BigNumber from 'bignumber.js'
 import BinanceLogo from '../../assets/images/binance-logo.png'
 // import MoonbaseLogo from '../../assets/images/moonbase-logo.png'
@@ -152,6 +153,8 @@ export default function BalanceItem({
         return 'Moonbeam Logo'
       case ChainId.MUMBAI:
         return 'Mumbai logo'
+      case ChainId.MATIC:
+        return MaticLogo
       default:
         return EthereumLogo
     }
@@ -166,7 +169,7 @@ export default function BalanceItem({
   return isNative ||
     (!isStaked && !isNative && hasABalance) ||
     (isStaked && ((isContained && !hasABalance) || !isContained)) ? (
-    <BalanceCard onClick={selectBalance} className={ isLast ? 'last' : isFirst ? 'first' : ''}>
+    <BalanceCard onClick={selectBalance} className={isLast ? 'last' : isFirst ? 'first' : ''}>
       <BubbleBase />
       <BoxFlex>
         {isNative ? <StyledEthereumLogo src={returnChainLogo()} /> : <CurrencyLogo size="48px" currency={token} />}

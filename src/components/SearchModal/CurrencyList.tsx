@@ -32,7 +32,9 @@ function currencyKey(currency: Currency): string {
     return 'BNB'
   } else if (currency === DEV) {
     return 'DEV'
-  } else {
+  } else if (currency === MATIC) {
+    return 'MATIC'
+  }else {
     return ''
   }
 }
@@ -140,7 +142,7 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
-    return currency === ETHER || currency === AVAX || currency === BNB || currency === DEV
+    return [ETHER, AVAX, BNB, DEV, MATIC].includes(currency)
   }
 
   if (unseenCustomToken && customAdded) {
@@ -235,7 +237,7 @@ export default function CurrencyList({
       ? Currency.BNB
       : chainId === ChainId.MOONBASE_ALPHA
       ? Currency.DEV
-      : chainId === ChainId.MUMBAI
+      : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
       ? Currency.MATIC
       : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [

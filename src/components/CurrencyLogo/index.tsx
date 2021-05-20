@@ -2,6 +2,7 @@ import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
 
 import AvaxLogo from '../../assets/images/avax-logo.png'
+import MaticLogo from '../../assets/images/matic-logo.png'
 import BNBLogo from '../../assets/images/binance-coin-logo.webp'
 // import DEVLogo from '../../assets/images/DEV-logo'
 import BTCLogo from '../../assets/images/crosschain/wBTC.png'
@@ -45,7 +46,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   border-radius: 24px;
 `
 
-const StyledLogo = styled(Logo)<{ size: string }>`
+const StyledLogo = styled(Logo) <{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
@@ -104,21 +105,15 @@ export default function CurrencyLogo({
   }
   // [ChainId.MUMBAI]: 'Mumbai'
   if (
-    currency?.symbol === 'DEV' ||
-    currency?.symbol === 'WDEV' ||
-    currency?.symbol === 'wDEV' ||
-    currency?.symbol === 'eDEV'
+    ['DEV', 'WDEV', 'wDEV', 'eDEV'].includes(String(currency?.symbol))
   ) {
     return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
   }
 
   if (
-    currency?.symbol === 'MATIC' ||
-    currency?.symbol === 'WMATIC' ||
-    currency?.symbol === 'wMATIC' ||
-    currency?.symbol === 'eMATIC'
+    ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC'].includes(String(currency?.symbol))
   ) {
-    return <StyledEthereumLogo src="" alt="MATIC" size={size} style={style} />
+    return <StyledEthereumLogo src={MaticLogo} alt="MATIC" size={size} style={style} />
   }
 
   if (['INDA'].includes(String(currency?.symbol))) {

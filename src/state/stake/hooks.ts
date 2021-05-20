@@ -30,7 +30,9 @@ import {
   zUSDT,
   zZERO,
   zCHART,
-  bscWISB
+  bscWISB,
+  WMATIC,
+  MZERO
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -253,6 +255,12 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
       rewardInfo: { rewardToken: bscWISB }
     },
+  ],
+  [ChainId.MATIC]: [
+    // {
+    //   tokens: [WMATIC, MZERO],
+    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
+    // },
   ]
 }
 
