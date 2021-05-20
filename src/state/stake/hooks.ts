@@ -257,10 +257,10 @@ export const STAKING_REWARDS_INFO: {
     },
   ],
   [ChainId.MATIC]: [
-    // {
-    //   tokens: [WMATIC, MZERO],
-    //   stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
-    // },
+    {
+      tokens: [WETH[ChainId.MATIC], MZERO],
+      stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
+    },
   ]
 }
 
