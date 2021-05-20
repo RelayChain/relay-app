@@ -23,6 +23,7 @@ import GraphQLProvider from './../graphql'
 import Guides from './Guides'
 import Header from '../components/Header'
 import Home from './Home'
+import Staking from './Staking'
 import Manage from './Pools/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
@@ -112,7 +113,7 @@ export default function App() {
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/find" component={PoolFinder} />
-                {/*<Route exact strict path="/pool" component={Pool} />*/}
+                <Route exact strict path="/staking" component={Staking} />
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
                 <Route exact strict path="/vote" component={Vote} />
