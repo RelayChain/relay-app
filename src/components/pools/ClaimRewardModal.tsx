@@ -1,17 +1,18 @@
+import { CloseIcon, TYPE } from '../../theme'
+import { LoadingView, SubmittedView } from '../ModalViews'
 import React, { useState } from 'react'
-import Modal from '../Modal'
+
 import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useStakingContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useActiveWeb3React } from '../../hooks'
+import styled from 'styled-components'
 import toEllipsis from './../../utils/toEllipsis'
+import { useActiveWeb3React } from '../../hooks'
+import { useStakingContract } from '../../hooks/useContract'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -48,7 +49,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claim accumulated ZERO rewards`
+            summary: `Claim accumulated ${stakingInfo?.rewardsTokenSymbol || ''} rewards`
           })
           setHash(response.hash)
         })
@@ -85,7 +86,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
                     : 0
                 )}
               </TYPE.body>
-              <TYPE.body>Unclaimed ZERO</TYPE.body>
+              <TYPE.body>Unclaimed {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
@@ -99,7 +100,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} ZERO</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -107,7 +108,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Claimed ZERO!</TYPE.body>
+            <TYPE.body fontSize={20}>Claimed {stakingInfo?.rewardsTokenSymbol || 'ZERO'}!</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

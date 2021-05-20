@@ -16,20 +16,7 @@ import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import { dateFormatted } from 'utils/getFormattedMonth'
-
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-padding: 0;
-`};
-`
+import { Title } from '../../theme'
 
 const BubbleMarginWrap = styled.div`
   display: flex;
@@ -53,11 +40,10 @@ const Flex = styled.div<{ isColumn: boolean }>`
   flex-direction: column;
   align-items: center;
   gap: 3rem;
-  margin: 40px auto 0;
+  margin: 10px auto 0;
 `};
   ${({ theme }) => theme.mediaWidth.upToSmall`
   gap: 2rem;
-  margin: 20px auto 0;
 `};
 `
 const CenterWrap = styled.div`

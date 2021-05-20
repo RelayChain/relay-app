@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { PairState, usePair } from '../../data/Reserves'
@@ -84,7 +84,7 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === ETHER || dependentCurrency === AVAX || dependentCurrency === BNB || dependentCurrency === MATIC || dependentCurrency === DEV
+        return dependentCurrency && ETHER_CURRENCIES.includes(dependentCurrency)
           ? CurrencyAmount.ether(dependentTokenAmount.raw, chainId)
           : dependentTokenAmount
       }

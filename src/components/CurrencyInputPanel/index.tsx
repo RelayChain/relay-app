@@ -419,6 +419,7 @@ export default function CurrencyInputPanel({
             otherSelectedCurrency={otherCurrency}
             showCommonBases={!isCrossChain}
             isCrossChain={isCrossChain}
+            transferPage={transferPage}
           />
         )}
         {!disableBlockchainSelect && onBlockchainSelect && (

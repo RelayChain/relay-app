@@ -1,5 +1,6 @@
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BSCLogo from '../../assets/images/binance-logo.png'
+import PolygonLogo from '../../assets/images/polygon-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import PolkadotLogo from '../../assets/images/polkadot-logo.png'
 import React from 'react'
@@ -43,8 +44,8 @@ export default function BlockchainLogo({
     return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
   }
 
-  if (blockchain === 'Mumbai' || blockchain === 'MATIC') {
-    return <StyledEthereumLogo src="" alt="MATIC" size={size} style={style} />
+  if (blockchain === 'Mumbai' || blockchain === 'Polygon' || blockchain === 'Matic') {
+    return <StyledEthereumLogo src={PolygonLogo} alt="MATIC" size={size} style={style} />
   }
 
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />

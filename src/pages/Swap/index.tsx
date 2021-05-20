@@ -7,7 +7,7 @@ import Card, { GreyCard } from '../../components/Card'
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import Column, { AutoColumn } from '../../components/Column'
 import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -42,6 +42,7 @@ import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
 import ProgressSteps from '../../components/ProgressSteps'
 import { ProposalStatus } from '../../state/crosschain/actions'
+import { RouteComponentProps } from 'react-router-dom'
 import Settings from '../../components/Settings'
 import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -82,17 +83,7 @@ const SwapOuterWrap = styled.div`
 padding: 0;
 `};
 `
-const Title = styled.h1`
-  width: 100%;
-  padding: 0px 64px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 0;
-  text-align: center;
-  font-size: 49px;
-  margin-top: 40px;
-  margin-bottom: 0px;
-`};
-`
+
 const SubTitle = styled.h2`
   font-size: 32px;
 `
@@ -118,6 +109,7 @@ const SwapWrap = styled.div`
     margin-left: auto;
   `};
   ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-top: 10px
   width: 100%;
   `};
   position: sticky;
@@ -156,29 +148,28 @@ const BalanceRow = styled.div<{ isColumn?: boolean }>`
   overflow-y: scroll;
   padding-right: 1rem;
   padding-left: 1rem;
-  #style-7::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	background-color: rgba(0,0,0,.5);
-	border-radius: 10px;
-}
+  #style-7::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+  }
 
-&::-webkit-scrollbar
-{
-	width: 10px;
-	background-color: rgba(0,0,0,.5);
-}
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
-&::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	background-image: -webkit-gradient(linear,
-									   left bottom,
-									   left top,
-                     color-stop(0.44, rgb(41, 32, 98)),
-									   color-stop(0.72, rgb(51, 40, 123)),
-									   color-stop(0.86, rgb(61, 49, 148)));
-}
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0.44, rgb(41, 32, 98)),
+      color-stop(0.72, rgb(51, 40, 123)),
+      color-stop(0.86, rgb(61, 49, 148))
+    );
+  }
 `
 const ChainBridgePending = styled.div`
   display: flex;
@@ -235,7 +226,9 @@ const Header = styled.div`
   margin-bottom: 1rem;
 `
 
-export default function Swap() {
+export default function Swap({
+  ...props
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   useCrossChain()
 
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -479,6 +472,27 @@ export default function Swap() {
     [onCurrencySelection]
   )
 
+  // for navigating from pools Manage page via trade button
+  const propsState: any = props?.location?.state
+  const token0: any = propsState?.token0 ? propsState?.token0 : null
+  const token1: any = propsState?.token1 ? propsState?.token1 : null
+  const curA = useCurrency(token0);
+  const curB = useCurrency(token1);
+
+  const [curAState, setCurAState] = useState(curA) // state for first token from Manage page
+  const [curBState, setCurBState] = useState(curB) // state for second token from Manage page
+
+  useEffect(() => {
+    if (curAState && curBState) {
+      // If there are tokens pair from Manage page set it on start and set null state to not force it again
+      handleInputSelect(curA)  
+      handleOutputSelect(curB)
+      setCurAState(null)
+      setCurBState(null)
+    }
+  }, [token0, token1, curA, curB])
+
+
   // swaps or cross chain
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
 
@@ -491,6 +505,9 @@ export default function Swap() {
 
   const nativeCurrency = NATIVE_CURRENCY[chainId ? chainId : ChainId.MAINNET]
   const onSelectBalance = (isNative: boolean, token?: any) => {
+    // clear inputs before changing tokens
+    onUserInput(Field.INPUT, '')
+    onUserInput(Field.OUTPUT, '')
     if (!currencies[Field.INPUT]) {
       handleInputSelect(isNative ? nativeCurrency : token)
     } else if (!currencies[Field.OUTPUT]) {
@@ -499,6 +516,7 @@ export default function Swap() {
       handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
+  
   const [stakedTokens, setStakedTokens] = useState<Token[]>([])
   const stakingInfos = useStakingInfo()
 
@@ -508,12 +526,12 @@ export default function Swap() {
     )
     // use set to avoid duplicates
     // reset array to [] each time
-    const arr: any = new Set();
+    const arr: any = new Set()
     for (let st of stakedPools) {
       arr.add(st?.tokens[0])
-      arr.add(st?.tokens[1]);
+      arr.add(st?.tokens[1])
     }
-    setStakedTokens([...arr]);
+    setStakedTokens([...arr])
   }, [stakingInfos])
 
   useEffect(() => {
@@ -529,15 +547,21 @@ export default function Swap() {
     })
 
   const tokenBalances = useMemo(() => {
-    return availableTokens
+    const arr = availableTokens
       .map((x: any) => {
         const address = toCheckSumAddress(x?.address)
         const tokenData = { ...x, address }
-        return new Token(tokenData?.chainId, tokenData?.address, tokenData?.decimals, tokenData?.symbol, tokenData?.name)
+        return new Token(
+          tokenData?.chainId,
+          tokenData?.address,
+          tokenData?.decimals,
+          tokenData?.symbol,
+          tokenData?.name
+        )
       })
       .concat(userTokens)
+    return [...new Set(arr)]
   }, [availableTokens, userTokens])
-
 
   return (
     <>
@@ -841,21 +865,23 @@ export default function Swap() {
                     ></BalanceItem>
                   )
                 })}
-                {stakedTokens?.filter((x: any) => x.chainId === chainId).map((token: any, index: any) => {
-                  return (
-                    <BalanceItem
-                      key={index}
-                      token={token}
-                      chainId={chainId}
-                      account={account}
-                      isStaked={true}
-                      tokenBalances={tokenBalances.map(item => item?.address)}
-                      selectBalance={() => onSelectBalance(false, token)}
-                      isLast={index === stakedTokens.length - 1}
-                      isFirst={index === 0 && tokenBalances?.length === 0}
-                    ></BalanceItem>
-                  )
-                })}
+                {stakedTokens
+                  ?.filter((x: any) => x.chainId === chainId)
+                  .map((token: any, index: any) => {
+                    return (
+                      <BalanceItem
+                        key={index}
+                        token={token}
+                        chainId={chainId}
+                        account={account}
+                        isStaked={true}
+                        tokenBalances={tokenBalances.map(item => item?.address)}
+                        selectBalance={() => onSelectBalance(false, token)}
+                        isLast={index === stakedTokens.length - 1}
+                        isFirst={index === 0 && tokenBalances?.length === 0}
+                      ></BalanceItem>
+                    )
+                  })}
               </BalanceRow>
             )}
           </SwapFlex>

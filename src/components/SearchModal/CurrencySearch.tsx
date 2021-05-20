@@ -1,12 +1,11 @@
 import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
-import { CloseIcon } from '../../theme'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { RowBetween } from '../Row'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
+import { CloseIcon } from '../../theme'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
@@ -15,6 +14,7 @@ import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constant
 import { FixedSizeList } from 'react-window'
 import ListLoader from '../ListLoader';
 import QuestionHelper from '../QuestionHelper'
+import { RowBetween } from '../Row'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -35,6 +35,7 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   onChangeList: () => void
   isCrossChain?: boolean
+  transferPage?: boolean
 }
 
 const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
@@ -47,7 +48,8 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
   onChangeList,
-  isCrossChain
+  isCrossChain,
+  transferPage = false
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -73,6 +75,7 @@ export function CurrencySearch({
   const availableTokensArray = isCrossChain
     ? availableTokens
         .filter(a => a.name !== 'BUSD')
+        .filter(y => !y.disableTransfer)
         .map((x: any) => {
           return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
         })
@@ -221,6 +224,7 @@ export function CurrencySearch({
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
               searchQuery={searchQuery}
+              unseenCustomToken={transferPage}
             />
           )}
         </AutoSizer>

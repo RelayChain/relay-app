@@ -26,9 +26,10 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 25px;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
+    top: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     grid-template-columns: 1fr;
     padding: 0;
     width: calc(100%);
@@ -158,7 +159,6 @@ const NotConnectedWrap = styled.div`
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: relative;
-    top: -10px;
     margin: 0 auto;
   `};
 `
@@ -174,7 +174,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.SMART_CHAIN_TEST]: 'SmartChain',
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.MAINNET]: 'Ethereum'
+  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.MATIC]: 'Polygon'
 }
 
 const NETWORK_SYMBOLS: any = {
@@ -185,7 +186,8 @@ const NETWORK_SYMBOLS: any = {
   Kovan: 'ETH',
   Avalanche: 'AVAX',
   SmartChain: 'BNB',
-  Moonbeam: 'DEV'
+  Moonbeam: 'DEV',
+  Polygon: 'MATIC'
 }
 
 const popupContent: PopupContent = {

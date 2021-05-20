@@ -239,3 +239,15 @@ body {
   background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
 }
 `
+
+export const Title = styled.h1`
+width: 100%;
+padding: 0px 64px;
+${({ theme }) => theme.mediaWidth.upToMedium`
+padding: 0;
+text-align: center;
+font-size: 49px;
+margin-top: 10px;
+margin-bottom: 0px;
+`};
+`

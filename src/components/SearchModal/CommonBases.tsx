@@ -111,7 +111,7 @@ export default function CommonBases({
             </Text>
           </BaseWrapper>
         )}
-        {chainId && chainId === ChainId.MUMBAI && (
+        {chainId && (chainId === ChainId.MUMBAI || chainId === ChainId.MATIC) && (
           <BaseWrapper
             onClick={() => {
               if (!selectedCurrency || !currencyEquals(selectedCurrency, MATIC)) {

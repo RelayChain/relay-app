@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
@@ -18,7 +18,6 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
-import { useV1Trade } from '../../data/V1'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -48,6 +47,9 @@ export function useSwapActionHandlers(): {
       }
       if (currency === DEV) {
         selected = 'DEV'
+      }
+      if (currency === MATIC) {
+        selected = 'MATIC'
       }
       dispatch(
         selectCurrency({
@@ -96,23 +98,25 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
       return currency instanceof Token
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
         : CurrencyAmount.ether(
-            JSBI.BigInt(typedValueParsed),
-            process.env.REACT_APP_TESTNET
-              ? currency?.symbol === 'ETH'
-                ? ChainId.RINKEBY
-                : currency?.symbol === 'BNB'
+          JSBI.BigInt(typedValueParsed),
+          process.env.REACT_APP_TESTNET
+            ? currency?.symbol === 'ETH'
+              ? ChainId.RINKEBY
+              : currency?.symbol === 'BNB'
                 ? ChainId.SMART_CHAIN_TEST
                 : currency?.symbol === 'DEV'
-                ? ChainId.MOONBASE_ALPHA
-                : currency?.symbol === 'MATIC'
-                ? ChainId.MUMBAI
-                : ChainId.FUJI
-              : currency?.symbol === 'ETH'
+                  ? ChainId.MOONBASE_ALPHA
+                  : currency?.symbol === 'MATIC'
+                    ? ChainId.MUMBAI
+                    : ChainId.FUJI
+            : currency?.symbol === 'ETH'
               ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
-              ? ChainId.SMART_CHAIN
-              : ChainId.AVALANCHE
-          )
+                ? ChainId.SMART_CHAIN
+                :currency?.symbol === 'MATIC'
+                ? ChainId.MATIC
+                : ChainId.AVALANCHE
+        )
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -189,8 +193,6 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
 
-  // get link to trade on v1, if a better rate exists
-  // const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
   const v1Trade = undefined
 
   let inputError: string | undefined
@@ -234,8 +236,8 @@ export function useDerivedSwapInfo(): {
         ? slippageAdjustedAmountsV1[Field.INPUT]
         : null
       : slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+        ? slippageAdjustedAmounts[Field.INPUT]
+        : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {

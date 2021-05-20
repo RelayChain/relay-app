@@ -1,5 +1,8 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals } from '@zeroexchange/sdk'
-import { AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS } from '../../constants'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import {
+  AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
+  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS
+} from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -103,8 +106,8 @@ export default function RemoveLiquidity({
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-      ? '<1'
-      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+        ? '<1'
+        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -125,12 +128,12 @@ export default function RemoveLiquidity({
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? ETH_ROUTER_ADDRESS
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
-      ? SMART_CHAIN_ROUTER_ADDRESS
-      : chainId === ChainId.MOONBASE_ALPHA
-      ? MOONBASE_ROUTER_ADDRESS
-      : chainId === ChainId.MUMBAI
-      ? MUMBAI_ROUTER_ADDRESS
-      : AVAX_ROUTER_ADDRESS
+        ? SMART_CHAIN_ROUTER_ADDRESS
+        : chainId === ChainId.MOONBASE_ALPHA
+          ? MOONBASE_ROUTER_ADDRESS
+          : chainId === ChainId.MUMBAI
+            ? MUMBAI_ROUTER_ADDRESS
+            : AVAX_ROUTER_ADDRESS
   )
 
   const isArgentWallet = useIsArgentWallet()
@@ -154,9 +157,8 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${
-        chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
-      }`,
+      name: `${chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
+        }`,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -174,12 +176,14 @@ export default function RemoveLiquidity({
         chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
           ? ETH_ROUTER_ADDRESS
           : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
-          ? SMART_CHAIN_ROUTER_ADDRESS
-          : chainId === ChainId.MOONBASE_ALPHA
-          ? MOONBASE_ROUTER_ADDRESS
-          : chainId === ChainId.MUMBAI
-          ? MUMBAI_ROUTER_ADDRESS
-          : AVAX_ROUTER_ADDRESS,
+            ? SMART_CHAIN_ROUTER_ADDRESS
+            : chainId === ChainId.MOONBASE_ALPHA
+              ? MOONBASE_ROUTER_ADDRESS
+              : chainId === ChainId.MUMBAI
+                ? MUMBAI_ROUTER_ADDRESS
+                : chainId === ChainId.MATIC
+                  ? MATIC_ROUTER_ADDRESS
+                  : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -251,8 +255,9 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
-    const oneCurrencyIsETH = currencyA === ETHER || currencyA === AVAX || currencyA === BNB || currencyA === DEV || currencyA === MATIC || currencyBIsETH
+    const currencyAIsETH = ETHER_CURRENCIES.includes(currencyA)
+    const currencyBIsETH = ETHER_CURRENCIES.includes(currencyB)
+    const oneCurrencyIsETH = currencyAIsETH || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -417,12 +422,12 @@ export default function RemoveLiquidity({
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
         ? 'UNI '
         : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
-        ? 'BNB'
-        : chainId === ChainId.MOONBASE_ALPHA
-        ? 'DEV'
-        : chainId === ChainId.MUMBAI
-        ? 'MATIC'
-        : 'AVAX '
+          ? 'BNB'
+          : chainId === ChainId.MOONBASE_ALPHA
+            ? 'DEV'
+            : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
+              ? 'MATIC'
+              : 'AVAX '
     return (
       <>
         <RowBetween>
@@ -463,9 +468,8 @@ export default function RemoveLiquidity({
     )
   }
 
-  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    currencyA?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
+  const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol
+    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -474,21 +478,13 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH =
-    currencyA === ETHER ||
-    currencyB === ETHER ||
-    currencyB === BNB ||
-    currencyB === AVAX ||
-    currencyB === DEV ||
-    currencyB === MATIC ||
-    currencyA === AVAX ||
-    currencyA === BNB ||
-    currencyA === MATIC ||
-    currencyA === DEV
+  const currencyAIsETH = currencyA && ETHER_CURRENCIES.includes(currencyA);
+  const currencyBIsETH = currencyB && ETHER_CURRENCIES.includes(currencyB);
+  const oneCurrencyIsETH = currencyAIsETH || currencyBIsETH;
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB)))
+    ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
+      (currencyB && currencyEquals(WETH[chainId], currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -538,7 +534,7 @@ export default function RemoveLiquidity({
       history.goBack()
     }
   }
-  
+
   return (
     <>
       <StandardCard style={{
@@ -638,33 +634,30 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${
-                              currencyA === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
-                                ? WETH[chainId].address
-                                : currencyIdA
-                            }/${
-                              currencyB === ETHER || currencyB === AVAX || currencyB === BNB || currencyB === DEV || currencyB === MATIC
+                            to={`/remove/${currencyA && ETHER_CURRENCIES.includes(currencyA)
+                              ? WETH[chainId].address
+                              : currencyIdA
+                              }/${currencyB && ETHER_CURRENCIES.includes(currencyB)
                                 ? WETH[chainId].address
                                 : currencyIdB
-                            }`}
+                              }`}
                           >
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
                             {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
                             {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
-                            {chainId && chainId === ChainId.MUMBAI && 'Receive WMATIC'}
+                            {chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/${
-                              currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
+                            to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
+                              }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
                             {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
                             {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
                             {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
-                            {chainId && chainId === ChainId.MUMBAI && 'Receive MATIC'}
+                            {chainId && (chainId === ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive MATIC'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>
@@ -687,11 +680,11 @@ export default function RemoveLiquidity({
                   currency={pair?.liquidityToken}
                   pair={pair}
                   id="liquidity-amount"
-                  grayedOut={ currencyIdA === undefined ||
-                              currencyIdB === undefined ||
-                              currencyIdA === 'undefined' ||
-                              currencyIdB === 'undefined'
-                            }
+                  grayedOut={currencyIdA === undefined ||
+                    currencyIdB === undefined ||
+                    currencyIdA === 'undefined' ||
+                    currencyIdB === 'undefined'
+                  }
                 />
                 <ColumnCenter>
                   <ArrowDown size="16" color={theme.text2} />

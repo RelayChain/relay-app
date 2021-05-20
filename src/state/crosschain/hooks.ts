@@ -156,7 +156,9 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
           imageUri: token.imageUri,
           resourceId: token.resourceId,
           isNativeWrappedToken: token.isNativeWrappedToken,
-          assetBase: token.assetBase
+          assetBase: token.assetBase,
+          // @ts-ignore
+          disableTransfer: token.disableTransfer
         }
         result.push(t)
       }
@@ -182,6 +184,8 @@ function GetChainNameById(chainID: number): string {
     return 'Moonbeam'
   } else if (chainID === ChainId.MUMBAI) {
     return 'Mumbai'
+  } else if (chainID === ChainId.MATIC) {
+    return 'Polygon'
   }
   return ''
 }
