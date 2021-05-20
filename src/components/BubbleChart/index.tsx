@@ -25,7 +25,8 @@ export type BubbleChartProps = {
 }
 
 const BubbleChartWrap = styled.div`
-  width: 562px;
+  width: 100%;
+  max-width: 562px;
   height: 309px;
   padding-top: 46px;
   position: relative;

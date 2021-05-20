@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react'
+import SearchIcon from '../../assets/svg/search_icon.svg'
 
 import styled from 'styled-components'
 
@@ -9,7 +10,7 @@ const StyledInput = styled.input`
   background: none;
   border: none;
   outline: none;
-  color: #A7B1F4;
+  color: #a7b1f4;
   height: 40px;
   width: 100%;
   ::placeholder {
@@ -30,6 +31,10 @@ const Container = styled.div<{ toggled: boolean }>`
   padding: 16px 24px;
 `
 
+const Icon = styled.img`
+  width: 24px;
+  height: 24px;
+`
 interface Props {
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -49,6 +54,7 @@ const SearchBar: React.FC<Props> = ({ value, onChange }) => {
         onFocus={e => (e.target.placeholder = '')}
         onBlur={e => (e.target.placeholder = 'Search')}
       />
+      <Icon src={SearchIcon} />
     </Container>
   )
 }
