@@ -1,5 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Pair, Token, TokenAmount, WETH } from '@zeroexchange/sdk'
 import {
+  WAS,
   DAI,
   MOCK1,
   SUSHI,
@@ -95,6 +96,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [DAI, ZERO],
       stakingRewardAddress: '0x8995fcD45B13BF75f9FA65BbBC6A75066E4E9Cbf'
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], WAS],
+      stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575'
     }
   ],
   [ChainId.AVALANCHE]: [
