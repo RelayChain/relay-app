@@ -1,5 +1,7 @@
-import { ChainId, Trade, currencyEquals } from '@zeroexchange/sdk'
-import React, { useCallback, useMemo } from 'react'
+import { ChainId, Trade, currencyEquals, Token } from '@zeroexchange/sdk'
+import { getCurrencyLogoImage } from 'components/CurrencyLogo'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
@@ -101,6 +103,68 @@ export default function ConfirmSwapModal({
     [onDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
+  // console.log(trade?.outputAmount)
+
+  const outputToken = wrappedCurrency(trade?.outputAmount?.currency ?? undefined, chainId)
+
+  // console.log(outputToken)
+
+  // let { ethereum } = window
+  // const onClickConnect = async () => {
+  //   if (ethereum) {
+  //     try {
+  //       // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+  //       const wasAdded = await ethereum.request({
+  //         method: 'wallet_watchAsset',
+  //         params: {
+  //           type: 'ERC20', // Initially only supports ERC20, but eventually more!
+  //           options: {
+  //             address: outputToken?.address, // The address that the token is at.
+  //             symbol: outputToken?.symbol, // A ticker symbol or shorthand, up to 5 chars.
+  //             decimals: outputToken?.decimals, // The number of decimals in the token
+  //             image: '' // A string url of the token logo
+  //           }
+  //         }
+  //       })
+
+  //       if (wasAdded) {
+  //         console.log('Thanks for your interest!')
+  //       } else {
+  //         console.log('Your loss!')
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // }
+  const [isMetamaskError, setMetamaskError] = useState(false)
+  const onClickAddToken = async (outputToken: Token) => {
+    let { ethereum } = window
+
+    if (ethereum) {
+      const data = {
+        type: 'ERC20', // Initially only supports ERC20, but eventually more!
+        options: {
+          address: outputToken?.address, // The address that the token is at.
+          symbol: outputToken?.symbol, // A ticker symbol or shorthand, up to 5 chars.
+          decimals: outputToken?.decimals, // The number of decimals in the token
+          image: getCurrencyLogoImage(outputToken?.symbol) // '' A string url of the token logo
+        }
+      }
+      /* eslint-disable */
+      const request =
+        ethereum && ethereum.request ? ethereum['request']({ method: 'wallet_watchAsset', params: data }).catch() : ''
+
+      if (request !== '') {
+        request.then(t => {
+          console.log(t)
+        })
+      } else {
+        setMetamaskError(true)
+      }
+    }
+  }
+
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}
@@ -109,6 +173,8 @@ export default function ConfirmSwapModal({
       hash={txHash}
       content={confirmationContent}
       pendingText={pendingText}
+      outputToken={outputToken}
+      handleClickAddToken={onClickAddToken}
     />
   )
 }
