@@ -124,7 +124,6 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={WASLogo} size={size} style={style} />
   }
 
-
   if (['GDL'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />
   }
@@ -176,4 +175,75 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={UNILogo} size={size} style={style} />
   }
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
+}
+
+export const getCurrencyLogoImage = (symbol: string | undefined) => {
+  switch (symbol) {
+    case 'AVAX':
+    case 'WAVAX':
+    case 'AWAX':
+    case 'zAWAX':
+    case 'wAVAX':
+    case 'AVA':
+    case 'zAVAX':
+    case 'eAVAX':
+      return AvaxLogo
+    case 'BNB':
+    case 'WBNB':
+    case 'wBNB':
+    case 'eBNB':
+      return BNBLogo
+    case 'DEV':
+    case 'WDEV':
+    case 'wDEV':
+    case 'eDEV':
+    case 'MATIC':
+    case 'WMATIC':
+    case 'wMATIC':
+    case 'eMATIC':
+      return ''
+    case 'INDA':
+      return INDALogo
+    case 'WAS':
+      return WASLogo
+    case 'GDL':
+      return GDLLogo
+    case 'ETH':
+    case 'wETH':
+      return EthereumLogo
+    case 'USDT':
+    case 'wUSDT':
+      return USDTLogo
+    case 'USDC':
+    case 'wUSDC':
+      return USDCLogo
+    case 'BTC':
+    case 'wBTC':
+      return BTCLogo
+    case 'DAI':
+    case 'wDAI':
+      return DAILogo
+    case 'WISB':
+      return WISBLogo
+    case 'zETH':
+      return ZETHLogo
+    case 'zUSDT':
+      return ZUSDTLogo
+    case 'zUSDC':
+      return ZUSDCLogo
+    case 'zBTC':
+      return ZBTCLogo
+    case 'BUSD':
+      return BUSDLogo
+    case 'zDAI':
+      return ZDAILogo
+    case 'ZERO':
+      return ZeroLogo
+    case 'zSUSHI':
+      return SushiLogo
+    case 'zUNI':
+      return UNILogo
+    default:
+      return ''
+  }
 }

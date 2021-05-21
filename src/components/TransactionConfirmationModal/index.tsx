@@ -5,9 +5,9 @@ import styled, { ThemeContext } from 'styled-components'
 
 import { SuccessIllustation, ErrorIllustratiton } from '../IllustationIcons'
 import { ButtonPrimary } from '../Button'
-import { ChainId } from '@zeroexchange/sdk'
+import { ChainId, Token } from '@zeroexchange/sdk'
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 import { Text } from 'rebass'
@@ -30,10 +30,21 @@ const BottomSection = styled(Section)`
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
-
+const SuccessIcon = styled(ColumnCenter)`
+  padding: 20px 0;
+`
 const Title = styled.h2`
   font-weight: bold;
   font-size: 32px;
+`
+
+const StyledLinkMetaMask = styled(TYPE.link)`
+  cursor: pointer;
+  transition: all ease 0.3s;
+
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
@@ -68,11 +79,15 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
-  hash
+  hash,
+  outputToken,
+  handleClickAddToken
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
+  outputToken?: Token | undefined
+  handleClickAddToken?: (outputToken: Token) => Promise<void>
 }) {
   const theme = useContext(ThemeContext)
 
@@ -83,14 +98,25 @@ function TransactionSubmittedContent({
           <div />
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <ConfirmedIcon>
+        <SuccessIcon>
           <SuccessIllustation />
-        </ConfirmedIcon>
+        </SuccessIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Title>Success!</Title>
           <Text fontWeight={600} fontSize={13} textAlign="center">
             Your tokens transfer has been successful.
           </Text>
+          {outputToken && handleClickAddToken && (
+            <StyledLinkMetaMask
+              onClick={() => handleClickAddToken(outputToken)}
+              fontWeight={600}
+              fontSize={[13, 14, 16]}
+              textAlign="center"
+            >
+              Add {outputToken.symbol} to MetaMask
+            </StyledLinkMetaMask>
+          )}
+
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
@@ -168,6 +194,8 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
+  outputToken?: Token | undefined
+  handleClickAddToken?: (outputToken: Token) => Promise<void>
 }
 
 export default function TransactionConfirmationModal({
@@ -176,7 +204,9 @@ export default function TransactionConfirmationModal({
   attemptingTxn,
   hash,
   pendingText,
-  content
+  content,
+  outputToken,
+  handleClickAddToken
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -188,7 +218,13 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
+        <TransactionSubmittedContent
+          chainId={chainId}
+          hash={hash}
+          onDismiss={onDismiss}
+          outputToken={outputToken}
+          handleClickAddToken={handleClickAddToken}
+        />
       ) : (
         content()
       )}
