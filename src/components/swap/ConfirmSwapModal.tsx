@@ -103,40 +103,8 @@ export default function ConfirmSwapModal({
     [onDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
-  // console.log(trade?.outputAmount)
-
   const outputToken = wrappedCurrency(trade?.outputAmount?.currency ?? undefined, chainId)
-
-  // console.log(outputToken)
-
-  // let { ethereum } = window
-  // const onClickConnect = async () => {
-  //   if (ethereum) {
-  //     try {
-  //       // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-  //       const wasAdded = await ethereum.request({
-  //         method: 'wallet_watchAsset',
-  //         params: {
-  //           type: 'ERC20', // Initially only supports ERC20, but eventually more!
-  //           options: {
-  //             address: outputToken?.address, // The address that the token is at.
-  //             symbol: outputToken?.symbol, // A ticker symbol or shorthand, up to 5 chars.
-  //             decimals: outputToken?.decimals, // The number of decimals in the token
-  //             image: '' // A string url of the token logo
-  //           }
-  //         }
-  //       })
-
-  //       if (wasAdded) {
-  //         console.log('Thanks for your interest!')
-  //       } else {
-  //         console.log('Your loss!')
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }
+  const url = process.env.REACT_APP_URL
   const [isMetamaskError, setMetamaskError] = useState(false)
   const onClickAddToken = async (outputToken: Token) => {
     let { ethereum } = window
@@ -148,7 +116,7 @@ export default function ConfirmSwapModal({
           address: outputToken?.address, // The address that the token is at.
           symbol: outputToken?.symbol, // A ticker symbol or shorthand, up to 5 chars.
           decimals: outputToken?.decimals, // The number of decimals in the token
-          image: getCurrencyLogoImage(outputToken?.symbol) // '' A string url of the token logo
+          image: `${url}${getCurrencyLogoImage(outputToken?.symbol)}` // '' A string url of the token logo
         }
       }
       /* eslint-disable */

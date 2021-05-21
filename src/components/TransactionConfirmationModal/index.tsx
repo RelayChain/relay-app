@@ -38,6 +38,15 @@ const Title = styled.h2`
   font-size: 32px;
 `
 
+const StyledLinkMetaMask = styled(TYPE.link)`
+  cursor: pointer;
+  transition: all ease 0.3s;
+
+  :hover {
+    text-decoration: underline;
+  }
+`
+
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
   return (
     <Wrapper>
@@ -98,14 +107,14 @@ function TransactionSubmittedContent({
             Your tokens transfer has been successful.
           </Text>
           {outputToken && handleClickAddToken && (
-            <TYPE.link
+            <StyledLinkMetaMask
               onClick={() => handleClickAddToken(outputToken)}
               fontWeight={600}
               fontSize={[13, 14, 16]}
               textAlign="center"
             >
               Add {outputToken.symbol} to MetaMask
-            </TYPE.link>
+            </StyledLinkMetaMask>
           )}
 
           {chainId && hash && (
