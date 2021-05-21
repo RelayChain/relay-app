@@ -1,19 +1,19 @@
 import { AutoColumn, ColumnCenter } from '../Column'
+import { ChainId, Token } from '@zeroexchange/sdk'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
+import { ErrorIllustratiton, SuccessIllustation } from '../IllustationIcons'
+import { ExternalLink, TYPE } from '../../theme'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-import { SuccessIllustation, ErrorIllustratiton } from '../IllustationIcons'
 import { ButtonPrimary } from '../Button'
-import { ChainId, Token } from '@zeroexchange/sdk'
+import { CHAIN_LABELS } from '../../constants'
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink, TYPE } from '../../theme'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 import { Text } from 'rebass'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { CHAIN_LABELS } from '../../constants'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -32,6 +32,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 const SuccessIcon = styled(ColumnCenter)`
   padding: 20px 0;
+  max-height: 180px;
 `
 const Title = styled.h2`
   font-weight: bold;
@@ -41,9 +42,12 @@ const Title = styled.h2`
 const StyledLinkMetaMask = styled(TYPE.link)`
   cursor: pointer;
   transition: all ease 0.3s;
-
+  color: #a7b1f4;
+  padding: .5rem 1rem .5rem 1rem;
+  border: 1px solid #a7b1f4;
+  border-radius: 30px;
   :hover {
-    text-decoration: underline;
+    filter: brightness(.9);
   }
 `
 
