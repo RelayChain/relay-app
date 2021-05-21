@@ -56,6 +56,8 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
+export const WAS = new Token(ChainId.MAINNET, '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b', 18, 'WAS', 'Wasder Token')
+
 export const CHART = new Token(ChainId.AVALANCHE, '0x1d37986F252d0e349522EA6C3B98Cb935495E63E', 18, 'CHART', 'ChartEx')
 
 export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche')
