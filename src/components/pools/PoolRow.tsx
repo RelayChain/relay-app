@@ -1,6 +1,8 @@
 import { ButtonOutlined, ButtonPrimary } from '../Button'
 import React, { useState } from 'react'
 import { StyledInternalLink, TYPE } from '../../theme'
+import { CustomLightSpinner} from '../../theme'
+import Circle from '../../assets/images/blue-loader.svg'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { CountUp } from 'use-count-up'
@@ -100,18 +102,10 @@ const DetailsBox = styled.div`
 `
 export default function PoolRow({
   stakingInfoTop,
-  harvestSent,
-  earningsSent,
-  liquiditySent,
   onHarvest,
-  stakingInfoAPR
 }: {
   stakingInfoTop: StakingInfo | any
-  harvestSent: any
-  earningsSent: any
-  liquiditySent: any
   onHarvest: any
-  stakingInfoAPR: any
 }) {
   const [showDetails, setShowDetails] = useState(false)
   const {
@@ -126,7 +120,7 @@ export default function PoolRow({
     valueOfTotalStakedAmountInWETH,
     countUpAmountPrevious,
     symbol
-  } = useStakingInfoTop(stakingInfoTop, harvestSent, earningsSent, liquiditySent)
+  } = useStakingInfoTop(stakingInfoTop)
 
   if (stakingInfoTop.isHidden) {
     return <></>
@@ -160,14 +154,16 @@ export default function PoolRow({
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            {stakingInfoAPR ? stakingInfoAPR + '%' : '-'}
+            {stakingInfoTop.APR ? stakingInfoTop.APR + '%' : '-'}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-            {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ${symbol}`}
+          {valueOfTotalStakedAmountInUSDC || valueOfTotalStakedAmountInWETH
+              ? valueOfTotalStakedAmountInUSDC
+                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' })} ${symbol}`
+              : <CustomLightSpinner src={Circle} alt="loader" size={'15px'} />}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

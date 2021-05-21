@@ -1,6 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { setAprData, AprObjectProps, setPoolsData, setToggle, setStackingInfo, replacePoolsState } from './actions'
+import {
+  setAprData,
+  AprObjectProps,
+  setPoolsData,
+  setToggle,
+  setStackingInfo,
+  replacePoolsState,
+  setPoolEarnings
+} from './actions'
 
 export interface PoolsState {
   aprData: AprObjectProps[]
@@ -10,6 +18,8 @@ export interface PoolsState {
   weeklyEarnings: object
   readyForHarvest: object
   totalLiquidity: object
+  weeklyEarningsTotalValue: any
+  readyForHarvestTotalValue: any
 }
 
 const initialState: PoolsState = {
@@ -19,7 +29,9 @@ const initialState: PoolsState = {
   poolStackingInfo: [],
   weeklyEarnings: {},
   readyForHarvest: {},
-  totalLiquidity: {}
+  totalLiquidity: {},
+  weeklyEarningsTotalValue: null,
+  readyForHarvestTotalValue: null
 }
 
 export default createReducer<PoolsState>(initialState, builder =>
@@ -59,4 +71,11 @@ export default createReducer<PoolsState>(initialState, builder =>
         }
       }
     )
+    .addCase(setPoolEarnings, (state, { payload: { weeklyEarningsTotalValue, readyForHarvestTotalValue } }) => {
+      return {
+        ...state,
+        weeklyEarningsTotalValue: weeklyEarningsTotalValue,
+        readyForHarvestTotalValue: readyForHarvestTotalValue
+      }
+    })
 )

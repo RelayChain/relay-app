@@ -22,10 +22,7 @@ export function usePoolsState(): AppState['pools'] {
 }
 
 export function useStakingInfoTop(
-  stakingInfoTop: any,
-  harvestSent: any,
-  earningsSent: any,
-  liquiditySent: any
+  stakingInfoTop: any
 ): {
   countUpAmount: any
   isStaking: any
@@ -41,6 +38,12 @@ export function useStakingInfoTop(
 } {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
+  const { weeklyEarnings, readyForHarvest, totalLiquidity } = usePoolsState()
+
+  const harvestSent = readyForHarvest[stakingInfoTop.stakingRewardAddress]
+  const earningsSent = weeklyEarnings[stakingInfoTop.stakingRewardAddress]
+  const liquiditySent = totalLiquidity[stakingInfoTop.stakingRewardAddress]
+
   const token0 = stakingInfoTop.tokens[0]
   const token1 = stakingInfoTop.tokens[1]
 

@@ -1,4 +1,11 @@
-import { AprObjectProps, setAprData, setPoolsData, setStackingInfo, setToggle } from './../../state/pools/actions'
+import {
+  AprObjectProps,
+  setAprData,
+  setPoolsData,
+  setStackingInfo,
+  setToggle,
+  setPoolEarnings
+} from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
@@ -231,7 +238,15 @@ export default function Pools() {
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
   const aprAllData = usePoolsState()
-  const { aprData, poolsData, weeklyEarnings, readyForHarvest, totalLiquidity } = aprAllData
+  const {
+    aprData,
+    poolsData,
+    weeklyEarnings,
+    readyForHarvest,
+    totalLiquidity,
+    weeklyEarningsTotalValue,
+    readyForHarvestTotalValue
+  } = aprAllData
   const { account, chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const toggleWalletModal = useWalletModalToggle()
@@ -253,7 +268,6 @@ export default function Pools() {
 
   const [showClaimRewardModal, setShowClaimRewardModal] = useState<boolean>(false)
   const [claimRewardStaking, setClaimRewardStaking] = useState<any>(null)
-  const [statsDisplay, setStatsDisplay] = useState<any>({})
 
   const [apyRequested, setApyRequested] = useState(false)
   const getAllAPY = async () => {
@@ -279,6 +293,7 @@ export default function Pools() {
         })
       })
     }
+
     arrayToShow = filterPoolsItems(
       stakingInfos,
       isLive,
@@ -290,18 +305,21 @@ export default function Pools() {
       totalLiquidity
     )
   }
+
   setArrayToShow()
 
   useEffect(() => {
     let earnings: any = 0
     let harvest: any = 0
-    Object.keys(weeklyEarnings).forEach(key => {
-      earnings = earnings + parseFloat(weeklyEarnings[key].replace(/,/g, ''))
+    Object.values(weeklyEarnings).forEach(value => {
+      earnings = earnings + parseFloat(value.replace(/,/g, ''))
     })
-    Object.keys(readyForHarvest).forEach(key => {
-      harvest = harvest + parseFloat(readyForHarvest[key].replace(/,/g, ''))
+    Object.values(readyForHarvest).forEach(value => {
+      harvest = harvest + parseFloat(value.replace(/,/g, ''))
     })
-    setStatsDisplay({ earnings, harvest })
+    if (weeklyEarningsTotalValue !== earnings || readyForHarvestTotalValue !== harvest) {
+      dispatch(setPoolEarnings({ weeklyEarningsTotalValue: earnings, readyForHarvestTotalValue: harvest }))
+    }
   }, [weeklyEarnings, readyForHarvest, stakingInfos])
 
   const onSortChange = (key: string, value: string | boolean) => {
@@ -360,20 +378,20 @@ export default function Pools() {
         </>
       )}
       <Title>Pools</Title>
-      {!arrayToShow || (apyRequested && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />)}
+      {(!arrayToShow || apyRequested) && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />}
       <PageContainer>
         {account !== null && arrayToShow?.length > 0 && aprData?.length > 0 && !apyRequested && (
           <StatsWrapper>
             <Stat className="weekly">
               <StatLabel>Weekly Earnings:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.earnings).format('0,0.00')} <span>Tokens</span>
+                {numeral(weeklyEarningsTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <Stat className="harvest">
               <StatLabel>Ready To Harvest:</StatLabel>
               <StatValue>
-                {numeral(statsDisplay?.harvest).format('0,0.00')} <span>Tokens</span>
+                {numeral(readyForHarvestTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>
@@ -457,12 +475,8 @@ export default function Pools() {
                       return (
                         <PoolRow
                           onHarvest={() => handleHarvest(item)}
-                          harvestSent={readyForHarvest[item.stakingRewardAddress]}
-                          earningsSent={weeklyEarnings[item.stakingRewardAddress]}
-                          liquiditySent={totalLiquidity[item.stakingRewardAddress]}
                           key={item.stakingRewardAddress}
                           stakingInfoTop={item}
-                          stakingInfoAPR={item.APR}
                         />
                       )
                     })}
@@ -478,12 +492,8 @@ export default function Pools() {
                   return (
                     <PoolCard
                       onHarvest={() => handleHarvest(item)}
-                      harvestSent={readyForHarvest[item.stakingRewardAddress]}
-                      earningsSent={weeklyEarnings[item.stakingRewardAddress]}
-                      liquiditySent={totalLiquidity[item.stakingRewardAddress]}
                       key={item.stakingRewardAddress}
                       stakingInfoTop={item}
-                      stakingInfoAPR={item.APR}
                     />
                   )
                 })}
