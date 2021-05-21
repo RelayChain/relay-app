@@ -116,6 +116,11 @@ const StyledStacked = styled.div`
   }
 `
 
+const AlignCenter = styled.div`
+  align-items: center;
+  display: flex;
+`
+
 export interface ToggleProps {
   isLive: boolean
   onSortChange: (key: string, value: string | boolean) => void
@@ -124,7 +129,7 @@ export interface ToggleProps {
 
 export default function Toggle({ isLive, onSortChange, isStaked }: ToggleProps) {
   return (
-    <Row>
+    <AlignCenter>
       <StyledStacked onClick={() => onSortChange('isStaked', !isStaked)}>
         <input type="checkbox" checked={isStaked} readOnly />
         <label>Staked only</label>
@@ -137,6 +142,6 @@ export default function Toggle({ isLive, onSortChange, isStaked }: ToggleProps) 
           Finished
         </ToggleElement>
       </StyledToggle>
-    </Row>
+    </AlignCenter>
   )
 }
