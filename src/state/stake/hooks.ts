@@ -99,7 +99,8 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WETH[ChainId.MAINNET], WAS],
-      stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575'
+      stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575',
+      rewardInfo: { rewardToken: WAS },
     }
   ],
   [ChainId.AVALANCHE]: [
