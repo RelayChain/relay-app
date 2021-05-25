@@ -111,22 +111,15 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   return result
 }
 
-export function GetTokenByAddress(address: string): TokenConfig {
+export function GetTokenByAddrAndChainId(address: string, chainId: string): TokenConfig {
   let result: TokenConfig = {
     address: '',
     decimals: 18,
     resourceId: '',
     assetBase: ''
   }
-  for (const chain of crosschainConfig.chains) {
-    for (const token of chain.tokens) {
-      if (token.address === address) {
-        result = token
-        return result
-      }
-    }
-  }
-  return result
+  const tokens = crosschainConfig.chains.find(c => String(c.chainId) === chainId)?.tokens ?? [];
+  return tokens.find(t => t.address === address) ?? result;
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
@@ -240,8 +233,12 @@ export function useCrosschainHooks() {
     )
 
     const crosschainState = getCrosschainState()
+    console.log(crosschainState.currentChain.chainID);
+    console.log(crosschainState.currentChain.chainID);
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+    // const currentToken = currentChain.tokens
+    //   .find(token => token.address === crosschainState.currentToken.address)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
     const currentGasPrice = await useGasPrice()
     dispatch(
@@ -364,7 +361,7 @@ export function useCrosschainHooks() {
   const GetAllowance = async () => {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -390,7 +387,7 @@ export function useCrosschainHooks() {
   const MakeApprove = async () => {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     const currentGasPrice = await useGasPrice()
     dispatch(
       setCurrentTxID({
@@ -480,7 +477,7 @@ export function useCrosschainHooks() {
 
   const UpdateOwnTokenBalance = async () => {
     const crosschainState = getCrosschainState()
-    const currentToken = GetTokenByAddress(crosschainState.currentToken.address)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)

@@ -9,7 +9,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
-import { GetTokenByAddress, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
+import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import {
@@ -250,7 +250,7 @@ export default function Transfer() {
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddress(inputCurrency.address)
+        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID)
         dispatch(
           setCurrentToken({
             token: {

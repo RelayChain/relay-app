@@ -522,7 +522,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           symbol: 'zETH',
           assetBase: 'ETH',
           decimals: 18,
-          resourceId: '0x00000000000000000000007c815BBc21FED2B97CA163552991A5C30d6a233603',
+          resourceId: '0x00000000000000000000004801D3057109758C3Cc82859Fe28C5692802033005',
         },
         {
           address: '0x2FaB07236d5E1F400568E475B21dBc6AdFEd57D5',
