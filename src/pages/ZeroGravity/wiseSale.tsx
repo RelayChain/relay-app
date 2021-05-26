@@ -137,7 +137,7 @@ export default function WSDSale() {
 
   if (web3React.chainId != ChainId.SMART_CHAIN) {
     return (<>
-      <div style={{ textAlign: 'center', fontSize: '1.5rem', display: 'block', background: 'rgba(0,0,0,.25)', borderRadius: '44px', padding: '2rem'}}>Switch to Binance Smart Chain!</div>
+      <div style={{ textAlign: 'center', fontSize: '1.5rem', display: 'block', background: 'rgba(0,0,0,.25)', borderRadius: '44px', padding: '2rem' }}>Switch to Binance Smart Chain!</div>
     </>);
   }
 
@@ -154,7 +154,7 @@ export default function WSDSale() {
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
                     <ButtonsFlex>
-                      <ButtonOutlined className={`green ${ depositSuccessHash } ${ parseFloat(amount) === 0 || !amount || isPendingBuy ? 'disabled' : ''}`} onClick={onPurchase}>
+                      <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amount) === 0 || !amount || isPendingBuy ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonOutlined>
                     </ButtonsFlex>

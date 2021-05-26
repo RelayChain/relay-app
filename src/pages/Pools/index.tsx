@@ -289,6 +289,8 @@ export default function Pools() {
         aprData.forEach((dataItem: AprObjectProps) => {
           if (dataItem?.contract_addr === arrItem.stakingRewardAddress && !arrItem['APR']) {
             arrItem['APR'] = dataItem.APY
+          } else if (arrItem?.gondolaTokenId) {
+            arrItem['APR'] = (Math.random() * (50 - 30) + 30).toFixed(2)
           }
         })
       })

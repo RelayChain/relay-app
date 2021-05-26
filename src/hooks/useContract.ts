@@ -9,23 +9,26 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
 
 import { Contract } from '@ethersproject/contracts'
+import {GONDOLA_PROXY_MASTER} from '../constants/abis/staking-rewards';
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ZERO_FREE_CLAIM from '../constants/abis/zerro-free-claim.json'
 import WDS_DEPOSIT_ABI from '../constants/abis/wds-deposit.json';
 import WISE_SALE_ABI from '../constants/abis/wise-sale.json';
 import ERC20_ABI from '../constants/abis/erc20.json'
-import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import { ERC20_BYTES32_ABI, ERC20_GONDOLA_INTERFACE } from '../constants/abis/erc20'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
+import { abi as GONDOLA_MASTER_CHEF } from '../constants/abis/gondola-master.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useMemo } from 'react'
+import { GONDOLA_SWAP_INTERFACE } from 'constants/abis/staking-rewards'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -143,6 +146,27 @@ export function useUniContract(): Contract | null {
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+}
+
+export function useStakingGondolaContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(stakingAddress, GONDOLA_MASTER_CHEF, withSignerIfPossible)
+}
+
+export function useGondolaMasterChefContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(stakingAddress, GONDOLA_MASTER_CHEF, withSignerIfPossible)
+}
+
+export function useGondolaProxyMasterChefContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(stakingAddress, GONDOLA_PROXY_MASTER, withSignerIfPossible)
+}
+
+
+export function useGondolaLpTokenContract(lpAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(lpAddress, ERC20_GONDOLA_INTERFACE, withSignerIfPossible)
+}
+
+export function useGondolaSwapContract(swapContractAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(swapContractAddress, GONDOLA_SWAP_INTERFACE, withSignerIfPossible)
 }
 
 export function useSocksController(): Contract | null {

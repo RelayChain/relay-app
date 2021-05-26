@@ -16,15 +16,18 @@ interface PlainPopupProps {
   content: PopupContent
   removeAfterMs: number
   hideClose?: boolean | undefined
+  link?: string
+  buttonName?: string
 }
-export default function PlainPopup({ isOpen, onDismiss, content, removeAfterMs, hideClose }: PlainPopupProps) {
+export default function PlainPopup({ isOpen, onDismiss, content, removeAfterMs, hideClose, link, buttonName }: PlainPopupProps) {
   return (
     <>
       {
         <>
           <Modal isOpen={isOpen} onDismiss={onDismiss}>
             <PopupItem key={''} content={content} popKey={''} removeAfterMs={removeAfterMs} hideClose={true} />
-          </Modal>
+            {link && (<a  href={link}> {buttonName}</a>)}
+        </Modal>
         </>
       }
     </>

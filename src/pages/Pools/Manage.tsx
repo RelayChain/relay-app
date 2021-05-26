@@ -2,7 +2,7 @@ import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount, ETHER_C
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
 import { StyledInternalLink, TYPE, Title } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
@@ -13,10 +13,8 @@ import { AutoColumn } from '../../components/Column'
 import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
-import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import FullPositionCard from '../../components/PositionCard'
-import { Link } from 'react-router-dom'
 import PageContainer from './../../components/PageContainer'
 import { RouteComponentProps } from 'react-router-dom'
 import StakingModal from '../../components/pools/StakingModal'
@@ -29,11 +27,12 @@ import { useHistory } from 'react-router'
 import { usePair } from '../../data/Reserves'
 import { usePairs } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { useStakingInfo } from '../../state/stake/hooks'
+import { useStakingInfo, STAKING_REWARDS_INFO } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import PlainPopup from 'components/Popups/PlainPopup'
 
 const moment = require('moment')
 
@@ -185,6 +184,37 @@ const StatValue = styled.h6`
     font-size: 1.25rem;
     margin-left: 4px;
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  font-size: 1.25rem;
+`};
+`
+
+const PositionInfo = styled(AutoColumn) <{ dim: any }>`
+  position: relative;
+  max-width: 640px;
+  width: 100%;
+  opacity: ${({ dim }) => (dim ? 0.6 : 1)};
+`
+
+const BottomSection = styled(AutoColumn)`
+  border-radius: 12px;
+  width: 100%;
+  position: relative;
+`
+
+const StyledBox = styled.div`
+  border-radius: 12px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  border: 2px solid ${({ theme }) => theme.green1};
+  padding: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  div {
+    color: ${({ theme }) => theme.green1};
+    font-weight: bold;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   font-size: 1.3rem;
   span {
@@ -251,32 +281,47 @@ export default function Manage({
   if (!stakingRewardAddress) {
     history.push('/pools')
   }
-
+  const flatRewards = Object.values(STAKING_REWARDS_INFO).flat(1)
+  const currentPairInfo = flatRewards.find(token => token && token['stakingRewardAddress'] === stakingRewardAddress)
+  const [isGongolaRewards, setGongolaRewards] = useState(false)
+  const [gongolaPathName, setGongolaPathName] = useState('usdt') 
+  useMemo(() => {
+    if(currentPairInfo &&
+      currentPairInfo?.rewardInfo && currentPairInfo?.rewardInfo?.chain === 'Gondola') {
+    }
+     
+    setGongolaPathName(currentPairInfo?.rewardInfo?.pathName)
+    setGongolaRewards(true)}, [setGongolaRewards ])
   const theme = useContext(ThemeContext)
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
-  const [, stakingTokenPair] = usePair(tokenA, tokenB)
+  const [, stakingTokenPair] = usePair(tokenA, tokenB, '0x842cc3a5cDf13cFdA564b315b3F3a2E8aBF0eb0A')
+
   const baseStakingInfo = useStakingInfo(stakingTokenPair)
-  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress)
+  const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress);
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
+
+  
   const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
   // toggle for staking modal and unstaking modal
   const [showStakingModal, setShowStakingModal] = useState(false)
   const [showUnstakingModal, setShowUnstakingModal] = useState(false)
   const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
+  const [showPopupOpen, setShowPopupOpen] = useState(false)
+  const [showRemLiquidity, setShowRemLiquidity] = useState(false)
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-  
+
   const [token, WETH] = currencyA && ETHER_CURRENCIES.includes(currencyA)
-      ? [tokenB, tokenA]
-      : [tokenA, tokenB];
+    ? [tokenB, tokenA]
+    : [tokenA, tokenB];
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -304,7 +349,7 @@ export default function Manage({
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-
+  const totalAmountInUSD = valueOfTotalStakedAmountInUSDC // stakingInfo?.rewardsTokenSymbol === 'GDL' ? gondolaTotalSupply : valueOfTotalStakedAmountInUSDC
   const toggleWalletModal = useWalletModalToggle()
 
   const handleDepositClick = useCallback(() => {
@@ -418,8 +463,8 @@ export default function Manage({
               <Stat className="weekly">
                 <StatLabel style={{ textAlign: 'left' }}>Total Deposits:</StatLabel>
                 <StatValue>
-                  {valueOfTotalStakedAmountInUSDC
-                    ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                  {totalAmountInUSD
+                    ? `$${totalAmountInUSD.toFixed(0, { groupSeparator: ',' })}`
                     : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}`}
                   <span>{symbol}</span>
                 </StatValue>
@@ -429,25 +474,48 @@ export default function Manage({
                 <StatValue>
                   {stakingInfo?.active
                     ? stakingInfo?.totalRewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                      ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
                 </StatValue>
               </Stat>
-              <StyledButtonsWrap>
-                <StyledTradelLink
-                  className="trade-button-link"
-                  to={{
-                    pathname: `/swap`,
-                    state: { token0: `${currencyA && currencyId(currencyA)}`, token1: `${currencyB && currencyId(currencyB)}` }
-                  }}
-                >
-                  <ButtonOutlined className="add-liquidity-button">Trade</ButtonOutlined>
-                </StyledTradelLink>
+              {
+                showAddLiquidityButton ? (!isGongolaRewards ) ? (
+                  <StyledInternalLink className="add-liquidity-link"
+                    to={{
+                      pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                      state: { stakingRewardAddress }
+                    }
+                    }
+                  >
+                    <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+                  </StyledInternalLink>
+                ) : (
+                  <div className="add-liquidity-link">
+                    <ButtonOutlined className="add-liquidity-button" onClick={() => setShowPopupOpen(true)}>Add Liquidity</ButtonOutlined>
 
-                <StyledInternalLink
-                  className="add-liquidity-link"
+                  </div>
+
+                ) : null
+              }
+              {
+                true ? (<PlainPopup isOpen={showPopupOpen} onDismiss={() => setShowPopupOpen(false)} content={
+                  {
+                    simpleAnnounce: {
+                      message: `
+                The current functional is developing now
+                To add liquidity on https://app.gondola.finance/
+                 push the button
+         `}
+                  }} removeAfterMs={2000}
+                  link={`https://app.gondola.finance/#/deposit/${gongolaPathName}`} buttonName={"Add Liquidity"} />) : <></>
+              }
+
+
+              {showAddLiquidityButton ? null : (!isGongolaRewards) ? (
+
+                <StyledInternalLink className="remove-liquidity-link"
                   to={{
                     pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
                     state: { stakingRewardAddress }
@@ -455,20 +523,28 @@ export default function Manage({
                 >
                   <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
                 </StyledInternalLink>
-                {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
-                    '0'
-                  ) ? null : !stakingInfo?.active ? null : (
-                  <StyledInternalLink
-                    className="remove-liquidity-link"
-                    to={{
-                      pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
-                      state: { stakingRewardAddress }
-                    }}
-                  >
-                    <TextLink>Remove Liquidity</TextLink>
-                  </StyledInternalLink>
-                )}
-              </StyledButtonsWrap>
+              ) :
+                (
+                  <div className="add-liquidity-link">
+                    <ButtonOutlined className="add-liquidity-button" onClick={() => setShowRemLiquidity(true)}>Remove Liquidity</ButtonOutlined>
+
+                  </div>
+
+                )
+              }
+              {
+                true ? (<PlainPopup isOpen={showRemLiquidity} onDismiss={() => setShowRemLiquidity(false)} content={
+                  {
+                    simpleAnnounce: {
+                      message: `
+                The current functional is developing now
+                You can remove liquidity push the link below
+         `}
+                  }} removeAfterMs={2000}
+                  link={`https://app.gondola.finance/#/deposit/${gongolaPathName}`} buttonName={"Remove Liquidity"} />) : <></>
+              }
+
+
             </StatsWrapper>{' '}
           </>
         )}
@@ -500,10 +576,10 @@ export default function Manage({
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRateWeekly
-                          ?.divide(JSBI.BigInt(10**15))
-                          .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
-                            groupSeparator: ','
-                          }) ?? '-'
+                        ?.divide(JSBI.BigInt(10 ** 15))
+                        .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
+                          groupSeparator: ','
+                        }) ?? '-'
                       : '0'}
                     <span
                       style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}
@@ -517,7 +593,7 @@ export default function Manage({
                       Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
                     ) ?? '-'}
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
-                      ZERO {currencyA?.symbol}-{currencyB?.symbol}
+                      {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'}`} {currencyA?.symbol}-{currencyB?.symbol}
                     </span>
                   </TYPE.white>
                 </RowBetween>
@@ -530,44 +606,46 @@ export default function Manage({
             </SingleColumn>
             {(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
               (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) && (
-              <SingleColumn className="right">
-                <Wrapper>
-                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
+                <SingleColumn className="right">
+                  <Wrapper>
+                    {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                       '0'
                     ) ? null : !stakingInfo?.active ? null : (
-                    <>
-                      <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
-                      <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                        <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                          {userLiquidityUnstaked?.toSignificant(
-                            Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
-                          )}
-                          <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
-                        </TYPE.white>
-                        <ButtonOutlined
-                          className="remove-liquidity-button green"
-                          onClick={handleDepositClick}
-                          style={{ width: '160px' }}
-                        >
-                          {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
-                        </ButtonOutlined>
-                      </RowBetween>
-                    </>
-                  )}
-                  {stakingPairs.map(
-                    (stakingPair, i) =>
-                      stakingPair[1] &&
-                      showMe(stakingPair[1]) && (
-                        <FullPositionCard
-                          key={stakingInfosWithBalance[i].stakingRewardAddress}
-                          pair={stakingPair[1]}
-                          stakedBalance={stakingInfosWithBalance[i].stakedAmount}
-                        />
-                      )
-                  )}
-                </Wrapper>
-              </SingleColumn>
-            )}
+                      <>
+
+                        <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
+                        <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
+                          <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                            {userLiquidityUnstaked?.toSignificant(
+                              Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
+                            )}
+                            <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`} LP tokens</span>
+                          </TYPE.white>
+                          <ButtonOutlined
+                            className="remove-liquidity-button green"
+                            onClick={handleDepositClick}
+                            style={{ width: '160px' }}
+                          >
+                            {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
+                          </ButtonOutlined>
+                        </RowBetween>
+
+                      </>
+                    )}
+                    {stakingPairs.map(
+                      (stakingPair, i) =>
+                        stakingPair[1] &&
+                        showMe(stakingPair[1]) && (
+                          <FullPositionCard
+                            key={stakingInfosWithBalance[i].stakingRewardAddress}
+                            pair={stakingPair[1]}
+                            stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                          />
+                        )
+                    )}
+                  </Wrapper>
+                </SingleColumn>
+              )}
           </Columns>
         </PageWrapper>
       </PageContainer>

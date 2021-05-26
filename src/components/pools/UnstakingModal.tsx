@@ -8,11 +8,12 @@ import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 import { StakingInfo } from '../../state/stake/hooks'
+import { useStakingContract, useStakingGondolaContract } from '../../hooks/useContract'
 import { TransactionResponse } from '@ethersproject/providers'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useStakingContract } from '../../hooks/useContract'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { BigNumber, utils } from 'ethers'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -38,14 +39,32 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     setAttempting(false)
     onDismiss()
   }
+  const stakingRewardAddress = (stakingInfo.gondolaTokenId && stakingInfo.gondolaRewardAddress) ?
+    stakingInfo.gondolaRewardAddress :
+    stakingInfo.stakingRewardAddress
 
-  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-
+  const stakingContract = useStakingContract(stakingRewardAddress)
+  const stakingGondolaContract = useStakingGondolaContract(stakingRewardAddress)
   async function onWithdraw() {
-    if (stakingContract && stakingInfo?.stakedAmount) {
+    if (stakingContract && stakingInfo?.stakedAmount && !stakingInfo?.gondolaTokenId) {
       setAttempting(true)
       await stakingContract
         .exit({ gasLimit: 300000 })
+        .then((response: TransactionResponse) => {
+          addTransaction(response, {
+            summary: `Withdraw deposited liquidity`
+          })
+          setHash(response.hash)
+        })
+        .catch((error: any) => {
+          setAttempting(false)
+          console.log(error)
+        })
+    } else if (stakingGondolaContract) {
+
+      setAttempting(true)
+      await stakingGondolaContract
+        .emergencyWithdraw(stakingInfo?.gondolaTokenId, { gasLimit: 300000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Withdraw deposited liquidity`

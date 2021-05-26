@@ -241,7 +241,7 @@ const NetworkSwitcher = () => {
         isTransfer={false}
         onDismiss={hideCrossChainModal}
         supportedChains={availableChains}
-        selectTransferChain={() => {}}
+        selectTransferChain={() => { }}
         activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
       />
       <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
@@ -285,10 +285,10 @@ const Header = () => {
           <Web3Status />
         </NotConnectedWrap>
       ) : (
-        <NotConnectedWrap>
-          <Web3Status />
-        </NotConnectedWrap>
-      )}
+            <NotConnectedWrap>
+              <Web3Status />
+            </NotConnectedWrap>
+          )}
     </HeaderFrame>
   )
 }

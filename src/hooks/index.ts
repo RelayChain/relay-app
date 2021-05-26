@@ -65,7 +65,6 @@ export function useInactiveListener(suppress = false) {
       }
 
       const handleNetworkChanged = (network: any) => {
-        console.log("🚀 ~ file: index.ts ~ line 68 ~ handleNetworkChanged ~ network", network)
         // eat errors
         activate(injected, undefined, true).catch(error => {
           console.error('Failed to activate after networkChanged changed', error)

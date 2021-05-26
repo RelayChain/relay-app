@@ -102,7 +102,6 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
     countUpAmountPrevious,
     symbol
   } = useStakingInfoTop(stakingInfoTop)
-
   if (stakingInfoTop.isHidden) {
     return <></>
   }
