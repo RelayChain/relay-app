@@ -196,6 +196,10 @@ export default function CrossChainModal({
               <span>{chain.name}</span>
             </li>
           ))}
+          <li className="disabled">
+            <BlockchainLogo size="28px" blockchain={`HECO`} />
+            <span>HECO</span>
+          </li>
         </ul>
       </ModalContainer>
     </Modal>
