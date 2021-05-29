@@ -10,6 +10,7 @@ import PageContainer from 'components/PageContainer';
 import { Title } from '../../theme'
 import WISESale from './wiseSale';
 import WSDSale from './wsdSale';
+import GrowSale from './growSale';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -253,7 +254,12 @@ export default function ZeroGravityInfo() {
             )}
           </ButtonsSection>
         )}
-        {idoData?.idoURL == 'wise' ? <WISESale /> : idoData?.idoURL == 'wasder' ? <WSDSale /> : <></>}
+        {
+          idoData?.idoURL == 'wise' ? <WISESale /> 
+          : idoData?.idoURL == 'wasder' ? <WSDSale /> 
+          : idoData?.idoURL == 'grow' ? <GrowSale /> 
+          : <></>
+        }
         <BgWrapper>
           <HeadingRow>
             <Heading>Pool details</Heading>
