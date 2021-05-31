@@ -185,7 +185,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zETH],
       stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575',
-      rewardInfo: { rewardToken: zCHART },
+      rewardInfo: { rewardToken: zZERO },
     },
   ],
   [ChainId.FUJI]: [
@@ -269,7 +269,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [bscZERO, bscETH],
       stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
-      rewardInfo: { rewardToken: bscWISB }
+      rewardInfo: { rewardToken: bscZERO }
     },
   ],
   [ChainId.MATIC]: [
