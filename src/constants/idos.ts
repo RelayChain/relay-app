@@ -62,7 +62,8 @@ export const IDO_LIST = [
     tierName: '', // if no tier, leave blank
     tierLogo: null, // if you include this image, it will override the tierName
     launchDate: new Date('May 28, 2021 6:00:00'),
-    endDate: new Date('June 01, 2021 13:00:00'),
+    // endDate: new Date('June 01, 2021 13:00:00'),
+    endDate: new Date(1622457706780),
     totalRaise: 'TBD',
     allocationMin: 'TBD',
     allocationMax: 'TBD',

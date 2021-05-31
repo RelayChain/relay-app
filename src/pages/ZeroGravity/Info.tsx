@@ -257,7 +257,7 @@ export default function ZeroGravityInfo() {
         {
           idoData?.idoURL == 'wise' ? <WISESale /> 
           : idoData?.idoURL == 'wasder' ? <WSDSale /> 
-          : idoData?.idoURL == 'grow' ? <GrowSale /> 
+          // : idoData?.idoURL == 'grow' ? <GrowSale /> 
           : <></>
         }
         <BgWrapper>
