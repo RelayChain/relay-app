@@ -268,7 +268,7 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [bscZERO, bscETH],
-      stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
+      stakingRewardAddress: '0xaa8e71A182a9c00d1d0E2004bf94929bacA543fC',
       rewardInfo: { rewardToken: bscZERO }
     },
   ],
