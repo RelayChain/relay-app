@@ -181,7 +181,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CHART',
           decimals: 18,
           resourceId: '0x00000000000000000000001d37986F252d0e349522EA6C3B98Cb935495E63E01'
-        }
+        },
+        {
+          address: '0xF268fE3d6909508ddA90DccF2bf69050D19f4CdD',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000F268fE3d6909508ddA90DccF2bf69050D19f4CdD01'
+        },
       ]
     },
     {
@@ -323,7 +331,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CHART',
           decimals: 18,
           resourceId: '0x0000000000000000000000D769bDFc0CaEe933dc0a047C7dBad2Ec42CFb3E202'
-        }
+        },
+        {
+          address: '0x5506bD8C8F5D6733E2738496d5C51Ed62934C9f8',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005506bD8C8F5D6733E2738496d5C51Ed62934C9f802'
+        },
       ]
     },
     {
@@ -484,7 +500,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           // resourceId: '0x00000000000000000000004f491d389A5bF7C56bd1e4d8aF2280fD217C854303'
           resourceId: "",
           disableTransfer: true,
-        }
+        },
+        {
+          address: '0x081A4D4e4A0cC74D6a7A61578f86b8C93CC950a0',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000081A4D4e4A0cC74D6a7A61578f86b8C93CC950a003'
+        },
       ]
     },
     {
@@ -620,6 +644,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000083c56d87eAD73D6231C165Ec450C6E28f3399C905'
         },
+        {
+          address: '0xDcDC86A38d1ddA13EEB346eeBf34d0148C8197d9',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000DcDC86A38d1ddA13EEB346eeBf34d0148C8197d905'
+        },      
       ]
     }
   ]
