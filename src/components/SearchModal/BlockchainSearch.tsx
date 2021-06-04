@@ -172,6 +172,7 @@ export function BlockchainSearch({
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
               searchQuery={searchQuery}
+              isAscendingFilter={invertSearchOrder}
             />
           )}
         </AutoSizer>

@@ -57,7 +57,7 @@ export function CurrencySearch({
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
+  const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(true)
   const userAddedTokens = useUserAddedTokens()
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
@@ -74,11 +74,11 @@ export function CurrencySearch({
   // ChainId.RINKEBY BUSD
   const availableTokensArray = isCrossChain
     ? availableTokens
-        .filter(a => a.name !== 'BUSD')
-        .filter(y => !y.disableTransfer)
-        .map((x: any) => {
-          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-        })
+      .filter(a => a.name !== 'BUSD')
+      .filter(y => !y.disableTransfer)
+      .map((x: any) => {
+        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+      })
         .concat(userTokens)
     : availableTokens
         .map((x: any) => {
@@ -218,13 +218,14 @@ export function CurrencySearch({
             <CurrencyList
               height={height}
               showETH={isCrossChain ? false : showETH}
-              currencies={!isCrossChain ? filteredSortedTokens : availableTokensArray}
+              currencies={!isCrossChain ? filteredSortedTokens : filteredSortedTokens}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
               searchQuery={searchQuery}
               unseenCustomToken={transferPage}
+              isAscendingFilter={invertSearchOrder}
             />
           )}
         </AutoSizer>

@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, Token, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -17,7 +17,7 @@ import { isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useTokenBalancesWithSortBalances } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
 
@@ -34,7 +34,7 @@ function currencyKey(currency: Currency): string {
     return 'DEV'
   } else if (currency === MATIC) {
     return 'MATIC'
-  }else {
+  } else {
     return ''
   }
 }
@@ -163,8 +163,8 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text title={currency.name} fontWeight={500}>
-          {currency.symbol}
+        <Text title={currency?.name} fontWeight={500}>
+          {currency?.symbol}
         </Text>
         {!isNative() && (
           <FadedSpan>
@@ -174,7 +174,7 @@ function CurrencyRow({
                 <LinkStyledButton
                   onClick={event => {
                     event.stopPropagation()
-                    if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
+                    if (chainId && currency instanceof Token) removeToken(chainId, currency?.address)
                   }}
                 >
                   (Remove)
@@ -215,7 +215,8 @@ export default function CurrencyList({
   fixedListRef,
   showETH,
   searchQuery,
-  unseenCustomToken = false
+  unseenCustomToken = false,
+  isAscendingFilter = false
 }: {
   height: number
   currencies: Currency[]
@@ -225,7 +226,8 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
   searchQuery: string | undefined
-  unseenCustomToken?: boolean
+  unseenCustomToken?: boolean,
+  isAscendingFilter?: boolean
 }) {
   const { chainId } = useActiveWeb3React()
   const tokenBalances = useTokenBalances()
@@ -234,21 +236,29 @@ export default function CurrencyList({
     chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
       ? Currency.ETHER
       : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
-      ? Currency.BNB
-      : chainId === ChainId.MOONBASE_ALPHA
-      ? Currency.DEV
-      : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
-      ? Currency.MATIC
-      : Currency.AVAX
+        ? Currency.BNB
+        : chainId === ChainId.MOONBASE_ALPHA
+          ? Currency.DEV
+          : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
+            ? Currency.MATIC
+            : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,
     showETH,
     nativeToken
   ])
   
+  const sortTokensByBalance = useTokenBalancesWithSortBalances(isAscendingFilter)
+  
+    const sortedTokensByAmount = Object.values(Object.assign({}, sortTokensByBalance[0])) ;
+    const sortItemDataByBalance = sortedTokensByAmount.length ? [nativeToken, ...sortedTokensByAmount.map
+      ((token: TokenAmount) => itemData.find(curr => curr.name === token.token.name))]
+      : itemData
+ 
+
   const Row = useCallback(
     ({ data, index, style }) => {
-     
+
       const currency: Currency = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
@@ -277,8 +287,8 @@ export default function CurrencyList({
       height={height}
       ref={fixedListRef as any}
       width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
+      itemData={sortItemDataByBalance}
+      itemCount={sortItemDataByBalance?.length}
       itemSize={56}
       itemKey={itemKey}
       overscanCount={30}
