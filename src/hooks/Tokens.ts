@@ -7,7 +7,22 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { useActiveWeb3React } from './index'
 import { useMemo } from 'react'
 import { useUserAddedTokens } from '../state/user/hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 
+export function useAllCrossChainTokens() {
+  const { availableTokens } = useCrosschainState()
+  const { chainId } = useActiveWeb3React()
+  const userTokens = useUserAddedTokens()
+  ?.filter((x: any) => x.chainId === chainId)
+  ?.map((x: any) => {
+    return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+  })
+  return availableTokens
+        .map((x: any) => {
+          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+        })
+        .concat(userTokens)
+}
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
