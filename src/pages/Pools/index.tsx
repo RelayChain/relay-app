@@ -1,10 +1,10 @@
 import {
   AprObjectProps,
   setAprData,
+  setPoolEarnings,
   setPoolsData,
   setStackingInfo,
-  setToggle,
-  setPoolEarnings
+  setToggle
 } from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
@@ -389,7 +389,7 @@ export default function Pools() {
               </StatValue>
             </Stat>
             <Stat className="harvest">
-              <StatLabel>Ready To Harvest:</StatLabel>
+              <StatLabel>Ready To Claim:</StatLabel>
               <StatValue>
                 {numeral(readyForHarvestTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
