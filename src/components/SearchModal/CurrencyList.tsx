@@ -149,6 +149,10 @@ function CurrencyRow({
     return null
   }
 
+  if (!currency) {
+    return <></>
+  }
+
   return (
     <MenuItem
       style={{
@@ -248,12 +252,12 @@ export default function CurrencyList({
     nativeToken
   ])
   
-  const sortTokensByBalance = useTokenBalancesWithSortBalances(isAscendingFilter)
+  /* const sortTokensByBalance = useTokenBalancesWithSortBalances(isAscendingFilter)
   
     const sortedTokensByAmount = Object.values(Object.assign({}, sortTokensByBalance[0])) ;
     const sortItemDataByBalance = sortedTokensByAmount.length ? [nativeToken, ...sortedTokensByAmount.map
       ((token: TokenAmount) => itemData.find(curr => curr.name === token.token.name))]
-      : itemData
+      : itemData */
  
 
   const Row = useCallback(
@@ -287,8 +291,8 @@ export default function CurrencyList({
       height={height}
       ref={fixedListRef as any}
       width="100%"
-      itemData={sortItemDataByBalance}
-      itemCount={sortItemDataByBalance?.length}
+      itemData={itemData}
+      itemCount={itemData?.length}
       itemSize={56}
       itemKey={itemKey}
       overscanCount={30}
