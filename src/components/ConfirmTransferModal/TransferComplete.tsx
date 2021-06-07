@@ -2,8 +2,8 @@ import { AutoColumn } from '../Column'
 import { ButtonOutlined } from '../Button'
 import React from 'react'
 import { RowFixed } from '../Row'
-import { Text } from 'rebass'
 import {SuccessIllustation} from '../IllustationIcons'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
 const Message = styled.p`
@@ -45,7 +45,7 @@ export default function TransferComplete({
           <b>
             {transferAmount} {currentToken?.symbol}{' '}
           </b>
-          tokens were successfully transferred into the ChainBridge, and are now being sent from {activeChain} to{' '}
+          tokens were successfully transferred into the bridge, and are now being sent from {activeChain} to{' '}
           {transferTo}.
         </Text>
       </RowFixed>
