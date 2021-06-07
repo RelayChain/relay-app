@@ -517,7 +517,7 @@ export default function Manage({
                       Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
                     ) ?? '-'}
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
-                      ZERO {currencyA?.symbol}-{currencyB?.symbol}
+                      RELAY {currencyA?.symbol}-{currencyB?.symbol}
                     </span>
                   </TYPE.white>
                 </RowBetween>

@@ -5,14 +5,17 @@ export interface Colors {
   // base
   white: Color
   black: Color
-
+  modeBg: Color
+  modeBgSidebarMobile: Color
   // text
   text1: Color
   text2: Color
   text3: Color
   text4: Color
   text5: Color
-
+  modeTextDark: Color
+  modeTextLight: Color
+  modeSideBarLink: Color
   // backgrounds / greys
   bg1: Color
   bg2: Color

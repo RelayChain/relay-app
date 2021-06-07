@@ -141,7 +141,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               ⭐️
             </span>{' '}
             By adding liquidity you&apos;ll earn a share of the liquidity pool. If fees are added to the protocol by
-            ZERO token holders, they will accrue to your share by withdrawing your liquidity.
+            RELAY token holders, they will accrue to your share by withdrawing your liquidity.
           </TYPE.subHeader>
         </LightCard>
       )}

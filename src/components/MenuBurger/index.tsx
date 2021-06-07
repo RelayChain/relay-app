@@ -1,8 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import LogoDark from './../../assets/images/0-icon.png'
 
-const Header = styled.div`
+import {useApplicationState} from 'state/application/hooks'
+import LogoGradient from './../../assets/svg/gradient-circle-logo-relay.svg'
+import LogoLight from './../../assets/svg/white-circle-logo-relay.svg'
+
+const Header = styled.div<{isLightMode: boolean}>`
+  background: ${({ isLightMode }) => (isLightMode ? '' : '#fff')};
   display: none;
   backdrop-filter: blur(28px);
   align-items: center;
@@ -24,7 +28,7 @@ const Title = styled.a`
   z-index: 3;
   `};
 `
-const StyledBurger = styled.button<{ open?: boolean }>`
+const StyledBurger = styled.button<{ open?: boolean, isLightMode: boolean }>`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
@@ -49,7 +53,7 @@ const StyledBurger = styled.button<{ open?: boolean }>`
   div {
     width: 100%;
     height: 4px;
-    background: #effffa;
+    background: ${({ isLightMode }) => (isLightMode ? '#effffa' : '#000')};
     border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;
@@ -78,12 +82,13 @@ export interface MenuBurgerProps {
 }
 
 export default function MenuBurger({ open, setOpen }: MenuBurgerProps) {
+  const {isLightMode} = useApplicationState()
   return (
-    <Header>
+    <Header isLightMode={isLightMode}>
       <Title href="/">
-        <img width={'100%'} src={LogoDark} alt="logo" />
+        <img width={'100%'} src={!isLightMode ? LogoGradient : LogoLight} alt="logo" />
       </Title>
-      <StyledBurger open={open} onClick={setOpen}>
+      <StyledBurger open={open} onClick={setOpen} isLightMode={isLightMode}>
         <div />
         <div />
         <div />

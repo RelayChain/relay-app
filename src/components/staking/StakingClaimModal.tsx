@@ -93,14 +93,14 @@ const StakingClaimModal = ({ open, setOpen }: StakingModalProps) => {
           <UpperContent>
             <ClaimText>You’ll claim</ClaimText>
             <div>
-              <ClaimNumber>0.0022657 ZERO</ClaimNumber>
+              <ClaimNumber>0.0022657 RELAY</ClaimNumber>
               <SmallClaimNumber>~0.04 USD</SmallClaimNumber>
             </div>
           </UpperContent>
           <MiddleContent>
             <Flex>
               <SubTittle>Pool total pending yield</SubTittle>
-              <SubTittle style={{ textAlign: 'right' }}>4.531 ZERO</SubTittle>
+              <SubTittle style={{ textAlign: 'right' }}>4.531 RELAY</SubTittle>
             </Flex>
             <Flex>
               <SubTittle>Bounty</SubTittle>
@@ -114,8 +114,8 @@ const StakingClaimModal = ({ open, setOpen }: StakingModalProps) => {
           <QuestionWrap>
             <QuestionHelper
               text={`This bounty is given as a reward for providing a service to other users.
-                      Whenever you successfully claim the bounty, you’re also helping out by activating the Auto ZERO Pool’s compounding function for everyone.
-                      Auto-Compound Bounty: 0.05% of all Auto ZERO pool users pending yield`}
+                      Whenever you successfully claim the bounty, you’re also helping out by activating the Auto RELAY Pool’s compounding function for everyone.
+                      Auto-Compound Bounty: 0.05% of all Auto RELAY pool users pending yield`}
             />
           </QuestionWrap>
         </FooterContent>

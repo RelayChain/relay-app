@@ -12,7 +12,8 @@ describe('application reducer', () => {
       blockNumber: {
         [ChainId.MAINNET]: 3
       },
-      openModal: null
+      openModal: null,
+      isLightMode: false
     })
   })
 

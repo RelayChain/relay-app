@@ -101,7 +101,7 @@ export default function RelayGravityList() {
     <>
       <Title>Relay GRAVITY</Title>
       <PageContainer>
-        <SubTitle>Exclusive offerings to the ZERO community</SubTitle>
+        <SubTitle>Exclusive offerings to the RELAY community</SubTitle>
 
         <ControlsContainer>
           <Toggle

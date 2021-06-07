@@ -9,7 +9,7 @@ import styled, {
 
 import { Colors } from './styled'
 import { useIsDarkMode } from '../state/user/hooks'
-
+import {useApplicationState} from '../state/application/hooks'
 export * from './components'
 
 const MEDIA_WIDTHS = {
@@ -39,13 +39,17 @@ export function colors(darkMode: boolean): Colors {
     // base
     white,
     black,
-
+    modeBg: darkMode ? 'rgba(0, 0, 0, 0.35);' :  '#FFFFFF',
+    modeBgSidebarMobile: darkMode ? '#000' :  '#FFFFFF',
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
+    text1: darkMode ? '#FFFFFF' : '#3B1F6A',
     text2: darkMode ? '#A7B1F4' : '#C3C5CB',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    modeTextDark: darkMode ? '#A7B1F4' : '#FFF',
+    modeTextLight: darkMode ? '#FFF' : '#A7B1F4',
+    modeSideBarLink: !darkMode ? '#7C69FF' : '#FFF',
 
     // backgrounds / greys
     bg1: darkMode ? 'rgba(18, 21, 56, 0.54)' : '#FFFFFF',
@@ -120,8 +124,8 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
-
+  const {isLightMode} = useApplicationState()
+  const darkMode = isLightMode
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>

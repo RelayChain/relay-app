@@ -22,7 +22,7 @@ import PageContainer from './../../components/PageContainer'
 import PoolCard from '../../components/pools/PoolCard'
 import PoolControls from '../../components/pools/PoolControls'
 import PoolRow from '../../components/pools/PoolRow'
-import ZeroIcon from '../../assets/svg/zero_icon.svg'
+import RelayIcon from '../../assets/svg/gradient-circle-logo-relay.svg'
 import { getAllPoolsAPY } from 'api'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
@@ -501,7 +501,7 @@ export default function Pools() {
             ))}
           {account !== null && stakingRewardsExist && stakingInfos?.length === 0 && (
             <EmptyData>
-              <Spinner src={ZeroIcon} />
+              <Spinner src={RelayIcon} />
             </EmptyData>
           )}
           {account === null && <NoWalletConnected handleWalletModal={toggleWalletModal} />}

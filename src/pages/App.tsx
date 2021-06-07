@@ -42,10 +42,11 @@ import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
-import RelayGravityInfo from './RelayGravity/Info';
-import RelayGravityKyc from './RelayGravity/Kyc';
-import RelayGravityList from './RelayGravity';
+import RelayGravityInfo from './RelayGravity/Info'
+import RelayGravityKyc from './RelayGravity/Kyc'
+import RelayGravityList from './RelayGravity'
 import styled from 'styled-components'
+import { useApplicationState } from 'state/application/hooks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -53,6 +54,7 @@ const AppWrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: column;
 `};
@@ -64,7 +66,8 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{isLightMode: boolean}>`
+  background-color: ${({ isLightMode }) => isLightMode ? '' : '#fff'}
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -88,16 +91,18 @@ function TopLevelModals() {
 }
 
 export default function App() {
+  const { isLightMode } = useApplicationState()
+  const isLightBg = isLightMode ? 'bg-darken' : ''
   return (
     <Suspense fallback={null}>
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
-        <AppWrapper>
+        <AppWrapper >
           <SideMenu />
           <div className="snow-bg"></div>
-          <div className="bg-darken"></div>
+          <div className={isLightBg}></div>
 
-          <BodyWrapper>
+          <BodyWrapper isLightMode={isLightMode}>
             <URLWarning />
             <HeaderWrapper>
               <Header />

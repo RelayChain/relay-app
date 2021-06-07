@@ -4,6 +4,10 @@ import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './actions'
 
+export function useApplicationState(): AppState['application'] {
+  return useSelector<AppState, AppState['application']>(state => state.application)
+}
+
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
 
