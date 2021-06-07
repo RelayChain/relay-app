@@ -41,8 +41,8 @@
             "chainId": 43114,
             "address": "0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7",
             "decimals": 18,
-            "name": "Zero.Exchange Token",
-            "symbol": "ZERO"
+            "name": "Relay.Exchange Token",
+            "symbol": "RELAY"
         },
           {
             "chainId": 43114,

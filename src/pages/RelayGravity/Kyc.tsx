@@ -75,7 +75,7 @@ const Row = styled.div`
     height: 48px;
   }
 `
-export default function ZeroGravityKyc() {
+export default function RelayGravityKyc() {
 
   const [formSent, setFormSent] = useState(false);
 

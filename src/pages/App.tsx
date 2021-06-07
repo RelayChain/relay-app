@@ -42,9 +42,9 @@ import URLWarning from '../components/Header/URLWarning'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
-import ZeroGravityInfo from './ZeroGravity/Info';
-import ZeroGravityKyc from './ZeroGravity/Kyc';
-import ZeroGravityList from './ZeroGravity';
+import RelayGravityInfo from './RelayGravity/Info';
+import RelayGravityKyc from './RelayGravity/Kyc';
+import RelayGravityList from './RelayGravity';
 import styled from 'styled-components'
 
 const AppWrapper = styled.div`
@@ -133,9 +133,9 @@ export default function App() {
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route exact strict path="/vote/:id" component={VotePage} />
                 <Route exact strict path="/transfer" component={Transfer} />
-                <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
-                <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
-                <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />
+                <Route exact strict path="/relay-gravity" component={RelayGravityList} />
+                <Route exact strict path="/relay-gravity/:idoURL" component={RelayGravityInfo} />
+                <Route exact strict path="/relay-gravity/:idoURL/kyc" component={RelayGravityKyc} />
                 <Route component={RedirectPathToHomeOnly} />
               </Switch>
             </Web3ReactManager>

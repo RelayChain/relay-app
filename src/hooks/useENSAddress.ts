@@ -1,7 +1,7 @@
 import { namehash } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import isZero from '../utils/isZero'
+import isRelay from '../utils/isRelay'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
 
@@ -22,7 +22,7 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
   const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
+    resolverAddressResult && !isRelay(resolverAddressResult) ? resolverAddressResult : undefined,
     false
   )
   const addr = useSingleCallResult(resolverContract, 'addr', ensNodeArgument)

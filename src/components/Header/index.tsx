@@ -13,10 +13,13 @@ import { PopupContent } from 'state/application/actions'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
+
+const SupTitle = styled.h1`
+  font-size: 40px;
+`
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -264,7 +267,9 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <img src={ZeroLogo} alt="Zero logotype" />
+          <SupTitle>
+         Relay
+         </SupTitle>
         </LogoContainer>
       </HideMedium>
       {account && userEthBalance ? (

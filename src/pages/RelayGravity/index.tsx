@@ -80,7 +80,7 @@ const HeaderSection = styled.div<{ width?: any }>`
   color: #A7B1F4;
 `
 
-export default function ZeroGravityList() {
+export default function RelayGravityList() {
 
   const [showActive, setShowActive] = useState(true);
 
@@ -99,7 +99,7 @@ export default function ZeroGravityList() {
 
   return (
     <>
-      <Title>ZERO GRAVITY</Title>
+      <Title>Relay GRAVITY</Title>
       <PageContainer>
         <SubTitle>Exclusive offerings to the ZERO community</SubTitle>
 

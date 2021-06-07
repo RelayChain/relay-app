@@ -1,17 +1,17 @@
-# Zero Exchange App
+# Relay Exchange App
 
-[![Lint](https://github.com/zeroexchange/app/workflows/Lint/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ALint)
-[![Tests](https://github.com/zeroexchange/app/workflows/Tests/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ATests)
+[![Lint](https://github.com/relayexchange/app/workflows/Lint/badge.svg)](https://github.com/relayexchange/app/actions?query=workflow%3ALint)
+[![Tests](https://github.com/relayexchange/app/workflows/Tests/badge.svg)](https://github.com/relayexchange/app/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 
-An open source interface for Zero Exchange -- a fork of uniswap providing cross chain liquidity from Ethereum to Avalanche.
+An open source interface for Relay Exchange -- a fork of uniswap providing cross chain liquidity from Ethereum to Avalanche.
 
 - Website: [0.exchange](https://0.exchange/)
 - App: [app.0.exchange](https://app.0.exchange)
 - Blog: [blog.0.exchange/](https://blog.0.exchange/)
-- Twitter: [@OfficialZeroDEX](https://twitter.com/OfficialZeroDEX)
+- Twitter: [@OfficialRelayDEX](https://twitter.com/OfficialRelayDEX)
 - Email: [hello@0.exchange](mailto:hello@0.exchange)
-- Discord: [Zero Exchange](https://discord.com/invite/5xwKdqrtDu)
+- Discord: [Relay Exchange](https://discord.com/invite/5xwKdqrtDu)
 - Learn More: [Learn More](https://0.exchange/learn-more)
 
 ## Development

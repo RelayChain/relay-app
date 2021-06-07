@@ -213,7 +213,7 @@ export default function ZeroGravityInfo() {
     if (idoData.kycURL) {
       window.open(idoData.kycURL, '_blank')
     } else {
-      history.push(`/zero-gravity/${idoURL}/kyc`)
+      history.push(`/relay-gravity/${idoURL}/kyc`)
     }
   }
 

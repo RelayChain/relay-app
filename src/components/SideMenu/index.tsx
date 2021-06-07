@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
-import LogoDark from './../../assets/images/0-icon.png'
+import LogoGradient from './../../assets/svg/gradient-circle-logo-relay.svg'
 import MenuBurger from './../MenuBurger'
 import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
@@ -128,7 +128,7 @@ export default function SideMenu() {
       <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
       <SideMenuWrapper open={open}>
         <Title href="/">
-          <img width={'100%'} src={LogoDark} alt="logo" />
+          <img width={'100%'} src={LogoGradient} alt="Relay Logo Gradient" />
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={handleSideMenuOpen}>
@@ -161,11 +161,11 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
-          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
+          <StyledNavLink id={`pools-nav-link`} to={'/relay-gravity'} onClick={handleSideMenuOpen}>
             <IconLink>
-              <Icon icon="planet" active={pathname.includes('zero-gravity')} />
+              <Icon icon="planet" active={pathname.includes('relay-gravity')} />
             </IconLink>
-            <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
+            <span className={pathname.includes('relay-gravity') ? 'active' : ''}>{t('Relay Gravity')}</span>
           </StyledNavLink>
           {/* <StyledNavLink id={`staking-nav-link`} to={'/staking'} onClick={hanldeSidemenuOpen}>
             <IconLink>

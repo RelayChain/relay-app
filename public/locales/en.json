@@ -52,7 +52,7 @@
   "deposit": "Deposit",
   "currentPoolSize": "Current Pool Size",
   "yourPoolShare": "Your Pool Share",
-  "noZero": "Amount cannot be zero.",
+  "noRelay": "Amount cannot be relay.",
   "mustBeETH": "One of the input must be ETH.",
   "enterCurrencyOrLabelCont": "Enter a {{ inputCurrency }} or {{ label }} value to continue.",
   "youAreAdding": "You are adding",
