@@ -94,7 +94,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
       <ModalContainer>
         <Cross onClick={onDismiss} />
 
-        <MenuItem href={`https://zero-exchange.gitbook.io/zero-exchange-docs/`}>
+        <MenuItem href={`https://0-exchange.gitbook.io/0-exchange-docs/`}>
           <IconLink>
             <Book size={20} />
           </IconLink>
