@@ -48,6 +48,8 @@ export function colors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: !darkMode ? '#ff007a' : '#EDEEF2',
+    text7: darkMode ? '#A7B1F4' : '#3B1F6A',
     modeTextDark: darkMode ? '#A7B1F4' : '#FFF',
     modeTextLight: darkMode ? '#FFF' : '#A7B1F4',
     modeSideBarLink: !darkMode ? '#7C69FF' : '#FFF',
@@ -66,9 +68,9 @@ export function colors(darkMode: boolean): Colors {
     modalBG: darkMode ? 'rgba(0,0,0,.75)' : 'rgba(0,0,0,0.75)',
     modalModeBG: darkMode ? 'rgba(47, 53, 115, 0.62)' : '#fff',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
-
+    earnedBG: darkMode ? 'rgba(18, 21, 56, 0.54)' : 'rgba(195, 172, 218, 0.24)',
     //primary colors
-    primary1: darkMode ? '#6752F7' : '#ff007a',
+    primary1: darkMode ? '#6752F7' : '#6752F7',
     primary2: darkMode ? '#6752F7' : '#FF8CC3',
     primary3: darkMode ? '#1CB0F9' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
@@ -144,6 +146,9 @@ export const TYPE = {
   main(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },
+  mainPool(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'text7'} {...props} />
+  },
   link(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
   },
@@ -152,6 +157,9 @@ export const TYPE = {
   },
   white(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
+  },
+  earnedTitle(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'modeTextDark'} {...props} />
   },
   body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
@@ -185,7 +193,7 @@ export const TYPE = {
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  }
+  },
 }
 
 export const FixedGlobalStyle = createGlobalStyle`

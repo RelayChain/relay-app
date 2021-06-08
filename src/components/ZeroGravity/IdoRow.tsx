@@ -78,7 +78,7 @@ export default function IdoRow({ idoInfo}: { idoInfo: any }) {
         {idoInfo.allocationMax}
       </InfoSection>
       <InfoSection>
-        <StyledNavLink id={`${idoInfo.idoURL}-nav-link`} to={`/relay-gravity/${idoInfo.idoURL}`}>
+        <StyledNavLink id={`${idoInfo.idoURL}-nav-link`} to={`/relay-gravity/${idoInfo.idoURL}`} style={{textDecoration:"none"}}>
           <ButtonPrimary style={{ width: '120px'}}>Details</ButtonPrimary>
         </StyledNavLink>
       </InfoSection>

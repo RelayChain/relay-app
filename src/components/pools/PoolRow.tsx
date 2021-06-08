@@ -95,7 +95,7 @@ const DetailsBox = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 34px;
-  background: rgba(18, 21, 56, 0.54);
+  background: ${({ theme }) => theme.earnedBG};
   border-radius: 44px;
   justify-content: center;
   display: flex;
@@ -138,44 +138,44 @@ export default function PoolRow({
         <Cell>
           <TitleCell>
             <Logo currency0={currency0} currency1={currency1} size={24} style={{ marginRight: '8px' }} />
-            <TYPE.main fontWeight={500} fontSize={15} style={{ display: 'inline' }}>
+            <TYPE.mainPool fontWeight={500} fontSize={15} style={{ display: 'inline' }}>
               {currency0.symbol}-{currency1.symbol}
-            </TYPE.main>
+            </TYPE.mainPool>
           </TitleCell>
         </Cell>
         <Cell mobile={false}>
-          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+          <TYPE.mainPool fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
             {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
-          </TYPE.main>
+          </TYPE.mainPool>
         </Cell>
         <Cell mobile={false}>
-          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+          <TYPE.mainPool fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfoTop.APR ? stakingInfoTop.APR + '%' : '-'}
-          </TYPE.main>
+          </TYPE.mainPool>
         </Cell>
         <Cell mobile={false}>
-          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+          <TYPE.mainPool fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
           {valueOfTotalStakedAmountInUSDC || valueOfTotalStakedAmountInWETH
               ? valueOfTotalStakedAmountInUSDC
                 ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
                 : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' })} ${symbol}`
               : <CustomLightSpinner src={Circle} alt="loader" size={'15px'} />}
-          </TYPE.main>
+          </TYPE.mainPool>
         </Cell>
         <Cell mobile={false}>
-          <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
+          <TYPE.mainPool fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {countUpAmount}
-          </TYPE.main>
+          </TYPE.mainPool>
         </Cell>
         <Cell style={{ width: '150px' }}>
           <DetailsCell showDetails={showDetails}>
-            <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'left', marginRight: 'auto' }}>
+            <TYPE.mainPool fontWeight={500} fontSize={15} style={{ textAlign: 'left', marginRight: 'auto' }}>
               {moment(stakingInfo?.periodFinish).fromNow()}
-            </TYPE.main>
+            </TYPE.mainPool>
             <DropdownArrow />
           </DetailsCell>
         </Cell>
@@ -186,12 +186,12 @@ export default function PoolRow({
           <td colSpan={8}>
             <Details>
               <DetailsBox>
-                <TYPE.main fontWeight={500} fontSize={15}>
+                <TYPE.mainPool fontWeight={500} fontSize={15}>
                   Earned:
-                </TYPE.main>
+                </TYPE.mainPool>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ display: 'flex', flexGrow: 1 }}>
-                    <TYPE.white fontWeight={600} fontSize={32}>
+                    <TYPE.earnedTitle fontWeight={600} fontSize={32}>
                       <CountUp
                         key={countUpAmount}
                         isCounting
@@ -201,7 +201,7 @@ export default function PoolRow({
                         thousandsSeparator={','}
                         duration={1}
                       />
-                    </TYPE.white>
+                    </TYPE.earnedTitle>
                   </div>
                   {countUpAmount && parseFloat(countUpAmount) > 0 && (
                     <div style={{ display: 'flex', flexGrow: 0 }}>
@@ -218,7 +218,7 @@ export default function PoolRow({
                     state: { stakingRewardAddress }
                   }}
                 >
-                  <ButtonOutlined>Select</ButtonOutlined>
+                  <ButtonOutlined style={{color: 'white'}}>Select</ButtonOutlined>
                 </StyledInternalLink>
               </DetailsBox>
             </Details>

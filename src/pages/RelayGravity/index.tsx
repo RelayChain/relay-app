@@ -8,6 +8,7 @@ import PageContainer from '../../components/PageContainer'
 import Toggle from '../../components/Toggle';
 import styled from 'styled-components';
 import moment from 'moment';
+import {useApplicationState} from 'state/application/hooks'
 
 const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none !important;
@@ -31,12 +32,12 @@ const SubTitle = styled.h3`
 `};
 `
 
-const ControlsContainer = styled.div`
+const ControlsContainer = styled.div<{isLightMode?: boolean}>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.25);
+  background:${({isLightMode}) => isLightMode ?  'rgba(0, 0, 0, 0.25)' : 'rgba(195,172,218,0.24);'}  ;
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .launch-button {
@@ -81,6 +82,7 @@ const HeaderSection = styled.div<{ width?: any }>`
 `
 
 export default function RelayGravityList() {
+  const {isLightMode} = useApplicationState()
 
   const [showActive, setShowActive] = useState(true);
 
@@ -103,7 +105,7 @@ export default function RelayGravityList() {
       <PageContainer>
         <SubTitle>Exclusive offerings to the RELAY community</SubTitle>
 
-        <ControlsContainer>
+        <ControlsContainer isLightMode={isLightMode}>
           <Toggle
             isActive={showActive}
             toggle={onHandleToggleActive}

@@ -27,7 +27,7 @@ import { getAllPoolsAPY } from 'api'
 import { useActiveWeb3React } from '../../hooks'
 import { useDispatch } from 'react-redux'
 import { usePoolsState } from './../../state/pools/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 
 const numeral = require('numeral')
 
@@ -41,8 +41,8 @@ const PageWrapper = styled.div`
 `};
 `
 
-const Wrapper = styled.div`
-  background: rgba(47, 53, 115, 0.32);
+const Wrapper = styled.div<{isLightMode?: boolean}>`
+  background: ${({ isLightMode}) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -109,10 +109,10 @@ const opacity = keyframes`
   }
 `
 
-const TextLink = styled.div`
+const TextLink = styled.div<{isLightMode?: boolean}>`
   font-size: 1rem;
   font-weight: bold;
-  color: #6752f7;
+  color: ${({ isLightMode}) => !isLightMode ? '#9726cd' : '#6752f7'} ;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   &.pink {
@@ -140,12 +140,12 @@ const GridContainer = styled.div`
   column-gap: 28px;
 `
 
-const StatsWrapper = styled.div`
+const StatsWrapper = styled.div<{isLightMode?: boolean}>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: ${({ isLightMode}) => isLightMode ? 'rgba(0, 0, 0, 0.25)' : 'rgba(219,205,236,0.32)'};
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .add-liquidity-link {
@@ -189,9 +189,9 @@ const Stat = styled.div`
 `};
 `
 
-const StatLabel = styled.h5`
+const StatLabel = styled.h5<{isLightMode?: boolean}>`
   font-weight: bold;
-  color: #fff;
+  color: ${({ isLightMode}) => isLightMode ? '#fff' : '#3B1F6A'} ;
   font-size: 1rem;
   span {
     opacity: 0.75;
@@ -199,9 +199,9 @@ const StatLabel = styled.h5`
   }
 `
 
-const StatValue = styled.h6`
+const StatValue = styled.h6<{isLightMode?: boolean}>`
   font-weight: bold;
-  color: #fff;
+  color: ${({ isLightMode}) => isLightMode ? '#fff' : '#3B1F6A'} ;
   font-size: 1.75rem;
   margin-top: 10px;
   margin-bottom: 0;
@@ -234,6 +234,7 @@ export type SortedTitleProps = {
 }
 
 export default function Pools() {
+  const {isLightMode} = useApplicationState()
   //@ts-ignore
   const serializePoolControls = JSON.parse(localStorage.getItem('PoolControls')) //get filter data from local storage
   const dispatch = useDispatch<AppDispatch>()
@@ -381,24 +382,24 @@ export default function Pools() {
       {(!arrayToShow || apyRequested) && <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />}
       <PageContainer>
         {account !== null && arrayToShow?.length > 0 && aprData?.length > 0 && !apyRequested && (
-          <StatsWrapper>
+          <StatsWrapper isLightMode={isLightMode}>
             <Stat className="weekly">
-              <StatLabel>Weekly Earnings:</StatLabel>
-              <StatValue>
+              <StatLabel isLightMode={isLightMode}>Weekly Earnings:</StatLabel>
+              <StatValue isLightMode={isLightMode}>
                 {numeral(weeklyEarningsTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <Stat className="harvest">
-              <StatLabel>Ready To Claim:</StatLabel>
-              <StatValue>
+              <StatLabel isLightMode={isLightMode}>Ready To Claim:</StatLabel>
+              <StatValue isLightMode={isLightMode}>
                 {numeral(readyForHarvestTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
             <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>
-              <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+              <ButtonOutlined className="add-liquidity-button" style={{ color: `${isLightMode ? '' : '#9726cd'}`, borderColor: `${isLightMode ? '' : '#9726cd'}`}}>Add Liquidity</ButtonOutlined>
             </StyledInternalLink>
             <StyledInternalLink className="remove-liquidity-link" to={{ pathname: `/remove` }}>
-              <TextLink>Remove Liquidity</TextLink>
+              <TextLink isLightMode={isLightMode}>Remove Liquidity</TextLink>
             </StyledInternalLink>
           </StatsWrapper>
         )}
@@ -418,52 +419,52 @@ export default function Pools() {
             stakingInfos?.length > 0 &&
             arrayToShow?.length > 0 &&
             (displayMode === 'table' ? (
-              <Wrapper>
+              <Wrapper isLightMode={isLightMode}>
                 <PoolsTable style={{ width: '100%' }}>
                   <thead>
                     <tr style={{ verticalAlign: 'top', height: '30px' }}>
                       <HeaderCell style={{ width: '45px' }}></HeaderCell>
                       <HeaderCell>
-                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
                           Type
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                       <HeaderCell mobile={false}>
-                        <TYPE.main fontWeight={600} fontSize={12}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12}>
                           Reward
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => onSortChange('filteredMode', 'APR')}
                       >
-                        <TYPE.main fontWeight={600} fontSize={12}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12}>
                           <SortedTitle title="APR" />
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => onSortChange('filteredMode', 'Liquidity')}
                       >
-                        <TYPE.main fontWeight={600} fontSize={12}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12}>
                           <SortedTitle title="Liquidity" />
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                       <HeaderCell
                         style={{ cursor: 'pointer' }}
                         mobile={false}
                         onClick={() => onSortChange('filteredMode', 'Earned')}
                       >
-                        <TYPE.main fontWeight={600} fontSize={12}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12}>
                           <SortedTitle title="Earned" />
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                       <HeaderCell style={{ width: '150px' }}>
-                        <TYPE.main fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                        <TYPE.mainPool fontWeight={600} fontSize={12} style={{ textAlign: 'left', paddingLeft: '20px' }}>
                           Ending:
-                        </TYPE.main>
+                        </TYPE.mainPool>
                       </HeaderCell>
                     </tr>
                   </thead>
@@ -494,6 +495,7 @@ export default function Pools() {
                       onHarvest={() => handleHarvest(item)}
                       key={item.stakingRewardAddress}
                       stakingInfoTop={item}
+                      isLightMode={isLightMode}
                     />
                   )
                 })}

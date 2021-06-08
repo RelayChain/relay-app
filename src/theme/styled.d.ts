@@ -14,6 +14,8 @@ export interface Colors {
   text3: Color
   text4: Color
   text5: Color
+  text6: Color
+  text7: Color
   modeTextDark: Color
   modeTextLight: Color
   modeSideBarLink: Color
@@ -30,7 +32,7 @@ export interface Colors {
   modalBG: Color
   modalModeBG: Color
   advancedBG: Color
-
+  earnedBG: Color
   //blues
   primary1: Color
   primary2: Color

@@ -27,11 +27,11 @@ const ToggleElement = styled.span<{ isLive?: boolean; isOnSwitch?: boolean }>`
   `};
 `
 
-const StyledToggle = styled.button<{ isLive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ isLive?: boolean; activeElement?: boolean, isLightMode?: boolean }>`
   border-radius: 12px;
   border: none;
   height: 48px;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : ' rgba(219, 205, 236, 0.32)'} ;
   box-shadow: inset 2px 2px 5px rgb(255 255 255 / 10%);
   -webkit-backdrop-filter: blur(28px);
   backdrop-filter: blur(28px);
@@ -125,16 +125,17 @@ export interface ToggleProps {
   isLive: boolean
   onSortChange: (key: string, value: string | boolean) => void
   isStaked: boolean
+  isLightMode?: boolean
 }
 
-export default function Toggle({ isLive, onSortChange, isStaked }: ToggleProps) {
+export default function Toggle({ isLive, onSortChange, isStaked, isLightMode }: ToggleProps) {
   return (
     <AlignCenter>
       <StyledStacked onClick={() => onSortChange('isStaked', !isStaked)}>
         <input type="checkbox" checked={isStaked} readOnly />
         <label>Staked only</label>
       </StyledStacked>
-      <StyledToggle isLive={isLive} onClick={() => onSortChange('isLive', !isLive)}>
+      <StyledToggle isLightMode={isLightMode} isLive={isLive} onClick={() => onSortChange('isLive', !isLive)}>
         <ToggleElement isLive={isLive} isOnSwitch={true}>
           Live
         </ToggleElement>

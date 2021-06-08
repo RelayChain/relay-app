@@ -15,10 +15,10 @@ import { useStakingInfoTop } from 'state/pools/hooks'
 
 const moment = require('moment')
 
-const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled.div<{ showBackground: boolean; bgColor: any, isLightMode?: boolean }>`
   border: 2px solid;
   border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219, 205, 236, 0.32)'};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -29,7 +29,8 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   flex-direction: column;
   align-items: center;
   &.active {
-    background: rgba(179, 104, 252, 0.2);
+    background: ${({isLightMode}) => isLightMode ? 'rgba(179, 104, 252, 0.2)' : ''} ;
+    border: ${({isLightMode}) => isLightMode ? '2px solid transparent' : '2px solid #ff54ef'} 
   }
 `
 
@@ -76,11 +77,11 @@ const Details = styled.div`
   margin-top: 16px;
   width: 100%;
 `
-const DetailsBox = styled.div`
+const DetailsBox = styled.div<{isLightMode?: boolean}>`
   width: 100%;
   flex-direction: column;
   padding: 34px;
-  background: rgba(18, 21, 56, 0.54);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(18, 21, 56, 0.54);' : 'rgba(195, 172, 218, 0.24);'};
   border-radius: 44px;
   min-height: 224px;
   justify-content: center;
@@ -88,7 +89,7 @@ const DetailsBox = styled.div`
   position: relative;
 `
 
-export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop: StakingInfo | any; onHarvest: any }) {
+export default function PoolCard({ stakingInfoTop, onHarvest, isLightMode }: { stakingInfoTop: StakingInfo | any; onHarvest: any, isLightMode:boolean }) {
   const {
     countUpAmount,
     isStaking,
@@ -110,6 +111,7 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
   return (
     <>
       <Wrapper
+        isLightMode={isLightMode}
         showBackground={isStaking}
         bgColor={backgroundColor}
         className={parseFloat(countUpAmount) !== 0 ? 'active' : ''}
@@ -162,12 +164,12 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
         </Row>
 
         <Details>
-          <DetailsBox>
+          <DetailsBox isLightMode={isLightMode}>
             {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) ? (
               <>
-                <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                <TYPE.mainPool fontWeight={500} fontSize={16} style={{ textAlign: 'left', marginBottom: '1rem' }}>
                   Earned:
-                </TYPE.white>
+                </TYPE.mainPool>
                 <div
                   style={{
                     display: 'flex',
@@ -213,9 +215,9 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
                   flexDirection: 'column'
                 }}
               >
-                <TYPE.white fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                <TYPE.mainPool fontWeight={500} fontSize={16} style={{ textAlign: 'center', marginBottom: '1rem' }}>
                   Start Farming:
-                </TYPE.white>
+                </TYPE.mainPool>
                 <StyledInternalLink
                   style={{ textDecoration: 'none', width: '100%', marginTop: 'auto' }}
                   to={{
@@ -223,7 +225,7 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
                     state: { stakingRewardAddress }
                   }}
                 >
-                  <ButtonOutlined>Select</ButtonOutlined>
+                  <ButtonOutlined style={{ color: 'white'}}>Select</ButtonOutlined>
                 </StyledInternalLink>
               </div>
             )}
