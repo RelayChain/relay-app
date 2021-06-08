@@ -16,6 +16,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
+import {useApplicationState} from 'state/application/hooks' 
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -43,6 +44,7 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
+  const {isLightMode} = useApplicationState()
   const { account, chainId } = useActiveWeb3React()
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0, chainId)
@@ -72,7 +74,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   return (
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
-        <GreyCard border={border}>
+        <GreyCard border={border}  isLightMode={isLightMode}>
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>

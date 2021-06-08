@@ -19,8 +19,8 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg1};
 `
 
-export const GreyCard = styled(Card)`
-  background: rgba(47, 53, 115, 0.32);
+export const GreyCard = styled(Card)<{isLightMode?: boolean}>`
+  background: ${({ isLightMode }) => isLightMode ? ' rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 30px;

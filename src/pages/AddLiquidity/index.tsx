@@ -41,15 +41,15 @@ import { useCrossChain } from '../../state/crosschain/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{isLightMode?: boolean}>`
   position: relative;
   max-width: 675px;
   margin-top: 4rem;
   width: 100%;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'} ;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 30px;
@@ -72,7 +72,7 @@ export default function AddLiquidity({
   ...props
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   useCrossChain()
-
+  const {isLightMode} = useApplicationState()
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -389,7 +389,7 @@ export default function AddLiquidity({
 
   return (
     <>
-      <BodyWrapper>
+      <BodyWrapper isLightMode={isLightMode}>
         <AddRemoveTabs creating={isCreate} adding={true} onGoBack={handleGoBack} />
         <Wrapper>
           <TransactionConfirmationModal
