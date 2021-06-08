@@ -9,6 +9,7 @@ import { ButtonOutlined } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import useGasPrice from 'hooks/useGasPrice'
+import { useApplicationState } from 'state/application/hooks'
 
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
@@ -19,13 +20,13 @@ width: 100%;
 margin-left: auto;
 margin-right: auto;
 `
-const SwapWrap = styled.div`
+const SwapWrap = styled.div<{isLightMode?: boolean}>`
 font-family: Poppins;
 position: relative;
 width: 400px;
 max-width: 100%;
 padding: 28px 34px;
-background: rgba(47, 53, 115, 0.32);
+background: ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'};
 box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
 backdrop-filter: blur(28px);
 border-radius: 44px;
@@ -63,7 +64,7 @@ const ButtonsFlex = styled.div`
     pointer-events: none;
   }
 `
-const BuyWrap = styled.div`
+const BuyWrap = styled.div<{isLightMode?: boolean}>`
   display: flex;
   flex-direction: column;
   input {
@@ -73,7 +74,6 @@ const BuyWrap = styled.div`
     outline: none;
     border: none;
     flex: 1 1 auto;
-    background: transparent;
     padding: 0px 15px;
     border-radius: 12px;
     font-size: 22px;
@@ -81,7 +81,7 @@ const BuyWrap = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-appearance: textfield;
-    background: rgba(0,0,0,.25);
+    background: ${({ isLightMode }) => isLightMode ? 'rgba(0,0,0,.25)' : '#E3D6F3'};
     height: 48px;
   }
   input::-webkit-outer-spin-button,
@@ -106,6 +106,7 @@ const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.fro
 const DEPOSIT_CONTRACT_ADDR = '0xe691fD6Ea139De7b28392e527124e82Cd0FF15Cc';
 
 export default function WSDSale() {
+  const {isLightMode} = useApplicationState()
   web3React = useActiveWeb3React()
   const wiseSale = useWISESaleContract(DEPOSIT_CONTRACT_ADDR)
 
@@ -146,8 +147,8 @@ export default function WSDSale() {
     <>
       <SwapFlex>
         <SwapFlexRow>
-          <SwapWrap>
-            <BuyWrap>
+          <SwapWrap isLightMode={isLightMode}>
+            <BuyWrap isLightMode={isLightMode}>
               <h2 style={{ marginBottom: '.5rem' }}>WISE Token Sale:</h2>
               <>
                 {!web3React.account && <p>Please connect to wallet</p>}

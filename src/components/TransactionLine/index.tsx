@@ -19,7 +19,7 @@ const Text = styled.div`
   font-size: 14px;
   line-height: 100%;
   letter-spacing: -0.01em;
-  color: #b7c0f9;
+  color: ${({ theme }) => theme.transactionLine};
   opacity: 0.8;
   text-align: center
   margin-top:5px

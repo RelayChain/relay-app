@@ -9,7 +9,7 @@ import styled, {
 
 import { Colors } from './styled'
 import { useIsDarkMode } from '../state/user/hooks'
-
+import {useApplicationState} from '../state/application/hooks'
 export * from './components'
 
 const MEDIA_WIDTHS = {
@@ -37,15 +37,25 @@ const black = '#000000'
 export function colors(darkMode: boolean): Colors {
   return {
     // base
+    bodyBg: darkMode ? 'linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%)' : '#fff',
     white,
     black,
-
+    modeBg: darkMode ? 'rgba(0, 0, 0, 0.35);' :  '#FFFFFF',
+    modeBgSidebarMobile: darkMode ? '#000' :  '#FFFFFF',
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
+    text1: darkMode ? '#FFFFFF' : '#3B1F6A',
     text2: darkMode ? '#A7B1F4' : '#C3C5CB',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: !darkMode ? '#ff007a' : '#EDEEF2',
+    text7: darkMode ? '#A7B1F4' : '#3B1F6A',
+    modeTextDark: darkMode ? '#A7B1F4' : '#FFF',
+    modeTextLight: darkMode ? '#FFF' : '#A7B1F4',
+    modeSideBarLink: !darkMode ? '#7C69FF' : '#FFF',
+    lightDarkColor: !darkMode ? '#3B1F6A' : '#FFF',
+    web3ConnectColor: !darkMode ? '#9726cd' : '#a7b1f4',
+    transactionLine: !darkMode ? '#727BBA' : '#a7b1f4',
 
     // backgrounds / greys
     bg1: darkMode ? 'rgba(18, 21, 56, 0.54)' : '#FFFFFF',
@@ -56,10 +66,11 @@ export function colors(darkMode: boolean): Colors {
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.75)' : 'rgba(0,0,0,0.75)',
+    modalModeBG: darkMode ? 'rgba(47, 53, 115, 0.62)' : '#fff',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
-
+    earnedBG: darkMode ? 'rgba(18, 21, 56, 0.54)' : 'rgba(195, 172, 218, 0.24)',
     //primary colors
-    primary1: darkMode ? '#6752F7' : '#ff007a',
+    primary1: darkMode ? '#6752F7' : '#6752F7',
     primary2: darkMode ? '#6752F7' : '#FF8CC3',
     primary3: darkMode ? '#1CB0F9' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
@@ -120,8 +131,8 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
-
+  const {isLightMode} = useApplicationState()
+  const darkMode = isLightMode
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
@@ -135,6 +146,9 @@ export const TYPE = {
   main(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },
+  mainPool(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'text7'} {...props} />
+  },
   link(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
   },
@@ -143,6 +157,9 @@ export const TYPE = {
   },
   white(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
+  },
+  earnedTitle(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'modeTextDark'} {...props} />
   },
   body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
@@ -176,7 +193,7 @@ export const TYPE = {
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  }
+  },
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
@@ -235,8 +252,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #2C3168;
-  background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
+  background: ${({ theme }) => theme.bodyBg};
 }
 `
 

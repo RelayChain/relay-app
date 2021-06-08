@@ -17,6 +17,7 @@ import useWindowDimensions from './../../hooks/useWindowDimensions'
 import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import { dateFormatted } from 'utils/getFormattedMonth'
 import { Title } from '../../theme'
+import { useApplicationState } from 'state/application/hooks'
 
 const BubbleMarginWrap = styled.div`
   display: flex;
@@ -92,6 +93,7 @@ function fnum(x: number) {
 }
 
 export default function Home() {
+  const { isLightMode } = useApplicationState()
   const [pagination, setPagination] = useState<number>(0)
   const [walletHolderCount, setWalletHolderCount] = useState<number>(0)
   const [totalValue, setTotalValue] = useState<number>(26285647.16)
@@ -166,6 +168,7 @@ export default function Home() {
           ) : (
             <>
               <BubbleChart
+              isLightMode={isLightMode}
                 type="line"
                 categoriesX={formattedDate}
                 title="Liquidity"
@@ -180,11 +183,11 @@ export default function Home() {
                   </CenterWrap>
                 ) : (
                   <>
-                    <Bubble variant="pink" color="#A7B1F4" title="Wallet Holders" showMountains={true}>
+                    <Bubble variant={isLightMode ? 'pink' : 'light'} color="#A7B1F4" title="Wallet Holders" showMountains={true}>
                       {new Intl.NumberFormat().format(walletHolderCount)}
                     </Bubble>
                     <Bubble
-                      variant="purple"
+                      variant={isLightMode ? 'purple' : 'light'}
                       color="#A7B1F4"
                       prefix="$"
                       suffix={fnum(totalValue)?.suffix}
@@ -205,7 +208,7 @@ export default function Home() {
           </CenterWrap>
         ) : (
           <>
-            <Transactions transactions={transactionsData.data?.transactions} />
+            <Transactions transactions={transactionsData.data?.transactions}   isLightMode={isLightMode}/>
             <FlexButtons>
               {pagination > 0 && (
                 <Button>

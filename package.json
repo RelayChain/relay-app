@@ -1,6 +1,6 @@
 {
-  "name": "@zeroexchange/app",
-  "description": "Zero Exchange App",
+  "name": "@relayexchange/app",
+  "description": "Relay Exchange App",
   "homepage": ".",
   "private": true,
   "devDependencies": {

@@ -2,7 +2,7 @@ import { namehash } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { isAddress } from '../utils'
-import isZero from '../utils/isZero'
+import isRelay from '../utils/isRelay'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
 
@@ -24,7 +24,7 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
+    resolverAddressResult && !isRelay(resolverAddressResult) ? resolverAddressResult : undefined,
     false
   )
   const name = useSingleCallResult(resolverContract, 'name', ensNodeArgument)

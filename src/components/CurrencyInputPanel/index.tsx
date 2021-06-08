@@ -15,6 +15,7 @@ import { returnBalanceNum } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
+import {useApplicationState} from 'state/application/hooks'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -89,9 +90,9 @@ const Aligner = styled.span`
 
 `};
 `
-const SectionLabel = styled.span`
+const SectionLabel = styled.span<{isLightMode?: boolean}>`
   display: flex;
-  color: #a7b1f4 !important;
+  color: ${({ isLightMode }) => (isLightMode ? '#a7b1f4 !important' : '#727BBA')};
   font-weight: bold;
   cursor: auto;
   opacity: 0.56;
@@ -101,10 +102,10 @@ const SectionLabel = styled.span`
 `};
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown)<{ selected: boolean,  isLightMode?: boolean}>`
   margin: 0 0.25rem 0 0.5rem;
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ isLightMode, theme }) => (!isLightMode ? '#3B1F6A' : theme.white)};
     stroke-width: 3.5px;
   }
   position: absolute;
@@ -116,11 +117,11 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean,  isLightMode?: boolean }>`
   display: none;
   margin: 0 0.25rem 0 0.5rem;
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ isLightMode, theme }) => (!isLightMode ? '#3B1F6A' : theme.white)};
     stroke-width: 3.5px;
   }
   position: absolute;
@@ -132,10 +133,10 @@ const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
 `};
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
+const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean, isLightMode?:boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  background: ${({ transferPage }) => (transferPage ? 'rgba(18, 21, 56, 0.24)' : 'rgba(18, 21, 56, 0.54)')};
+  background: ${({ transferPage, isLightMode }) => (!isLightMode ? ' rgba(195, 172, 218, 0.24);' : 'rgba(18, 21, 56, 0.54)')};
   box-shadow: ${({ transferPage }) =>
     transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)'};
   backdrop-filter: blur(28px);
@@ -204,6 +205,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 const StyledTokenNameDeafult = styled(StyledTokenName)`
   font-size: 16px;
   margin: 0 0.25rem 0 0.25rem;
+  color: ${({theme}) => theme.lightDarkColor}
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   margin: 0;
   font-size: 12px;
@@ -221,16 +223,16 @@ flex-direction: column;
 gap: 1rem;
 `};
 `
-const StyledBalanceMax = styled.button`
+const StyledBalanceMax = styled.button<{isLightMode?: boolean}>`
   height: 35px;
-  border: 2px solid #1ef7e7;
+  border: ${({ isLightMode }) => (!isLightMode ? '2px solid #a7b1f4' : '2px solid #1ef7e7')};
   background: transparent;
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: #1ef7e7;
+  color: ${({ isLightMode }) => (!isLightMode ? ' #a7b1f4' : ' #1ef7e7')};
   transition: all 0.2s ease-in-out;
   padding-left: 10px;
   padding-right: 10px;
@@ -297,10 +299,11 @@ export default function CurrencyInputPanel({
   transferPage,
   crossChainBalance,
   currentTargetToken,
-  grayedOut = false,
+  grayedOut = false
+
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
-
+  const {isLightMode} = useApplicationState()
   const [modalOpen, setModalOpen] = useState(false)
   const [modal2Open, setModal2Open] = useState(false)
   const { account, chainId } = useActiveWeb3React()
@@ -321,16 +324,16 @@ export default function CurrencyInputPanel({
 
   return (
     <>
-      <InputPanel id={id} transferPage={transferPage}>
+      <InputPanel id={id} transferPage={transferPage} isLightMode={isLightMode}>
         <Container hideInput={hideInput} className={ grayedOut ? 'grayed-out' : ''}>
           {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
               <RowBetweenTransfer>
-                <SectionLabel>{label}</SectionLabel>
+                <SectionLabel isLightMode={isLightMode}>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
                     onClick={hasABalance ? onMax : () => {}}
-                    color={theme.text2}
+                    color={isLightMode ? theme.text2 : '#3B1F6A'}
                     fontWeight={500}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
@@ -350,6 +353,7 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 <NumericalInput
+                  isLightMode={isLightMode}
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
@@ -401,9 +405,9 @@ export default function CurrencyInputPanel({
                             </StyledTokenNameDeafult>}
                     </StyledTokenName>
                   )}
-                  {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}
+                  {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} isLightMode={isLightMode} />}
                   {!disableCurrencySelect && !disableBlockchainSelect && (
-                    <SmallStyledDropDown selected={!!altCurrency} />
+                    <SmallStyledDropDown selected={!!altCurrency}  isLightMode={isLightMode}/>
                   )}
                 </TokenNameAligner>
               </CurrencySelect>

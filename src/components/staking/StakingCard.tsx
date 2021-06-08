@@ -171,7 +171,7 @@ const StakingCard = () => {
             </div>
           </div>
         </Flex>
-        <TextEarned>ZERO EARNED</TextEarned>
+        <TextEarned>RELAY EARNED</TextEarned>
         <Flex>
           <div>
             <TextApr>0</TextApr>

@@ -99,7 +99,7 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="guides-link" href="https://zero-exchange.gitbook.io/zero-exchange-docs/">
+          <MenuItem id="guides-link" href="https://relay-exchange.gitbook.io/relay-exchange-docs/">
             <BookOpen size={14} />
             Guides
           </MenuItem>
@@ -107,11 +107,11 @@ export default function Menu() {
             <Info size={14} />
             Homepage
           </MenuItem>
-          <MenuItem id="blog-link" href="https://medium.com/@OfficialZeroDex/">
+          <MenuItem id="blog-link" href="https://medium.com/@OfficialRelayDex/">
             <BookOpen size={14} />
             Blog
           </MenuItem>
-          <MenuItem id="telegram-link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+          <MenuItem id="telegram-link" href="https://web.telegram.org/#/im?p=@RelayExchangeCommunity">
             <MessageCircle size={14} />
             Telegram
           </MenuItem>
@@ -119,7 +119,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="coingecko-link" href="https://www.coingecko.com/en/coins/zero-exchange">
+          <MenuItem id="coingecko-link" href="https://www.coingecko.com/en/coins/relay-exchange">
             <img style={{ float: 'left', width: '14px', height: '14px', marginRight: '9px', marginTop: '3px' }}src="/images/coingecko.png" />
             CoinGecko
           </MenuItem>

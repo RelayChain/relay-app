@@ -3,15 +3,15 @@ import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { NavLink } from 'react-router-dom'
 import React from 'react'
 import styled from 'styled-components'
+import { useApplicationState } from 'state/application/hooks'
 
-const moment = require('moment');
-const StyledNavLink = styled(NavLink)`
-`
+const moment = require('moment')
+const StyledNavLink = styled(NavLink)``
 
-const RowContainer = styled.div`
+const RowContainer = styled.div<{ isLightMode?: boolean }>`
   border: 2px solid;
   border-image-source: linear-gradient(150.61deg, rgba(255, 255, 255, 0.03) 18.02%, rgba(34, 39, 88, 0) 88.48%);
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({ isLightMode }) => (isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(195,172,218,0.24)')};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -56,30 +56,25 @@ const InfoSection = styled.div<{ width?: any }>`
     margin-top: 1rem;
   `};
 `
-export default function IdoRow({ idoInfo}: { idoInfo: any }) {
+export default function IdoRow({ idoInfo }: { idoInfo: any }) {
+  const { isLightMode } = useApplicationState()
   return (
-    <RowContainer>
+    <RowContainer isLightMode={isLightMode}>
       <LogoWrapper>
         <img src={idoInfo.logo} />
       </LogoWrapper>
-      <InfoSection className="mobile-hidden">
-        {idoInfo.tierName}
-      </InfoSection>
-      <InfoSection className="mobile-hidden">
-        {moment(idoInfo.launchDate).fromNow()}
-      </InfoSection>
-      <InfoSection className="mobile-hidden">
-        {idoInfo.totalRaise}
-      </InfoSection>
-      <InfoSection className="mobile-hidden">
-        {idoInfo.allocationMin}
-      </InfoSection>
-      <InfoSection className="mobile-hidden">
-        {idoInfo.allocationMax}
-      </InfoSection>
+      <InfoSection className="mobile-hidden">{idoInfo.tierName}</InfoSection>
+      <InfoSection className="mobile-hidden">{moment(idoInfo.launchDate).fromNow()}</InfoSection>
+      <InfoSection className="mobile-hidden">{idoInfo.totalRaise}</InfoSection>
+      <InfoSection className="mobile-hidden">{idoInfo.allocationMin}</InfoSection>
+      <InfoSection className="mobile-hidden">{idoInfo.allocationMax}</InfoSection>
       <InfoSection>
-        <StyledNavLink id={`${idoInfo.idoURL}-nav-link`} to={`/zero-gravity/${idoInfo.idoURL}`}>
-          <ButtonPrimary style={{ width: '120px'}}>Details</ButtonPrimary>
+        <StyledNavLink
+          id={`${idoInfo.idoURL}-nav-link`}
+          to={`/relay-gravity/${idoInfo.idoURL}`}
+          style={{ textDecoration: 'none' }}
+        >
+          <ButtonPrimary style={{ width: '120px' }}>Details</ButtonPrimary>
         </StyledNavLink>
       </InfoSection>
     </RowContainer>

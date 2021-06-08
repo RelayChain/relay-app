@@ -78,9 +78,9 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyout = styled.span<{isLightMode?: boolean}>`
   min-width: 21.125rem;
-  background: rgba(47,53,115,0.72);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47,53,115,0.72)' : 'mediumpurple'} ; 
   backdrop-filter: blur(100px);
   border-radius: 44px;
   padding: 10px;
@@ -117,8 +117,12 @@ const ModalContentWrapper = styled.div`
   padding: 2rem 0;
   border-radius: 44px;
 `
+ interface SettingsTabProps {
+  isLightMode:boolean
+}
 
-export default function SettingsTab() {
+
+export default function SettingsTab({isLightMode}: SettingsTabProps) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -186,7 +190,7 @@ export default function SettingsTab() {
         ) : null}
       </StyledMenuButton>
       {open && (
-        <MenuFlyout>
+        <MenuFlyout isLightMode={isLightMode}>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
               Transaction Settings

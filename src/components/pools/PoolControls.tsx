@@ -7,6 +7,8 @@ import { TYPE } from '../../theme'
 import TogglePool from '../../components/TooglePool'
 import styled from 'styled-components'
 
+import {useApplicationState} from 'state/application/hooks'
+
 const Controls = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -52,12 +54,12 @@ const ControlLabel = styled.div`
   margin-bottom: 8px;
 `};
 `
-const InputContainer = styled.div`
+const InputContainer = styled.div<{isLightMode?: boolean}>`
   display: flex;
   align-items: center;
   height: 48px;
   padding: 0px 8px;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -122,13 +124,14 @@ function PoolControls({
   options,
   activeFilteredMode
 }: PoolControlsProps) {
+  const {isLightMode} = useApplicationState()
   return (
     <Controls>
       <SearchGroup>
-        <SearchBar value={searchText} onChange={e => onSortChange('searchText', e.target.value)} />
+        <SearchBar value={searchText} onChange={e => onSortChange('searchText', e.target.value)} isLightMode={isLightMode}/>
       </SearchGroup>
       <ToggleGroup>
-        <TogglePool isLive={isLive} onSortChange={onSortChange} isStaked={isStaked} />
+        <TogglePool isLive={isLive} onSortChange={onSortChange} isStaked={isStaked} isLightMode={isLightMode}/>
       </ToggleGroup>
       <Group>
         <ControlGroup>
@@ -137,7 +140,7 @@ function PoolControls({
               Sort by:
             </TYPE.main>
           </ControlLabel>
-          <Select options={options} onChange={e => onSortChange('filteredMode', e)} activeOption={activeFilteredMode} />
+          <Select options={options} onChange={e => onSortChange('filteredMode', e)} activeOption={activeFilteredMode} isLightMode={isLightMode}/>
         </ControlGroup>
 
         <ControlGroup>
@@ -146,7 +149,7 @@ function PoolControls({
               Mode:
             </TYPE.main>
           </ControlLabel>
-          <InputContainer>
+          <InputContainer isLightMode={isLightMode}>
             <Button isSelected={displayMode === 'table'} onClick={() => onSortChange('displayMode', 'table')}>
               <ListMode />
             </Button>

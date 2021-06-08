@@ -2897,8 +2897,8 @@
             "chainId": 43114,
             "address": "0x9Bdd302e506C3F6c23c085C37789cce6d3C1a233",
             "decimals": 18,
-            "name": "Zero.Exchange Token",
-            "symbol": "ZERO",
+            "name": "Relay.Exchange Token",
+            "symbol": "RELAY",
             "logoURI": "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0x9Bdd302e506C3F6c23c085C37789cce6d3C1a233/logo.png"
         },
         {

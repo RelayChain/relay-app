@@ -20,6 +20,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance, useTokenBalancesWithSortBalances } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
+import {useApplicationState} from 'state/application/hooks'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -128,6 +129,7 @@ function CurrencyRow({
   tokenBalances: any
   unseenCustomToken?: boolean
 }) {
+  const {isLightMode} = useApplicationState()
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
@@ -153,7 +155,7 @@ function CurrencyRow({
     <MenuItem
       style={{
         ...style,
-        background: '#1f224a',
+        background:`${isLightMode ? '#1f224a' : '#fff'}`,
         borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}`
       }}
       className={`token-item-${key}`}

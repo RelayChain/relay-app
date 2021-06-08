@@ -52,7 +52,7 @@
   "deposit": "Depozitează",
   "currentPoolSize": "Volumul Actual al Fondului",
   "yourPoolShare": "Partea Ta din Fond",
-  "noZero": "Cantitatea nu poate fi zero.",
+  "noRelay": "Cantitatea nu poate fi relay.",
   "mustBeETH": "Una dintre valori trebuie să fie ETH.",
   "enterCurrencyOrLabelCont": "Setează o valoare pentru {{ inputCurrency }} sau {{ label }} pentru a continua. ",
   "youAreAdding": "Tu adaugi",

@@ -115,7 +115,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Blog
         </MenuItem>
 
-        <MenuItem id="link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+        <MenuItem id="link" href="https://web.telegram.org/#/im?p=@RelayExchangeCommunity">
           <IconLink>
             <MessageCircle size={20} />
           </IconLink>
@@ -129,7 +129,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Discord
         </MenuItem>
 
-        <MenuItem id="link" href="https://www.coingecko.com/en/coins/zero-exchange">
+        <MenuItem id="link" href="https://www.coingecko.com/en/coins/relay-exchange">
           <IconLink>
             <img alt="coingecko" style={{ float: 'left', width: '20px', height: '20px' }} src="/images/coingecko.png" />
           </IconLink>

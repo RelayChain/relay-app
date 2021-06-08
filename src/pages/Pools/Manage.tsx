@@ -32,7 +32,7 @@ import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState} from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const moment = require('moment')
@@ -94,9 +94,9 @@ const SingleColumn = styled.div`
   }
 `};
 `
-const Wrapper = styled.div`
-  background: rgba(47, 53, 115, 0.32);
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+const Wrapper = styled.div<{isLightMode?: boolean}>`
+  background:  ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219,205,236,0.32)'};
+  background: box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
   margin-bottom: 1rem;
@@ -109,12 +109,12 @@ const Wrapper = styled.div`
   padding: 16px 16px;
 `};
 `
-const StatsWrapper = styled.div`
+const StatsWrapper = styled.div<{isLightMode?: boolean}>`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.25);
+  background:  ${({ isLightMode }) => isLightMode ? 'rgba(0, 0, 0, 0.25)' : 'rgba(219,205,236,0.32)'};
   border-radius: 24px;
   margin-bottom: 1.5rem;
   .add-liquidity-link, .trade-button-link {
@@ -161,9 +161,9 @@ const Stat = styled.div`
   }
 `};
 `
-const StatLabel = styled.h5`
+const StatLabel = styled.h5<{isLightMode?: boolean}>`
   font-weight: bold;
-  color: #fff;
+  color:  ${({ isLightMode }) => isLightMode ? '#fff' : '#3B1F6A'};
   font-size: 1rem;
   span {
     opacity: 0.75;
@@ -173,9 +173,9 @@ const StatLabel = styled.h5`
   text-align: center
   `};
 `
-const StatValue = styled.h6`
+const StatValue = styled.h6 <{isLightMode?: boolean}>`
   font-weight: bold;
-  color: #fff;
+  color:  ${({ isLightMode }) => isLightMode ? '#fff' : '#3B1F6A'};
   font-size: 1.75rem;
   margin-top: 10px;
   margin-bottom: 0;
@@ -242,6 +242,7 @@ export default function Manage({
   },
   ...props
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+  const {isLightMode} = useApplicationState()
   const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
 
@@ -414,10 +415,10 @@ export default function Manage({
             >
               ( Ending: {moment(stakingInfo?.periodFinish).fromNow()} )
             </span>
-            <StatsWrapper>
+            <StatsWrapper isLightMode={isLightMode}>
               <Stat className="weekly">
-                <StatLabel style={{ textAlign: 'left' }}>Total Deposits:</StatLabel>
-                <StatValue>
+                <StatLabel isLightMode={isLightMode} style={{ textAlign: 'left' }}>Total Deposits:</StatLabel>
+                <StatValue isLightMode={isLightMode}>
                   {valueOfTotalStakedAmountInUSDC
                     ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
                     : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}`}
@@ -425,8 +426,8 @@ export default function Manage({
                 </StatValue>
               </Stat>
               <Stat className="harvest">
-                <StatLabel style={{ textAlign: 'left' }}>Reward Rate:</StatLabel>
-                <StatValue>
+                <StatLabel isLightMode={isLightMode} style={{ textAlign: 'left' }}>Reward Rate:</StatLabel>
+                <StatValue isLightMode={isLightMode}>
                   {stakingInfo?.active
                     ? stakingInfo?.totalRewardRate
                         ?.multiply(BIG_INT_SECONDS_IN_WEEK)
@@ -443,7 +444,7 @@ export default function Manage({
                     state: { token0: `${currencyA && currencyId(currencyA)}`, token1: `${currencyB && currencyId(currencyB)}` }
                   }}
                 >
-                  <ButtonOutlined className="add-liquidity-button">Trade</ButtonOutlined>
+                  <ButtonOutlined className="add-liquidity-button" style={{color: `${isLightMode ? 'white' : '#3B1F6A'}` }}>Trade</ButtonOutlined>
                 </StyledTradelLink>
 
                 <StyledInternalLink
@@ -453,7 +454,7 @@ export default function Manage({
                     state: { stakingRewardAddress }
                   }}
                 >
-                  <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+                  <ButtonOutlined className="add-liquidity-button" style={{color: `${isLightMode ? 'white' : '#3B1F6A'}` }}>Add Liquidity</ButtonOutlined>
                 </StyledInternalLink>
                 {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                     '0'
@@ -475,10 +476,10 @@ export default function Manage({
         <PageWrapper>
           <Columns>
             <SingleColumn className="left">
-              <Wrapper>
+              <Wrapper isLightMode={isLightMode}>
                 <StatLabel style={{ color: '#A7B1F4' }}>Rewards Earned:</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                  <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                  <TYPE.black fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     <CountUp
                       key={countUpAmount}
                       isCounting
@@ -488,7 +489,7 @@ export default function Manage({
                       thousandsSeparator={','}
                       duration={1}
                     />
-                  </TYPE.white>
+                  </TYPE.black>
                   {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
                     <ButtonPrimary onClick={() => setShowClaimRewardModal(true)} style={{ width: '160px' }}>
                       Claim
@@ -497,7 +498,7 @@ export default function Manage({
                 </RowBetween>
                 <StatLabel style={{ color: '#A7B1F4' }}>Earning Rate:</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                  <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                  <TYPE.black fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRateWeekly
                           ?.divide(JSBI.BigInt(10**15))
@@ -508,18 +509,18 @@ export default function Manage({
                     <span
                       style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}
                     >{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
-                  </TYPE.white>
+                  </TYPE.black>
                 </RowBetween>
                 <StatLabel style={{ color: '#A7B1F4' }}>Current Liquidity Deposits:</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                  <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                  <TYPE.black fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.stakedAmount?.toSignificant(
                       Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
                     ) ?? '-'}
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
-                      ZERO {currencyA?.symbol}-{currencyB?.symbol}
+                      RELAY {currencyA?.symbol}-{currencyB?.symbol}
                     </span>
-                  </TYPE.white>
+                  </TYPE.black>
                 </RowBetween>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
                   <RowCenter>
@@ -531,19 +532,19 @@ export default function Manage({
             {(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
               (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) && (
               <SingleColumn className="right">
-                <Wrapper>
+                <Wrapper isLightMode={isLightMode}>
                   {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                       '0'
                     ) ? null : !stakingInfo?.active ? null : (
                     <>
                       <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
                       <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                        <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                        <TYPE.black fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                           {userLiquidityUnstaked?.toSignificant(
                             Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
                           )}
                           <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
-                        </TYPE.white>
+                        </TYPE.black>
                         <ButtonOutlined
                           className="remove-liquidity-button green"
                           onClick={handleDepositClick}

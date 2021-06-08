@@ -6,7 +6,7 @@ import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Version } from './useToggledVersion'
-import isZero from '../utils/isZero'
+import isRelay from '../utils/isRelay'
 import { useActiveWeb3React } from './index'
 import useENS from './useENS'
 import { useMemo } from 'react'
@@ -144,7 +144,7 @@ export function useSwapCallback(
               parameters: { methodName, args, value },
               contract
             } = call
-            const options = !value || isZero(value) ? {} : { value }
+            const options = !value || isRelay(value) ? {} : { value }
             return contract.estimateGas[methodName](...args, options)
               .then(gasEstimate => {
                 return {
@@ -218,7 +218,7 @@ export function useSwapCallback(
 
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gas),
-          ...(value && !isZero(value) ? { value, from: account } : { from: account })
+          ...(value && !isRelay(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
             const inputSymbol = trade.inputAmount.currency.symbol

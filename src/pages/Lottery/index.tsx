@@ -447,7 +447,7 @@ export const Lottery = () => {
                 How it works
               </TYPE.white>
               <TYPE.main fontSize={14} style={{ marginTop: '1rem' }}>
-                Spend Zero to buy tiickets, contributing to the lottery pot. WIn prizes if 2, 3, or 4 of your ticket
+                Spend Relay to buy tickets, contributing to the lottery pot. WIn prizes if 2, 3, or 4 of your ticket
                 numbers match the winning numbers and their exact order
               </TYPE.main>
               <ReadMoreButton>Read More</ReadMoreButton>

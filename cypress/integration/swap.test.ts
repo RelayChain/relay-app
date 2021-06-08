@@ -8,7 +8,7 @@ describe('Swap', () => {
       .should('have.value', '0.001')
   })
 
-  it('zero swap amount', () => {
+  it('relay swap amount', () => {
     cy.get('#swap-currency-input .token-amount-input')
       .type('0.0', { delay: 200 })
       .should('have.value', '0.0')
@@ -26,7 +26,7 @@ describe('Swap', () => {
       .should('have.value', '0.001')
   })
 
-  it('zero output amount', () => {
+  it('relay output amount', () => {
     cy.get('#swap-currency-output .token-amount-input')
       .type('0.0', { delay: 200 })
       .should('have.value', '0.0')

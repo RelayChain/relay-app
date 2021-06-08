@@ -59,6 +59,7 @@ const FlexAmount = styled.div`
   display: flex;
   align-items: baseline;
   margin-left: 5px;
+  color:  ${({ theme }) => theme.lightDarkColor}
 `
 const TextPrefix = styled.div`
   font-weight: bold;

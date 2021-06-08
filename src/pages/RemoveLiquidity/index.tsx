@@ -44,7 +44,7 @@ import { usePairContract } from '../../hooks/useContract'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const CurrencyInputRow = styled.div`
@@ -63,7 +63,7 @@ export default function RemoveLiquidity({
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   useCrossChain()
-
+  const {isLightMode} = useApplicationState()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
@@ -542,7 +542,8 @@ export default function RemoveLiquidity({
         paddingBottom: '2rem',
         width: '100%',
         maxWidth: '600px',
-        marginTop: '3rem'
+        marginTop: '3rem',
+        backgroundColor: `${isLightMode ? '' : 'rgba(219,205,236,0.32)'}`
       }}>
         <AddRemoveTabs creating={false} adding={false} onGoBack={handleGoBack} />
         <Wrapper>

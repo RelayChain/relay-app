@@ -4,20 +4,23 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
-import LogoDark from './../../assets/images/0-icon.png'
+import LogoGradient from './../../assets/svg/gradient-circle-logo-relay.svg'
+import LogoLight from './../../assets/svg/white-circle-logo-relay.svg'
 import MenuBurger from './../MenuBurger'
 import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import ToggleMode from 'components/ToggleMode'
 import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import { useApplicationState } from 'state/application/hooks'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
   width: 260px;
   display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.35);
+  background:   ${({ theme }) => theme.modeBg}
   justify-content: center;
 
   ${({ theme }) => theme.mediaWidth.upToMedium<{ open?: boolean }>`
@@ -25,7 +28,7 @@ const SideMenuWrapper = styled.div<{ open?: boolean }>`
       return open ? 'flex' : 'none'
     }};
     position: fixed;
-    background: rgba(0,0,0,.95);
+    background:   ${({ theme }) => theme.modeBgSidebarMobile}
     left: 0;
     top: 0;
     width: 100%;
@@ -57,7 +60,7 @@ const StyledNavLink = styled(NavLink).attrs({
   text-transform: uppercase;
   font-size: 13px;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: #a7b1f4;
   width: fit-content;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
@@ -65,12 +68,12 @@ const StyledNavLink = styled(NavLink).attrs({
   margin-bottom: 1.5rem;
   span {
     &.active {
-      color: ${({ theme }) => theme.white};
+      color: ${({ theme }) => theme.modeSideBarLink};
     }
   }
 `
 const HeaderExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.text2};
+  color: #a7b1f4;
   transition: all 0.2s ease-in-out;
   text-transform: uppercase;
   font-size: 13px;
@@ -92,7 +95,7 @@ const IconLink = styled.span`
 const MoreLink = styled.span`
   display: flex;
   cursor: pointer;
-  color: ${({ theme }) => theme.text2};
+  color: #a7b1f4;
 `
 const Title = styled.a`
   position: absolute;
@@ -107,6 +110,7 @@ const Title = styled.a`
 `
 
 export default function SideMenu() {
+  const { isLightMode } = useApplicationState()
   const { t } = useTranslation()
   const { width } = useWindowDimensions()
   const history = useHistory()
@@ -115,7 +119,7 @@ export default function SideMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [open, setOpen] = useState<boolean>(false)
 
-  history.listen((location) => setPathname(location.pathname))
+  history.listen(location => setPathname(location.pathname))
   const toggleOpen = () => {
     setOpen(!open)
   }
@@ -128,7 +132,7 @@ export default function SideMenu() {
       <ModalMore isOpen={isOpenModal} onDismiss={() => setIsOpenModal(false)} />
       <SideMenuWrapper open={open}>
         <Title href="/">
-          <img width={'100%'} src={LogoDark} alt="logo" />
+          <img width={'100%'} src={isLightMode ? LogoLight : LogoGradient} alt="Relay Logo" />
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={handleSideMenuOpen}>
@@ -161,12 +165,13 @@ export default function SideMenu() {
             </IconLink>
             {t('Charts')}
           </HeaderExternalLink>
-          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
+          <StyledNavLink id={`pools-nav-link`} to={'/relay-gravity'} onClick={handleSideMenuOpen}>
             <IconLink>
-              <Icon icon="planet" active={pathname.includes('zero-gravity')} />
+              <Icon icon="planet" active={pathname.includes('relay-gravity')} />
             </IconLink>
-            <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
+            <span className={pathname.includes('relay-gravity') ? 'active' : ''}>{t('Relay Gravity')}</span>
           </StyledNavLink>
+          <ToggleMode />
           {/* <StyledNavLink id={`staking-nav-link`} to={'/staking'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="market" active={pathname === '/staking'} />
@@ -178,7 +183,7 @@ export default function SideMenu() {
             <IconLink>
               <DollarSign size={20} />
             </IconLink>
-            Buy ZERO
+            Buy RELAY
           </HeaderExternalLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px' }}>

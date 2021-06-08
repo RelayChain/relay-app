@@ -126,10 +126,10 @@ export default function Background({ variant = 'green', showMountains }: Backgro
             </filter>
           </defs>
         </svg>
-      ) : variant === 'blue' ? (
+      ) : variant === 'light' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#prefix__filter0_bi)">
-            <rect width={261} height={162} rx={44} fill="#1CB0F9" fillOpacity={0.26} />
+            <rect width={261} height={162} rx={44} fill="rgba(219,205,236,0.72)" fillOpacity={0.26} />
             <rect
               x={1}
               y={1}
@@ -147,7 +147,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
               fillRule="evenodd"
               clipRule="evenodd"
               d="M0 100l33 14 32-28 31-11 35 48 32-24 33-11 32 16 33-20v34c0 24.301-19.699 44-44 44H44c-24.3 0-44-19.699-44-44v-18z"
-              fill="#1CB0F9"
+              fill="#cba0ff"
             />
           )}
           <defs>

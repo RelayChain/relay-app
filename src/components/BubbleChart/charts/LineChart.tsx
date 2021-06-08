@@ -47,7 +47,7 @@ const LineChart = ({ categoriesX, onSelectedValue, lineChartWidth, series }: Lin
       },
       areaspline: {
         lineWidth: 4,
-        color: '#7244D3',
+        color: '#B86FFF',
         fillColor: {
           //@ts-ignore
           linearGradient: [0, 0, 0, 300],

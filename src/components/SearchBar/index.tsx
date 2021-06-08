@@ -18,13 +18,13 @@ const StyledInput = styled.input`
   }
 `
 
-const Container = styled.div<{ toggled: boolean }>`
+const Container = styled.div<{ toggled: boolean, isLightMode?: boolean }>`
   display: flex;
   flex-grow: 1;
   align-items: center;
   transition: border-radius 0.15s;
   height: 48px;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : ' rgba(219, 205, 236, 0.32)'} ;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -38,14 +38,15 @@ const Icon = styled.img`
 interface Props {
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  isLightMode?: boolean
 }
 
-const SearchBar: React.FC<Props> = ({ value, onChange }) => {
+const SearchBar: React.FC<Props> = ({ value, onChange, isLightMode }) => {
   const [toggled, setToggled] = useState(false)
   const inputEl = useRef(null)
 
   return (
-    <Container toggled={toggled}>
+    <Container toggled={toggled} isLightMode={isLightMode}>
       <StyledInput
         ref={inputEl}
         value={value}

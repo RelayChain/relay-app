@@ -5,14 +5,15 @@ import { useHistory, useParams } from 'react-router'
 
 import { BiWorld } from 'react-icons/bi'
 import { ButtonOutlined } from 'components/Button'
-import { IDO_LIST } from 'constants/idos';
-import PageContainer from 'components/PageContainer';
+import { IDO_LIST } from 'constants/idos'
+import PageContainer from 'components/PageContainer'
 import { Title } from '../../theme'
-import WISESale from './wiseSale';
-import WSDSale from './wsdSale';
-import GrowSale from './growSale';
-import moment from 'moment';
-import styled from 'styled-components';
+import WISESale from './wiseSale'
+import WSDSale from './wsdSale'
+import GrowSale from './growSale'
+import moment from 'moment'
+import styled from 'styled-components'
+import { useApplicationState } from 'state/application/hooks'
 
 const ImageContainer = styled.div`
   margin-top: 1rem;
@@ -66,8 +67,9 @@ const VerticalLine = styled.div`
   border-right: solid 1px white;
   margin: 0 0.6rem;
 `
-const BgWrapper = styled.div`
-  background: rgba(47, 53, 115, 0.32);
+const BgWrapper = styled.div<{ isLightMode?: boolean }>`
+  background: ${({ isLightMode }) => (isLightMode ? 'rgba(47, 53, 115, 0.32);' : 'rgba(219,205,236,0.32)')};
+  border-radius: 44px;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -149,23 +151,24 @@ const Stat = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-const StatTitle = styled.p`
-  color: rgba(255, 255, 255, 0.5);
+const StatTitle = styled.p<{ isLightMode?: boolean }>`
+  color: ${({ isLightMode }) => (isLightMode ? 'rgba(255, 255, 255, 0.5)' : '')};
   margin-bottom: 0.4rem;
 `
 const StatText = styled.p`
   margin: 0;
 `
-const Disclaimer = styled.div`
-  color: rgba(255, 255, 255, 0.5);
+const Disclaimer = styled.div<{ isLightMode?: boolean }>`
+  color: ${({ isLightMode }) => (isLightMode ? 'rgba(255, 255, 255, 0.5)' : '')};
   font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: ${({ isLightMode }) => (isLightMode ? 'rgba(0, 0, 0, 0.25)' : 'rgba(219,205,236,0.32)')};
   border-radius: 44px;
   padding: 2rem;
   margin-top: -5rem;
 `
 
 export default function ZeroGravityInfo() {
+  const { isLightMode } = useApplicationState()
   const { idoURL } = useParams<{ idoURL: string }>()
   const history = useHistory()
   const [idoData, setIdoData] = useState<any>()
@@ -213,7 +216,7 @@ export default function ZeroGravityInfo() {
     if (idoData.kycURL) {
       window.open(idoData.kycURL, '_blank')
     } else {
-      history.push(`/zero-gravity/${idoURL}/kyc`)
+      history.push(`/relay-gravity/${idoURL}/kyc`)
     }
   }
 
@@ -254,13 +257,15 @@ export default function ZeroGravityInfo() {
             )}
           </ButtonsSection>
         )}
-        {
-          idoData?.idoURL == 'wise' ? <WISESale /> 
-          : idoData?.idoURL == 'wasder' ? <WSDSale /> 
-          // : idoData?.idoURL == 'grow' ? <GrowSale /> 
-          : <></>
-        }
-        <BgWrapper>
+        {idoData?.idoURL == 'wise' ? (
+          <WISESale />
+        ) : idoData?.idoURL == 'wasder' ? (
+          <WSDSale />
+        ) : (
+          // : idoData?.idoURL == 'grow' ? <GrowSale />
+          <></>
+        )}
+        <BgWrapper isLightMode={isLightMode}>
           <HeadingRow>
             <Heading>Pool details</Heading>
             <SocialLinks>
@@ -275,24 +280,24 @@ export default function ZeroGravityInfo() {
           <Detail>{idoData?.description ?? ''}</Detail>
           <StatsSection>
             <Stat>
-              <StatTitle> Auction Start Date </StatTitle>
+              <StatTitle isLightMode={isLightMode}> Auction Start Date </StatTitle>
               <StatText>{moment(idoData?.launchDate ?? '').format('MMM DD, YYYY hh:mm A')}</StatText>
             </Stat>
             <Stat>
-              <StatTitle> Token Distribution Date </StatTitle>
+              <StatTitle isLightMode={isLightMode}> Token Distribution Date </StatTitle>
               <StatText>{moment(idoData?.distributionDate ?? '').format('MMM DD, YYYY hh:mm A')}</StatText>
             </Stat>
             <Stat>
-              <StatTitle> Min. Allocation </StatTitle>
+              <StatTitle isLightMode={isLightMode}> Min. Allocation </StatTitle>
               <StatText>{idoData?.allocationMin ?? ''}</StatText>
             </Stat>
             <Stat>
-              <StatTitle> Allocation per Winning Ticket </StatTitle>
+              <StatTitle isLightMode={isLightMode}> Allocation per Winning Ticket </StatTitle>
               <StatText>{idoData?.allocationWinningAmount ?? ''}</StatText>
             </Stat>
           </StatsSection>
         </BgWrapper>
-        {idoData?.disclaimer && <Disclaimer>{idoData?.disclaimer}</Disclaimer>}
+        {idoData?.disclaimer && <Disclaimer isLightMode={isLightMode}>{idoData?.disclaimer}</Disclaimer>}
       </PageContainer>
     </>
   )

@@ -28,7 +28,7 @@ import { useDispatch } from 'react-redux'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useTranslation } from 'react-i18next'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -63,8 +63,8 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
 //   }
 // `
 
-const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean, isLightMode?: boolean }>`
+background: ${({isLightMode}) => !isLightMode ? 'transparent!important' : 'rgba(103, 82, 247, 0.18)' } ;
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
@@ -88,11 +88,11 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
       padding: 18px 39px;
       font-weight: 600;
       font-size: 13px;
-      color: #fff;
+      color: ${({theme}) => theme.lightDarkColor}
       :hover,
       :focus {
         border-color: #fff;
-        color: #fff;
+        color: ${({theme}) => theme.lightDarkColor}
       }
     `}
 `
@@ -104,7 +104,7 @@ const Web3StatusConnected = styled.div`
   font-size: 13px;
   line-height: 19px;
   letter-spacing: 0.05em;
-  color: #a7b1f4;
+color: ${({theme}) => theme.web3ConnectColor}
   opacity: 0.56;
   font-weight: 500;
 `
@@ -211,6 +211,7 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
+  const {isLightMode} = useApplicationState()
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
@@ -288,7 +289,7 @@ function Web3StatusInner() {
   }
   else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account} isLightMode={isLightMode}>
         <Text>{t('Connect Wallet')}</Text>
       </Web3StatusConnect>
     )
