@@ -104,7 +104,7 @@ const Web3StatusConnected = styled.div`
   font-size: 13px;
   line-height: 19px;
   letter-spacing: 0.05em;
-  color: #a7b1f4;
+color: ${({theme}) => theme.web3ConnectColor}
   opacity: 0.56;
   font-weight: 500;
 `

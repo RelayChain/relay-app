@@ -22,6 +22,7 @@ export type BubbleChartProps = {
   flipMonthWeek?: boolean
   type: 'line' | 'bar'
   categoriesX: Array<string>
+  isLightMode?: boolean
 }
 
 const BubbleChartWrap = styled.div`
@@ -69,7 +70,7 @@ const SecondHeading = styled.div`
   }
 `
 
-const BubbleChart = ({ title, value, percentage, type, categoriesX, series }: BubbleChartProps) => {
+const BubbleChart = ({ title, value, percentage, type, categoriesX, series, isLightMode }: BubbleChartProps) => {
   const [selectedValue, setSelectedValue] = useState<number>(value)
   const [currentPercentage, setCurrentPercentage] = useState<number>(percentage)
 
@@ -89,7 +90,7 @@ const BubbleChart = ({ title, value, percentage, type, categoriesX, series }: Bu
 
   return (
     <BubbleChartWrap>
-      <BubbleBase />
+      <BubbleBase isLightMode={isLightMode}/>
       {/* @ts-ignore */}
       <Flex ref={componentRef}>
         <FirstBox>

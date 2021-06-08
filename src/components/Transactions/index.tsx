@@ -48,8 +48,8 @@ const GridWithMargin = styled(Grid)`
     border-bottom-width: 0px;
   }
 `
-const Heading = styled.h5`
-  color: #a7b1f4;
+const Heading = styled.h5<{isLightMode?: boolean}>`
+  color: ${({ theme }) => theme.transactionLine};
   opacity: 0.4;
   font-size: 13px;
   font-weight: 600;
@@ -65,8 +65,8 @@ const HeadingValue = styled(Heading)`
 `};
 `
 
-const Wrapper = styled.div`
-  background: rgba(47, 53, 115, 0.32);
+const Wrapper = styled.div<{isLightMode?: boolean}>`
+  background:  ${({ isLightMode }) => !isLightMode ? 'rgba(219,205,236,0.32)' : 'rgba(47, 53, 115, 0.32)'};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -84,9 +84,10 @@ const Wrapper = styled.div`
 
 export type TransactionsProps = {
   transactions: TransactionTypes[]
+  isLightMode: boolean
 }
 
-const Transactions = ({ transactions }: TransactionsProps) => {
+const Transactions = ({ transactions, isLightMode }: TransactionsProps) => {
   const { width } = useWindowDimensions()
 
   return (
@@ -95,7 +96,7 @@ const Transactions = ({ transactions }: TransactionsProps) => {
         <Title>Latest Transactions</Title>
         {/*<DropDown options={[{ label: 'Last 24h', value: '1' }]} />*/}
       </SelectWrap>
-      <Wrapper>
+      <Wrapper isLightMode={isLightMode}>
         <Grid>
           <Heading style={{ textAlign: 'left' }}>Type</Heading>
           <HeadingValue>Total Value</HeadingValue>

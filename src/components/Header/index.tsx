@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
+import { ArrowDown } from 'components/Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
@@ -16,6 +17,7 @@ import { YellowCard } from '../Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
+import { useApplicationState } from 'state/application/hooks'
 
 const SupTitle = styled.h1`
   font-size: 40px;
@@ -52,13 +54,13 @@ const LogoContainer = styled.div`
   display: flex;
   flex-grow: 1;
 `
-const HeaderControls = styled.div`
+const HeaderControls = styled.div<{ isLightMode: boolean }>`
   padding: 22px 19px;
   display: flex;
   align-items: center;
   justify-self: flex-end;
   justify-content: space-between;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({ isLightMode }) => (isLightMode ? 'rgba(47, 53, 115, 0.32) ' : 'rgba(219, 205, 236, 0.32)')};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -92,15 +94,15 @@ const AccountElement = styled.div<{ active: boolean }>`
     border: 1px solid blue;
   }
 `
-const NetworkCard = styled(YellowCard)`
+const NetworkCard = styled(YellowCard)<{ isLightMode: boolean }>`
   position: relative;
   padding-top: 10px;
   padding-left: 50px;
   width: 243px;
   height: 40px;
   letter-spacing: 0.05em;
-  color: #ffffff;
-  background: rgba(225, 248, 250, 0.12);
+  color: ${({ theme }) => theme.lightDarkColor}
+  background: ${({ isLightMode }) => (isLightMode ? ' rgba(225, 248, 250, 0.12)' : '#E3D6F3')};
   border-radius: 54px;
   transition: all 0.2s ease-in-out;
   font-family: Poppins;
@@ -133,7 +135,7 @@ const BalanceText = styled(Text)`
   font-size: 20px;
   line-height: 80%;
   letter-spacing: -0.01em;
-  color: #ffffff;
+  color: ${({ theme }) => theme.lightDarkColor}
   margin-bottom: 5px !important;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
@@ -146,8 +148,8 @@ const BlockchainLogoWrap = styled.span`
 `
 const ArrowDropWrap = styled.span`
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 10px;
+  top: 14px;
 `
 const NotConnectedWrap = styled.div`
   padding: 22px 19px;
@@ -199,7 +201,7 @@ const popupContent: PopupContent = {
   }
 }
 
-const NetworkSwitcher = () => {
+const NetworkSwitcher = ({ isLightMode }: any) => {
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
   const availableChains = useMemo(() => {
@@ -228,13 +230,13 @@ const NetworkSwitcher = () => {
     <div onClick={showCrossChainModal}>
       <HideSmall>
         {chainId && NETWORK_LABELS[chainId] && (
-          <NetworkCard title={NETWORK_LABELS[chainId]}>
+          <NetworkCard title={NETWORK_LABELS[chainId]} isLightMode={isLightMode}>
             <BlockchainLogoWrap>
               <BlockchainLogo size="28px" blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'} />
             </BlockchainLogoWrap>
             <span>{NETWORK_LABELS[chainId]}</span>
             <ArrowDropWrap>
-              <img src={ArrowDropdown} alt="ArrowDropdown" />
+              <ArrowDown activeColor={isLightMode ? '#fff' : '#727BBA'} />
             </ArrowDropWrap>
           </NetworkCard>
         )}
@@ -252,6 +254,7 @@ const NetworkSwitcher = () => {
   )
 }
 const Header = () => {
+  const { isLightMode } = useApplicationState()
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   let label,
@@ -267,15 +270,13 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <SupTitle>
-         Relay
-         </SupTitle>
+          <SupTitle>Relay</SupTitle>
         </LogoContainer>
       </HideMedium>
       {account && userEthBalance ? (
-        <HeaderControls>
+        <HeaderControls isLightMode={isLightMode}>
           <HeaderElement>
-            <NetworkSwitcher />
+            <NetworkSwitcher isLightMode={isLightMode} />
             <AccountElement active={!!account}>
               <BalanceText>
                 {userEthBalance?.toSignificant(4)} {symbol}

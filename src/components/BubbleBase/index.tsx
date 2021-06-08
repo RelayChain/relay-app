@@ -4,7 +4,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 export interface BubbleBaseProps {
-  mode?: 'normal' | 'dark'
+  mode?: 'normal' | 'light'
+  isLightMode?: boolean
 }
 
 const BubbleBaseWrap = styled.div`
@@ -16,7 +17,7 @@ const BubbleBaseWrap = styled.div`
   height: 100%;
 `
 
-const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
+const BubbleBase = ({ mode = 'normal', isLightMode }: BubbleBaseProps) => {
   const prefixGradient = `prefixGradientBubbleBase${Math.round(Math.random() * 99999)}`
 
   return (
@@ -35,8 +36,8 @@ const BubbleBase = ({ mode = 'normal' }: BubbleBaseProps) => {
             width="100%"
             height="100%"
             rx={44}
-            fill={mode === 'normal' ? '#202550' : '#121538'}
-            fillOpacity={mode === 'normal' ? 0.72 : 0.54}
+            fill={isLightMode ? '#202550' : 'rgba(219,205,236,0.72)'}
+            fillOpacity={isLightMode? 0.72 : 0.34}
           />
           <rect
             x={1}

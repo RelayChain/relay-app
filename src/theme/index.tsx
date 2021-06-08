@@ -37,6 +37,7 @@ const black = '#000000'
 export function colors(darkMode: boolean): Colors {
   return {
     // base
+    bodyBg: darkMode ? 'linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%)' : '#fff',
     white,
     black,
     modeBg: darkMode ? 'rgba(0, 0, 0, 0.35);' :  '#FFFFFF',
@@ -50,6 +51,9 @@ export function colors(darkMode: boolean): Colors {
     modeTextDark: darkMode ? '#A7B1F4' : '#FFF',
     modeTextLight: darkMode ? '#FFF' : '#A7B1F4',
     modeSideBarLink: !darkMode ? '#7C69FF' : '#FFF',
+    lightDarkColor: !darkMode ? '#3B1F6A' : '#FFF',
+    web3ConnectColor: !darkMode ? '#9726cd' : '#a7b1f4',
+    transactionLine: !darkMode ? '#727BBA' : '#a7b1f4',
 
     // backgrounds / greys
     bg1: darkMode ? 'rgba(18, 21, 56, 0.54)' : '#FFFFFF',
@@ -239,8 +243,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #2C3168;
-  background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
+  background: ${({ theme }) => theme.bodyBg};
 }
 `
 

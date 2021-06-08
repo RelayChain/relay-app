@@ -66,8 +66,8 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div<{isLightMode: boolean}>`
-  background-color: ${({ isLightMode }) => isLightMode ? '' : '#fff'}
+const BodyWrapper = styled.div<{ isLightMode: boolean }>`
+  // background-color: ${({ isLightMode }) => (isLightMode ? '' : '#fff')}
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -97,9 +97,9 @@ export default function App() {
     <Suspense fallback={null}>
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
-        <AppWrapper >
+        <AppWrapper>
           <SideMenu />
-          <div className="snow-bg"></div>
+          {isLightMode ?  <div className="common-bg dark-bg" /> : <div className="common-bg light-bg" />}
           <div className={isLightBg}></div>
 
           <BodyWrapper isLightMode={isLightMode}>
