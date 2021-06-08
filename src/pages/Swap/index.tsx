@@ -21,7 +21,7 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-
+import {useApplicationState} from 'state/application/hooks'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
@@ -91,14 +91,14 @@ const SwapFlexRow = styled.div`
   flex: 1;
   width: 100%;
 `
-const SwapWrap = styled.div`
+const SwapWrap = styled.div<{isLightMode?: boolean}>`
   font-family: Poppins;
   position: relative;
   width: 620px;
   max-width: 100%;
   padding: 28px 34px;
   min-height: 570px;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219, 205, 236, 0.32)'} ;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -251,7 +251,7 @@ export default function Swap({
   if (width < 1350) {
     isColumn = true
   }
-
+  const {isLightMode} = useApplicationState()
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -576,8 +576,8 @@ export default function Swap({
 
           <SwapFlex>
             <SwapFlexRow>
-              <SwapWrap>
-                <BubbleBase />
+              <SwapWrap isLightMode={isLightMode}>
+                <BubbleBase isLightMode={isLightMode}/>
                 <Wrapper id="swap-page">
                   <ConfirmSwapModal
                     isOpen={showConfirm}
@@ -595,10 +595,11 @@ export default function Swap({
                   />
                   <Header>
                     <SubTitle>Swap</SubTitle>
-                    <Settings />
+                    <Settings isLightMode={isLightMode}/>
                   </Header>
                   <AutoColumn gap={'md'}>
                     <CurrencyInputPanel
+                    
                       blockchain={isCrossChain ? currentChain.name : getChainName()}
                       label={'From'}
                       value={formattedAmounts[Field.INPUT]}
@@ -847,6 +848,7 @@ export default function Swap({
               <BalanceRow isColumn={isColumn}>
                 <TextBalance>{currentChain.name} Balances</TextBalance>
                 <BalanceItem
+                isLightMode={isLightMode}
                   currentChain={currentChain}
                   chainId={chainId}
                   isNative={true}
@@ -856,6 +858,7 @@ export default function Swap({
                 {tokenBalances?.map((token: any, index) => {
                   return (
                     <BalanceItem
+                    isLightMode={isLightMode}
                       key={index}
                       token={token}
                       chainId={chainId}
@@ -870,6 +873,7 @@ export default function Swap({
                   .map((token: any, index: any) => {
                     return (
                       <BalanceItem
+                      isLightMode={isLightMode}
                         key={index}
                         token={token}
                         chainId={chainId}

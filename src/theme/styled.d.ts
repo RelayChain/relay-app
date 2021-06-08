@@ -28,6 +28,7 @@ export interface Colors {
   bg5: Color
 
   modalBG: Color
+  modalModeBG: Color
   advancedBG: Color
 
   //blues

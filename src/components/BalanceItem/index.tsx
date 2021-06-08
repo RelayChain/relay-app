@@ -15,12 +15,12 @@ import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 
-const BalanceCard = styled.div`
+const BalanceCard = styled.div<{isLightMode?: boolean}>`
   margin-top: 20px;
   position: relative;
   height: 111.5px;
   width: 100%;
-  background: rgba(47, 53, 115, 0.32);
+  background: ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : ' rgba(219,205,236,0.32);'} ;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   border-radius: 44px;
   display: flex;
@@ -115,6 +115,7 @@ export default function BalanceItem({
   selectBalance,
   isLast,
   isFirst,
+  isLightMode
 }: {
   account?: any
   chainId?: any
@@ -127,6 +128,7 @@ export default function BalanceItem({
   selectBalance?: any
   isLast?: boolean;
   isFirst?: boolean;
+  isLightMode?:boolean
 }) {
   // const weiToEthNum = (balance: any, decimals = 18) => {
   //   const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
@@ -169,8 +171,8 @@ export default function BalanceItem({
   return isNative ||
     (!isStaked && !isNative && hasABalance) ||
     (isStaked && ((isContained && !hasABalance) || !isContained)) ? (
-    <BalanceCard onClick={selectBalance} className={isLast ? 'last' : isFirst ? 'first' : ''}>
-      <BubbleBase />
+    <BalanceCard isLightMode={isLightMode} onClick={selectBalance} className={isLast ? 'last' : isFirst ? 'first' : ''}>
+      <BubbleBase isLightMode={isLightMode}/>
       <BoxFlex>
         {isNative ? <StyledEthereumLogo src={returnChainLogo()} /> : <CurrencyLogo size="48px" currency={token} />}
         <Box>
