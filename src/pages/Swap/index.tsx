@@ -19,9 +19,8 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import { useToggleSettingsMenu, useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import {useApplicationState} from 'state/application/hooks'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'

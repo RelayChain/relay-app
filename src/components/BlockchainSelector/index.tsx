@@ -71,11 +71,11 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
   flex-direction: column;
 `};
 `
-const CrossChainWrap = styled.div`
+const CrossChainWrap = styled.div<{isLightMode?: boolean}>`
   position: relative;
   width: 252px;
   min-height: 146px;
-  background: rgba(18, 21, 56, 0.24);
+  background: ${({ isLightMode }) => (!isLightMode ? ' rgba(195, 172, 218, 0.24);' : 'rgba(18, 21, 56, 0.54)')};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -91,7 +91,7 @@ const SubTitle = styled.h3`
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.05em;
-  color: #a7b1f4;
+  color:  ${({ theme }) => theme.lightDarkColor};
   opacity: 0.56;
   margin-bottom: 20px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -125,7 +125,8 @@ const BlockchainSelector = ({
   supportedChains,
   isCrossChain,
   onShowCrossChainModal,
-  onShowTransferChainModal
+  onShowTransferChainModal,
+  isLightMode = true
 }: {
   blockchain: string | CrosschainChain | undefined
   transferTo: any // tslint not working here, same as above
@@ -133,6 +134,7 @@ const BlockchainSelector = ({
   supportedChains: string[]
   onShowCrossChainModal: () => void
   onShowTransferChainModal: () => void
+  isLightMode?: boolean
 }) => {
   const { transferAmount } = useCrosschainState()
 
@@ -168,16 +170,16 @@ const BlockchainSelector = ({
       )}
       {isCrossChain && (
         <Row borderBottom={false} isCrossChain={isCrossChain}>
-          <CrossChainWrap>
+          <CrossChainWrap isLightMode={isLightMode}>
             <SubTitle>Current Blockchain</SubTitle>
             <FlexOrder>
-              <p className="crosschain currentchain">
+              <p className="crosschain currentchain" >
                 <BlockchainLogo
                   size="32px"
                   blockchain={typeof blockchain !== 'string' ? blockchain.name : blockchain}
                   style={{ marginLeft: '0px', marginRight: '0px' }}
                 />
-                <span>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
+                <span style={{color: `${isLightMode ? 'white' : '#3B1F6A'}`}}>{typeof blockchain !== 'string' ? blockchain.name : blockchain}</span>
               </p>
             </FlexOrder>
           </CrossChainWrap>
@@ -188,10 +190,10 @@ const BlockchainSelector = ({
           <ShowSmall>
             <ArrowDown conditionInput={true} conditionOutput={true} defaultColor="#727BBA" activeColor="white" />
           </ShowSmall>
-          <CrossChainWrap>
+          <CrossChainWrap isLightMode={isLightMode}>
             <SubTitle>Destination Chain</SubTitle>
             <FlexOrder>
-              <p className="crosschain" onClick={openTransferModal}>
+              <p className="crosschain" onClick={openTransferModal} style={{backgroundColor: `${isLightMode ? 'rgba(225,248,250,0.12)' : '#C8BBD6'}`}}>
                 {transferTo && transferTo.name.length > 0 &&
                   <BlockchainLogo
                     size="32px"
@@ -199,8 +201,8 @@ const BlockchainSelector = ({
                     style={{ marginRight: '0px' }}
                   />
                 }
-                <span>{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</span>
-                <ChevronDown size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />
+                <span style={{color: `${isLightMode ? 'white' : '#3B1F6A'}`}} >{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</span>
+                <ChevronDown color={isLightMode ? 'white' : '#3B1F6A'} size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />
               </p>
             </FlexOrder>
           </CrossChainWrap>

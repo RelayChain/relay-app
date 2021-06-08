@@ -43,7 +43,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -90,8 +90,10 @@ const Description = styled.p`
   letter-spacing: 0.1em;
 `
 
-const TransferBodyWrapper = styled.div`
+const TransferBodyWrapper = styled.div<{isLightMode?:boolean}>`
   width: 100%;
+  border-radius: 44px;
+  background: ${({ isLightMode }) => isLightMode ? '' : 'rgba(219, 205, 236, 0.32)'} ;
   max-width: 600px;
   position: relative;
   padding: 2rem;
@@ -150,7 +152,7 @@ export default function Transfer() {
   useCrossChain()
 
   const loadedUrlParams = useDefaultsFromURLSearch()
-
+  const {isLightMode} = useApplicationState()
   const {
     currentTxID,
     availableChains: allChains,
@@ -406,8 +408,8 @@ export default function Transfer() {
         <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
 
         {!bridgeEnabled && <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>}
-        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
-          <BubbleBase />
+        <TransferBodyWrapper isLightMode={isLightMode} className={!bridgeEnabled ? 'offline' : ''}>
+          <BubbleBase isLightMode={isLightMode}/>
           <Heading>Cross-Chain Bridge</Heading>
           <Description>Transfer your tokens from one blockchain to another</Description>
           <div
@@ -435,6 +437,7 @@ export default function Transfer() {
               />
 
               <BlockchainSelector
+              isLightMode={isLightMode}
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
                 blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
@@ -443,7 +446,7 @@ export default function Transfer() {
                 onShowTransferChainModal={showTransferChainModal}
               />
               <RowBetweenTransfer style={{ marginBottom: '1rem', marginTop: '-1.5rem' }}>
-                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
+                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color:`${isLightMode ? '#a7b1f4' : '#3B1F6A' }` }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
               </RowBetweenTransfer>
               <RowBetweenTransfer>
                 <TextBottom>

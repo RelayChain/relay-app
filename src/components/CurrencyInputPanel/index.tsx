@@ -90,9 +90,9 @@ const Aligner = styled.span`
 
 `};
 `
-const SectionLabel = styled.span`
+const SectionLabel = styled.span<{isLightMode?: boolean}>`
   display: flex;
-  color: #a7b1f4 !important;
+  color: ${({ isLightMode }) => (isLightMode ? '#a7b1f4 !important' : '#727BBA')};
   font-weight: bold;
   cursor: auto;
   opacity: 0.56;
@@ -299,7 +299,7 @@ export default function CurrencyInputPanel({
   transferPage,
   crossChainBalance,
   currentTargetToken,
-  grayedOut = false,
+  grayedOut = false
 
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
@@ -329,7 +329,7 @@ export default function CurrencyInputPanel({
           {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
               <RowBetweenTransfer>
-                <SectionLabel>{label}</SectionLabel>
+                <SectionLabel isLightMode={isLightMode}>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
                     onClick={hasABalance ? onMax : () => {}}
@@ -353,7 +353,7 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 <NumericalInput
-                  
+                  isLightMode={isLightMode}
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
