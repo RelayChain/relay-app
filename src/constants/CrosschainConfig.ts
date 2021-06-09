@@ -545,7 +545,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       gasLimit: 60000,
       defaultGasPrice: 2,
-      blockExplorer: 'https://explorer-mainnet.maticvigil.com/',
+      blockExplorer: 'https://polygonscan.com/',
       nativeTokenSymbol: 'MATIC',
       tokens: [
         {
