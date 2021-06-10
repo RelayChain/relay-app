@@ -67,7 +67,7 @@ const HeaderWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ isLightMode: boolean }>`
-  // background-color: ${({ isLightMode }) => (isLightMode ? '' : '#fff')}
+  background-color: ${({ isLightMode }) => (isLightMode ? 'rgba(0, 0, 0, 0.2)' : '')};
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -92,7 +92,7 @@ function TopLevelModals() {
 
 export default function App() {
   const { isLightMode } = useApplicationState()
-  const isLightBg = isLightMode ? 'bg-darken' : ''
+
   return (
     <Suspense fallback={null}>
       <GraphQLProvider>
@@ -100,7 +100,6 @@ export default function App() {
         <AppWrapper>
           <SideMenu />
           {isLightMode ?  <div className="common-bg dark-bg" /> : <div className="common-bg light-bg" />}
-          <div className={isLightBg}></div>
 
           <BodyWrapper isLightMode={isLightMode}>
             <URLWarning />

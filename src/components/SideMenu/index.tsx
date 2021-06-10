@@ -109,6 +109,16 @@ const Title = styled.a`
   `};
 `
 
+const ToggleModeWrap = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 45px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  left: 50%;
+  transform: translateX(-50%);
+  `};
+`
+
 export default function SideMenu() {
   const { isLightMode } = useApplicationState()
   const { t } = useTranslation()
@@ -171,7 +181,7 @@ export default function SideMenu() {
             </IconLink>
             <span className={pathname.includes('relay-gravity') ? 'active' : ''}>{t('Relay Gravity')}</span>
           </StyledNavLink>
-          <ToggleMode />
+
           {/* <StyledNavLink id={`staking-nav-link`} to={'/staking'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="market" active={pathname === '/staking'} />
@@ -192,6 +202,11 @@ export default function SideMenu() {
             {t('More ...')}
           </MoreLink>
         </HeaderLinks>
+
+        <ToggleModeWrap>
+          <ToggleMode />
+        </ToggleModeWrap>
+     
       </SideMenuWrapper>
     </>
   )

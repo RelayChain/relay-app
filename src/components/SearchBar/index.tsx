@@ -3,14 +3,14 @@ import SearchIcon from '../../assets/svg/search_icon.svg'
 
 import styled from 'styled-components'
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{isLightMode?: boolean}>`
   display: flex;
   flex-grow: 1;
   border-radius: 16px;
   background: none;
   border: none;
   outline: none;
-  color: #a7b1f4;
+  color: ${({isLightMode}) => isLightMode ? '#a7b1f4' : '#3B1F6A'};
   height: 40px;
   width: 100%;
   ::placeholder {
@@ -48,6 +48,7 @@ const SearchBar: React.FC<Props> = ({ value, onChange, isLightMode }) => {
   return (
     <Container toggled={toggled} isLightMode={isLightMode}>
       <StyledInput
+      isLightMode={isLightMode}
         ref={inputEl}
         value={value}
         onChange={onChange}

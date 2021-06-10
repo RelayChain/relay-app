@@ -129,7 +129,7 @@ export default function Background({ variant = 'green', showMountains }: Backgro
       ) : variant === 'light' ? (
         <svg width={widthSize} height={heightSize} viewBox="0 0 261 162" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#prefix__filter0_bi)">
-            <rect width={261} height={162} rx={44} fill="rgba(219,205,236,0.72)" fillOpacity={0.26} />
+            <rect width={261} height={162} rx={44} fill="rgba(219,205,236,0.72)" fillOpacity={0.8} />
             <rect
               x={1}
               y={1}

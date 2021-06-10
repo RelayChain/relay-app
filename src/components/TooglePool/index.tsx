@@ -15,7 +15,7 @@ const ToggleElement = styled.span<{ isLive?: boolean; isOnSwitch?: boolean }>`
   padding: 0.35rem 0.6rem;
   border-radius: 12px;
   background: ${({ isLive, isOnSwitch }) => (isLive ? (isOnSwitch ? '#6752F7' : '#6752F7') : 'none')};
-  color: ${({ theme, isLive, isOnSwitch }) => (isLive ? (isOnSwitch ? theme.white : theme.white) : theme.text2)};
+  color: ${({ theme, isLive, isOnSwitch }) => (isLive ? (isOnSwitch ? theme.white : theme.white) : theme.text7)};
   font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
