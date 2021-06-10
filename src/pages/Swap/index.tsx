@@ -11,6 +11,7 @@ import { LinkStyledButton, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import Web3 from 'web3'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -41,7 +42,6 @@ import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
 import ProgressSteps from '../../components/ProgressSteps'
-import { ProposalStatus } from '../../state/crosschain/actions'
 import { RouteComponentProps } from 'react-router-dom'
 import Settings from '../../components/Settings'
 import { Text } from 'rebass'
@@ -234,15 +234,12 @@ export default function Swap({
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const {
-    currentTxID,
     availableChains: allChains,
     availableTokens,
     currentChain,
     currentToken,
     crosschainFee,
     targetTokens,
-    crosschainTransferStatus,
-    swapDetails
   } = useCrosschainState()
 
   const { width } = useWindowDimensions()
@@ -476,8 +473,8 @@ export default function Swap({
   const propsState: any = props?.location?.state
   const token0: any = propsState?.token0 ? propsState?.token0 : null
   const token1: any = propsState?.token1 ? propsState?.token1 : null
-  const curA = useCurrency(token0);
-  const curB = useCurrency(token1);
+  const curA = useCurrency(token0)
+  const curB = useCurrency(token1)
 
   const [curAState, setCurAState] = useState(curA) // state for first token from Manage page
   const [curBState, setCurBState] = useState(curB) // state for second token from Manage page

@@ -1,7 +1,7 @@
 import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, Token, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
-import { LinkStyledButton, TYPE } from '../../theme'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo, useState } from 'react'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
 import BigNumber from 'bignumber.js'
@@ -13,13 +13,15 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { isTokenOnList } from '../../utils'
+import { getEtherscanLink, isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance, useTokenBalancesWithSortBalances } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
+import { ExternalLink as ExternalLinkIcon } from 'react-feather'
+import InfiniteLoader from 'react-window-infinite-loader'
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -108,6 +110,7 @@ const weiToEthNum = (balance: any, decimals = 18) => {
 }
 
 function CurrencyRow({
+  isUserTokens,
   currency,
   onSelect,
   isSelected,
@@ -116,8 +119,8 @@ function CurrencyRow({
   isEnd,
   hasQuery,
   tokenBalances,
-  unseenCustomToken = false
 }: {
+  isUserTokens?: boolean
   currency: any
   onSelect: () => void
   isSelected: boolean
@@ -126,7 +129,6 @@ function CurrencyRow({
   isEnd: boolean
   hasQuery: any
   tokenBalances: any
-  unseenCustomToken?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -137,16 +139,12 @@ function CurrencyRow({
   const addToken = useAddUserToken()
 
   const hasABalance = useMemo(() => {
-    return balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false;
+    return balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
   }, [balance])
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
     return [ETHER, AVAX, BNB, DEV, MATIC].includes(currency)
-  }
-
-  if (unseenCustomToken && customAdded) {
-    return null
   }
 
   if (!currency) {
@@ -211,6 +209,8 @@ function CurrencyRow({
 }
 
 export default function CurrencyList({
+  isUserTokens,
+  loadMore,
   height,
   currencies,
   selectedCurrency,
@@ -219,9 +219,9 @@ export default function CurrencyList({
   fixedListRef,
   showETH,
   searchQuery,
-  unseenCustomToken = false,
-  isAscendingFilter = false
 }: {
+  isUserTokens?: boolean
+  loadMore?: any
   height: number
   currencies: Currency[]
   selectedCurrency?: Currency | null
@@ -262,30 +262,52 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
-
       const currency: Currency = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
-      const handleSelect = () => onCurrencySelect(currency)
       return (
         <CurrencyRow
           style={style}
           currency={currency}
           isSelected={isSelected}
-          onSelect={handleSelect}
+          onSelect={() => onCurrencySelect(currency)}
           otherSelected={otherSelected}
           tokenBalances={tokenBalances}
           isEnd={index === data.length - 1}
           hasQuery={searchQuery && searchQuery.length > 0}
-          unseenCustomToken={unseenCustomToken}
         />
       )
     },
     [onCurrencySelect, otherCurrency, selectedCurrency, searchQuery]
   )
 
+  const isItemLoaded = (index: any) => itemData.length - index > 10
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
-
+  if (loadMore) {
+    return (
+      <InfiniteLoader
+        isItemLoaded={isItemLoaded}
+        itemCount={itemData.length}
+        loadMoreItems={loadMore}
+      >
+        {({ onItemsRendered, ref }) => (
+          <FixedSizeList
+            height={height}
+            ref={ref}
+            width="100%"
+            itemData={itemData}
+            itemCount={itemData.length}
+            itemSize={56}
+            // itemKey={itemKey}
+            overscanCount={30}
+            onItemsRendered={onItemsRendered}
+          >
+            {Row}
+          </FixedSizeList>
+        )}
+      </InfiniteLoader>
+    )
+  }
   return (
     <FixedSizeList
       height={height}
