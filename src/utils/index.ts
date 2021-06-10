@@ -64,7 +64,7 @@ export function getEtherscanLink(
     prefix = `https://moonbase.subscan.io`
   }
   if (chainId === ChainId.MATIC) {
-    prefix = `https://explorer-mainnet.maticvigil.com`
+    prefix = `https://polygonscan.com`
   }
   switch (type) {
     case 'transaction': {

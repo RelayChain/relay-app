@@ -12,7 +12,7 @@ import CurrencyList from './CurrencyList'
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
 import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
-import ListLoader from '../ListLoader';
+import ListLoader from '../ListLoader'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
 import SortButton from './SortButton'
@@ -25,6 +25,7 @@ import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
 import { useUserAddedTokens } from '../../state/user/hooks'
+import { toCheckSumAddress } from '../../state/crosschain/hooks'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -74,15 +75,31 @@ export function CurrencySearch({
   // ChainId.RINKEBY BUSD
   const availableTokensArray = isCrossChain
     ? availableTokens
-      .filter(a => a.name !== 'BUSD')
-      .filter(y => !y.disableTransfer)
-      .map((x: any) => {
-        return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-      })
+        .filter(a => a.name !== 'BUSD')
+        .filter(y => !y.disableTransfer)
+        .map((x: any) => {
+          const address = toCheckSumAddress(x?.address)
+          const tokenData = { ...x, address }
+          return new Token(
+            tokenData?.chainId,
+            tokenData?.address,
+            tokenData?.decimals,
+            tokenData?.symbol,
+            tokenData?.name
+          )
+        })
         .concat(userTokens)
     : availableTokens
         .map((x: any) => {
-          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+          const address = toCheckSumAddress(x?.address)
+          const tokenData = { ...x, address }
+          return new Token(
+            tokenData?.chainId,
+            tokenData?.address,
+            tokenData?.decimals,
+            tokenData?.symbol,
+            tokenData?.name
+          )
         })
         .concat(userTokens)
 
@@ -110,7 +127,7 @@ export function CurrencySearch({
     if (isAddressSearch) return searchToken ? [searchToken] : []
 
     // the search list should only show by default tokens that are in our pools
-    return filterTokens([...availableTokensArray], searchQuery);
+    return filterTokens([...availableTokensArray], searchQuery)
 
     // return filterTokens(
     //   chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY

@@ -190,6 +190,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000F268fE3d6909508ddA90DccF2bf69050D19f4CdD01'
         },
+        {
+          address: '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
+        },
       ]
     },
     {
@@ -339,6 +347,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'GROW',
           decimals: 18,
           resourceId: '0x00000000000000000000005506bD8C8F5D6733E2738496d5C51Ed62934C9f802'
+        },
+        {
+          address: '0xDE03bB9EFf0804516Be4Bdac5761b7526798aF0F',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000DE03bB9EFf0804516Be4Bdac5761b7526798aF0F02'
         },
       ]
     },
@@ -509,6 +525,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000081A4D4e4A0cC74D6a7A61578f86b8C93CC950a003'
         },
+        {
+          address: '0x0f236c7EDda9c1e87036dD258bd9D1bcC37EA66C',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000f236c7EDda9c1e87036dD258bd9D1bcC37EA66C03'
+        },
       ]
     },
     {
@@ -521,7 +545,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       gasLimit: 60000,
       defaultGasPrice: 2,
-      blockExplorer: 'https://explorer-mainnet.maticvigil.com/',
+      blockExplorer: 'https://polygonscan.com/',
       nativeTokenSymbol: 'MATIC',
       tokens: [
         {
@@ -651,7 +675,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'GROW',
           decimals: 18,
           resourceId: '0x0000000000000000000000DcDC86A38d1ddA13EEB346eeBf34d0148C8197d905'
-        },      
+        },
+        {
+          address: '0xfaEF64930CDD15a19B24EA71Efa14d37f2401169',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000faEF64930CDD15a19B24EA71Efa14d37f240116905'
+        },
       ]
     }
   ]
