@@ -64,7 +64,7 @@ const InputContainer = styled.div<{isLightMode?: boolean}>`
   backdrop-filter: blur(28px);
   border-radius: 44px;
 `
-const Button = styled.button<{ isSelected?: boolean }>`
+const Button = styled.button<{ isSelected?: boolean, isLightMode?: boolean }>`
   display: flex;
   width: 40px;
   height: 40px;
@@ -79,24 +79,16 @@ const Button = styled.button<{ isSelected?: boolean }>`
   &:hover {
     svg {
       g {
-        fill: #ffffff;
+        fill: ${({isLightMode}) => isLightMode ? '#fff' : '#9726cd'};
       }
     }
   }
   svg {
     g {
-      fill: #727bba;
+      fill: ${({isLightMode, isSelected}) => isLightMode && !isSelected ? '#727bba' : !isLightMode && isSelected ? '#9726cd' : !isLightMode && !isSelected ? '#727bba'  : '#fff'};
     }
   }
-  ${({ isSelected }) =>
-    isSelected &&
-    `
-    svg {
-        g {
-          fill: #ffffff;
-        }
-      }
-    `}
+  
 `
 const Group = styled.div`
   display: flex;
@@ -136,24 +128,24 @@ function PoolControls({
       <Group>
         <ControlGroup>
           <ControlLabel>
-            <TYPE.main fontWeight={600} fontSize={12}>
+            <TYPE.mainPool fontWeight={600} fontSize={12}>
               Sort by:
-            </TYPE.main>
+            </TYPE.mainPool>
           </ControlLabel>
           <Select options={options} onChange={e => onSortChange('filteredMode', e)} activeOption={activeFilteredMode} isLightMode={isLightMode}/>
         </ControlGroup>
 
         <ControlGroup>
           <ControlLabel>
-            <TYPE.main fontWeight={600} fontSize={12}>
+            <TYPE.mainPool fontWeight={600} fontSize={12}>
               Mode:
-            </TYPE.main>
+            </TYPE.mainPool>
           </ControlLabel>
           <InputContainer isLightMode={isLightMode}>
-            <Button isSelected={displayMode === 'table'} onClick={() => onSortChange('displayMode', 'table')}>
+            <Button isLightMode={isLightMode} isSelected={displayMode === 'table'} onClick={() => onSortChange('displayMode', 'table')}>
               <ListMode />
             </Button>
-            <Button isSelected={displayMode === 'grid'} onClick={() => onSortChange('displayMode', 'grid')}>
+            <Button isLightMode={isLightMode} isSelected={displayMode === 'grid'} onClick={() => onSortChange('displayMode', 'grid')}>
               <CardMode />
             </Button>
           </InputContainer>

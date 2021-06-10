@@ -37,7 +37,7 @@ const BubbleBase = ({ mode = 'normal', isLightMode=true }: BubbleBaseProps) => {
             height="100%"
             rx={44}
             fill={mode === 'normal' && !isLightMode ? 'rgba(219,205,236,0.72)' : '#202550'}
-            fillOpacity={mode === 'normal' && !isLightMode ? 0.34 : 0.72}
+            fillOpacity={mode === 'normal' && !isLightMode ? 0.8 : 0.72}
           />
           <rect
             x={1}

@@ -128,7 +128,7 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, activ
       {containerSize.width !== 0 && (
         <DropDownHeader onClick={() => setIsOpen(!isOpen)} isLightMode={isLightMode}>
           <ListItem>
-            <TYPE.main fontWeight={600} fontSize={13} style={{ color: `${isLightMode ? '#A7B1F4' : 'rgb(167, 177, 244)'}` }}>
+            <TYPE.main fontWeight={600} fontSize={13} style={{ color: `${isLightMode ? '#A7B1F4' : '#3B1F6A'}` }}>
               {activeOption}{' '}
             </TYPE.main>
             <DropdownArrow />
@@ -140,9 +140,9 @@ const Select: React.FunctionComponent<SelectProps> = ({ options, onChange, activ
           {options.map(option =>
             option.label !== activeOption ? (
               <ListItem onClick={onOptionClicked(option.label)} key={option.label}>
-                <TYPE.main fontWeight={600} fontSize={13}>
+                <TYPE.mainPool fontWeight={600} fontSize={13}>
                   {option.label}{' '}
-                </TYPE.main>
+                </TYPE.mainPool>
               </ListItem>
             ) : null
           )}
