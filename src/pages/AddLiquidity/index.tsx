@@ -249,10 +249,10 @@ export default function AddLiquidity({
 
     try {
       let gas
-      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN || chainId === ChainId.HECO) {
-        gas = BigNumber.from(350000)
-      } else {
+      try {
         gas = await estimate(...args, value ? { value } : {})
+      } catch (e) {
+        gas = BigNumber.from(3000000);
       }
       const response = await method(...args, {
         ...(value ? { value } : {}),
