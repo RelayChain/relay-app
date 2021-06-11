@@ -1,11 +1,12 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, HECO, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS,
   ETH_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS,
   MUMBAI_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS,
-  MATIC_ROUTER_ADDRESS
+  MATIC_ROUTER_ADDRESS,
+  HECO_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -172,6 +173,8 @@ export default function AddLiquidity({
       ? MUMBAI_ROUTER_ADDRESS
       : chainId === ChainId.MATIC
       ? MATIC_ROUTER_ADDRESS
+      : chainId === ChainId.HECO
+      ? HECO_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
   const [approvalB, approveBCallback] = useApproveCallback(
@@ -186,6 +189,8 @@ export default function AddLiquidity({
       ? MUMBAI_ROUTER_ADDRESS
       : chainId === ChainId.MATIC
       ? MATIC_ROUTER_ADDRESS
+      : chainId === ChainId.HECO
+      ? HECO_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 
@@ -207,7 +212,7 @@ export default function AddLiquidity({
     }
 
     // TODO: export this from SDK
-    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC]
+    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC, HECO]
 
     let estimate
     let method: (...args: any) => Promise<TransactionResponse>

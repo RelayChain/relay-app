@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, HECO, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useState } from 'react'
@@ -50,6 +50,9 @@ export function useSwapActionHandlers(): {
       }
       if (currency === MATIC) {
         selected = 'MATIC'
+      }
+      if (currency === HECO) {
+        selected = 'HT'
       }
       dispatch(
         selectCurrency({
@@ -113,9 +116,11 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
               ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
                 ? ChainId.SMART_CHAIN
-                :currency?.symbol === 'MATIC'
-                ? ChainId.MATIC
-                : ChainId.AVALANCHE
+                : currency?.symbol === 'MATIC'
+                  ? ChainId.MATIC
+                  : currency?.symbol === 'HT'
+                  ? ChainId.HECO
+                  : ChainId.AVALANCHE
         )
     }
   } catch (error) {

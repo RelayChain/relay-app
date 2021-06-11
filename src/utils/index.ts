@@ -1,7 +1,7 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, HECO, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
-  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS
+  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
 } from '../constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
@@ -36,7 +36,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   56: 'SMART_CHAIN',
   1287: 'MOONBASE_ALPHA',
   80001: 'MUMBAI',
-  137: 'MATIC'
+  137: 'MATIC',
+  128: 'HECO'
 }
 
 export function getEtherscanLink(
@@ -65,6 +66,9 @@ export function getEtherscanLink(
   }
   if (chainId === ChainId.MATIC) {
     prefix = `https://polygonscan.com`
+  }
+  if (chainId === ChainId.HECO) {
+    prefix = `https://hecoinfo.com`
   }
   switch (type) {
     case 'transaction': {
@@ -144,6 +148,8 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
             ? MUMBAI_ROUTER_ADDRESS
             : chainId === ChainId.MATIC
               ? MATIC_ROUTER_ADDRESS
+              : chainId === ChainId.HECO
+              ? HECO_ROUTER_ADDRESS
               : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,
@@ -161,6 +167,7 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
   if (currency === BNB) return true
   if (currency === DEV) return true
   if (currency === MATIC) return true
+  if (currency === HECO) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 

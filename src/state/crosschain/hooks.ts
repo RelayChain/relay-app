@@ -179,6 +179,8 @@ function GetChainNameById(chainID: number): string {
     return 'Mumbai'
   } else if (chainID === ChainId.MATIC) {
     return 'Polygon'
+  } else if (chainID === ChainId.HECO) {
+    return 'HECO'
   }
   return ''
 }

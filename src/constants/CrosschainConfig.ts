@@ -536,6 +536,158 @@ export const crosschainConfig: ChainbridgeConfig = {
       ]
     },
     {
+      chainId: 4,
+      networkId: 128,
+      name: 'HECO',
+      bridgeAddress: "0x651A4FD3550426788bA73B68655ad40627226e30",
+      erc20HandlerAddress: "0x55B2952a406514cB1b1279D42Aa9be9CC8d4ECfd",
+      rpcUrl: 'https://http-mainnet-node.huobichain.com',
+      type: 'Ethereum',
+      gasLimit: 60000,
+      defaultGasPrice: 2,
+      blockExplorer: 'https://hecoinfo.com/',
+      nativeTokenSymbol: 'HT',
+      tokens: [
+        {
+          address: '0xaC021dF3FF6939CFdCA4ce5a3D1b6048CA5aaBF4',
+          name: 'zUSDC',
+          symbol: 'zUSDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000aC021dF3FF6939CFdCA4ce5a3D1b6048CA5aaBF404'
+        },
+        {
+          address: '0x9A9D4653820D079218007d8Ec0a4AEe1e1E1D394',
+          name: 'zETH',
+          symbol: 'zETH',
+          assetBase: 'ETH',
+          decimals: 18,
+          resourceId: '0x00000000000000000000009A9D4653820D079218007d8Ec0a4AEe1e1E1D39404'
+        },
+        {
+          address: '0x683844fE2ec704f80bD032D0d94089315Ec58D5b',
+          name: 'zBTC',
+          symbol: 'zBTC',
+          assetBase: 'BTC',
+          decimals: 8,
+          resourceId: '0x00000000000000000000008aeb905Eed42Dce79e6e2357AAA0d51FA128800a04'
+        },
+        {
+          address: '0x8aeb905Eed42Dce79e6e2357AAA0d51FA128800a',
+          name: 'zDAI',
+          symbol: 'zDAI',
+          assetBase: 'DAI',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008aeb905Eed42Dce79e6e2357AAA0d51FA128800a04'
+        },
+        {
+          address: '0x0E4564692B15Af6526b6910CFd9E1F4B6671CA1A',
+          name: 'ZERO',
+          symbol: 'ZERO',
+          assetBase: 'ZERO',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000E4564692B15Af6526b6910CFd9E1F4B6671CA1A04'
+        },
+        {
+          address: '0x96b59499D6067B94ee2D1C558A31fA8dC4E3640d',
+          name: 'zAVAX',
+          symbol: 'zAVAX',
+          assetBase: 'AVAX',
+          decimals: 18,
+          resourceId: '0x000000000000000000000096b59499D6067B94ee2D1C558A31fA8dC4E3640d04'
+        },
+        {
+          address: '0x72157E63Bd6F546901C6121CA478061F8756271a',
+          name: 'zLINK',
+          symbol: 'zLINK',
+          assetBase: 'LINK',
+          decimals: 18,
+          resourceId: '0x000000000000000000000072157E63Bd6F546901C6121CA478061F8756271a04'
+        },
+        {
+          address: '0xA0F347628657051e28eafCb2713Beb85c44D931F',
+          name: 'zAAVE',
+          symbol: 'zAAVE',
+          assetBase: 'AAVE',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000A0F347628657051e28eafCb2713Beb85c44D931F04'
+        },
+        {
+          address: '0x75286d76389613960d3466399DB15201e037116f',
+          name: 'zUNI',
+          symbol: 'zUNI',
+          assetBase: 'zUNI',
+          decimals: 18,
+          resourceId: '0x000000000000000000000075286d76389613960d3466399DB15201e037116f04'
+        },
+        {
+          address: '0x98659e9A7ddc51eE3A2FB386d20B481c77E8C8bf',
+          name: 'zSUSHI',
+          symbol: 'zSUSHI',
+          assetBase: 'SUSHI',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098659e9A7ddc51eE3A2FB386d20B481c77E8C8bf04'
+        },
+        {
+          address: '0x5a32a14EF0c756dc016c0EcaA68f65258504B851',
+          name: 'z1INCH',
+          symbol: 'z1INCH',
+          assetBase: '1INCH',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005a32a14EF0c756dc016c0EcaA68f65258504B85104'
+        },
+        {
+          address: '0xD4Cc96d31f4a272B34804B121b871a0432b38911',
+          name: 'zYFI',
+          symbol: 'zYFI',
+          assetBase: 'YFI',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000D4Cc96d31f4a272B34804B121b871a0432b3891104'
+        },
+        {
+          address: '0x3D1f2C168F4b6028f422e43755a60F0384b63568',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 18,
+          resourceId: '0x00000000000000000000003D1f2C168F4b6028f422e43755a60F0384b6356804'
+        },
+        {
+          address: '0x4E76805F76c13BfaA1D6558596A12086e4bE3E2C',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x00000000000000000000004E76805F76c13BfaA1D6558596A12086e4bE3E2C04'
+        },
+        {
+          address: '0x8C2f0dBa074f120Eef8530da5F8a825796c505a4',
+          name: 'ChartEx',
+          symbol: 'ChartEx',
+          assetBase: 'Chart',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008C2f0dBa074f120Eef8530da5F8a825796c505a404'
+        },
+        {
+          address: '0x87F86C5870e96a55A29e37f0c11C7620edb7B203',
+          name: 'GROW',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x000000000000000000000087F86C5870e96a55A29e37f0c11C7620edb7B20304'
+        },
+        {
+          address: '0xc9EFDAC4fE5828361b0aE69d1C16670CDa712BDc',
+          name: 'WAS',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000c9EFDAC4fE5828361b0aE69d1C16670CDa712BDc04'
+        },
+
+      ]
+    },
+    {
       chainId: 5,
       networkId: 137,
       name: 'Polygon',
@@ -686,6 +838,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
       ]
     }
+
+
   ]
 
   // rinkeby - FUJI

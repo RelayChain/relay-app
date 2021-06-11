@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, HECO, ChainId, Currency, ETHER, Token, currencyEquals } from '@zeroexchange/sdk'
 
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -123,6 +123,21 @@ export default function CommonBases({
             <CurrencyLogo currency={MATIC} style={{ marginRight: 8 }} />
             <Text fontWeight={500} fontSize={16}>
               MATIC
+            </Text>
+          </BaseWrapper>
+        )}
+        {chainId && chainId === ChainId.HECO && (
+          <BaseWrapper
+            onClick={() => {
+              if (!selectedCurrency || !currencyEquals(selectedCurrency, HECO)) {
+                onSelect(HECO)
+              }
+            }}
+            disable={selectedCurrency === HECO}
+          >
+            <CurrencyLogo currency={HECO} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+            HT
             </Text>
           </BaseWrapper>
         )}
