@@ -1,4 +1,4 @@
-import { AVAX, BNB, Currency, DEV, ETHER, MATIC, HECO, Token, currencyEquals } from '@zeroexchange/sdk'
+import { Currency,Token, ETHER_NAMES_CURRENCIES, ETHER_CURRENCIES, currencyEquals } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -117,26 +117,11 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
-  const isAVAX = currencyId?.toUpperCase() === 'AVAX'
-  const isBNB = currencyId?.toUpperCase() === 'BNB'
-  const isDEV = currencyId?.toUpperCase() === 'DEV'
-  const isMATIC = currencyId?.toUpperCase() === 'MATIC'
-  const isHECO = currencyId?.toUpperCase() === 'HT'
-  const token = useToken(isETH || isAVAX || isBNB || isDEV || isMATIC || isHECO ? undefined : currencyId)
+  const isNativeCurrency = ETHER_NAMES_CURRENCIES.includes(String(currencyId?.toUpperCase()))
+  const token = useToken(isNativeCurrency ? undefined : currencyId)
 
-  if (isETH) {
-    return ETHER
-  } else if (isAVAX) {
-    return AVAX
-  } else if (isBNB) {
-    return BNB
-  } else if (isDEV) {
-    return DEV
-  } else if (isMATIC) {
-    return MATIC
-  } else if (isHECO) {
-    return HECO
+  if (isNativeCurrency) {
+    return ETHER_CURRENCIES.find((curr: Currency) => curr.name === String(currencyId?.toUpperCase()))
   }
   else {
     return token

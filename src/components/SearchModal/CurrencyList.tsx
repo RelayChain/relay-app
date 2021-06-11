@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, HECO, Token, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, HECO, Token, ETHER_CURRENCIES, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -24,18 +24,8 @@ import { useTokenBalances } from '../../state/user/hooks'
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
     return currency.address
-  } else if (currency === ETHER) {
-    return 'ETHER'
-  } else if (currency === AVAX) {
-    return 'AVAX'
-  } else if (currency === BNB) {
-    return 'BNB'
-  } else if (currency === DEV) {
-    return 'DEV'
-  } else if (currency === MATIC) {
-    return 'MATIC'
-  } else if (currency === HECO) {
-    return 'HT'
+  } else if (ETHER_CURRENCIES.includes(currency)) {
+    return String(currency.name)
   } else {
     return ''
   }
@@ -144,7 +134,7 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
-    return [ETHER, AVAX, BNB, DEV, MATIC, HECO].includes(currency)
+    return ETHER_CURRENCIES.includes(currency)
   }
 
   if (unseenCustomToken && customAdded) {

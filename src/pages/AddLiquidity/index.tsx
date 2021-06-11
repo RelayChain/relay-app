@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, HECO, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, ETHER_CURRENCIES, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS,
   ETH_ROUTER_ADDRESS,
@@ -211,16 +211,13 @@ export default function AddLiquidity({
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
-    // TODO: export this from SDK
-    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC, HECO]
-
     let estimate
     let method: (...args: any) => Promise<TransactionResponse>
     let args: Array<string | string[] | number>
     let value: BigNumber | null
 
-    if ([currencyA, currencyB].some(c => ALL_ETHERS.includes(c))) {
-      const tokenBIsETH = ALL_ETHERS.includes(currencyB)
+    if ([currencyA, currencyB].some(c => ETHER_CURRENCIES.includes(c))) {
+      const tokenBIsETH = ETHER_CURRENCIES.includes(currencyB)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -252,7 +249,7 @@ export default function AddLiquidity({
 
     try {
       let gas
-      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN) {
+      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN || chainId === ChainId.HECO) {
         gas = BigNumber.from(350000)
       } else {
         gas = await estimate(...args, value ? { value } : {})

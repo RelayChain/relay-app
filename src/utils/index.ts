@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, HECO, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Percent, Token } from '@zeroexchange/sdk'
+import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
@@ -162,13 +162,8 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
-  if (currency === AVAX) return true
-  if (currency === BNB) return true
-  if (currency === DEV) return true
-  if (currency === MATIC) return true
-  if (currency === HECO) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+  return currency && ETHER_CURRENCIES.includes(currency)? true: 
+  Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 
 export const copyToClipboard = (text: string) => {

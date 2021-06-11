@@ -1,4 +1,4 @@
-import { AVAX, BNB, MATIC, DEV, HECO, ChainId, CurrencyAmount, ETHER, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { ETHER_CURRENCIES, ChainId, CurrencyAmount, TokenAmount, Trade } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS,
   ETH_ROUTER_ADDRESS,
@@ -42,7 +42,7 @@ export function useApproveCallback(
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if ([ETHER, AVAX, BNB, DEV, MATIC, HECO].includes(amountToApprove.currency)) return ApprovalState.APPROVED
+    if (ETHER_CURRENCIES.includes(amountToApprove.currency)) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 

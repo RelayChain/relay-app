@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { UNI } from './../../constants/index'
