@@ -281,6 +281,16 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0xC49f75293427F14288328059992d6c8213abc760',
       rewardInfo: { rewardToken: bscZERO }
     },
+    {
+      tokens: [bscZERO, bscWBNB],
+      stakingRewardAddress: '0x51b53dDAd48bcCfb23f9091Ad2bC87Aa9417eb85',
+      rewardInfo: { rewardToken: bscZERO }
+    },
+    {
+      tokens: [bscZERO, bscBUSD],
+      stakingRewardAddress: '0x7d3616EbdF793E00d900D69b4D4a47ce33725ED4',
+      rewardInfo: { rewardToken: bscZERO }
+    },
   ],
   [ChainId.MATIC]: [
     {
