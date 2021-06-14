@@ -32,8 +32,9 @@ import {
   zZERO,
   zCHART,
   bscWISB,
-  WMATIC,
-  MZERO
+  MZERO,
+  XIOT,
+  BIOS,
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -101,7 +102,21 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MAINNET], WAS],
       stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575',
       rewardInfo: { rewardToken: WAS },
-    }
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], BIOS],
+      stakingRewardAddress: '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
+      rewardInfo: { 
+        rewardToken: XIOT,
+        addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+      },
+    },
+    {
+      tokens: [BIOS, BIOS],
+      stakingRewardAddress: '0x91bCecC4F7ae1F71Ef485102BCABBF0f1D872e00',
+      rewardInfo: { rewardToken: XIOT },
+    },
   ],
   [ChainId.AVALANCHE]: [
     {
@@ -332,7 +347,10 @@ export interface StakingInfo {
     totalRewardRate: TokenAmount,
     seconds: number,
     decimals:number,
-  ) => TokenAmount
+  ) => TokenAmount,
+
+  // all the info from stakingRewards
+  rewardInfo?: any,
 }
 
 // gets the staking info from the network for the active chain id
@@ -346,12 +364,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
-              ? false
-              : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          pairToFilterBy == undefined ? true
+          : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+          pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
         : [],
     [chainId, pairToFilterBy]
@@ -422,14 +437,21 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // get the LP token
         const tokens = info[index].tokens
-        const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
+        const isSingleSided = tokens[0] === tokens[1];
+
+        let liquidityToken;
+        if (isSingleSided) {
+          liquidityToken = tokens[0];
+        } else {
+          liquidityToken = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0')).liquidityToken;
+        }
 
         // check for account, if no account set to 0
         const currentPair = info.find(pair => pair.stakingRewardAddress === rewardsAddress)
 
         const rewardsToken = currentPair?.rewardInfo?.rewardToken ?? ZERO;
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+        const stakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+        const totalStakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
         const totalRewardRate = new TokenAmount(rewardsToken, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
@@ -464,8 +486,6 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const active =
           periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
 
-        const lpToken = currentPair?.rewardInfo?.lpToken
-
         memo.push({
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
@@ -480,6 +500,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           active,
           rewardsTokenSymbol: rewardsToken.symbol,
           chainId,
+          rewardInfo: currentPair?.rewardInfo,
         })
       }
       return memo

@@ -57,6 +57,8 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
 export const WAS = new Token(ChainId.MAINNET, '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b', 18, 'WAS', 'Wasder Token')
+export const BIOS = new Token(ChainId.MAINNET, '0xAACa86B876ca011844b5798ECA7a67591A9743C8', 18, 'BIOS', 'BIOS')
+export const XIOT = new Token(ChainId.MAINNET, '0x31024A4C3e9aEeb256B825790F5cb7ac645e7cD5', 18, 'XIOT', 'Xiotri')
 
 export const CHART = new Token(ChainId.AVALANCHE, '0x1d37986F252d0e349522EA6C3B98Cb935495E63E', 18, 'CHART', 'ChartEx')
 
@@ -89,6 +91,8 @@ export const bscWISB = new Token(ChainId.SMART_CHAIN, '0x4f491d389A5bF7C56bd1e4d
 
 export const WMATIC = new Token(ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped Matic (WMATIC)')
 export const MZERO = new Token(ChainId.MATIC, '0xb67176655e7919a27aA34C279157124619aDFd4B', 18, 'MZERO', 'ZERO in Polygon')
+// a test token, mintable by anyone
+export const MINT = new Token(ChainId.MATIC, '0x08193764bd81a742c15125e48f41b1232068c912', 18, 'MINT', 'Mintable Token')
 
 export const rinkebyZERO = new Token(ChainId.RINKEBY, '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a', 18, 'ZERO', 'Zero Exchange')
 export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
@@ -117,7 +121,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.SMART_CHAIN_TEST]: new Token(ChainId.SMART_CHAIN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -144,7 +149,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.SMART_CHAIN_TEST]: [WETH[ChainId.SMART_CHAIN_TEST]],
   [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
-  [ChainId.MATIC]: [WETH[ChainId.MATIC]]
+  [ChainId.MATIC]: [WETH[ChainId.MATIC]],
+  [ChainId.HECO]: [WETH[ChainId.HECO]],
 }
 
 // used to construct intermediary pairs for trading

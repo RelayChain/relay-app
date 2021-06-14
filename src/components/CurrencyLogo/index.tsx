@@ -16,6 +16,8 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
 import WASLogo from '../../assets/images/crosschain/WAS.jpeg'
 import GDLLogo from '../../assets/images/crosschain/GDL.png'
+import BIOSLogo from '../../assets/images/crosschain/BIOS.png'
+import XIOTLogo from '../../assets/images/crosschain/XIOT.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
 import USDTLogo from '../../assets/images/crosschain/wUSDT.png'
@@ -136,6 +138,14 @@ export default function CurrencyLogo({
 
   if (['GDL'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />
+  }
+  
+  if (['XIOT'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={XIOTLogo} size={size} style={style} />
+  }
+
+  if (['BIOS'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={BIOSLogo} size={size} style={style} />
   }
 
   // cross chain
