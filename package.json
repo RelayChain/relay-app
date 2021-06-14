@@ -141,7 +141,7 @@
     "@types/react-window-infinite-loader": "^1.0.3",
     "@types/yup": "^0.29.11",
     "@uniswap/default-token-list": "^2.0.0",
-    "@zeroexchange/sdk": "^3.2.17",
+    "@zeroexchange/sdk": "^3.2.18",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "highcharts": "^9.0.1",

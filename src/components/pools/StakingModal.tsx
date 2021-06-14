@@ -147,6 +147,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       return approveCallback()
     }
 
+    // if it's sushi pair, just use the usual approve
+    if (pairContract.address == '0xE9a889E6963f122a98f8083d951c71329c726c0A') return approveCallback();
+
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account).catch((e: any) => null);
 
