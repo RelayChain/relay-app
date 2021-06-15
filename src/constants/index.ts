@@ -58,7 +58,7 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18, 'SUSHI', 'Wrapped BTC')
 export const WAS = new Token(ChainId.MAINNET, '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b', 18, 'WAS', 'Wasder Token')
 export const BIOS = new Token(ChainId.MAINNET, '0xAACa86B876ca011844b5798ECA7a67591A9743C8', 18, 'BIOS', 'BIOS')
-export const XIOT = new Token(ChainId.MAINNET, '0x31024A4C3e9aEeb256B825790F5cb7ac645e7cD5', 18, 'XIOT', 'Xiotri')
+export const XIOT = new Token(ChainId.MAINNET, '0x31024A4C3e9aEeb256B825790F5cb7ac645e7cD5', 3, 'XIOT', 'Xiotri')
 
 export const CHART = new Token(ChainId.AVALANCHE, '0x1d37986F252d0e349522EA6C3B98Cb935495E63E', 18, 'CHART', 'ChartEx')
 
