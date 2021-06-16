@@ -1,10 +1,10 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, ETHER_CURRENCIES, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
+import { ExternalLink, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
-import { StyledInternalLink, TYPE, Title, ExternalLink } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -13,9 +13,9 @@ import { AutoColumn } from '../../components/Column'
 import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import FullPositionCard from '../../components/PositionCard'
 import { Link } from 'react-router-dom'
 import PageContainer from './../../components/PageContainer'
@@ -476,7 +476,6 @@ export default function Manage({
                   </ExternalLink>
                   : !userLiquidityUnstaked ? null
                     : userLiquidityUnstaked.equalTo('0') ? null
-                      : !stakingInfo?.active ? null
                         : isSingleSided ? null
                           : (
                             <StyledInternalLink
@@ -557,14 +556,14 @@ export default function Manage({
                     {
                       !userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                         '0'
-                      ) ? null : !stakingInfo?.active ? null :
+                      ) ? null :
                         (
                           <>
                             <StatLabel style={{ color: '#A7B1F4' }}>{isSingleSided ? `${currencyA?.symbol} to deposit` : 'LP To Deposit:'}</StatLabel>
                             <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                               <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                                 {userLiquidityUnstaked?.toSignificant(
-                                  Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
+                                  Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)
                                 )}
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
                               </TYPE.white>
