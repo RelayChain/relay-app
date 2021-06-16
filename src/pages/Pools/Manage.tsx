@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, DEV, ETHER, JSBI, MATIC, Pair, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, DEV, ETHER, ETHER_CURRENCIES, JSBI, MATIC, Pair, TokenAmount } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
@@ -7,6 +7,7 @@ import { RowBetween, RowCenter } from '../../components/Row'
 import { StyledInternalLink, TYPE, Title } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useApplicationState, useWalletModalToggle } from '../../state/application/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import { AutoColumn } from '../../components/Column'
@@ -32,7 +33,6 @@ import usePrevious from '../../hooks/usePrevious'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
-import { useWalletModalToggle, useApplicationState} from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const moment = require('moment')
@@ -274,7 +274,7 @@ export default function Manage({
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-  
+
   const [token, WETH] = currencyA && ETHER_CURRENCIES.includes(currencyA)
       ? [tokenB, tokenA]
       : [tokenA, tokenB];
@@ -458,7 +458,7 @@ export default function Manage({
                 </StyledInternalLink>
                 {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                     '0'
-                  ) ? null : !stakingInfo?.active ? null : (
+                  ) ? null : (
                   <StyledInternalLink
                     className="remove-liquidity-link"
                     to={{
@@ -535,13 +535,13 @@ export default function Manage({
                 <Wrapper isLightMode={isLightMode}>
                   {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
                       '0'
-                    ) ? null : !stakingInfo?.active ? null : (
+                    ) ? null : (
                     <>
                       <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
                       <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                         <TYPE.black fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                           {userLiquidityUnstaked?.toSignificant(
-                            Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
+                            Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)
                           )}
                           <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
                         </TYPE.black>
