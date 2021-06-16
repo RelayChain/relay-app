@@ -19,8 +19,9 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { useToggleSettingsMenu, useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
+import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { AppDispatch } from '../../state'
@@ -40,12 +41,12 @@ import Icon from '../../components/Icon'
 import Loader from '../../components/Loader'
 import PageContainer from './../../components/PageContainer'
 import ProgressSteps from '../../components/ProgressSteps'
-import { ProposalStatus } from '../../state/crosschain/actions'
 import { RouteComponentProps } from 'react-router-dom'
 import Settings from '../../components/Settings'
 import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
+import Web3 from 'web3'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { setCurrentToken } from '../../state/crosschain/actions'
@@ -90,14 +91,14 @@ const SwapFlexRow = styled.div`
   flex: 1;
   width: 100%;
 `
-const SwapWrap = styled.div<{isLightMode?: boolean}>`
+const SwapWrap = styled.div`
   font-family: Poppins;
   position: relative;
   width: 620px;
   max-width: 100%;
   padding: 28px 34px;
   min-height: 570px;
-  background: ${({ isLightMode }) => isLightMode ? 'rgba(47, 53, 115, 0.32)' : 'rgba(219, 205, 236, 0.32)'} ;
+  background: rgba(47, 53, 115, 0.32);
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
   border-radius: 44px;
@@ -233,15 +234,12 @@ export default function Swap({
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const {
-    currentTxID,
     availableChains: allChains,
     availableTokens,
     currentChain,
     currentToken,
     crosschainFee,
     targetTokens,
-    crosschainTransferStatus,
-    swapDetails
   } = useCrosschainState()
 
   const { width } = useWindowDimensions()
@@ -250,7 +248,7 @@ export default function Swap({
   if (width < 1350) {
     isColumn = true
   }
-  const {isLightMode} = useApplicationState()
+
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -475,8 +473,8 @@ export default function Swap({
   const propsState: any = props?.location?.state
   const token0: any = propsState?.token0 ? propsState?.token0 : null
   const token1: any = propsState?.token1 ? propsState?.token1 : null
-  const curA = useCurrency(token0);
-  const curB = useCurrency(token1);
+  const curA = useCurrency(token0)
+  const curB = useCurrency(token1)
 
   const [curAState, setCurAState] = useState(curA) // state for first token from Manage page
   const [curBState, setCurBState] = useState(curB) // state for second token from Manage page
@@ -484,7 +482,7 @@ export default function Swap({
   useEffect(() => {
     if (curAState && curBState) {
       // If there are tokens pair from Manage page set it on start and set null state to not force it again
-      handleInputSelect(curA)  
+      handleInputSelect(curA)
       handleOutputSelect(curB)
       setCurAState(null)
       setCurBState(null)
@@ -515,7 +513,7 @@ export default function Swap({
       handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
-  
+
   const [stakedTokens, setStakedTokens] = useState<Token[]>([])
   const stakingInfos = useStakingInfo()
 
@@ -558,8 +556,17 @@ export default function Swap({
           tokenData?.name
         )
       })
-      .concat(userTokens)
-    return [...new Set(arr)]
+      .concat(userTokens, stakedTokens)
+
+      const filteredArray: any = [];
+      arr.forEach((item: any) => {
+        const i = filteredArray.findIndex((x: any) => x.address == item.address);
+        if(i <= -1){
+          filteredArray.push(item);
+        }
+      })
+
+    return [...new Set(filteredArray)]
   }, [availableTokens, userTokens])
 
   return (
@@ -575,8 +582,8 @@ export default function Swap({
 
           <SwapFlex>
             <SwapFlexRow>
-              <SwapWrap isLightMode={isLightMode}>
-                <BubbleBase isLightMode={isLightMode}/>
+              <SwapWrap>
+                <BubbleBase />
                 <Wrapper id="swap-page">
                   <ConfirmSwapModal
                     isOpen={showConfirm}
@@ -594,11 +601,10 @@ export default function Swap({
                   />
                   <Header>
                     <SubTitle>Swap</SubTitle>
-                    <Settings isLightMode={isLightMode}/>
+                    <Settings />
                   </Header>
                   <AutoColumn gap={'md'}>
                     <CurrencyInputPanel
-                    
                       blockchain={isCrossChain ? currentChain.name : getChainName()}
                       label={'From'}
                       value={formattedAmounts[Field.INPUT]}
@@ -847,7 +853,6 @@ export default function Swap({
               <BalanceRow isColumn={isColumn}>
                 <TextBalance>{currentChain.name} Balances</TextBalance>
                 <BalanceItem
-                isLightMode={isLightMode}
                   currentChain={currentChain}
                   chainId={chainId}
                   isNative={true}
@@ -857,7 +862,6 @@ export default function Swap({
                 {tokenBalances?.map((token: any, index) => {
                   return (
                     <BalanceItem
-                    isLightMode={isLightMode}
                       key={index}
                       token={token}
                       chainId={chainId}
@@ -867,24 +871,6 @@ export default function Swap({
                     ></BalanceItem>
                   )
                 })}
-                {stakedTokens
-                  ?.filter((x: any) => x.chainId === chainId)
-                  .map((token: any, index: any) => {
-                    return (
-                      <BalanceItem
-                      isLightMode={isLightMode}
-                        key={index}
-                        token={token}
-                        chainId={chainId}
-                        account={account}
-                        isStaked={true}
-                        tokenBalances={tokenBalances.map(item => item?.address)}
-                        selectBalance={() => onSelectBalance(false, token)}
-                        isLast={index === stakedTokens.length - 1}
-                        isFirst={index === 0 && tokenBalances?.length === 0}
-                      ></BalanceItem>
-                    )
-                  })}
               </BalanceRow>
             )}
           </SwapFlex>
