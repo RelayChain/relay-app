@@ -11,7 +11,6 @@ import { LinkStyledButton, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import Web3 from 'web3'
 import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
@@ -47,6 +46,7 @@ import Settings from '../../components/Settings'
 import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
+import Web3 from 'web3'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { setCurrentToken } from '../../state/crosschain/actions'
@@ -482,7 +482,7 @@ export default function Swap({
   useEffect(() => {
     if (curAState && curBState) {
       // If there are tokens pair from Manage page set it on start and set null state to not force it again
-      handleInputSelect(curA)  
+      handleInputSelect(curA)
       handleOutputSelect(curB)
       setCurAState(null)
       setCurBState(null)
@@ -513,7 +513,7 @@ export default function Swap({
       handleInputSelect(isNative ? nativeCurrency : token)
     }
   }
-  
+
   const [stakedTokens, setStakedTokens] = useState<Token[]>([])
   const stakingInfos = useStakingInfo()
 
@@ -556,8 +556,17 @@ export default function Swap({
           tokenData?.name
         )
       })
-      .concat(userTokens)
-    return [...new Set(arr)]
+      .concat(userTokens, stakedTokens)
+
+      const filteredArray: any = [];
+      arr.forEach((item: any) => {
+        const i = filteredArray.findIndex((x: any) => x.address == item.address);
+        if(i <= -1){
+          filteredArray.push(item);
+        }
+      })
+
+    return [...new Set(filteredArray)]
   }, [availableTokens, userTokens])
 
   return (
@@ -862,23 +871,6 @@ export default function Swap({
                     ></BalanceItem>
                   )
                 })}
-                {stakedTokens
-                  ?.filter((x: any) => x.chainId === chainId)
-                  .map((token: any, index: any) => {
-                    return (
-                      <BalanceItem
-                        key={index}
-                        token={token}
-                        chainId={chainId}
-                        account={account}
-                        isStaked={true}
-                        tokenBalances={tokenBalances.map(item => item?.address)}
-                        selectBalance={() => onSelectBalance(false, token)}
-                        isLast={index === stakedTokens.length - 1}
-                        isFirst={index === 0 && tokenBalances?.length === 0}
-                      ></BalanceItem>
-                    )
-                  })}
               </BalanceRow>
             )}
           </SwapFlex>
