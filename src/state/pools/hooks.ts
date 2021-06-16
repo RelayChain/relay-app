@@ -56,7 +56,7 @@ export function useStakingInfoTop(
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
-  const isSingleSided = tokenA?.address !== tokenB?.address;
+  const isSingleSided = tokenA?.address === tokenB?.address;
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   // TODO: don't we receive it as argument already?
@@ -76,7 +76,7 @@ export function useStakingInfoTop(
   // get WETH value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
   let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
-  if ( isSingleSided && totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
+  if ( !isSingleSided && totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInWETH = new TokenAmount(
       WETH,
@@ -88,7 +88,6 @@ export function useStakingInfoTop(
         totalSupplyOfStakingToken.raw
       )
     )
-    console.log('valueOfTotalStakedAmountInWETH :>> ', valueOfTotalStakedAmountInWETH);
   }
 
   // TODO: how does it work in chains other than Eth?
