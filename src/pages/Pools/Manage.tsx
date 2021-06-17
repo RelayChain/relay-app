@@ -457,9 +457,10 @@ export default function Manage({
                 {isSingleSided ? <></>
                   :
                   stakingInfo?.rewardInfo?.addLiquidityLink ?
-                    <ExternalLink href={stakingInfo?.rewardInfo?.addLiquidityLink}>
+                    /*<ExternalLink href={stakingInfo?.rewardInfo?.addLiquidityLink}>
                       <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
-                    </ExternalLink>
+                    </ExternalLink>*/
+                    <></>
                     :
                     <StyledInternalLink
                       className="add-liquidity-link"
