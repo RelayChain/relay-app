@@ -551,7 +551,8 @@ export default function Manage({
             </SingleColumn>
             {
               (stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
-                (userLiquidityUnstaked && !userLiquidityUnstaked?.equalTo('0'))) && (
+                (userLiquidityUnstaked && !userLiquidityUnstaked?.equalTo('0'))) &&
+                (
                 <SingleColumn className="right">
                   <Wrapper>
                     {
@@ -569,6 +570,7 @@ export default function Manage({
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
                               </TYPE.white>
                               <ButtonOutlined
+                                disabled={stakingInfo?.rewardInfo?.disableDeposit}
                                 className="remove-liquidity-button green"
                                 onClick={handleDepositClick}
                                 style={{ width: '160px' }}

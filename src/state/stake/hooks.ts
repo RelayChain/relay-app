@@ -110,12 +110,13 @@ export const STAKING_REWARDS_INFO: {
         rewardToken: XIOT,
         addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        disableDeposit: true
       },
     },
     {
       tokens: [BIOS, BIOS],
       stakingRewardAddress: '0x91bCecC4F7ae1F71Ef485102BCABBF0f1D872e00',
-      rewardInfo: { rewardToken: XIOT },
+      rewardInfo: { rewardToken: XIOT, disableDeposit: true },
     },
   ],
   [ChainId.AVALANCHE]: [
@@ -331,7 +332,6 @@ export interface StakingInfo {
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
   rewardRate: TokenAmount
-  
   rewardRateWeekly: TokenAmount
   // when the period ends
   periodFinish: Date | undefined
