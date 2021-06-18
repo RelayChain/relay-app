@@ -35,6 +35,7 @@ import {
   MZERO,
   XIOT,
   BIOS,
+  MINT,
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -313,6 +314,11 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
     },
+    {
+      tokens: [MINT, MINT],
+      stakingRewardAddress: '0x33658140664e02814e6b0F32521498F03CB1380B',
+      rewardInfo: { rewardToken: MINT }
+    }
   ]
 }
 
