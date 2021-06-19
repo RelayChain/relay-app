@@ -68,6 +68,10 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x823e89163ea28eec2be01c644399d6515995921d'
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], ZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
     },
     {
@@ -131,6 +135,11 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0xfA2c38470aD0a970240cF1afD35Cd04d9e994e76'
+    },
+    {
+      tokens: [zZERO, WAVAX],
+      // new one:
+      stakingRewardAddress: '0x9e09298D7Dd8C01835177EC5df5D0b59EA105f2C'
     },
     {
       tokens: [zZERO, WAVAX],
