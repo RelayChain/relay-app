@@ -320,6 +320,10 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MATIC]: [
     {
       tokens: [WETH[ChainId.MATIC], MZERO],
+      stakingRewardAddress: '0xc095c481c27e1d8E3DF69610d0d5A1cb8F36cE8B'
+    },
+    {
+      tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
     },
   ]
