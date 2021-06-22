@@ -120,6 +120,21 @@ export const STAKING_REWARDS_INFO: {
       },
     },
     {
+      tokens: [WETH[ChainId.MAINNET], BIOS],
+      stakingRewardAddress: '0x591d01efab5f96da72de29bda8fec0a80084d1a6',
+      rewardInfo: {
+        rewardToken: XIOT,
+        addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        rewardsMultiplier: 10e18
+      },
+    },
+    {
+      tokens: [BIOS, BIOS],
+      stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
+      rewardInfo: { rewardToken: XIOT },
+    },
+    {
       tokens: [BIOS, BIOS],
       stakingRewardAddress: '0x91bCecC4F7ae1F71Ef485102BCABBF0f1D872e00',
       rewardInfo: { rewardToken: XIOT, disableDeposit: true },
