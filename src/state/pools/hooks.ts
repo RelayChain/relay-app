@@ -16,6 +16,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useStakingInfo } from 'state/stake/hooks'
 import { useEffect } from 'react'
 import { replacePoolsState } from './actions'
+import toEllipsis from 'utils/toEllipsis'
 
 export function usePoolsState(): AppState['pools'] {
   return useSelector<AppState, AppState['pools']>(state => state.pools)
@@ -68,7 +69,7 @@ export function useStakingInfoTop(
 
   // TODO: what happens if neither of tokens is ETHER?
   const [token, WETH] =
-      currencyA && ETHER_CURRENCIES.includes(currencyA)
+    currencyA && ETHER_CURRENCIES.includes(currencyA)
       ? [tokenB, tokenA]
       : [tokenA, tokenB]
   const backgroundColor = useColor(token)
@@ -76,7 +77,7 @@ export function useStakingInfoTop(
   // get WETH value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
   let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
-  if ( !isSingleSided && totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
+  if (!isSingleSided && totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInWETH = new TokenAmount(
       WETH,
@@ -98,16 +99,28 @@ export function useStakingInfoTop(
 
   const symbol = WETH?.symbol
 
-  const countUpAmount =
-    stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
+  const countUpAmount = toEllipsis(
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }) : '0',
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }).length > 16
+      ? stakingInfo?.earnedAmount
+        .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+        ?.toSignificant(6, { groupSeparator: ',' }).length - 16
+      : 0
+      : 0
+  )
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   useEffect(() => {
     const contract = stakingInfo?.stakingRewardAddress
     const singleWeeklyEarnings = stakingInfo?.active
       ? stakingInfo?.rewardRate
-          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-          ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
+        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+        ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+        ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
       : '0'
     const readyToHarvest = countUpAmount
     const liquidityValue = valueOfTotalStakedAmountInUSDC

@@ -80,9 +80,15 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                 {toEllipsis(
-                  stakingInfo?.earnedAmount?.toSignificant(6),
-                  stakingInfo?.earnedAmount?.toSignificant(6).length > MAX_SHOW_WIDTH
-                    ? stakingInfo?.earnedAmount?.toSignificant(6).length - MAX_SHOW_WIDTH
+                  stakingInfo?.earnedAmount
+                  ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                  ?.toSignificant(6, { groupSeparator: ',' }),
+                  stakingInfo?.earnedAmount
+                  ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                  ?.toSignificant(6, { groupSeparator: ',' }).length > MAX_SHOW_WIDTH
+                    ? stakingInfo?.earnedAmount
+                    .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                    ?.toSignificant(6, { groupSeparator: ',' }).length - MAX_SHOW_WIDTH
                     : 0
                 )}
               </TYPE.body>
@@ -100,7 +106,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {
+            stakingInfo?.earnedAmount
+            ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+            ?.toSignificant(6)} {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}

@@ -15,6 +15,7 @@ import { returnBalanceNum } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
+import { StakingInfo } from 'state/stake/hooks'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -271,6 +272,7 @@ interface CurrencyInputPanelProps {
   currentTargetToken?: any
   transferPage?: boolean
   grayedOut?: boolean;
+  stakingInfo?: StakingInfo
 }
 
 export default function CurrencyInputPanel({
@@ -298,6 +300,7 @@ export default function CurrencyInputPanel({
   crossChainBalance,
   currentTargetToken,
   grayedOut = false,
+  stakingInfo
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -337,7 +340,9 @@ export default function CurrencyInputPanel({
                   >
                     {!hideBalance && !!altCurrency && selectedCurrencyBalance && hasABalance
                       ? (customBalanceText ?? 'Balance: ') +
-                        `${selectedCurrencyBalance?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
+                        `${selectedCurrencyBalance
+                          ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                          ?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
                         })}`
                       : ''}

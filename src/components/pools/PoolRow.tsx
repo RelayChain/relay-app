@@ -148,7 +148,9 @@ export default function PoolRow({
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
-              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
+              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)
+              ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              ?.toFixed(0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
             {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}

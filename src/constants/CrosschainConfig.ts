@@ -684,6 +684,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000faEF64930CDD15a19B24EA71Efa14d37f240116905'
         },
+        {
+          address: '0x08193764bd81a742c15125e48f41b1232068c912',
+          name: 'MINT',
+          symbol: 'MINT',
+          assetBase: 'MINT',
+          decimals: 18,
+          resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
+        },
       ]
     }
   ]

@@ -107,11 +107,12 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WETH[ChainId.MAINNET], BIOS],
       stakingRewardAddress: '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
-      rewardInfo: { 
+      rewardInfo: {
         rewardToken: XIOT,
         addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
-        disableDeposit: true
+        disableDeposit: true,
+        rewardsMultiplier: 10e18
       },
     },
     {
@@ -317,7 +318,7 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [MINT, MINT],
       stakingRewardAddress: '0x33658140664e02814e6b0F32521498F03CB1380B',
-      rewardInfo: { rewardToken: MINT }
+      rewardInfo: { rewardToken: MINT, rewardsMultiplier: 1e18 }
     }
   ]
 }
@@ -352,7 +353,7 @@ export interface StakingInfo {
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount,
     seconds: number,
-    decimals:number,
+    decimals: number,
   ) => TokenAmount,
 
   // all the info from stakingRewards
@@ -371,8 +372,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
           pairToFilterBy == undefined ? true
-          : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-          pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+            : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+            pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
         : [],
     [chainId, pairToFilterBy]
@@ -483,7 +484,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         }
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1, 1)
-        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10**15)
+        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10 ** 15)
 
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000

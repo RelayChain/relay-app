@@ -135,7 +135,11 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const maxAmountInput = maxAmountSpend(userLiquidityUnstaked)
   const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
   const handleMax = useCallback(() => {
-    maxAmountInput && onUserInput(maxAmountInput.toExact())
+    maxAmountInput && onUserInput(
+      maxAmountInput
+      .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
+      )
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
@@ -235,6 +239,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             hideCurrencySelect={true}
             customBalanceText={isSingleSided ? 'Available tokens: ' : 'Available LP: '}
             id="stake-liquidity-token"
+            stakingInfo={stakingInfo}
           />
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
@@ -243,7 +248,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             </div>
 
             <TYPE.black>
-              {hypotheticalRewardRate.toSignificant(4, { groupSeparator: ',' })}{' '}
+              {hypotheticalRewardRate
+              .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              .toSignificant(4, { groupSeparator: ',' })}{' '}
               {stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week
             </TYPE.black>
           </HypotheticalRewardRate>

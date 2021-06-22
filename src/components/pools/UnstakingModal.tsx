@@ -78,7 +78,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
+                {
+                  stakingInfo?.rewardInfo?.rewardsMultiplier
+                    ? stakingInfo.stakedAmount
+                      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                      ?.toSignificant(Math.min(4, stakingInfo?.stakedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
+                    : <FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />
+
+                }
               </TYPE.body>
               <TYPE.body>Deposited liquidity:</TYPE.body>
             </AutoColumn>
@@ -86,7 +93,13 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
+                {
+                  stakingInfo?.rewardInfo?.rewardsMultiplier
+                    ? stakingInfo.stakedAmount
+                      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                      ?.toSignificant(Math.min(4, stakingInfo?.stakedAmount?.currency.decimals), { groupSeparator: ',' }) ?? '-'
+                    : <FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount}
+                    />}
               </TYPE.body>
               <TYPE.body>Unclaimed {stakingInfo?.rewardsTokenSymbol ?? 'ZERO'}</TYPE.body>
             </AutoColumn>
@@ -102,8 +115,12 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} ZERO LP</TYPE.body>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} ZERO</TYPE.body>
+            <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount
+              ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              ?.toSignificant(4)} ZERO LP</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount
+              ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              ?.toSignificant(4)} ZERO</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
