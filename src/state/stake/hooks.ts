@@ -35,6 +35,7 @@ import {
   MZERO,
   XIOT,
   BIOS,
+  MINT,
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -110,12 +111,28 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WETH[ChainId.MAINNET], BIOS],
       stakingRewardAddress: '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
-      rewardInfo: { 
+      rewardInfo: {
         rewardToken: XIOT,
         addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
-        disableDeposit: true
+        disableDeposit: true,
+        rewardsMultiplier: 10e18
       },
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], BIOS],
+      stakingRewardAddress: '0x591d01efab5f96da72de29bda8fec0a80084d1a6',
+      rewardInfo: {
+        rewardToken: XIOT,
+        addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        rewardsMultiplier: 10e18
+      },
+    },
+    {
+      tokens: [BIOS, BIOS],
+      stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
+      rewardInfo: { rewardToken: XIOT },
     },
     {
       tokens: [BIOS, BIOS],
@@ -325,7 +342,13 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
-    },
+    }
+    // ,
+    // {
+    //   tokens: [MINT, MINT],
+    //   stakingRewardAddress: '0x33658140664e02814e6b0F32521498F03CB1380B',
+    //   rewardInfo: { rewardToken: MINT, rewardsMultiplier: 1e18 }
+    // }
   ]
 }
 
@@ -359,7 +382,7 @@ export interface StakingInfo {
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount,
     seconds: number,
-    decimals:number,
+    decimals: number,
   ) => TokenAmount,
 
   // all the info from stakingRewards
@@ -378,8 +401,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
           pairToFilterBy == undefined ? true
-          : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-          pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+            : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+            pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
         : [],
     [chainId, pairToFilterBy]
@@ -490,7 +513,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         }
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1, 1)
-        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10**15)
+        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10 ** 15)
 
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000

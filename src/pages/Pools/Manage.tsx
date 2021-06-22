@@ -35,6 +35,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import toEllipsis from 'utils/toEllipsis'
 
 const moment = require('moment')
 
@@ -299,10 +300,26 @@ export default function Manage({
     )
   }
 
-  const countUpAmount =
-    stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
+  const countUpAmount = toEllipsis(
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }) : '0',
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }).length > 16
+      ? stakingInfo?.earnedAmount
+        .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+        ?.toSignificant(6, { groupSeparator: ',' }).length - 16
+      : 0
+      : 0
+
+  )
+
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
+  const stakedAmount = stakingInfo?.stakedAmount ?
+    JSBI.divide(JSBI.BigInt(stakingInfo?.stakedAmount.raw), JSBI.BigInt((stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)))
+    : JSBI.BigInt(0)
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
@@ -438,6 +455,7 @@ export default function Manage({
                   {stakingInfo?.active
                     ? stakingInfo?.totalRewardRate
                       ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
                       ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
@@ -477,18 +495,18 @@ export default function Manage({
                   </ExternalLink>
                   : !userLiquidityUnstaked ? null
                     : userLiquidityUnstaked.equalTo('0') ? null
-                        : isSingleSided ? null
-                          : (
-                            <StyledInternalLink
-                              className="remove-liquidity-link"
-                              to={{
-                                pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
-                                state: { stakingRewardAddress }
-                              }}
-                            >
-                              <TextLink>Remove Liquidity</TextLink>
-                            </StyledInternalLink>
-                          )}
+                      : isSingleSided ? null
+                        : (
+                          <StyledInternalLink
+                            className="remove-liquidity-link"
+                            to={{
+                              pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                              state: { stakingRewardAddress }
+                            }}
+                          >
+                            <TextLink>Remove Liquidity</TextLink>
+                          </StyledInternalLink>
+                        )}
               </StyledButtonsWrap>
             </StatsWrapper>{' '}
           </>
@@ -522,6 +540,7 @@ export default function Manage({
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRateWeekly
                         ?.divide(JSBI.BigInt(10 ** 15))
+                        ?.divide(JSBI.BigInt(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1))
                         .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
                           groupSeparator: ','
                         }) ?? '-'
@@ -534,9 +553,9 @@ export default function Manage({
                 <StatLabel style={{ color: '#A7B1F4' }}>{`Current ${isSingleSided ? 'Token Deposit' : 'Liquidity Deposits:'}`}</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                    {stakingInfo?.stakedAmount?.toSignificant(
-                      Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
-                    ) ?? '-'}
+                    {JSBI.toNumber(stakedAmount).toFixed(
+                      Math.min(6, stakingInfo?.earnedAmount?.currency.decimals ?? 18)) ?? '-'}
+
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
                       {isSingleSided ? `${currencyA?.symbol}` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '} ${currencyA?.symbol}-${currencyB?.symbol}`}
                     </span>
@@ -552,7 +571,7 @@ export default function Manage({
             {
               (stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
                 (userLiquidityUnstaked && !userLiquidityUnstaked?.equalTo('0'))) &&
-                (
+              (
                 <SingleColumn className="right">
                   <Wrapper>
                     {
@@ -564,9 +583,9 @@ export default function Manage({
                             <StatLabel style={{ color: '#A7B1F4' }}>{isSingleSided ? `${currencyA?.symbol} to deposit` : 'LP To Deposit:'}</StatLabel>
                             <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                               <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                                {userLiquidityUnstaked?.toSignificant(
+                                {JSBI.divide(JSBI.BigInt(userLiquidityUnstaked?.toSignificant(
                                   Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)
-                                )}
+                                )), JSBI.BigInt(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1))}
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
                               </TYPE.white>
                               <ButtonOutlined
