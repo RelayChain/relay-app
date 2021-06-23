@@ -341,7 +341,6 @@ export default function CurrencyInputPanel({
                     {!hideBalance && !!altCurrency && selectedCurrencyBalance && hasABalance
                       ? (customBalanceText ?? 'Balance: ') +
                         `${selectedCurrencyBalance
-                          ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
                           ?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
                         })}`

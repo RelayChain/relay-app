@@ -583,9 +583,10 @@ export default function Manage({
                             <StatLabel style={{ color: '#A7B1F4' }}>{isSingleSided ? `${currencyA?.symbol} to deposit` : 'LP To Deposit:'}</StatLabel>
                             <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                               <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                                {JSBI.divide(JSBI.BigInt(userLiquidityUnstaked?.toSignificant(
-                                  Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)
-                                )), JSBI.BigInt(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1))}
+                                {
+                                  userLiquidityUnstaked?.toSignificant(
+                                    Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
+                                }                                
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
                               </TYPE.white>
                               <ButtonOutlined

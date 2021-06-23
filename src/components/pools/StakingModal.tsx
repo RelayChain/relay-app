@@ -137,7 +137,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const handleMax = useCallback(() => {
     maxAmountInput && onUserInput(
       maxAmountInput
-      .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
       ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
       )
   }, [maxAmountInput, onUserInput])
