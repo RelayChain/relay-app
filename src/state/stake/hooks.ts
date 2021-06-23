@@ -116,7 +116,7 @@ export const STAKING_REWARDS_INFO: {
         addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         disableDeposit: true,
-        rewardsMultiplier: 10e18
+        rewardsMultiplier: 1e18
       },
     },
     {
@@ -126,13 +126,16 @@ export const STAKING_REWARDS_INFO: {
         rewardToken: XIOT,
         addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
         removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
-        rewardsMultiplier: 10e18
+        rewardsMultiplier: 1e18
       },
     },
     {
       tokens: [BIOS, BIOS],
       stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
-      rewardInfo: { rewardToken: XIOT },
+      rewardInfo: { 
+        rewardToken: XIOT,
+        rewardsMultiplier: 1e18
+      },
     },
     {
       tokens: [BIOS, BIOS],
