@@ -33,7 +33,9 @@ import {
   zCHART,
   bscWISB,
   WMATIC,
-  MZERO
+  MZERO,
+  hZERO,
+  hINDA
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -287,6 +289,9 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
     },
+  ],
+  [ChainId.HECO]: [
+    
   ]
 }
 
