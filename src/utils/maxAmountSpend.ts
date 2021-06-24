@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, CurrencyAmount, ETHER, JSBI, ETHER_CURRENCIES, Currency, CHAIN_IDS_AND_CURRENCIES } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, HECO, ChainId, CurrencyAmount, ETHER, JSBI, ETHER_CURRENCIES, Currency, CHAIN_IDS_AND_CURRENCIES } from '@zeroexchange/sdk'
 
 import { MIN_ETH } from '../constants'
 
@@ -25,6 +25,8 @@ export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount 
           ? ChainId.SMART_CHAIN
           : currencyAmount.currency === MATIC
             ? ChainId.MATIC
+            : currencyAmount.currency === HECO
+            ? ChainId.HECO
             : ChainId.AVALANCHE
 
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {

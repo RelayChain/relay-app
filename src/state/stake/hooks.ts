@@ -40,7 +40,9 @@ import {
   zCHART,
   bscWISB,
   WMATIC,
-  MZERO
+  MZERO,
+  hZERO,
+  hINDA
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -232,6 +234,11 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x8D607CE623BE63a017ED32229A2AA918e4f67264',
       rewardInfo: { rewardToken: zCHART },
     },
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575',
+      rewardInfo: { rewardToken: zZERO },
+    },
   ],
   [ChainId.FUJI]: [
     {
@@ -311,12 +318,30 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
       rewardInfo: { rewardToken: bscWISB }
     },
+    {
+      tokens: [bscZERO, bscETH],
+      stakingRewardAddress: '0xaa8e71A182a9c00d1d0E2004bf94929bacA543fC',
+      rewardInfo: { rewardToken: bscZERO }
+    },
+    {
+      tokens: [bscWISB, bscWBNB],
+      stakingRewardAddress: '0xc863A9D783faB2c264262bBc023e1450b945Cf8d',
+      rewardInfo: { rewardToken: bscZERO }
+    },
+    {
+      tokens: [bscWISB, bscZERO],
+      stakingRewardAddress: '0xC49f75293427F14288328059992d6c8213abc760',
+      rewardInfo: { rewardToken: bscZERO }
+    },
   ],
   [ChainId.MATIC]: [
     {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
     },
+  ],
+  [ChainId.HECO]: [
+    
   ]
 }
 

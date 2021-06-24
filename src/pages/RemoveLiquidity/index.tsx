@@ -1,7 +1,7 @@
 import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
-  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS
+  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
@@ -133,7 +133,9 @@ export default function RemoveLiquidity({
           ? MOONBASE_ROUTER_ADDRESS
           : chainId === ChainId.MUMBAI
             ? MUMBAI_ROUTER_ADDRESS
-            : AVAX_ROUTER_ADDRESS
+            : chainId === ChainId.HECO
+              ? HECO_ROUTER_ADDRESS
+              : AVAX_ROUTER_ADDRESS
   )
 
   const isArgentWallet = useIsArgentWallet()
@@ -183,7 +185,9 @@ export default function RemoveLiquidity({
                 ? MUMBAI_ROUTER_ADDRESS
                 : chainId === ChainId.MATIC
                   ? MATIC_ROUTER_ADDRESS
-                  : AVAX_ROUTER_ADDRESS,
+                  : chainId === ChainId.HECO
+                    ? HECO_ROUTER_ADDRESS
+                    : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -427,7 +431,9 @@ export default function RemoveLiquidity({
             ? 'DEV'
             : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
               ? 'MATIC'
-              : 'AVAX '
+              : chainId === ChainId.HECO
+                ? 'HT'
+                : 'AVAX '
     return (
       <>
         <RowBetween>
@@ -647,6 +653,7 @@ export default function RemoveLiquidity({
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
                             {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
                             {chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
+                            {chainId && chainId === (ChainId.HECO) && 'Receive WHT'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -657,7 +664,7 @@ export default function RemoveLiquidity({
                             {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
                             {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
                             {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
-                            {chainId && (chainId === ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive MATIC'}
+                            {chainId && chainId === (ChainId.HECO) && 'Receive HECO'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

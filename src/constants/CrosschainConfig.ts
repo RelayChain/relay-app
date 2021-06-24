@@ -181,7 +181,23 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CHART',
           decimals: 18,
           resourceId: '0x00000000000000000000001d37986F252d0e349522EA6C3B98Cb935495E63E01'
-        }
+        },
+        {
+          address: '0xF268fE3d6909508ddA90DccF2bf69050D19f4CdD',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000F268fE3d6909508ddA90DccF2bf69050D19f4CdD01'
+        },
+        {
+          address: '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
+        },
       ]
     },
     {
@@ -348,7 +364,23 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CHART',
           decimals: 18,
           resourceId: '0x0000000000000000000000D769bDFc0CaEe933dc0a047C7dBad2Ec42CFb3E202'
-        }
+        },
+        {
+          address: '0x5506bD8C8F5D6733E2738496d5C51Ed62934C9f8',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005506bD8C8F5D6733E2738496d5C51Ed62934C9f802'
+        },
+        {
+          address: '0xDE03bB9EFf0804516Be4Bdac5761b7526798aF0F',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000DE03bB9EFf0804516Be4Bdac5761b7526798aF0F02'
+        },
       ]
     },
     {
@@ -509,7 +541,175 @@ export const crosschainConfig: ChainbridgeConfig = {
           // resourceId: '0x00000000000000000000004f491d389A5bF7C56bd1e4d8aF2280fD217C854303'
           resourceId: "",
           disableTransfer: true,
-        }
+        },
+        {
+          address: '0x081A4D4e4A0cC74D6a7A61578f86b8C93CC950a0',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000081A4D4e4A0cC74D6a7A61578f86b8C93CC950a003'
+        },
+        {
+          address: '0x0f236c7EDda9c1e87036dD258bd9D1bcC37EA66C',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000f236c7EDda9c1e87036dD258bd9D1bcC37EA66C03'
+        },
+      ]
+    },
+    {
+      chainId: 4,
+      networkId: 128,
+      name: 'HECO',
+      bridgeAddress: "0x651A4FD3550426788bA73B68655ad40627226e30",
+      erc20HandlerAddress: "0x55B2952a406514cB1b1279D42Aa9be9CC8d4ECfd",
+      rpcUrl: 'https://http-mainnet-node.huobichain.com',
+      type: 'Ethereum',
+      gasLimit: 60000,
+      defaultGasPrice: 2,
+      blockExplorer: 'https://hecoinfo.com/',
+      nativeTokenSymbol: 'HT',
+      tokens: [
+        {
+          address: '0xaC021dF3FF6939CFdCA4ce5a3D1b6048CA5aaBF4',
+          name: 'zUSDC',
+          symbol: 'zUSDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000aC021dF3FF6939CFdCA4ce5a3D1b6048CA5aaBF404'
+        },
+        {
+          address: '0x9A9D4653820D079218007d8Ec0a4AEe1e1E1D394',
+          name: 'zETH',
+          symbol: 'zETH',
+          assetBase: 'ETH',
+          decimals: 18,
+          resourceId: '0x00000000000000000000009A9D4653820D079218007d8Ec0a4AEe1e1E1D39404'
+        },
+        {
+          address: '0x683844fE2ec704f80bD032D0d94089315Ec58D5b',
+          name: 'zBTC',
+          symbol: 'zBTC',
+          assetBase: 'BTC',
+          decimals: 8,
+          resourceId: '0x00000000000000000000008aeb905Eed42Dce79e6e2357AAA0d51FA128800a04'
+        },
+        {
+          address: '0x8aeb905Eed42Dce79e6e2357AAA0d51FA128800a',
+          name: 'zDAI',
+          symbol: 'zDAI',
+          assetBase: 'DAI',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008aeb905Eed42Dce79e6e2357AAA0d51FA128800a04'
+        },
+        {
+          address: '0x0E4564692B15Af6526b6910CFd9E1F4B6671CA1A',
+          name: 'ZERO',
+          symbol: 'ZERO',
+          assetBase: 'ZERO',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000E4564692B15Af6526b6910CFd9E1F4B6671CA1A04'
+        },
+        {
+          address: '0x96b59499D6067B94ee2D1C558A31fA8dC4E3640d',
+          name: 'zAVAX',
+          symbol: 'zAVAX',
+          assetBase: 'AVAX',
+          decimals: 18,
+          resourceId: '0x000000000000000000000096b59499D6067B94ee2D1C558A31fA8dC4E3640d04'
+        },
+        {
+          address: '0x72157E63Bd6F546901C6121CA478061F8756271a',
+          name: 'zLINK',
+          symbol: 'zLINK',
+          assetBase: 'LINK',
+          decimals: 18,
+          resourceId: '0x000000000000000000000072157E63Bd6F546901C6121CA478061F8756271a04'
+        },
+        {
+          address: '0xA0F347628657051e28eafCb2713Beb85c44D931F',
+          name: 'zAAVE',
+          symbol: 'zAAVE',
+          assetBase: 'AAVE',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000A0F347628657051e28eafCb2713Beb85c44D931F04'
+        },
+        {
+          address: '0x75286d76389613960d3466399DB15201e037116f',
+          name: 'zUNI',
+          symbol: 'zUNI',
+          assetBase: 'zUNI',
+          decimals: 18,
+          resourceId: '0x000000000000000000000075286d76389613960d3466399DB15201e037116f04'
+        },
+        {
+          address: '0x98659e9A7ddc51eE3A2FB386d20B481c77E8C8bf',
+          name: 'zSUSHI',
+          symbol: 'zSUSHI',
+          assetBase: 'SUSHI',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098659e9A7ddc51eE3A2FB386d20B481c77E8C8bf04'
+        },
+        {
+          address: '0x5a32a14EF0c756dc016c0EcaA68f65258504B851',
+          name: 'z1INCH',
+          symbol: 'z1INCH',
+          assetBase: '1INCH',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005a32a14EF0c756dc016c0EcaA68f65258504B85104'
+        },
+        {
+          address: '0xD4Cc96d31f4a272B34804B121b871a0432b38911',
+          name: 'zYFI',
+          symbol: 'zYFI',
+          assetBase: 'YFI',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000D4Cc96d31f4a272B34804B121b871a0432b3891104'
+        },
+        {
+          address: '0x3D1f2C168F4b6028f422e43755a60F0384b63568',
+          name: 'zUSDT',
+          symbol: 'zUSDT',
+          assetBase: 'USDT',
+          decimals: 18,
+          resourceId: '0x00000000000000000000003D1f2C168F4b6028f422e43755a60F0384b6356804'
+        },
+        {
+          address: '0x4E76805F76c13BfaA1D6558596A12086e4bE3E2C',
+          name: 'INDA',
+          symbol: 'INDA',
+          assetBase: 'INDA',
+          decimals: 2,
+          resourceId: '0x00000000000000000000004E76805F76c13BfaA1D6558596A12086e4bE3E2C04'
+        },
+        {
+          address: '0x8C2f0dBa074f120Eef8530da5F8a825796c505a4',
+          name: 'ChartEx',
+          symbol: 'ChartEx',
+          assetBase: 'Chart',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008C2f0dBa074f120Eef8530da5F8a825796c505a404'
+        },
+        {
+          address: '0x87F86C5870e96a55A29e37f0c11C7620edb7B203',
+          name: 'GROW',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x000000000000000000000087F86C5870e96a55A29e37f0c11C7620edb7B20304'
+        },
+        {
+          address: '0xc9EFDAC4fE5828361b0aE69d1C16670CDa712BDc',
+          name: 'WAS',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000c9EFDAC4fE5828361b0aE69d1C16670CDa712BDc04'
+        },
+
       ]
     },
     {
@@ -522,7 +722,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       gasLimit: 60000,
       defaultGasPrice: 2,
-      blockExplorer: 'https://explorer-mainnet.maticvigil.com/',
+      blockExplorer: 'https://polygonscan.com/',
       nativeTokenSymbol: 'MATIC',
       tokens: [
         {
@@ -645,8 +845,26 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000083c56d87eAD73D6231C165Ec450C6E28f3399C905'
         },
+        {
+          address: '0xDcDC86A38d1ddA13EEB346eeBf34d0148C8197d9',
+          name: 'Grow Token',
+          symbol: 'GROW',
+          assetBase: 'GROW',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000DcDC86A38d1ddA13EEB346eeBf34d0148C8197d905'
+        },
+        {
+          address: '0xfaEF64930CDD15a19B24EA71Efa14d37f2401169',
+          name: 'Wasder Token',
+          symbol: 'WAS',
+          assetBase: 'WAS',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000faEF64930CDD15a19B24EA71Efa14d37f240116905'
+        },
       ]
     }
+
+
   ]
 
   // rinkeby - FUJI

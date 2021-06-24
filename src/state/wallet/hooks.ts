@@ -1,11 +1,10 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
-
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { UNI } from './../../constants/index'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllCrossChainTokens, useAllTokens } from '../../hooks/Tokens'
 import { useMemo } from 'react'
 import { useMulticallContract } from '../../hooks/useContract'
 import { useTotalUniEarned } from '../stake/hooks'
@@ -25,9 +24,9 @@ export function useETHBalances(
     () =>
       uncheckedAddresses
         ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
+          .map(isAddress)
+          .filter((a): a is string => a !== false)
+          .sort()
         : [],
     [uncheckedAddresses]
   )
@@ -72,17 +71,71 @@ export function useTokenBalancesWithLoadingIndicator(
       () =>
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = balances?.[i]?.result?.[0]
-              const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = new TokenAmount(token, amount)
-              }
-              return memo
-            }, {})
+            const value = balances?.[i]?.result?.[0]
+            const amount = value ? JSBI.BigInt(value.toString()) : undefined
+            if (amount) {
+              memo[token.address] = new TokenAmount(token, amount)
+            }
+            return memo
+          }, {})
           : {},
       [address, validatedTokens, balances]
     ),
     anyLoading
+  ]
+}
+
+export function useTokenBalancesWithSortBalances(isAscendingFilter: boolean 
+): [{ [tokenAddress: string]: TokenAmount }] {
+  const { account } = useActiveWeb3React()
+  const allTokens = useAllCrossChainTokens()
+
+  const tokens = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+
+  const validatedTokens: Token[] = useMemo(
+    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
+    [tokens]
+  )
+
+  const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => {
+    return { address: vt.address, decimals: vt.decimals }
+  }), [validatedTokens])
+  const listAddressesTokens = validatedTokenAddresses.map(i => i.address)
+  const balances = useMultipleContractSingleData(listAddressesTokens, ERC20_INTERFACE, 'balanceOf', [String(account)])
+
+  const tokenWithBalance = validatedTokenAddresses.map((token, i) => {
+    return {
+      address: token.address, balance: JSBI.exponentiate(JSBI.BigInt((balances[i]?.result?.balance) ? balances[i]?.result?.balance : 0),
+        JSBI.BigInt(token.decimals)), decimals: token.decimals
+    }
+  })
+  return [
+    useMemo(
+      () => {
+        const filterA = isAscendingFilter ? -1 : 1
+        const filterB = isAscendingFilter ? 1 : -1
+        const sortedTokens = (validatedTokens.length > 0)
+
+          ? validatedTokens.sort((a, b) => {
+            const valueA = tokenWithBalance.find(item => item.address === a.address)
+            const valueB = tokenWithBalance.find(item => item.address === b.address)
+            const amountA = valueA?.balance ? valueA.balance : undefined
+            const amountB = valueB?.balance ? valueB.balance : undefined
+            return amountA && amountB ? JSBI.greaterThan(amountA, amountB) ? filterA : filterB : 0
+
+          }) : []
+        const sortedTokensWithBalances = sortedTokens.reduce<{ [tokenAddress: string]: TokenAmount }>((memo, token, i) => {
+          const value = balances?.[i]?.result?.[0]
+          const amount = value ? JSBI.BigInt(value.toString()) : undefined
+          if (amount) {
+            memo[token.address] = new TokenAmount(token, amount)
+          }
+          return memo
+        }, {})
+        return sortedTokensWithBalances
+      },
+      [account, validatedTokens, balances]
+    )
   ]
 }
 

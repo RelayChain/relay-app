@@ -1,7 +1,8 @@
+import React from 'react'
 import { copyToClipboard, wait } from '../../utils'
-
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import MaticLogo from '../../assets/images/matic-logo.png'
+import HecoLogo from '../../assets/images/ht.png'
 // import BigNumber from 'bignumber.js'
 import BinanceLogo from '../../assets/images/binance-logo.png'
 // import MoonbaseLogo from '../../assets/images/moonbase-logo.png'
@@ -10,7 +11,7 @@ import { ChainId } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import Icon from '../Icon'
-import React from 'react'
+
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -155,6 +156,8 @@ export default function BalanceItem({
         return 'Mumbai logo'
       case ChainId.MATIC:
         return MaticLogo
+      case ChainId.HECO:
+        return HecoLogo  
       default:
         return EthereumLogo
     }

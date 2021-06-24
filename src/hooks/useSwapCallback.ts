@@ -212,7 +212,8 @@ export function useSwapCallback(
           chainId === ChainId.SMART_CHAIN_TEST ||
           chainId === ChainId.MOONBASE_ALPHA ||
           chainId === ChainId.MUMBAI ||
-          chainId === ChainId.MATIC
+          chainId === ChainId.MATIC  ||
+          chainId === ChainId.HECO
             ? BigNumber.from(350000)
             : gasEstimate
 

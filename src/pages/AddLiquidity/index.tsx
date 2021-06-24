@@ -1,11 +1,12 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, ETHER_CURRENCIES, TokenAmount, WETH, currencyEquals } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS,
   ETH_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS,
   MUMBAI_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS,
-  MATIC_ROUTER_ADDRESS
+  MATIC_ROUTER_ADDRESS,
+  HECO_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -172,6 +173,8 @@ export default function AddLiquidity({
       ? MUMBAI_ROUTER_ADDRESS
       : chainId === ChainId.MATIC
       ? MATIC_ROUTER_ADDRESS
+      : chainId === ChainId.HECO
+      ? HECO_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
   const [approvalB, approveBCallback] = useApproveCallback(
@@ -186,6 +189,8 @@ export default function AddLiquidity({
       ? MUMBAI_ROUTER_ADDRESS
       : chainId === ChainId.MATIC
       ? MATIC_ROUTER_ADDRESS
+      : chainId === ChainId.HECO
+      ? HECO_ROUTER_ADDRESS
       : AVAX_ROUTER_ADDRESS
   )
 
@@ -206,16 +211,13 @@ export default function AddLiquidity({
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
-    // TODO: export this from SDK
-    const ALL_ETHERS = [ETHER, BNB, AVAX, DEV, MATIC]
-
     let estimate
     let method: (...args: any) => Promise<TransactionResponse>
     let args: Array<string | string[] | number>
     let value: BigNumber | null
 
-    if ([currencyA, currencyB].some(c => ALL_ETHERS.includes(c))) {
-      const tokenBIsETH = ALL_ETHERS.includes(currencyB)
+    if ([currencyA, currencyB].some(c => ETHER_CURRENCIES.includes(c))) {
+      const tokenBIsETH = ETHER_CURRENCIES.includes(currencyB)
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
@@ -247,10 +249,10 @@ export default function AddLiquidity({
 
     try {
       let gas
-      if (chainId === ChainId.AVALANCHE || chainId === ChainId.SMART_CHAIN) {
-        gas = BigNumber.from(350000)
-      } else {
+      try {
         gas = await estimate(...args, value ? { value } : {})
+      } catch (e) {
+        gas = BigNumber.from(3000000);
       }
       const response = await method(...args, {
         ...(value ? { value } : {}),

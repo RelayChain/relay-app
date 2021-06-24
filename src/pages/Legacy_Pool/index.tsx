@@ -175,6 +175,8 @@ export default function Pool() {
                       ? 'DEV'
                       : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
                       ? 'MATIC'
+                      : chainId === ChainId.HECO
+                      ? 'HT'
                       : 'AVAX'
                   }`}
                   style={{ margin: '10px' }}

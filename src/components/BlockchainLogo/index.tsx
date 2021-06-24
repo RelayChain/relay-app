@@ -1,8 +1,9 @@
 import AvaxLogo from '../../assets/images/avax-logo.png'
 import BSCLogo from '../../assets/images/binance-logo.png'
-import PolygonLogo from '../../assets/images/polygon-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import HecoLogo from '../../assets/images/heco-icon.jpg'
 import PolkadotLogo from '../../assets/images/polkadot-logo.png'
+import PolygonLogo from '../../assets/images/polygon-logo.png'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -48,5 +49,8 @@ export default function BlockchainLogo({
     return <StyledEthereumLogo src={PolygonLogo} alt="MATIC" size={size} style={style} />
   }
 
+  if (blockchain === 'HECO' || blockchain === 'heco') {
+    return <StyledEthereumLogo src={HecoLogo} alt="HECO" size={size} style={style} />
+  }
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
 }

@@ -55,5 +55,40 @@ export const IDO_LIST = [
         url: 'https://wisetoken.net/'
       },
     ]
+  },
+  {
+    idoURL: 'grow',
+    logo: '/images/idos/grow-logo.svg',
+    tierName: '', // if no tier, leave blank
+    tierLogo: null, // if you include this image, it will override the tierName
+    launchDate: new Date('May 28, 2021 6:00:00'),
+    // endDate: new Date('June 01, 2021 13:00:00'),
+    endDate: new Date(1622457706780),
+    totalRaise: 'TBD',
+    allocationMin: 'TBD',
+    allocationMax: 'TBD',
+    allocationCurrency: 'BUSD',
+    description: `GROW Token is the portal to enable operation of equitable medicinal cannabis cultivation through decentralized sharing.
+Users will be able to interact with the platform to claim cultivation rewards, access their prescriptions, pay
+for Grow products and earn loyalty benefits.`,
+    distributionDate: new Date('June 01, 2021 13:00:00'),
+    allocationWinningAmount: '$200',
+    buttonSectionEnabled: true,
+    whiteListUrl: 'https://docs.google.com/spreadsheets/d/1v1By-TTQxs-sBHcyOh3LV_u5SqFSm5h3732pAioE_Vo/edit?usp=sharing',
+    kycURL: `https://verify-with.blockpass.org/?clientId=GROW_IDO_KYC&serviceName=IDO%20KYC&env=prod`,
+    socials: [
+      {
+        type: 'TELEGRAM',
+        url: 'https://t.me/GROWCommunity'
+      },
+      {
+        type: 'WEBSITE',
+        url: 'https://grow.house/'
+      },
+      {
+        type: 'MEDIUM',
+        url: 'https://grow-official.medium.com/'
+      },
+    ]
   }
 ]

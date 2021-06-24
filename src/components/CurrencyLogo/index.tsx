@@ -10,7 +10,7 @@ import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
 import SushiLogo from '../../assets/images/sushi-logo.png'
 import UNILogo from '../../assets/images/uni-logo.png'
-
+import HTLogo from '../../assets/images/ht.png'
 // import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
@@ -26,6 +26,7 @@ import ZETHLogo from '../../assets/images/crosschain/zETH.png'
 import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
 import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
 import WISBLogo from '../../assets/images/crosschain/WISB.png'
+import GROWLogo from '../../assets/images/crosschain/GROW.png'
 import ZeroLogo from '../../assets/images/0-icon.png'
 import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { crosschainConfig as crosschainConfigMainnet } from '../../constants/CrosschainConfig'
@@ -103,6 +104,10 @@ export default function CurrencyLogo({
   if (['BNB', 'WBNB', 'wBNB', 'eBNB'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
   }
+
+  if (['HT', 'HECO'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={HTLogo} alt="Huobi Token" size={size} style={style} />
+  }
   // [ChainId.MUMBAI]: 'Mumbai'
   if (
     ['DEV', 'WDEV', 'wDEV', 'eDEV'].includes(String(currency?.symbol))
@@ -173,6 +178,9 @@ export default function CurrencyLogo({
   }
   if (currency?.symbol === 'zUNI') {
     return <StyledEthereumLogo src={UNILogo} size={size} style={style} />
+  }
+  if (currency?.symbol === 'GROW') {
+    return <StyledEthereumLogo src={GROWLogo} size={size} style={style} />
   }
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
 }
@@ -245,6 +253,9 @@ export const getCurrencyLogoImage = (symbol: string | undefined) => {
       return SushiLogo
     case 'zUNI':
       return UNILogo
+    case 'HT':
+    case 'HECO':
+      return HTLogo  
     default:
       return ''
   }

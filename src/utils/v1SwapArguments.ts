@@ -1,10 +1,5 @@
 import {
-  AVAX,
-  BNB,
-  DEV,
-  MATIC,
   CurrencyAmount,
-  ETHER,
   SwapParameters,
   Token,
   Trade,

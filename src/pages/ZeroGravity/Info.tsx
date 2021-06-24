@@ -7,11 +7,12 @@ import { BiWorld } from 'react-icons/bi'
 import { ButtonOutlined } from 'components/Button'
 import { IDO_LIST } from 'constants/idos';
 import PageContainer from 'components/PageContainer';
+import { Title } from '../../theme'
 import WISESale from './wiseSale';
 import WSDSale from './wsdSale';
+import GrowSale from './growSale';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Title } from '../../theme'
 
 const ImageContainer = styled.div`
   margin-top: 1rem;
@@ -208,8 +209,12 @@ export default function ZeroGravityInfo() {
     window.open(str, '_blank')
   }
 
-  const goToKyc = (idoURL: string) => {
-    history.push(`/zero-gravity/${idoURL}/kyc`)
+  const goToKyc = (idoData: any) => {
+    if (idoData.kycURL) {
+      window.open(idoData.kycURL, '_blank')
+    } else {
+      history.push(`/zero-gravity/${idoURL}/kyc`)
+    }
   }
 
   return (
@@ -240,7 +245,7 @@ export default function ZeroGravityInfo() {
             )}
             <ButtonsSpacer hidden={!idoData.whiteListUrl || !idoData.idoURL} />
             {idoData.idoURL && (
-              <ButtonOutlined className="green" onClick={() => goToKyc(idoData.idoURL)}>
+              <ButtonOutlined className="green" onClick={() => goToKyc(idoData)}>
                 <ButtonIcon>
                   <CgAddR />
                 </ButtonIcon>
@@ -249,7 +254,12 @@ export default function ZeroGravityInfo() {
             )}
           </ButtonsSection>
         )}
-        {idoData?.idoURL == 'wise' ? <WISESale /> : idoData?.idoURL == 'wasder' ? <WSDSale /> : <></>}
+        {
+          idoData?.idoURL == 'wise' ? <WISESale /> 
+          : idoData?.idoURL == 'wasder' ? <WSDSale /> 
+          // : idoData?.idoURL == 'grow' ? <GrowSale /> 
+          : <></>
+        }
         <BgWrapper>
           <HeadingRow>
             <Heading>Pool details</Heading>

@@ -1,12 +1,11 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useState } from 'react'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getSigner } from '../../utils'
+import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import styled, { ThemeContext } from 'styled-components'
-import { useTokenContract, useWDSDepositContract, useWISESaleContract } from '../../hooks/useContract'
+import { useTokenContract, useWDSDepositContract } from '../../hooks/useContract'
 
 import { AutoColumn } from '../../components/Column'
 import { ButtonOutlined } from '../../components/Button'
-import { ChainId } from '@zeroexchange/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import useGasPrice from 'hooks/useGasPrice'
 
@@ -103,25 +102,53 @@ const MaxButton = styled.p`
 let web3React: any
 const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
-const DEPOSIT_CONTRACT_ADDR = '0xe691fD6Ea139De7b28392e527124e82Cd0FF15Cc';
+const DEPOSIT_CONTRACT_ADDR = '0x8B2bdF262b4869d1A89006F6D5b14509Aee249Db';
+const TOKEN_CONTRACT_ADDR = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56';
+const TOKEN_DECIMALS = 18;
 
 export default function WSDSale() {
   web3React = useActiveWeb3React()
-  const wiseSale = useWISESaleContract(DEPOSIT_CONTRACT_ADDR)
+  const {
+    // @ts-ignore
+    buyers_limits: buyersLimits,
+    // @ts-ignore
+    deposit
+  } = useWDSDepositContract(DEPOSIT_CONTRACT_ADDR)
+
+  const {
+    // @ts-ignore
+    approve
+  } = useTokenContract(TOKEN_CONTRACT_ADDR);
 
   const [limits, setLimits] = useState('0.0')
   const [amount, setAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(false)
   const [isPendingBuy, setIsPendingBuy] = useState(false)
+  const [approveSuccessHash, setApproveSuccessHash] = useState<null | string>(null);
   const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
+  // const currentGasPrice = await useGasPrice()
+  const getLimits = async () => {
+    try {
+      const res = await buyersLimits(web3React?.account)
+      setLimits(ethers.utils.formatUnits(res, TOKEN_DECIMALS))
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    if (buyersLimits && web3React?.account) {
+      getLimits()
+    }
+  }, [buyersLimits, web3React?.account])
 
   const onPurchase = async () => {
     try {
       setIsPendingBuy(true)
-      const res = await wiseSale?.deposit({
-        value: ethers.utils.parseUnits(amount, 18),
-        gasPrice: 10 * 10 ** 9,
-        gasLimit: 60000,
+      const res = await deposit(BigNumber.from(utils.parseUnits(amount, TOKEN_DECIMALS)).toHexString(), {
+        // gasLimit: '55000',
+        gasPrice: await web3React.library.getSigner().getGasPrice(),
+        nonce: await web3React.library.getSigner().getTransactionCount()
       })
       await res.wait()
       setDepositSuccessHash(res.hash)
@@ -129,39 +156,71 @@ export default function WSDSale() {
       setIsPendingBuy(false)
       console.log(e)
     } finally {
+      // setAmount('0.0')
       setIsPendingBuy(false)
     }
-  };
-
-
-
-  if (web3React.chainId != ChainId.SMART_CHAIN) {
-    return (<>
-      <div style={{ textAlign: 'center', fontSize: '1.5rem', display: 'block', background: 'rgba(0,0,0,.25)', borderRadius: '44px', padding: '2rem' }}>Switch to Binance Smart Chain!</div>
-    </>);
   }
 
-  
+  const onApprove = async () => {
+    try {
+      setIsLoading(true)
+      const transferAmount = String(Number.MAX_SAFE_INTEGER)
+      const res = await approve(DEPOSIT_CONTRACT_ADDR, BigNumber.from(utils.parseUnits(transferAmount, 18)).toHexString(), {
+        // gasLimit: '55000',
+        gasPrice: await web3React.library.getSigner().getGasPrice(),
+        nonce: await web3React.library.getSigner().getTransactionCount()
+      })
+
+      await res.wait()
+      setApproveSuccessHash(res.hash)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (limits === '0.0' && !approveSuccessHash && !depositSuccessHash) {
+    return (<></>)
+  }
+
   return (
     <>
       <SwapFlex>
         <SwapFlexRow>
           <SwapWrap>
             <BuyWrap>
-              <h2 style={{ marginBottom: '.5rem' }}>WISE Token Sale:</h2>
+              <h2 style={{ marginBottom: '.5rem' }}>Grow Token Sale:</h2>
               <>
                 {!web3React.account && <p>Please connect to wallet</p>}
                 {web3React.account && (
                   <>
                     <input type="number" name="amount" id="amount-wsd" value={amount} onChange={e => setAmount(e.target.value)} />
+                    <MaxButton onClick={() => setAmount(limits)}>MAX</MaxButton>
+                    <p style={{ textAlign: 'center' }}>Your limit: {limits} BUSD</p>
                     <ButtonsFlex>
-                      <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amount) === 0 || !amount || isPendingBuy ? 'disabled' : ''}`} onClick={onPurchase}>
+                      <ButtonOutlined className={ (approveSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''} onClick={onApprove}>
+                        {isLoading ? '... pending' : 'Approve'}
+                      </ButtonOutlined>
+                      <ButtonOutlined className={`green ${ (depositSuccessHash || parseFloat(amount) > parseFloat(limits)) ? 'disabled' : ''}`} onClick={onPurchase}>
                         {isPendingBuy ? '... pending' : 'Buy Tokens'}
                       </ButtonOutlined>
                     </ButtonsFlex>
                   </>
                 )}
               </>
+              {approveSuccessHash ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <p>Approved successfully</p>
+                  <a
+                    href={getEtherscanLink(web3React.chainId as number, approveSuccessHash as string, 'transaction')}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    View tx on Ethereum
+                  </a>
+                </div>
+              ) : (<></>)}
               {depositSuccessHash ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <p>Deposited successfully</p>
@@ -170,7 +229,7 @@ export default function WSDSale() {
                     rel="noreferrer"
                     target="_blank"
                   >
-                    View tx on the block explorer
+                    View tx on Ethereum
                   </a>
                 </div>
               ) : (<></>)}
