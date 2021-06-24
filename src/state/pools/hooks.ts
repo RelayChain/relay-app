@@ -56,7 +56,7 @@ export function useStakingInfoTop(
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
-  const [, stakingTokenPair] = usePair(tokenA, tokenB)
+  const [, stakingTokenPair] = usePair(tokenA, tokenB, stakingInfoTop?.gondolaPoolAddress)
   const baseStakingInfo = useStakingInfo(stakingTokenPair)
   const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingInfoTop.stakingRewardAddress)
   const stakingRewardAddress = stakingInfoTop.stakingRewardAddress

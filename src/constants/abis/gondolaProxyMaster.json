@@ -1,0 +1,123 @@
+{
+    "abi": [
+    {
+        "type": "constructor",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_contract",
+                "internalType": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "_lpId",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "balanceOf",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "earned",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "lpId",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address",
+                "name": "",
+                "internalType": "contract MasterChef"
+            }
+        ],
+        "name": "masterChefContract",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "periodFinish",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "rewardRate",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "totalSupply",
+        "inputs": []
+    }
+]
+}

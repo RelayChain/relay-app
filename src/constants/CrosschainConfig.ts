@@ -218,7 +218,24 @@ export const crosschainConfig: ChainbridgeConfig = {
           symbol: 'zETH',
           assetBase: 'ETH',
           decimals: 18,
-          resourceId: '0x0000000000000000000000f6F3EEa905ac1da6F6DD37d06810C6Fcb0EF518301'
+          resourceId: '0x0000000000000000000000f6F3EEa905ac1da6F6DD37d06810C6Fcb0EF518302'
+        },
+        {
+          address: '0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a',
+          name: 'pngETH',
+          symbol: 'pngETH',
+          assetBase: 'ETH',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000bA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a02'
+        },
+        {
+          address: "0xde3A24028580884448a5397872046a019649b084",
+          name: "pngUSDT",
+          symbol: "pngUSDT",
+          assetBase: 'USDT',
+          decimals: 6,
+          resourceId: "0x0000000000000000000000de3A24028580884448a5397872046a019649b08402"
+
         },
         {
           address: "0x650CECaFE61f3f65Edd21eFacCa18Cc905EeF0B7",
@@ -251,6 +268,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'DAI',
           decimals: 18,
           resourceId: '0x000000000000000000000012f108E6138d4A9c58511e042399cF8f90D5673f02'
+        },
+        {
+          address: '0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a',
+          name: 'pngDAI',
+          symbol: 'pngDAI',
+          assetBase: 'DAI',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000bA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a02'
         },
         {
           address: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
