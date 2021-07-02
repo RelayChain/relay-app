@@ -32,7 +32,10 @@ import {
   zZERO,
   zCHART,
   bscWISB,
+  WMATIC,
   MZERO,
+  hZERO,
+  hINDA,
   XIOT,
   BIOS,
   MINT,
@@ -342,16 +345,10 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0xc095c481c27e1d8E3DF69610d0d5A1cb8F36cE8B'
     },
-    {
-      tokens: [WETH[ChainId.MATIC], MZERO],
-      stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
-    }
-    // ,
-    // {
-    //   tokens: [MINT, MINT],
-    //   stakingRewardAddress: '0x33658140664e02814e6b0F32521498F03CB1380B',
-    //   rewardInfo: { rewardToken: MINT, rewardsMultiplier: 1e18 }
-    // }
+  ],
+  [ChainId.HECO]: [
+    
+    
   ]
 }
 

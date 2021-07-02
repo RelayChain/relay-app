@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, ChainId, ETHER, HECO, JSBI, Percent, Token, WETH } from '@zeroexchange/sdk'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -17,6 +17,9 @@ export const MATIC_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
   ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0'
   : '0x9894B0F28CcfA0F5c5F74EAC88f161110C5F8027'
 
+export const HECO_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
+  ? '0x2d29a75276abd2ad768f1db1706e62526e73b93b'
+  : '0x2d29a75276abd2ad768f1db1706e62526e73b93b'
 export const MOONBASE_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0xaD3eE6686B40655b34e0D150f99715c87A75DF37' : ''
 
 export const MUMBAI_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
@@ -94,6 +97,11 @@ export const MZERO = new Token(ChainId.MATIC, '0xb67176655e7919a27aA34C279157124
 // a test token, mintable by anyone
 export const MINT = new Token(ChainId.MATIC, '0x08193764bd81a742c15125e48f41b1232068c912', 18, 'MINT', 'Mintable Token')
 
+
+export const WHT = new Token(ChainId.HECO, '0x5545153ccfca01fbd7dd11c0b23ba694d9509a6f', 18, 'WHT', 'Wrapped HECO in HUOBI')
+export const hINDA = new Token(ChainId.HECO, '0x4E76805F76c13BfaA1D6558596A12086e4bE3E2C', 2, 'HINDA', 'INDA in HUOBI');
+export const hZERO = new Token(ChainId.HECO, '0x0E4564692B15Af6526b6910CFd9E1F4B6671CA1A', 18, 'HZERO', 'ZERO in HUOBI')
+
 export const rinkebyZERO = new Token(ChainId.RINKEBY, '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a', 18, 'ZERO', 'Zero Exchange')
 export const rinkebyUSDC = new Token(ChainId.RINKEBY, '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926', 6, 'USDC', 'USDC')
 export const MOCK1 = new Token(ChainId.FUJI, '0xD752858feafADd6BD6B92e5bBDbb3DC8d40cD351', 18, 'MOCK1', 'MOCK1 in Avalanche')
@@ -122,7 +130,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -150,7 +158,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
-  [ChainId.HECO]: [WETH[ChainId.HECO]],
+  [ChainId.HECO]: [WETH[ChainId.HECO]]
 }
 
 // used to construct intermediary pairs for trading
@@ -161,7 +169,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   // [ChainId.FUJI]: [...WETH_ONLY[ChainId.FUJI], MOCK1, MOCK2],
   [ChainId.SMART_CHAIN]: [...WETH_ONLY[ChainId.SMART_CHAIN], WBNB, bscZERO, bscBUSD, bscUSDC],
   [ChainId.AVALANCHE]: [...WETH_ONLY[ChainId.AVALANCHE], WAVAX, zZERO, zUSDC],
-  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], WMATIC]
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], WMATIC],
+  [ChainId.HECO]: [...WETH_ONLY[ChainId.HECO], WHT]
 }
 
 /**
@@ -184,12 +193,13 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
   [ChainId.RINKEBY]: [],
   [ChainId.AVALANCHE]: [zZERO, AVAX as Token, zUSDC, zUSDT, zDAI, zETH],
-  [ChainId.SMART_CHAIN]: [bscZERO, BNB as Token, bscBUSD, bscDAI,bscUSDC, bscUSDT, bscETH],
+  [ChainId.SMART_CHAIN]: [bscZERO, BNB as Token, bscBUSD, bscDAI, bscUSDC, bscUSDT, bscETH],
   [ChainId.SMART_CHAIN_TEST]: [],
   [ChainId.FUJI]: [],
   [ChainId.MOONBASE_ALPHA]: [],
   [ChainId.MUMBAI]: [],
-  [ChainId.MATIC]: []
+  [ChainId.MATIC]: [],
+  [ChainId.HECO]: []
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -337,10 +347,11 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.SMART_CHAIN_TEST]: 'Smart Chain',
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.MATIC]: 'Polygon'
+  [ChainId.MATIC]: 'Polygon',
+  [ChainId.HECO]: 'HECO'
 }
 
-export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic']
+export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
 
@@ -353,5 +364,6 @@ export const NATIVE_CURRENCY = {
   [ChainId.SMART_CHAIN_TEST]: BNB,
   [ChainId.MOONBASE_ALPHA]: DEV,
   [ChainId.MUMBAI]: MATIC,
-  [ChainId.MATIC]: MATIC
+  [ChainId.MATIC]: MATIC,
+  [ChainId.HECO]: HECO
 }

@@ -10,7 +10,7 @@ import BUSDLogo from '../../assets/images/busd-logo.png'
 import DAILogo from '../../assets/images/crosschain/wDAI.png'
 import SushiLogo from '../../assets/images/sushi-logo.png'
 import UNILogo from '../../assets/images/uni-logo.png'
-
+import HTLogo from '../../assets/images/ht.png'
 // import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
@@ -117,6 +117,10 @@ export default function CurrencyLogo({
 
   if (['BNB', 'WBNB', 'wBNB', 'eBNB'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
+  }
+
+  if (['HT', 'HECO'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={HTLogo} alt="Huobi Token" size={size} style={style} />
   }
   // [ChainId.MUMBAI]: 'Mumbai'
   if (
@@ -269,6 +273,9 @@ export const getCurrencyLogoImage = (symbol: string | undefined) => {
       return SushiLogo
     case 'zUNI':
       return UNILogo
+    case 'HT':
+    case 'HECO':
+      return HTLogo  
     default:
       return ''
   }

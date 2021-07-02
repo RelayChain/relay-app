@@ -3885,10 +3885,10 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
 
-"@zeroexchange/sdk@^3.2.18":
-  version "3.2.18"
-  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.18.tgz#b5a99db35d2fdb3f496153b2dfe9377a337434e5"
-  integrity sha512-1dA8JSAqbaRNxWWw0PsHum5tzj2dRVb3tmCddDdHz/JrZZNHAHIy8hHN106F4zeC5qoLM6fuWH+1DAu5PV9AiQ==
+"@zeroexchange/sdk@^3.2.19":
+  version "3.2.19"
+  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.19.tgz#8942ae54c0f0e0f71921d10cae6f6cfddb50d74e"
+  integrity sha512-ApB0DJpJPmfmWWI3g8FK7QJJfTc02KoWWapTekZHC9iiewihBwEkObhUbyu1g/AozdxAU+jxImMiurOB4BFO5Q==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"

@@ -49,9 +49,8 @@ export default function BlockchainLogo({
     return <StyledEthereumLogo src={PolygonLogo} alt="MATIC" size={size} style={style} />
   }
 
-  if (blockchain === 'HECO' || blockchain === 'Heco' || blockchain === 'heco') {
+  if (blockchain === 'HECO' || blockchain === 'heco') {
     return <StyledEthereumLogo src={HecoLogo} alt="HECO" size={size} style={style} />
   }
-
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
 }

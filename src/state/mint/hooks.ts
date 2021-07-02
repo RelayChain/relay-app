@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { PairState, usePair } from '../../data/Reserves'

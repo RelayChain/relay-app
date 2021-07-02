@@ -414,7 +414,8 @@ export default function Pools() {
               activeFilteredMode={filteredMode}
             />
           )}
-          {account !== null &&
+          {
+          account !== null &&
             stakingInfos?.length > 0 &&
             arrayToShow?.length > 0 &&
             (displayMode === 'table' ? (
@@ -485,7 +486,8 @@ export default function Pools() {
               </Wrapper>
             ) : (
               <GridContainer>
-                {arrayToShow?.map((item: any) => {
+                {
+                arrayToShow?.map((item: any) => {
                   if (!item) {
                     return <></>
                   }

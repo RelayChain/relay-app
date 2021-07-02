@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, Token, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
+import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, HECO, Token, ETHER_CURRENCIES, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo, useState } from 'react'
@@ -26,16 +26,8 @@ import InfiniteLoader from 'react-window-infinite-loader'
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
     return currency.address
-  } else if (currency === ETHER) {
-    return 'ETHER'
-  } else if (currency === AVAX) {
-    return 'AVAX'
-  } else if (currency === BNB) {
-    return 'BNB'
-  } else if (currency === DEV) {
-    return 'DEV'
-  } else if (currency === MATIC) {
-    return 'MATIC'
+  } else if (ETHER_CURRENCIES.includes(currency)) {
+    return String(currency.name)
   } else {
     return ''
   }
@@ -144,7 +136,7 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
-    return [ETHER, AVAX, BNB, DEV, MATIC].includes(currency)
+    return ETHER_CURRENCIES.includes(currency)
   }
 
   if (!currency) {
@@ -245,7 +237,9 @@ export default function CurrencyList({
           ? Currency.DEV
           : chainId === ChainId.MUMBAI || chainId === ChainId.MATIC
             ? Currency.MATIC
-            : Currency.AVAX
+            : chainId === ChainId.HECO
+              ? Currency.HECO
+              : Currency.AVAX
   const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
     currencies,
     showETH,

@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount,JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -36,21 +36,10 @@ export function useSwapActionHandlers(): {
       if (currency instanceof Token) {
         selected = currency.address
       }
-      if (currency === ETHER) {
-        selected = 'ETH'
-      }
-      if (currency === AVAX) {
-        selected = 'AVAX'
-      }
-      if (currency === BNB) {
-        selected = 'BNB'
-      }
-      if (currency === DEV) {
-        selected = 'DEV'
-      }
-      if (currency === MATIC) {
-        selected = 'MATIC'
-      }
+
+      if (ETHER_CURRENCIES.includes(currency)) {
+        selected = String(currency.name)
+      }      
       dispatch(
         selectCurrency({
           field,
@@ -113,9 +102,11 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
               ? ChainId.MAINNET
               : currency?.symbol === 'BNB'
                 ? ChainId.SMART_CHAIN
-                :currency?.symbol === 'MATIC'
-                ? ChainId.MATIC
-                : ChainId.AVALANCHE
+                : currency?.symbol === 'MATIC'
+                  ? ChainId.MATIC
+                  : currency?.symbol === 'HT'
+                  ? ChainId.HECO
+                  : ChainId.AVALANCHE
         )
     }
   } catch (error) {
