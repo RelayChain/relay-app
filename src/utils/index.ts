@@ -30,6 +30,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   4: 'rinkeby.',
   5: 'goerli.',
   42: 'kovan.',
+  // TODO: are these needed at all?
   43113: 'FUJI',
   43114: 'AVALANCHE',
   97: 'SMART_CHAIN_TEST',

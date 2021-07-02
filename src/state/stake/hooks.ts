@@ -35,7 +35,10 @@ import {
   WMATIC,
   MZERO,
   hZERO,
-  hINDA
+  hINDA,
+  XIOT,
+  BIOS,
+  MINT,
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -67,6 +70,10 @@ export const STAKING_REWARDS_INFO: {
   }[]
 } = {
   [ChainId.MAINNET]: [
+    {
+      tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0x823e89163ea28eec2be01c644399d6515995921d'
+    },
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
       stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
@@ -103,7 +110,41 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MAINNET], WAS],
       stakingRewardAddress: '0x2b854fAAc04f501ba8183430aA1501Aa8268F575',
       rewardInfo: { rewardToken: WAS },
-    }
+    },
+    // {
+    //   tokens: [WETH[ChainId.MAINNET], BIOS],
+    //   stakingRewardAddress: '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc',
+    //   rewardInfo: {
+    //     rewardToken: XIOT,
+    //     addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+    //     removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+    //     disableDeposit: true,
+    //     rewardsMultiplier: 1e18
+    //   },
+    // },
+    {
+      tokens: [WETH[ChainId.MAINNET], BIOS],
+      stakingRewardAddress: '0x591d01efab5f96da72de29bda8fec0a80084d1a6',
+      rewardInfo: {
+        rewardToken: XIOT,
+        addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+        rewardsMultiplier: 1e18
+      },
+    },
+    {
+      tokens: [BIOS, BIOS],
+      stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
+      rewardInfo: { 
+        rewardToken: XIOT,
+        rewardsMultiplier: 1e18
+      },
+    },
+    // {
+    //   tokens: [BIOS, BIOS],
+    //   stakingRewardAddress: '0x91bCecC4F7ae1F71Ef485102BCABBF0f1D872e00',
+    //   rewardInfo: { rewardToken: XIOT, disableDeposit: true },
+    // },
   ],
   [ChainId.AVALANCHE]: [
     {
@@ -117,6 +158,11 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [zZERO, zUSDC],
       stakingRewardAddress: '0xfA2c38470aD0a970240cF1afD35Cd04d9e994e76'
+    },
+    {
+      tokens: [zZERO, WAVAX],
+      // new one:
+      stakingRewardAddress: '0x9e09298D7Dd8C01835177EC5df5D0b59EA105f2C'
     },
     {
       tokens: [zZERO, WAVAX],
@@ -283,14 +329,25 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0xC49f75293427F14288328059992d6c8213abc760',
       rewardInfo: { rewardToken: bscZERO }
     },
+    {
+      tokens: [bscZERO, bscWBNB],
+      stakingRewardAddress: '0x51b53dDAd48bcCfb23f9091Ad2bC87Aa9417eb85',
+      rewardInfo: { rewardToken: bscZERO }
+    },
+    {
+      tokens: [bscZERO, bscBUSD],
+      stakingRewardAddress: '0x7d3616EbdF793E00d900D69b4D4a47ce33725ED4',
+      rewardInfo: { rewardToken: bscZERO }
+    },
   ],
   [ChainId.MATIC]: [
     {
       tokens: [WETH[ChainId.MATIC], MZERO],
-      stakingRewardAddress: '0x90466Fa3B137b56e52eF987BD6e26aca87A32fF2'
+      stakingRewardAddress: '0xc095c481c27e1d8E3DF69610d0d5A1cb8F36cE8B'
     },
   ],
   [ChainId.HECO]: [
+    
     
   ]
 }
@@ -311,7 +368,6 @@ export interface StakingInfo {
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
   rewardRate: TokenAmount
-  
   rewardRateWeekly: TokenAmount
   // when the period ends
   periodFinish: Date | undefined
@@ -326,8 +382,11 @@ export interface StakingInfo {
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount,
     seconds: number,
-    decimals:number,
-  ) => TokenAmount
+    decimals: number,
+  ) => TokenAmount,
+
+  // all the info from stakingRewards
+  rewardInfo?: any,
 }
 
 // gets the staking info from the network for the active chain id
@@ -341,12 +400,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
-              ? false
-              : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          pairToFilterBy == undefined ? true
+            : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+            pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
         : [],
     [chainId, pairToFilterBy]
@@ -417,14 +473,21 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // get the LP token
         const tokens = info[index].tokens
-        const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
+        const isSingleSided = tokens[0] === tokens[1];
+
+        let liquidityToken;
+        if (isSingleSided) {
+          liquidityToken = tokens[0];
+        } else {
+          liquidityToken = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0')).liquidityToken;
+        }
 
         // check for account, if no account set to 0
         const currentPair = info.find(pair => pair.stakingRewardAddress === rewardsAddress)
 
         const rewardsToken = currentPair?.rewardInfo?.rewardToken ?? ZERO;
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+        const stakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+        const totalStakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
         const totalRewardRate = new TokenAmount(rewardsToken, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
@@ -450,7 +513,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         }
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 1, 1)
-        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10**15)
+        const individualRewardRateWeekly = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate, 60 * 60 * 24 * 7, 10 ** 15)
 
         const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
         const periodFinishMs = periodFinishSeconds * 1000
@@ -458,8 +521,6 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         // compare period end timestamp vs current block timestamp (in seconds)
         const active =
           periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
-
-        const lpToken = currentPair?.rewardInfo?.lpToken
 
         memo.push({
           stakingRewardAddress: rewardsAddress,
@@ -475,6 +536,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           active,
           rewardsTokenSymbol: rewardsToken.symbol,
           chainId,
+          rewardInfo: currentPair?.rewardInfo,
         })
       }
       return memo

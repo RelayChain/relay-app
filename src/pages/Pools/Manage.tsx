@@ -2,9 +2,9 @@ import { JSBI, Pair, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
+import { ExternalLink, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
-import { StyledInternalLink, TYPE, Title } from '../../theme'
 import styled, { ThemeContext } from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -13,6 +13,7 @@ import { AutoColumn } from '../../components/Column'
 import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import FullPositionCard from '../../components/PositionCard'
@@ -34,6 +35,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import toEllipsis from 'utils/toEllipsis'
 
 const moment = require('moment')
 
@@ -246,7 +248,7 @@ export default function Manage({
   const history = useHistory()
 
   const locationState: any = props?.location?.state
-  const stakingRewardAddress: any = locationState?.stakingRewardAddress ? locationState?.stakingRewardAddress : null
+  const stakingRewardAddress: any = locationState?.stakingRewardAddress ?? null;
 
   if (!stakingRewardAddress) {
     history.push('/pools')
@@ -258,8 +260,10 @@ export default function Manage({
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
+  const isSingleSided = tokenA?.address === tokenB?.address;
+
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const baseStakingInfo = useStakingInfo(stakingTokenPair)
+  const baseStakingInfo = useStakingInfo(isSingleSided ? undefined : stakingTokenPair)
   const stakingInfo = baseStakingInfo.find(x => x.stakingRewardAddress === stakingRewardAddress)
 
   // detect existing unstaked LP position to show add button if none found
@@ -273,10 +277,10 @@ export default function Manage({
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-  
+
   const [token, WETH] = currencyA && ETHER_CURRENCIES.includes(currencyA)
-      ? [tokenB, tokenA]
-      : [tokenA, tokenB];
+    ? [tokenB, tokenA]
+    : [tokenA, tokenB];
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
@@ -296,10 +300,26 @@ export default function Manage({
     )
   }
 
-  const countUpAmount =
-    stakingInfo?.earnedAmount?.toFixed(Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)) ?? '0'
+  const countUpAmount = toEllipsis(
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }) : '0',
+    stakingInfo?.earnedAmount ? stakingInfo?.earnedAmount
+      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+      ?.toSignificant(6, { groupSeparator: ',' }).length > 16
+      ? stakingInfo?.earnedAmount
+        .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+        ?.toSignificant(6, { groupSeparator: ',' }).length - 16
+      : 0
+      : 0
+
+  )
+
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
+  const stakedAmount = stakingInfo?.stakedAmount ?
+    JSBI.divide(JSBI.BigInt(stakingInfo?.stakedAmount.raw), JSBI.BigInt((stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)))
+    : JSBI.BigInt(0)
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
   const valueOfTotalStakedAmountInUSDC =
@@ -397,11 +417,16 @@ export default function Manage({
         {account !== null && (
           <>
             <SymbolTitleWrapper>
-              <SymbolTitleInner>
-                {currencyA?.symbol}/{currencyB?.symbol}
-                <span style={{ marginLeft: '10px', marginRight: '10px' }}>Liquidity Mining</span>
-                <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
-              </SymbolTitleInner>
+              {isSingleSided
+                ? <SymbolTitleInner>
+                  <span style={{ marginLeft: '10px', marginRight: '10px' }}>Single Token Mining</span>
+                  <CurrencyLogo currency={currencyA ?? undefined} />
+                </SymbolTitleInner>
+                : <SymbolTitleInner>
+                  {currencyA?.symbol}/{currencyB?.symbol}
+                  <span style={{ marginLeft: '10px', marginRight: '10px' }}>Liquidity Mining</span>
+                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={30} />
+                </SymbolTitleInner>}
             </SymbolTitleWrapper>
             <span
               style={{
@@ -429,8 +454,9 @@ export default function Manage({
                 <StatValue>
                   {stakingInfo?.active
                     ? stakingInfo?.totalRewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                      ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                      ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
                 </StatValue>
@@ -446,28 +472,41 @@ export default function Manage({
                   <ButtonOutlined className="add-liquidity-button">Trade</ButtonOutlined>
                 </StyledTradelLink>
 
-                <StyledInternalLink
-                  className="add-liquidity-link"
-                  to={{
-                    pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
-                    state: { stakingRewardAddress }
-                  }}
-                >
-                  <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
-                </StyledInternalLink>
-                {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
-                    '0'
-                  ) ? null : !stakingInfo?.active ? null : (
-                  <StyledInternalLink
-                    className="remove-liquidity-link"
-                    to={{
-                      pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
-                      state: { stakingRewardAddress }
-                    }}
-                  >
-                    <TextLink>Remove Liquidity</TextLink>
-                  </StyledInternalLink>
-                )}
+                {isSingleSided ? <></>
+                  :
+                  stakingInfo?.rewardInfo?.addLiquidityLink ?
+                    /*<ExternalLink href={stakingInfo?.rewardInfo?.addLiquidityLink}>
+                      <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+                    </ExternalLink>*/
+                    <></>
+                    :
+                    <StyledInternalLink
+                      className="add-liquidity-link"
+                      to={{
+                        pathname: `/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                        state: { stakingRewardAddress }
+                      }}
+                    >
+                      <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
+                    </StyledInternalLink>}
+                {stakingInfo?.rewardInfo?.removeLiquidityLink ?
+                  <ExternalLink href={stakingInfo?.rewardInfo?.removeLiquidityLink}>
+                    <ButtonOutlined className="add-liquidity-button">Remove Liquidity</ButtonOutlined>
+                  </ExternalLink>
+                  : !userLiquidityUnstaked ? null
+                    : userLiquidityUnstaked.equalTo('0') ? null
+                      : isSingleSided ? null
+                        : (
+                          <StyledInternalLink
+                            className="remove-liquidity-link"
+                            to={{
+                              pathname: `/remove/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`,
+                              state: { stakingRewardAddress }
+                            }}
+                          >
+                            <TextLink>Remove Liquidity</TextLink>
+                          </StyledInternalLink>
+                        )}
               </StyledButtonsWrap>
             </StatsWrapper>{' '}
           </>
@@ -500,24 +539,25 @@ export default function Manage({
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
                     {stakingInfo?.active
                       ? stakingInfo?.rewardRateWeekly
-                          ?.divide(JSBI.BigInt(10**15))
-                          .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
-                            groupSeparator: ','
-                          }) ?? '-'
+                        ?.divide(JSBI.BigInt(10 ** 15))
+                        ?.divide(JSBI.BigInt(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1))
+                        .toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals), {
+                          groupSeparator: ','
+                        }) ?? '-'
                       : '0'}
                     <span
                       style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}
                     >{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
                   </TYPE.white>
                 </RowBetween>
-                <StatLabel style={{ color: '#A7B1F4' }}>Current Liquidity Deposits:</StatLabel>
+                <StatLabel style={{ color: '#A7B1F4' }}>{`Current ${isSingleSided ? 'Token Deposit' : 'Liquidity Deposits:'}`}</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                    {stakingInfo?.stakedAmount?.toSignificant(
-                      Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
-                    ) ?? '-'}
+                    {JSBI.toNumber(stakedAmount).toFixed(
+                      Math.min(6, stakingInfo?.earnedAmount?.currency.decimals ?? 18)) ?? '-'}
+
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
-                      ZERO {currencyA?.symbol}-{currencyB?.symbol}
+                      {isSingleSided ? `${currencyA?.symbol}` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '} ${currencyA?.symbol}-${currencyB?.symbol}`}
                     </span>
                   </TYPE.white>
                 </RowBetween>
@@ -528,46 +568,52 @@ export default function Manage({
                 )}
               </Wrapper>
             </SingleColumn>
-            {(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
-              (userLiquidityUnstaked && !userLiquidityUnstaked.equalTo('0'))) && (
-              <SingleColumn className="right">
-                <Wrapper>
-                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
-                      '0'
-                    ) ? null : !stakingInfo?.active ? null : (
-                    <>
-                      <StatLabel style={{ color: '#A7B1F4' }}>LP To Deposit:</StatLabel>
-                      <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                        <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                          {userLiquidityUnstaked?.toSignificant(
-                            Math.min(6, stakingInfo?.earnedAmount?.currency.decimals)
-                          )}
-                          <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>ZERO LP tokens</span>
-                        </TYPE.white>
-                        <ButtonOutlined
-                          className="remove-liquidity-button green"
-                          onClick={handleDepositClick}
-                          style={{ width: '160px' }}
-                        >
-                          {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
-                        </ButtonOutlined>
-                      </RowBetween>
-                    </>
-                  )}
-                  {stakingPairs.map(
-                    (stakingPair, i) =>
-                      stakingPair[1] &&
-                      showMe(stakingPair[1]) && (
-                        <FullPositionCard
-                          key={stakingInfosWithBalance[i].stakingRewardAddress}
-                          pair={stakingPair[1]}
-                          stakedBalance={stakingInfosWithBalance[i].stakedAmount}
-                        />
-                      )
-                  )}
-                </Wrapper>
-              </SingleColumn>
-            )}
+            {
+              (stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ||
+                (userLiquidityUnstaked && !userLiquidityUnstaked?.equalTo('0'))) &&
+              (
+                <SingleColumn className="right">
+                  <Wrapper>
+                    {
+                      !userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo(
+                        '0'
+                      ) ? null :
+                        (
+                          <>
+                            <StatLabel style={{ color: '#A7B1F4' }}>{isSingleSided ? `${currencyA?.symbol} to deposit` : 'LP To Deposit:'}</StatLabel>
+                            <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
+                              <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                                {
+                                  userLiquidityUnstaked?.toSignificant(
+                                    Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
+                                }                                
+                                <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
+                              </TYPE.white>
+                              <ButtonOutlined
+                                disabled={stakingInfo?.rewardInfo?.disableDeposit}
+                                className="remove-liquidity-button green"
+                                onClick={handleDepositClick}
+                                style={{ width: '160px' }}
+                              >
+                                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
+                              </ButtonOutlined>
+                            </RowBetween>
+                          </>
+                        )}
+                    {stakingPairs.map(
+                      (stakingPair, i) =>
+                        stakingPair[1] &&
+                        showMe(stakingPair[1]) && (
+                          <FullPositionCard
+                            key={stakingInfosWithBalance[i].stakingRewardAddress}
+                            pair={stakingPair[1]}
+                            stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                          />
+                        )
+                    )}
+                  </Wrapper>
+                </SingleColumn>
+              )}
           </Columns>
         </PageWrapper>
       </PageContainer>

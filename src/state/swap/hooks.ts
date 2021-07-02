@@ -1,7 +1,7 @@
 import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount,JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 
@@ -329,4 +329,16 @@ export function useDefaultsFromURLSearch():
   }, [dispatch, chainId])
 
   return result
+}
+
+
+export function useIsMountedRef() {
+  const isMountedRef = useRef(false)
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+  return isMountedRef
 }

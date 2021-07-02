@@ -122,6 +122,8 @@ export default function PoolRow({
     symbol
   } = useStakingInfoTop(stakingInfoTop)
 
+  const isSingleSided = stakingInfo.tokens[0].address === stakingInfo.tokens[1].address;
+
   if (stakingInfoTop.isHidden) {
     return <></>
   }
@@ -146,7 +148,9 @@ export default function PoolRow({
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
             {stakingInfo?.active
-              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
+              ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)
+              ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              ?.toFixed(0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
             {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
@@ -159,11 +163,13 @@ export default function PoolRow({
         </Cell>
         <Cell mobile={false}>
           <TYPE.main fontWeight={500} fontSize={15} style={{ textAlign: 'center' }}>
-          {valueOfTotalStakedAmountInUSDC || valueOfTotalStakedAmountInWETH
-              ? valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' })} ${symbol}`
-              : <CustomLightSpinner src={Circle} alt="loader" size={'15px'} />}
+            {isSingleSided 
+              ? '-' 
+              : valueOfTotalStakedAmountInUSDC || valueOfTotalStakedAmountInWETH
+                ? valueOfTotalStakedAmountInUSDC
+                  ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                  : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' })} ${symbol}`
+                : <CustomLightSpinner src={Circle} alt="loader" size={'15px'} />}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

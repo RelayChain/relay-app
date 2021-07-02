@@ -72,9 +72,19 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     onDismiss()
   }, [onDismiss])
 
+
+  let dummyPair = null;
+  let pairAddress = null;
   // pair contract for this token to be staked
-  const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
-  const pairContract = usePairContract(dummyPair.liquidityToken.address)
+  const isSingleSided = stakingInfo.tokens[0] === stakingInfo.tokens[1];
+  if (!isSingleSided) {
+    dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'));
+    pairAddress = dummyPair.liquidityToken.address;
+  } else {
+    pairAddress = stakingInfo?.stakedAmount?.token.address;
+  }
+  
+  const pairContract = usePairContract(pairAddress);
 
   // approval data for stake
   const deadline = useTransactionDeadline()
@@ -125,7 +135,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const maxAmountInput = maxAmountSpend(userLiquidityUnstaked)
   const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
   const handleMax = useCallback(() => {
-    maxAmountInput && onUserInput(maxAmountInput.toExact())
+    maxAmountInput && onUserInput(
+      maxAmountInput
+      ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
+      )
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
@@ -137,8 +150,13 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       return approveCallback()
     }
 
+    // if it's sushi pair, just use the usual approve
+    if (pairContract.address == '0xE9a889E6963f122a98f8083d951c71329c726c0A') return approveCallback();
+
     // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
+    const nonce = await pairContract.nonces(account).catch((e: any) => null);
+
+    if (nonce == null) return approveCallback();
 
     const EIP712Domain = [
       { name: 'name', type: 'string' },
@@ -202,7 +220,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <DoubleCurrencyLogo currency0={dummyPair.token0} currency1={dummyPair.token1} size={32} />
+            <DoubleCurrencyLogo currency0={dummyPair?.token0} currency1={dummyPair?.token1} size={32} />
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           <RowCenter>
@@ -218,8 +236,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             label={''}
             disableCurrencySelect={true}
             hideCurrencySelect={true}
-            customBalanceText={'Available LP: '}
+            customBalanceText={isSingleSided ? 'Available tokens: ' : 'Available LP: '}
             id="stake-liquidity-token"
+            stakingInfo={stakingInfo}
           />
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
@@ -228,7 +247,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             </div>
 
             <TYPE.black>
-              {hypotheticalRewardRate.toSignificant(4, { groupSeparator: ',' })}{' '}
+              {hypotheticalRewardRate
+              .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+              .toSignificant(4, { groupSeparator: ',' })}{' '}
               {stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week
             </TYPE.black>
           </HypotheticalRewardRate>
@@ -256,8 +277,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} ZERO LP</TYPE.body>
+            <TYPE.largeHeader>{isSingleSided ? `Depositing tokens` : `Depositing Liquidity`}</TYPE.largeHeader>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} {isSingleSided ? `Tokens` : `ZERO LP`}</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -265,7 +286,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} ZERO LP</TYPE.body>
+            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} {isSingleSided ? `Tokens` : `ZERO LP`}</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}
