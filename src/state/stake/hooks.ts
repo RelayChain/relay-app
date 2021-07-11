@@ -72,6 +72,10 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
+      stakingRewardAddress: '0xBab3c860Dc02ECF21c63416858aBFe296448f5A6'
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], ZERO],
       stakingRewardAddress: '0x823e89163ea28eec2be01c644399d6515995921d'
     },
     {
@@ -147,6 +151,10 @@ export const STAKING_REWARDS_INFO: {
     // },
   ],
   [ChainId.AVALANCHE]: [
+    {
+      tokens: [zZERO, zETH],
+      stakingRewardAddress: '0x2D6d5bc58adEDa28f62B0aBc3f53F5EAef497FCc'
+    },
     {
       tokens: [zZERO, zETH],
       stakingRewardAddress: '0x7b35150abde10F98f44DEd0d02e7E942321fbbe0'
