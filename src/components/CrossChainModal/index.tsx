@@ -159,9 +159,6 @@ export default function CrossChainModal({
     }
   }
 
-  console.log("ACTIVE CHAIN ========== ", activeChain);
-  console.log("isTransfer??? ======== ", isTransfer);
-
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
