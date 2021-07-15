@@ -262,14 +262,17 @@ export function useCrosschainHooks() {
         .substr(2) + // Deposit Amount (32 bytes)
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+    const auxData = '0xdeadbeef';
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
     const resultDepositTx = await bridgeContract
-      .deposit(targetChain.chainId, currentToken.resourceId, data, {
+      .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
         gasLimit: '500000',
-        value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+        // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+        // TODO mbot: fetch the fee from the contract, (method Bridge._fees[destinationChainId])
+        value: '0',
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
       })
