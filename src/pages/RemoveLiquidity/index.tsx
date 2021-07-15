@@ -424,7 +424,7 @@ export default function RemoveLiquidity({
   function modalBottom() {
     const symbolName =
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? 'UNI '
+        ? 'ETH'
         : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
           ? 'BNB'
           : chainId === ChainId.MOONBASE_ALPHA

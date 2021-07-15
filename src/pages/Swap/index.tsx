@@ -291,6 +291,7 @@ export default function Swap({
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
+  console.log("🚀 ~ file: index.tsx ~ line 294 ~ currencies", currencies)
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],

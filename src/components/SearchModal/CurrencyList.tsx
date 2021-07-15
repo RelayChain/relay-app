@@ -27,7 +27,7 @@ function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
     return currency.address
   } else if (ETHER_CURRENCIES.includes(currency)) {
-    return String(currency.name)
+    return String(currency.symbol)
   } else {
     return ''
   }

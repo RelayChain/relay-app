@@ -25,7 +25,7 @@ export default function BlockchainLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  if (blockchain === 'Ethereum' || blockchain === 'ETH') {
+  if (['Ethereum', 'ETH', 'Ether'].includes(String(blockchain))) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 

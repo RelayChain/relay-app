@@ -121,7 +121,7 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   const token = useToken(isNativeCurrency ? undefined : currencyId)
 
   if (isNativeCurrency) {
-    return ETHER_CURRENCIES.find((curr: Currency) => curr.name === String(currencyId?.toUpperCase()))
+    return ETHER_CURRENCIES.find((curr: Currency) => curr.symbol === String(currencyId?.toUpperCase()))
   }
   else {
     return token
