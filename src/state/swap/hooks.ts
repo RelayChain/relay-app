@@ -38,7 +38,7 @@ export function useSwapActionHandlers(): {
       }
 
       if (ETHER_CURRENCIES.includes(currency)) {
-        selected = String(currency.name)
+        selected = String(currency.symbol?.toUpperCase())
       }      
       dispatch(
         selectCurrency({
