@@ -272,7 +272,7 @@ export function useCrosschainHooks() {
       .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
         gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
-        value: '0',
+        value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
       })
@@ -503,7 +503,6 @@ export function useCrosschainHooks() {
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
     const fee = (await bridgeContract._fees(crosschainState.targetChain.chainID)).toString()
-    console.log("🚀 ~ file: hooks.ts ~ line 506 ~ UpdateFee ~ fee", fee)
 
     dispatch(
       setCrosschainFee({   

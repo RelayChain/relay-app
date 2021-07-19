@@ -184,7 +184,6 @@ export default function Transfer() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
-  console.log("🚀 ~ file: index.tsx ~ line 187 ~ Transfer ~ chainId", chainId)
 
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
