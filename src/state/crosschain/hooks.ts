@@ -502,11 +502,14 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-    const fee = (await bridgeContract._fees(crosschainState.targetChain.chainID)).toString()
+    const targetChain = crosschainState.targetChain.chainID;
+    const feeResult = await bridgeContract._fees(targetChain);
+    const fee = feeResult.toString()
+    const value = WithDecimals(fee);
 
     dispatch(
       setCrosschainFee({   
-        value: WithDecimals(fee)
+        value
       })
     )
   }
@@ -597,7 +600,7 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
-  }, [account, currentToken])
+  }, [account, currentToken, targetChain])
 }
 
 export function toCheckSumAddress(address: string) {

@@ -58,7 +58,7 @@ export const crosschainConfig: ChainbridgeConfig = {
     {
       chainId: 3,
       networkId: 97,
-      name: 'Smart Chain',
+      name: 'Smart Chain Testnet',
       bridgeAddress: '0x26258365B44Eb73740a6dfdA962E8a3096cA3e59',
       erc20HandlerAddress: '0x9DC206947A1f4881022a03863555B963B4bB86a2',
       rpcUrl: 'https://data-seed-prebsc-1-s2.binance.org:8545',
