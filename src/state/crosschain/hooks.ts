@@ -172,7 +172,7 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.SMART_CHAIN) {
     return 'Smart Chain'
   } else if (chainID === ChainId.SMART_CHAIN_TEST) {
-    return 'Smart Chain'
+    return 'Smart Chain Testnet'
   } else if (chainID === ChainId.MOONBASE_ALPHA) {
     return 'Moonbeam'
   } else if (chainID === ChainId.MUMBAI) {
@@ -267,11 +267,11 @@ export function useCrosschainHooks() {
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
         gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
-        // TODO mbot: fetch the fee from the contract, (method Bridge._fees[destinationChainId])
         value: '0',
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
@@ -502,11 +502,11 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-
-    const fee = (await bridgeContract._fee()).toString()
+    const fee = (await bridgeContract._fees(crosschainState.targetChain.chainID)).toString()
+    console.log("🚀 ~ file: hooks.ts ~ line 506 ~ UpdateFee ~ fee", fee)
 
     dispatch(
-      setCrosschainFee({
+      setCrosschainFee({   
         value: WithDecimals(fee)
       })
     )
