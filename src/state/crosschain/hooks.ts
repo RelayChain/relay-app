@@ -236,7 +236,6 @@ export function useCrosschainHooks() {
 
     const crosschainState = getCrosschainState()
     console.log(crosschainState.currentChain.chainID);
-    console.log(crosschainState.currentChain.chainID);
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     // const currentToken = currentChain.tokens
     //   .find(token => token.address === crosschainState.currentToken.address)
@@ -482,14 +481,17 @@ export function useCrosschainHooks() {
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-
-    const balance = (await tokenContract.balanceOf(web3React.account)).toString()
-    dispatch(
-      setCurrentTokenBalance({
-        balance: WithDecimals(balance)
-      })
-    )
+    if(currentToken.address !== '') {
+      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+  
+      const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+      dispatch(
+        setCurrentTokenBalance({
+          balance: WithDecimals(balance)
+        })
+      )
+    }
+    
   }
 
   const UpdateFee = async () => {
@@ -572,7 +574,7 @@ export function useCrossChain() {
       })
     )
     dispatch(setTransferAmount({ amount: '' }))
-    UpdateOwnTokenBalance().catch(console.error)
+    UpdateOwnTokenBalance() // .catch(console.error)
     UpdateFee().catch(console.error)
   }
 
