@@ -29,6 +29,12 @@ if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
 
+console.debug = function() {
+  if(!process.env.REACT_APP_TESTNET) return;
+  const argumentsTyped: any = arguments;
+  console.log.apply(this, argumentsTyped);
+};
+
 function Updaters() {
   return (
     <>
