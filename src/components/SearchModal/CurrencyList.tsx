@@ -1,10 +1,9 @@
-import { AVAX, BNB, ChainId, Currency, CurrencyAmount, DEV, ETHER, MATIC, HECO, Token, ETHER_CURRENCIES, currencyEquals, TokenAmount } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, Token, ETHER_CURRENCIES, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
-import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo, useState } from 'react'
+import { LinkStyledButton, TYPE } from '../../theme'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
-import BigNumber from 'bignumber.js'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { FixedSizeList } from 'react-window'
@@ -13,14 +12,12 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { getEtherscanLink, isTokenOnList } from '../../utils'
 import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance, useTokenBalancesWithSortBalances } from '../../state/wallet/hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
-import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import InfiniteLoader from 'react-window-infinite-loader'
 
 function currencyKey(currency: Currency): string {
@@ -96,10 +93,10 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
-const weiToEthNum = (balance: any, decimals = 18) => {
-  const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
-  return displayBalance.toNumber()
-}
+// const weiToEthNum = (balance: any, decimals = 18) => {
+//   const displayBalance = balance.dividedBy(new BigNumber(10).pow(decimals))
+//   return displayBalance.toNumber()
+// }
 
 function CurrencyRow({
   isUserTokens,
@@ -272,6 +269,7 @@ export default function CurrencyList({
         />
       )
     },
+    // eslint-disable-next-line
     [onCurrencySelect, otherCurrency, selectedCurrency, searchQuery]
   )
 

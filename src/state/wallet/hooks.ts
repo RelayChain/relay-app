@@ -44,7 +44,7 @@ export function useETHBalances(
         if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()), chainId)
         return memo
       }, {}),
-    [addresses, results]
+    [addresses, results, chainId]
   )
 }
 
@@ -134,6 +134,7 @@ export function useTokenBalancesWithSortBalances(isAscendingFilter: boolean
         }, {})
         return sortedTokensWithBalances
       },
+      // eslint-disable-next-line 
       [account, validatedTokens, balances]
     )
   ]

@@ -182,12 +182,18 @@ export default function BalanceItem({
             <span>{isNative ? currentChain?.name : token?.name}</span>
           </CrossChain>
           {isNative ? (
-            <AddressWallet>
-              {userEthBalance?.toSignificant(returnBalanceNum(userEthBalance, 4), { groupSeparator: ',' }) || 0}
+            <AddressWallet>              
+              {
+              // eslint-disable-next-line
+              userEthBalance?.toSignificant(returnBalanceNum(userEthBalance, 4), { groupSeparator: ',' }) || 0
+              }
             </AddressWallet>
           ) : (
-            <AddressWallet>
-              {hasABalance && balance?.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}
+            <AddressWallet>              
+              {
+              // eslint-disable-next-line
+              hasABalance && balance?.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0
+              }
             </AddressWallet>
           )}
         </Box>

@@ -1,11 +1,9 @@
-import { ChainId, Currency, ETHER, Token } from '@zeroexchange/sdk'
+import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../state'
 import styled from 'styled-components'
 import { ArrowRight as Arrow } from './../Arrows'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import Toggle from './../Toggle'
@@ -15,12 +13,12 @@ import { CloseIcon } from '../../theme'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
-import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
+// import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
+// import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
 import ListLoader from '../ListLoader'
 import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween } from '../Row'
+import { RowBetween } from '../Row'
 import SortButton from './SortButton'
 import { Box, Flex, Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -30,7 +28,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
-import { toCheckSumAddress } from '../../state/crosschain/hooks'
 import { useUserAddedTokens, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { Info } from 'react-feather'
 import { checksumedCoingeckoList } from 'constants/coingecko'
@@ -47,10 +44,6 @@ interface CurrencySearchProps {
   onChangeList: () => void
   isCrossChain?: boolean
 }
-
-const ManageButton = styled(LinkStyledButton)`
-  font-size: 17px;
-`
 
 const RowCenter = styled(RowBetween)`
   justify-content: center;
@@ -72,7 +65,7 @@ const TokenListRow = styled.div`
 `
 
 
-const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
+// const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
 
 export function CurrencySearch({
   selectedCurrency,
@@ -101,7 +94,6 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
   const searchToken = useToken(debouncedQuery)
-  // const allTokens = useAllTokens()
   const isMountedRef = useIsMountedRef()
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
@@ -114,11 +106,11 @@ export function CurrencySearch({
       return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
     })
 
-  const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId)
-    .map((x: any) => {
-      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-    })
-    .concat(userTokens)
+  // const defaultTokenList = DEFAULT_TOKEN_LIST.filter((x: any) => x.chainId === chainId)
+  //   .map((x: any) => {
+  //     return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+  //   })
+  //   .concat(userTokens)
 
     let availableTokensArray = useMemo(() => {
       return isCrossChain
@@ -139,6 +131,7 @@ export function CurrencySearch({
               return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
             })
             .concat(userTokens)
+            // eslint-disable-next-line 
     }, [isCrossChain, availableTokens, isCoingeckoListOn, checksumedCoingeckoList])
   
     if (isCoingeckoListOn && checksumedCoingeckoList && availableTokens && availableTokensArray) {
@@ -181,6 +174,7 @@ export function CurrencySearch({
     //     : [...uniqueAvailableTokensArray, ...Object.values(allTokens)],
     //   searchQuery
     // )
+    // eslint-disable-next-line 
   }, [isAddressSearch, searchToken, debouncedQuery, chainId, uniqueAvailableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
@@ -198,6 +192,7 @@ export function CurrencySearch({
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
+    // eslint-disable-next-line 
   }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
 
@@ -210,6 +205,7 @@ export function CurrencySearch({
     if (isMountedRef && isCoingeckoListOn) {
       setArrayToShow(filteredSortedTokens.length > 40 ? filteredSortedTokens.slice(0, 40) : filteredSortedTokens)
     }
+    // eslint-disable-next-line 
   }, [isCoingeckoListOn, debouncedQuery, invertSearchOrder])
 
   const loadMore = (startIndex: any, stopIndex: any) => {
@@ -267,7 +263,6 @@ export function CurrencySearch({
   }
 
   const ManageList = ({ setIsManageTokenList, tokenLength }: ManageListProps) => {
-    const dispatch = useDispatch<AppDispatch>()
     const removeToken = useRemoveUserAddedToken()
     const removeAllTokens = () => {
       userTokens.forEach(item => {
@@ -337,7 +332,7 @@ export function CurrencySearch({
             <RowBetween style={{ padding: '0 15px' }}>
               <TYPE.main fontWeight={600} fontSize={[10, 12, 14]}>
                 {userTokens.length
-                  ? userTokens.length + ' ' + 'Custom token' + (userTokens.length === 1 ? '' : 's')
+                  ? `${userTokens.length} Custom token${(userTokens.length === 1 ? '' : 's')}`
                   : ''}
               </TYPE.main>
               <LinkStyledButton onClick={() => removeAllTokens()}>Clear all</LinkStyledButton>

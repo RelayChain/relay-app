@@ -155,6 +155,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const currency0 = unwrappedToken(pair.token0, chainId)
   const currency1 = unwrappedToken(pair.token1, chainId)
 
+  // eslint-disable-next-line
   const [showMore, setShowMore] = useState(true)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)

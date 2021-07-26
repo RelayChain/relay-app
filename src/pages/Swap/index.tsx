@@ -4,12 +4,12 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { CHAIN_LABELS, NATIVE_CURRENCY } from '../../constants'
 import Card, { GreyCard } from '../../components/Card'
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import Column, { AutoColumn } from '../../components/Column'
-import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
+import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainState } from '../../state/crosschain/hooks'
 import { LinkStyledButton, TYPE, Title } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { useStakingInfo } from '../../state/stake/hooks'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import styled, { ThemeContext } from 'styled-components'
 import {
@@ -28,7 +28,6 @@ import { AppDispatch } from '../../state'
 import { ArrowDown } from 'react-feather'
 import BalanceItem from '../../components/BalanceItem'
 import BubbleBase from '../../components/BubbleBase'
-import Circle from '../../assets/images/circle-grey.svg'
 import Circle2 from '../../assets/images/circle.svg'
 import { ClickableText } from '../Legacy_Pool/styleds'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -46,11 +45,9 @@ import Settings from '../../components/Settings'
 import { Text } from 'rebass'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import TradePrice from '../../components/swap/TradePrice'
-import Web3 from 'web3'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { setCurrentToken } from '../../state/crosschain/actions'
-import { setTokenBalances } from '../../state/user/actions'
 import { toCheckSumAddress } from '../../state/crosschain/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -171,34 +168,6 @@ const BalanceRow = styled.div<{ isColumn?: boolean }>`
     );
   }
 `
-const ChainBridgePending = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 40px;
-  padding: 0.25rem 1rem 0.25rem 1rem;
-  border-radius: 12px;
-  margin-top: 2rem;
-  color: rgba(255, 255, 255, 0.75);
-  transition: all 0.2s ease-in-out;
-  background: linear-gradient(45deg, #5496ff, #8739e5);
-  position: fixed;
-  top: 68px;
-  right: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    position: relative;
-    top: auto; right: auto;
-  `};
-  &:hover {
-    cursor: pointer;
-    filter: brightness(1.2);
-  }
-  p {
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-`
 const BottomGroupingSwap = styled(BottomGrouping)`
   padding: 14px, 30px, 14px, 30px;
   width: 100%;
@@ -234,7 +203,7 @@ export default function Swap({
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const {
-    availableChains: allChains,
+    // availableChains: allChains,
     availableTokens,
     currentChain,
     currentToken,
@@ -250,8 +219,6 @@ export default function Swap({
   }
 
   const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
-
-  const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -272,9 +239,9 @@ export default function Swap({
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
 
-  const availableChains = useMemo(() => {
-    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
-  }, [allChains])
+  // const availableChains = useMemo(() => {
+  //   return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+  // }, [allChains])
 
   const theme = useContext(ThemeContext)
 
@@ -405,6 +372,7 @@ export default function Swap({
           txHash: undefined
         })
       })
+      // eslint-disable-next-line 
   }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
 
   // errors
@@ -453,6 +421,7 @@ export default function Swap({
         )
       }
     },
+    // eslint-disable-next-line 
     [onCurrencySelection, dispatch]
   )
 
@@ -487,10 +456,12 @@ export default function Swap({
       setCurAState(null)
       setCurBState(null)
     }
+    // eslint-disable-next-line 
   }, [token0, token1, curA, curB])
 
 
   // swaps or cross chain
+  // eslint-disable-next-line 
   const [isCrossChain, setIsCrossChain] = useState<boolean>(false)
 
   const getChainName = (): string => {
@@ -535,6 +506,7 @@ export default function Swap({
     if (stakingInfos?.length > 0) {
       handleStakedTokens()
     }
+    // eslint-disable-next-line
   }, [stakingInfos])
 
   const userTokens = useUserAddedTokens()
@@ -560,13 +532,14 @@ export default function Swap({
 
       const filteredArray: any = [];
       arr.forEach((item: any) => {
-        const i = filteredArray.findIndex((x: any) => x.address == item.address);
+        const i = filteredArray.findIndex((x: any) => x.address === item.address);
         if(i <= -1){
           filteredArray.push(item);
         }
       })
 
     return [...new Set(filteredArray)]
+    // eslint-disable-next-line
   }, [availableTokens, userTokens])
 
   return (

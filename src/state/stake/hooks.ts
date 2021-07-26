@@ -32,13 +32,9 @@ import {
   zZERO,
   zCHART,
   bscWISB,
-  WMATIC,
   MZERO,
-  hZERO,
-  hINDA,
   XIOT,
   BIOS,
-  MINT,
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -408,8 +404,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-          pairToFilterBy == undefined ? true
-            : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+          pairToFilterBy === undefined ? true
+            : pairToFilterBy?.involvesToken(stakingRewardInfo.tokens[0]) &&
             pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
         : [],

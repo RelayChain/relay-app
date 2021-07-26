@@ -7,9 +7,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import CrossChainModal from 'components/CrossChainModal'
 
-export default function ChainSwitcherContent({
-}: {
-}) {
+export default function ChainSwitcherContent() {
     const { chainId } = useActiveWeb3React()
     const dispatch = useDispatch<AppDispatch>()
     const {
@@ -30,7 +28,7 @@ export default function ChainSwitcherContent({
 
     const availableChains = useMemo(() => {
         return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
-    }, [allChains])
+    }, [allChains, chainId])
 
     return (
         <CrossChainModal

@@ -203,7 +203,7 @@ const NetworkSwitcher = () => {
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
-  }, [allChains])
+  }, [allChains, chainId])
 
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
   const [crossPopupOpen, setShowPopupModal] = useState(false)

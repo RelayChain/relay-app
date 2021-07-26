@@ -1,30 +1,24 @@
-import { JSBI, Pair, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { JSBI, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
-import { ButtonOutlined, ButtonPrimary, ButtonSuccess } from '../../components/Button'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/pools/styled'
+import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { ExternalLink, StyledInternalLink, TYPE, Title } from '../../theme'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
-import { AutoColumn } from '../../components/Column'
-import Card from '../../components/Card'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import { CountUp } from 'use-count-up'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { Dots } from '../../components/swap/styleds'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import FullPositionCard from '../../components/PositionCard'
-import { Link } from 'react-router-dom'
 import PageContainer from './../../components/PageContainer'
 import { RouteComponentProps } from 'react-router-dom'
 import StakingModal from '../../components/pools/StakingModal'
 import UnstakingModal from '../../components/pools/UnstakingModal'
 import { currencyId } from '../../utils/currencyId'
 import { useActiveWeb3React } from '../../hooks'
-import { useColor } from '../../hooks/useColor'
 import { useCurrency } from '../../hooks/Tokens'
 import { useHistory } from 'react-router'
 import { usePair } from '../../data/Reserves'
@@ -254,7 +248,6 @@ export default function Manage({
     history.push('/pools')
   }
 
-  const theme = useContext(ThemeContext)
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
@@ -268,7 +261,7 @@ export default function Manage({
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
-  const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
+  // const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
   // toggle for staking modal and unstaking modal
   const [showStakingModal, setShowStakingModal] = useState(false)
@@ -276,12 +269,12 @@ export default function Manage({
   const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
 
   // fade cards if nothing staked or nothing earned yet
-  const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-
+  // const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
+  // eslint-disable-next-line
   const [token, WETH] = currencyA && ETHER_CURRENCIES.includes(currencyA)
     ? [tokenB, tokenA]
     : [tokenA, tokenB];
-  const backgroundColor = useColor(token)
+  // const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
@@ -346,12 +339,14 @@ export default function Manage({
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
+  // eslint-disable-next-line
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     liquidityTokens
   )
 
   // fetch the reserves for all V2 pools in which the user has a balance
+  // eslint-disable-next-line 
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens?.filter(({ liquidityToken }) => {
@@ -362,11 +357,11 @@ export default function Manage({
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+  // const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  // const v2IsLoading =
+    // fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  // const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   // show liquidity even if its deposited in rewards contract
   const allStakingInfo = useStakingInfo()
@@ -374,13 +369,13 @@ export default function Manage({
   const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
 
   // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
-    return (
-      stakingPairs
-        ?.map(stakingPair => stakingPair[1])
-        .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
-    )
-  })
+  // const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
+  //   return (
+  //     stakingPairs
+  //       ?.map(stakingPair => stakingPair[1])
+  //       .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
+  //   )
+  // })
 
   const showMe = (pair: any) => {
     return (

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
-import { AVAX, BNB, DEV, ETHER, JSBI, MATIC, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { JSBI, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -8,12 +8,10 @@ import { useColor } from '../../hooks/useColor'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from 'hooks'
-import { useStakingInfo } from 'state/stake/hooks'
 import { useEffect } from 'react'
 import { replacePoolsState } from './actions'
 import toEllipsis from 'utils/toEllipsis'
@@ -146,6 +144,7 @@ export function useStakingInfoTop(
         })
       )
     }
+    // eslint-disable-next-line
   }, [
     countUpAmount,
     stakingInfo,

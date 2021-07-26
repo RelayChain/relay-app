@@ -139,7 +139,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       maxAmountInput
       ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
       )
-  }, [maxAmountInput, onUserInput])
+  }, [maxAmountInput, onUserInput, stakingInfo])
 
   async function onAttemptToApprove() {
     if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
@@ -151,7 +151,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     }
 
     // if it's sushi pair, just use the usual approve
-    if (pairContract.address == '0xE9a889E6963f122a98f8083d951c71329c726c0A') return approveCallback();
+    if (pairContract.address === '0xE9a889E6963f122a98f8083d951c71329c726c0A') return approveCallback();
 
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account).catch((e: any) => null);

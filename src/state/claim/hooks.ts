@@ -1,11 +1,11 @@
 import { UNI } from './../../constants/index'
-import { TokenAmount, JSBI, ChainId } from '@zeroexchange/sdk'
+import { TokenAmount, JSBI} from '@zeroexchange/sdk'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useSingleCallResult } from '../multicall/hooks'
-import { calculateGasMargin, isAddress } from '../../utils'
+import { calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
 
 interface UserClaimData {
@@ -19,29 +19,29 @@ interface UserClaimData {
   }
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
+// const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
 
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | null> {
-  const formatted = isAddress(account)
-  if (!formatted) return Promise.reject(new Error('Invalid address'))
-  const key = `${chainId}:${account}`
+// function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | null> {
+//   const formatted = isAddress(account)
+//   if (!formatted) return Promise.reject(new Error('Invalid address'))
+//   const key = `${chainId}:${account}`
 
-  return (CLAIM_PROMISES[key] =
-    CLAIM_PROMISES[key] ??
-    fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
-      .then(res => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          console.debug(`No claim for account ${formatted} on chain ID ${chainId}`)
-          return null
-        }
-      })
-      .catch(error => {
-        console.error('Failed to get claim data', error)
-      }))
-}
+//   return (CLAIM_PROMISES[key] =
+//     CLAIM_PROMISES[key] ??
+//     fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
+//       .then(res => {
+//         if (res.status === 200) {
+//           return res.json()
+//         } else {
+//           console.debug(`No claim for account ${formatted} on chain ID ${chainId}`)
+//           return null
+//         }
+//       })
+//       .catch(error => {
+//         console.error('Failed to get claim data', error)
+//       }))
+// }
 
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
@@ -49,6 +49,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
   const { chainId } = useActiveWeb3React()
 
   const key = `${chainId}:${account}`
+  // eslint-disable-next-line 
   const [claimInfo, setClaimInfo] = useState<{ [key: string]: UserClaimData | null }>({})
 
   // useEffect(() => {

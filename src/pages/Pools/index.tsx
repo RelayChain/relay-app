@@ -1,15 +1,12 @@
 import {
   AprObjectProps,
   setAprData,
-  setPoolsData,
-  setStackingInfo,
-  setToggle,
   setPoolEarnings
 } from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { filterPoolsItems, searchItems, setOptions } from 'utils/sortPoolsPage'
+import { filterPoolsItems, setOptions } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
@@ -240,7 +237,6 @@ export default function Pools() {
   const aprAllData = usePoolsState()
   const {
     aprData,
-    poolsData,
     weeklyEarnings,
     readyForHarvest,
     totalLiquidity,
@@ -320,6 +316,7 @@ export default function Pools() {
     if (weeklyEarningsTotalValue !== earnings || readyForHarvestTotalValue !== harvest) {
       dispatch(setPoolEarnings({ weeklyEarningsTotalValue: earnings, readyForHarvestTotalValue: harvest }))
     }
+    // eslint-disable-next-line 
   }, [weeklyEarnings, readyForHarvest, stakingInfos])
 
   const onSortChange = (key: string, value: string | boolean) => {

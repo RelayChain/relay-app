@@ -10,8 +10,8 @@ import {
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useCallback, useMemo, useState } from 'react'
+import styled from 'styled-components'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -159,12 +159,10 @@ export default function Transfer() {
     transferAmount,
     crosschainFee,
     targetChain,
-    targetTokens,
     crosschainTransferStatus,
     swapDetails
   } = useCrosschainState()
 
-  const currentTargetToken = targetTokens.find(x => x.assetBase === currentToken.assetBase)
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -187,16 +185,14 @@ export default function Transfer() {
 
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
-  }, [allChains])
-
-  const theme = useContext(ThemeContext)
+  }, [allChains, chainId])
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
+  const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
 
   const trade = v2Trade
 
@@ -204,12 +200,10 @@ export default function Transfer() {
     [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount
   }
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
-
-  const isValid = !swapInputError
-  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
 
   // track the input amount, on change, if crosschain, dispatch
+  // eslint-disable-next-line
   const [inputAmountToTrack, setInputAmountToTrack] = useState('')
   const handleInputAmountChange = useCallback(
     (amount: string) => {
@@ -230,6 +224,7 @@ export default function Transfer() {
     },
     [onUserInput, handleInputAmountChange]
   )
+  // eslint-disable-next-line
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
@@ -240,8 +235,6 @@ export default function Transfer() {
   const formattedAmounts = {
     [independentField]: typedValue
   }
-
-  const route = trade?.route
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
@@ -264,6 +257,7 @@ export default function Transfer() {
         )
       }
     },
+    // eslint-disable-next-line
     [onCurrencySelection, dispatch]
   )
 
@@ -274,28 +268,8 @@ export default function Transfer() {
     }
   }, [maxAmountInput, onUserInput, handleInputAmountChange])
 
-  // swaps or cross chain
-  const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
-  const handleSetIsCrossChain = (bool: boolean) => {
-    setIsCrossChain(bool)
-
-    dispatch(
-      setTransferAmount({
-        amount: inputAmountToTrack
-      })
-    )
-  }
-
-  // useEffect(() => {
-  //   // change logic when we add polka
-  //   if (chainId) {
-  //     const label: any = SUPPORTED_CHAINS.find(x => x !== CHAIN_LABELS[chainId]);
-  //     onSelectTransferChain({
-  //       name: label,
-  //       chainID: chainId.toString()
-  //     })
-  //   }
-  // }, [chainId, currentChain])
+  // eslint-disable-next-line
+  const [isCrossChain, setIsCrossChain] = useState<boolean>(true)  
 
   const startNewSwap = () => {
     BreakCrosschainSwap()
@@ -309,11 +283,8 @@ export default function Transfer() {
     setShowChainBridgeModal(false)
   }
 
+  // eslint-disable-next-line
   const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
-  const hideCrossChainModal = () => {
-    setShowCrossChainModal(false)
-    // startNewSwap()
-  }
   const showCrossChainModal = () => {
     setShowCrossChainModal(true)
   }

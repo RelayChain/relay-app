@@ -79,7 +79,9 @@ export default function CurrencyLogo({
       // find logos on ETH address for non-ETH assets
       let logoAddress = currency.address
       const allConfigTokens: any = []
+      // eslint-disable-next-line 
       crosschainConfig.chains.map(chain => {
+        // eslint-disable-next-line 
         chain.tokens.map(token => {
           allConfigTokens.push(token)
         })

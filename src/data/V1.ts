@@ -1,7 +1,5 @@
 import {
   BigintIsh,
-  Currency,
-  CurrencyAmount,
   JSBI,
   Pair,
   Percent,
@@ -12,7 +10,7 @@ import {
   currencyEquals
 } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+import { useTokenBalances } from '../state/wallet/hooks'
 
 import { AddressZero } from '@ethersproject/constants'
 import { Version } from '../hooks/useToggledVersion'

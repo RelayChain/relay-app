@@ -1,16 +1,11 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useState } from 'react'
-import { calculateGasMargin, getEtherscanLink } from '../../utils'
-import styled, { ThemeContext } from 'styled-components'
+import { getEtherscanLink } from '../../utils'
+import styled from 'styled-components'
 import { useTokenContract, useWDSDepositContract } from '../../hooks/useContract'
 
-import { AutoColumn } from '../../components/Column'
 import { ButtonOutlined } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
-import useGasPrice from 'hooks/useGasPrice'
-
-const USDTTokenABI = require('../../constants/abis/USDTABI.json')
-
 
 const SwapFlexRow = styled.div`
 flex: 1;
@@ -100,7 +95,6 @@ const MaxButton = styled.p`
 `
 
 let web3React: any
-const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
 const DEPOSIT_CONTRACT_ADDR = process.env.REACT_APP_TESTNET
   ? '0xdA0135E75dA9F2fCe90d5cCdB8dC0868Cc13D1Ae'
@@ -143,6 +137,7 @@ export default function WSDSale() {
     if (buyersLimits && web3React?.account) {
       getLimits()
     }
+    // eslint-disable-next-line 
   }, [buyersLimits, web3React?.account])
 
   const onPurchase = async () => {
@@ -217,7 +212,7 @@ export default function WSDSale() {
                   <p>Approved successfully</p>
                   <a
                     href={getEtherscanLink(web3React.chainId as number, approveSuccessHash as string, 'transaction')}
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     View tx on Ethereum
@@ -229,7 +224,7 @@ export default function WSDSale() {
                   <p>Deposited successfully</p>
                   <a
                     href={getEtherscanLink(web3React.chainId as number, depositSuccessHash as string, 'transaction')}
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     View tx on Ethereum

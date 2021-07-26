@@ -136,6 +136,7 @@ export function ExternalLink({
         event.preventDefault()
       }
     },
+    // eslint-disable-next-line
     [href, target]
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />

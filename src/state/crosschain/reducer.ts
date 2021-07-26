@@ -186,6 +186,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
         depositConfirmed: confirmed
       }
     })
+    // eslint-disable-next-line
     .addCase(setCrosschainLastTimeSwitched, (state, {}) => {
       const currentState = { ...initialState, ...state };
       return {

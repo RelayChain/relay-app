@@ -3,7 +3,6 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import { toCheckSumAddress } from '../../state/crosschain/hooks'
 
 type TagDetails = Tags[keyof Tags]

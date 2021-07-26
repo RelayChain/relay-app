@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, HECO, ChainId, CurrencyAmount, ETHER, JSBI, ETHER_CURRENCIES, Currency, CHAIN_IDS_AND_CURRENCIES } from '@zeroexchange/sdk'
+import { BNB, DEV, MATIC, HECO, ChainId, CurrencyAmount, ETHER, JSBI, ETHER_CURRENCIES} from '@zeroexchange/sdk'
 
 import { MIN_ETH } from '../constants'
 
