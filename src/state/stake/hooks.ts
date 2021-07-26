@@ -122,24 +122,24 @@ export const STAKING_REWARDS_INFO: {
     //     rewardsMultiplier: 1e18
     //   },
     // },
-    {
-      tokens: [WETH[ChainId.MAINNET], BIOS],
-      stakingRewardAddress: '0x591d01efab5f96da72de29bda8fec0a80084d1a6',
-      rewardInfo: {
-        rewardToken: XIOT,
-        addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
-        removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
-        rewardsMultiplier: 1e18
-      },
-    },
-    {
-      tokens: [BIOS, BIOS],
-      stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
-      rewardInfo: { 
-        rewardToken: XIOT,
-        rewardsMultiplier: 1e18
-      },
-    },
+    // {
+    //   tokens: [WETH[ChainId.MAINNET], BIOS],
+    //   stakingRewardAddress: '0x591d01efab5f96da72de29bda8fec0a80084d1a6',
+    //   rewardInfo: {
+    //     rewardToken: XIOT,
+    //     addLiquidityLink: 'https://app.sushi.com/add/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+    //     removeLiquidityLink: 'https://app.sushi.com/remove/ETH/0xAACa86B876ca011844b5798ECA7a67591A9743C8',
+    //     rewardsMultiplier: 1e18
+    //   },
+    // },
+    // {
+    //   tokens: [BIOS, BIOS],
+    //   stakingRewardAddress: '0x7f0f2d35f09a3bfd98938a21370ae0b1677905d7',
+    //   rewardInfo: { 
+    //     rewardToken: XIOT,
+    //     rewardsMultiplier: 1e18
+    //   },
+    // },
     // {
     //   tokens: [BIOS, BIOS],
     //   stakingRewardAddress: '0x91bCecC4F7ae1F71Ef485102BCABBF0f1D872e00',
@@ -303,16 +303,16 @@ export const STAKING_REWARDS_INFO: {
     //   tokens: [bscBUSD, bscINDA],
     //   stakingRewardAddress: '0x337BDB3197e705c5E2b2630dC571d08608204001'
     // },
-    {
-      tokens: [bscZERO, bscINDA],
-      stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
-      rewardInfo: { rewardToken: bscINDA }
-    },
-    {
-      tokens: [bscWISB, bscWBNB],
-      stakingRewardAddress: '0x065422cd8e4903A1F188cef09a3A7702769AEE71',
-      rewardInfo: { rewardToken: bscWISB }
-    },
+    // {
+    //   tokens: [bscZERO, bscINDA],
+    //   stakingRewardAddress: '0xb466598db72798Ec6118afbFcA29Bc7F1009cad6',
+    //   rewardInfo: { rewardToken: bscINDA }
+    // },
+    // {
+    //   tokens: [bscWISB, bscWBNB],
+    //   stakingRewardAddress: '0x065422cd8e4903A1F188cef09a3A7702769AEE71',
+    //   rewardInfo: { rewardToken: bscWISB }
+    // },
     {
       tokens: [bscWISB, bscZERO],
       stakingRewardAddress: '0x728e8E1c134fc5b22FB6EF26F392e724f5f8F413',
