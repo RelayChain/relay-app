@@ -15,7 +15,6 @@ import {
   bscBUSD,
   bscDAI,
   bscETH,
-  bscINDA,
   bscSUSHI,
   bscUNI,
   bscUSDC,
@@ -32,9 +31,7 @@ import {
   zZERO,
   zCHART,
   bscWISB,
-  MZERO,
-  XIOT,
-  BIOS,
+  MZERO
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
