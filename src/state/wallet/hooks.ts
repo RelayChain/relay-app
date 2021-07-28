@@ -1,10 +1,11 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER_CURRENCIES, JSBI, Token, TokenAmount } from '@zeroexchange/sdk'
+import { useAllCrossChainTokens, useAllTokens } from '../../hooks/Tokens'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
+
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { UNI } from './../../constants/index'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllCrossChainTokens, useAllTokens } from '../../hooks/Tokens'
 import { useMemo } from 'react'
 import { useMulticallContract } from '../../hooks/useContract'
 import { useTotalUniEarned } from '../stake/hooks'
@@ -85,7 +86,7 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
-export function useTokenBalancesWithSortBalances(isAscendingFilter: boolean 
+export function useTokenBalancesWithSortBalances(isAscendingFilter: boolean
 ): [{ [tokenAddress: string]: TokenAmount }] {
   const { account } = useActiveWeb3React()
   const allTokens = useAllCrossChainTokens()
@@ -134,7 +135,7 @@ export function useTokenBalancesWithSortBalances(isAscendingFilter: boolean
         }, {})
         return sortedTokensWithBalances
       },
-      // eslint-disable-next-line 
+      // eslint-disable-next-line
       [account, validatedTokens, balances]
     )
   ]

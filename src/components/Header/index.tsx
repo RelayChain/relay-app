@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
-
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
-import Loader from '../Loader'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { Text } from 'rebass'
@@ -198,8 +196,10 @@ const popupContent: PopupContent = {
 }
 
 const NetworkSwitcher = () => {
+
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
+
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
   }, [allChains, chainId])
@@ -250,6 +250,7 @@ const NetworkSwitcher = () => {
   )
 }
 const Header = () => {
+  
   const { account, chainId } = useActiveWeb3React()
   // eslint-disable-next-line
   const [isSuccessAuth, userEthBalance] = useEagerConnect()
@@ -269,7 +270,7 @@ const Header = () => {
           <img src={ZeroLogo} alt="Zero logotype" />
         </LogoContainer>
       </HideMedium>
-      {account && userEthBalance ? (
+      {account ? (
         <HeaderControls>
           <HeaderElement>
             <NetworkSwitcher />
@@ -281,11 +282,6 @@ const Header = () => {
             </AccountElement>
           </HeaderElement>
         </HeaderControls>
-      ) : account && !userEthBalance ? (
-        <NotConnectedWrap className="no-point">
-          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
-          <Web3Status />
-        </NotConnectedWrap>
       ) : (
         <NotConnectedWrap>
           <Web3Status />
