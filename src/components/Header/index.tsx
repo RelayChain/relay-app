@@ -14,9 +14,8 @@ import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useEagerConnect } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -252,7 +251,8 @@ const NetworkSwitcher = () => {
 }
 const Header = () => {
   const { account, chainId } = useActiveWeb3React()
-  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
+  // eslint-disable-next-line
+  const [isSuccessAuth, userEthBalance] = useEagerConnect()
   let label,
     symbol = ''
 
@@ -275,7 +275,7 @@ const Header = () => {
             <NetworkSwitcher />
             <AccountElement active={!!account}>
               <BalanceText>
-                {userEthBalance?.toSignificant(4)} {symbol}
+                {userEthBalance} {symbol}
               </BalanceText>
               <Web3Status />
             </AccountElement>
