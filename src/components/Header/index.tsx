@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import styled from 'styled-components'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
@@ -14,8 +14,8 @@ import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
 const HeaderFrame = styled.div`
@@ -199,8 +199,10 @@ const popupContent: PopupContent = {
 }
 
 const NetworkSwitcher = () => {
+
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
+
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
   }, [allChains, chainId])
@@ -251,6 +253,7 @@ const NetworkSwitcher = () => {
   )
 }
 const Header = () => {
+  
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   let label,
@@ -269,23 +272,25 @@ const Header = () => {
           <img src={ZeroLogo} alt="Zero logotype" />
         </LogoContainer>
       </HideMedium>
-      {account && userEthBalance ? (
+      {account ? (
         <HeaderControls>
           <HeaderElement>
             <NetworkSwitcher />
             <AccountElement active={!!account}>
-              <BalanceText>
-                {userEthBalance?.toSignificant(4)} {symbol}
-              </BalanceText>
+              { userEthBalance &&
+                <BalanceText>
+                  {userEthBalance?.toSignificant(4)} {symbol}
+                </BalanceText>
+              }
+              { !userEthBalance &&
+                <BalanceText>
+                  0 {symbol}
+                </BalanceText>
+              }
               <Web3Status />
             </AccountElement>
           </HeaderElement>
         </HeaderControls>
-      ) : account && !userEthBalance ? (
-        <NotConnectedWrap className="no-point">
-          <Loader stroke="#6752F7" style={{ marginRight: '10px' }} />
-          <Web3Status />
-        </NotConnectedWrap>
       ) : (
         <NotConnectedWrap>
           <Web3Status />

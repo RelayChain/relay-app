@@ -482,7 +482,7 @@ export function useCrosschainHooks() {
     const signer = web3React.library.getSigner()
     if(currentToken.address !== '') {
       const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-  
+
       const balance = (await tokenContract.balanceOf(web3React.account)).toString()
       dispatch(
         setCurrentTokenBalance({
@@ -490,7 +490,7 @@ export function useCrosschainHooks() {
         })
       )
     }
-    
+
   }
 
   const UpdateFee = async () => {
@@ -521,6 +521,7 @@ export function useCrosschainHooks() {
 }
 
 export function useCrossChain() {
+
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
 
@@ -552,6 +553,7 @@ export function useCrossChain() {
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
+    
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []

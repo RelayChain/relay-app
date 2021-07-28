@@ -5,6 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { AppDispatch } from 'state'
@@ -22,7 +23,6 @@ import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import WalletModal from '../WalletModal'
 import { shortenAddress } from '../../utils'
 import { useActiveWeb3React } from 'hooks'
-import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDispatch } from 'react-redux'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -178,6 +178,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
+  useCrossChain();
   const {
     availableChains: allChains,
   } = useCrosschainState()
