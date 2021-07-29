@@ -1,22 +1,19 @@
 import React, { useMemo, useState } from 'react'
-import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
-
+import styled from 'styled-components'
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
-import Loader from '../Loader'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
-import styled from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useActiveWeb3React, useEagerConnect } from '../../hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -255,7 +252,8 @@ const NetworkSwitcher = () => {
 const Header = () => {
   
   const { account, chainId } = useActiveWeb3React()
-  const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
+  // eslint-disable-next-line
+  const [isSuccessAuth, userEthBalance] = useEagerConnect()
   let label,
     symbol = ''
 
@@ -277,16 +275,9 @@ const Header = () => {
           <HeaderElement>
             <NetworkSwitcher />
             <AccountElement active={!!account}>
-              { userEthBalance &&
-                <BalanceText>
-                  {userEthBalance?.toSignificant(4)} {symbol}
-                </BalanceText>
-              }
-              { !userEthBalance &&
-                <BalanceText>
-                  0 {symbol}
-                </BalanceText>
-              }
+              <BalanceText>
+                {userEthBalance} {symbol}
+              </BalanceText>
               <Web3Status />
             </AccountElement>
           </HeaderElement>
