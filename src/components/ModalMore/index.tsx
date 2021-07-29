@@ -1,4 +1,4 @@
-import { Book, BookOpen, DollarSign, Info, MessageCircle } from 'react-feather'
+import { Book, BookOpen, Info, MessageCircle } from 'react-feather'
 
 import { ExternalLink } from '../../theme'
 import Modal from '../Modal'
@@ -108,7 +108,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Home
         </MenuItem>
 
-        <MenuItem id="link" href="https://blog.0.exchange">
+        <MenuItem id="link" href="https://medium.com/@OfficialZeroDex">
           <IconLink>
             <BookOpen size={20} />
           </IconLink>

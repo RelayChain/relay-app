@@ -60,6 +60,7 @@ export const searchItems = (array: any[], searchText: string, chainId?: ChainId)
   if (!searchText || searchText.length === 0 || searchText === '' || searchText.trim().length === 0) {
     return array
   }
+  // eslint-disable-next-line 
   return (array = array.slice().map(item => {
     if (item) {
       const firstCurrencySymbol = unwrappedToken(item.tokens[0], chainId).symbol

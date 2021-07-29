@@ -48,7 +48,7 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
   const allTokens = useAllTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
-    if (!token || chainId == undefined) return false
+    if (!token || chainId === undefined) return false
 
     return Object.keys(allTokens).some(tokenAddress => {
       const userToken = allTokens[tokenAddress]

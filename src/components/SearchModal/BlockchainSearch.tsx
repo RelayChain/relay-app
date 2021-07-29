@@ -1,7 +1,7 @@
 import { CloseIcon } from '../../theme'
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { RowBetween } from '../Row'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 
@@ -13,7 +13,6 @@ import { FixedSizeList } from 'react-window'
 import QuestionHelper from '../QuestionHelper'
 import SortButton from './SortButton'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
@@ -41,7 +40,6 @@ export function BlockchainSearch({
 }: BlockchainSearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')

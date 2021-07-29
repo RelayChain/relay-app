@@ -17,7 +17,6 @@ import {
   setCrosschainSwapDetails,
   setCrosschainTransferStatus,
   setCurrentChain,
-  setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
   setPendingTransfer,
@@ -172,7 +171,7 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.SMART_CHAIN) {
     return 'Smart Chain'
   } else if (chainID === ChainId.SMART_CHAIN_TEST) {
-    return 'Smart Chain'
+    return 'Smart Chain Testnet'
   } else if (chainID === ChainId.MOONBASE_ALPHA) {
     return 'Moonbeam'
   } else if (chainID === ChainId.MUMBAI) {
@@ -236,7 +235,6 @@ export function useCrosschainHooks() {
 
     const crosschainState = getCrosschainState()
     console.log(crosschainState.currentChain.chainID);
-    console.log(crosschainState.currentChain.chainID);
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     // const currentToken = currentChain.tokens
     //   .find(token => token.address === crosschainState.currentToken.address)
@@ -262,14 +260,17 @@ export function useCrosschainHooks() {
         .substr(2) + // Deposit Amount (32 bytes)
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+    const auxData = '0xdeadbeef';
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+
     const resultDepositTx = await bridgeContract
-      .deposit(targetChain.chainId, currentToken.resourceId, data, {
+      .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
         gasLimit: '500000',
-        value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+        // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+        value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
       })
@@ -482,14 +483,17 @@ export function useCrosschainHooks() {
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+    if(currentToken.address !== '') {
+      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
 
-    const balance = (await tokenContract.balanceOf(web3React.account)).toString()
-    dispatch(
-      setCurrentTokenBalance({
-        balance: WithDecimals(balance)
-      })
-    )
+      const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+      dispatch(
+        setCurrentTokenBalance({
+          balance: WithDecimals(balance)
+        })
+      )
+    }
+
   }
 
   const UpdateFee = async () => {
@@ -499,12 +503,14 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-
-    const fee = (await bridgeContract._fee()).toString()
+    const targetChain = crosschainState.targetChain.chainID;
+    const feeResult = await bridgeContract._fees(targetChain);
+    const fee = feeResult.toString()
+    const value = WithDecimals(fee);
 
     dispatch(
-      setCrosschainFee({
-        value: WithDecimals(fee)
+      setCrosschainFee({   
+        value
       })
     )
   }
@@ -520,6 +526,7 @@ export function useCrosschainHooks() {
 }
 
 export function useCrossChain() {
+
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
 
@@ -551,6 +558,7 @@ export function useCrossChain() {
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
+    
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
@@ -572,7 +580,7 @@ export function useCrossChain() {
       })
     )
     dispatch(setTransferAmount({ amount: '' }))
-    UpdateOwnTokenBalance().catch(console.error)
+    UpdateOwnTokenBalance() // .catch(console.error)
     UpdateFee().catch(console.error)
   }
 
@@ -595,7 +603,7 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
-  }, [account, currentToken])
+  }, [account, currentToken, targetChain])
 }
 
 export function toCheckSumAddress(address: string) {

@@ -1,6 +1,6 @@
 import { ChainId, Trade, currencyEquals, Token } from '@zeroexchange/sdk'
 import { getCurrencyLogoImage } from 'components/CurrencyLogo'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -68,7 +68,7 @@ export default function ConfirmSwapModal({
         chainId={chainId}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, chainId])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -81,7 +81,7 @@ export default function ConfirmSwapModal({
         chainId={chainId}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade, chainId])
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
@@ -105,6 +105,7 @@ export default function ConfirmSwapModal({
 
   const outputToken = wrappedCurrency(trade?.outputAmount?.currency ?? undefined, chainId)
   const url = process.env.REACT_APP_URL
+  // eslint-disable-next-line 
   const [isMetamaskError, setMetamaskError] = useState(false)
   const onClickAddToken = async (outputToken: Token) => {
     let { ethereum } = window

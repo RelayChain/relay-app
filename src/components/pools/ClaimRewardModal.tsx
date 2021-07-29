@@ -1,7 +1,6 @@
 import { CloseIcon, TYPE } from '../../theme'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import React, { useState } from 'react'
-import { BigNumber } from 'ethers'
 
 import { AutoColumn } from '../Column'
 import { ButtonError } from '../Button'
@@ -12,9 +11,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import styled from 'styled-components'
 import toEllipsis from './../../utils/toEllipsis'
 import { useActiveWeb3React } from '../../hooks'
-import { useGondolaLpTokenContract, useStakingContract, useStakingGondolaContract, useGondolaProxyMasterChefContract } from '../../hooks/useContract'
+import { useStakingContract } from '../../hooks/useContract'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -42,14 +40,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
     onDismiss()
   }
 
-  const stakingRewardAddress = (stakingInfo.gondolaTokenId && stakingInfo.gondolaRewardAddress) ?
-    stakingInfo.gondolaRewardAddress :
-    stakingInfo.stakingRewardAddress
-  const lpContract = useGondolaProxyMasterChefContract(stakingInfo.stakingRewardAddress)
-  const stakingContract = useStakingContract(stakingRewardAddress)
-  const stakingGondolaContract = useStakingGondolaContract(stakingRewardAddress)
+  const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
+
   async function onClaimReward() {
-    if (stakingContract && stakingInfo?.stakedAmount && !stakingInfo?.gondolaTokenId) {
+    if (stakingContract && stakingInfo?.stakedAmount) {
       setAttempting(true)
       await stakingContract
         .getReward({ gasLimit: 350000 })
@@ -63,25 +57,6 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           setAttempting(false)
           console.log(error)
         })
-    } else if (stakingGondolaContract && lpContract) {
-      console.log('account :>> ', account);
-      const lpBalance = await lpContract.earned(account)
-      console.log("🚀 ~ file: ClaimRewardModal.tsx ~ line 69 ~ onClaimReward ~ lpBalance", lpBalance)
-      setAttempting(true)
-      // const claimAmount = BigNumber.from( stakingInfo?.earnedAmount.toExact())
-      await stakingGondolaContract
-        .withdraw(stakingInfo?.gondolaTokenId, lpBalance, { gasLimit: 300000 })
-        .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: `Claim accumulated ${stakingInfo?.rewardsTokenSymbol || ''} rewards`
-          })
-          setHash(response.hash)
-        })
-        .catch((error: any) => {
-          setAttempting(false)
-          console.log(error)
-        }) 
-
     }
   }
 
@@ -105,9 +80,15 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                 {toEllipsis(
-                  stakingInfo?.earnedAmount?.toSignificant(6),
-                  stakingInfo?.earnedAmount?.toSignificant(6).length > MAX_SHOW_WIDTH
-                    ? stakingInfo?.earnedAmount?.toSignificant(6).length - MAX_SHOW_WIDTH
+                  stakingInfo?.earnedAmount
+                  ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                  ?.toSignificant(6, { groupSeparator: ',' }),
+                  stakingInfo?.earnedAmount
+                  ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                  ?.toSignificant(6, { groupSeparator: ',' }).length > MAX_SHOW_WIDTH
+                    ? stakingInfo?.earnedAmount
+                    .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                    ?.toSignificant(6, { groupSeparator: ',' }).length - MAX_SHOW_WIDTH
                     : 0
                 )}
               </TYPE.body>
@@ -125,7 +106,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {
+            stakingInfo?.earnedAmount
+            ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+            ?.toSignificant(6)} {stakingInfo?.rewardsTokenSymbol || 'ZERO'}</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}

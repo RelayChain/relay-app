@@ -158,6 +158,7 @@ export default function CrossChainModal({
       }
     }
   }
+
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
@@ -168,7 +169,17 @@ export default function CrossChainModal({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </li>
-          {supportedChains.map((chain: CrosschainChain) => (
+          { !isTransfer && (activeChain !== 'ethereum' && activeChain !== 'Ethereum') &&
+            !supportedChains.find((x: any) => x.chainID === '1') &&
+            <li className='selectable' onClick={() => {
+              alert('To switch back to Ethereum, please change your RPC inside your wallet.')
+              onDismiss()
+            }}>
+              <BlockchainLogo size="28px" blockchain={'ethereum'} />
+              <span>Ethereum</span>
+            </li>
+          }
+          {supportedChains.filter(x => x.name.toLowerCase() !== activeChain?.toLowerCase()).map((chain: CrosschainChain) => (
             <li
               key={chain.chainID}
               onClick={() => {

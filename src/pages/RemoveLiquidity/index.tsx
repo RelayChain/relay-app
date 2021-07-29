@@ -1,4 +1,4 @@
-import { AVAX, BNB, ChainId, Currency, DEV, ETHER, MATIC, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { ChainId, Currency, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
   SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
@@ -14,11 +14,10 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { StyledInternalLink, TYPE } from '../../theme'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -424,7 +423,7 @@ export default function RemoveLiquidity({
   function modalBottom() {
     const symbolName =
       chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY
-        ? 'UNI '
+        ? 'ETH'
         : chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST
           ? 'BNB'
           : chainId === ChainId.MOONBASE_ALPHA
@@ -648,23 +647,34 @@ export default function RemoveLiquidity({
                                 : currencyIdB
                               }`}
                           >
-                            {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
-                            {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
-                            {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
-                            {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
-                            {chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
-                            {chainId && chainId === (ChainId.HECO) && 'Receive WHT'}
+                            {// eslint-disable-next-line 
+                            chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === (ChainId.HECO) && 'Receive WHT'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                               }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
-                            {chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
-                            {chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
-                            {chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
-                            {chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
-                            {chainId && chainId === (ChainId.HECO) && 'Receive HECO'}
+                            {// eslint-disable-next-line 
+                            chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
+                            {// eslint-disable-next-line 
+                            chainId && chainId === (ChainId.HECO) && 'Receive HECO'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

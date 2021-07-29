@@ -1,10 +1,5 @@
 import React from 'react'
-import Row from 'components/Row'
 import styled from 'styled-components'
-import { AppDispatch } from '../../state'
-import { setToggle } from './../../state/pools/actions'
-import { useDispatch } from 'react-redux'
-import { usePoolsState } from './../../state/pools/hooks'
 const ToggleElement = styled.span<{ isLive?: boolean; isOnSwitch?: boolean }>`
   display: flex;
   justify-content: center;

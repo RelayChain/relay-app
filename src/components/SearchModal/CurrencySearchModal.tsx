@@ -13,7 +13,6 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   isCrossChain?: boolean
-  transferPage?: boolean
 }
 
 export default function CurrencySearchModal({
@@ -24,7 +23,6 @@ export default function CurrencySearchModal({
   otherSelectedCurrency,
   isCrossChain,
   showCommonBases = false,
-  transferPage = false
 }: CurrencySearchModalProps) {
   const [listView, setListView] = useState<boolean>(false)
   const lastOpen = useLast(isOpen)
@@ -46,9 +44,6 @@ export default function CurrencySearchModal({
   const handleClickChangeList = useCallback(() => {
     setListView(true)
   }, [])
-  const handleClickBack = useCallback(() => {
-    setListView(false)
-  }, [])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={84} minHeight={listView ? 40 : 84}>
@@ -61,7 +56,6 @@ export default function CurrencySearchModal({
         otherSelectedCurrency={otherSelectedCurrency}
         showCommonBases={showCommonBases}
         isCrossChain={isCrossChain}
-        transferPage={transferPage}
       />
     </Modal>
   )

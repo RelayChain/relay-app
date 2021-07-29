@@ -16,6 +16,8 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
 import WASLogo from '../../assets/images/crosschain/WAS.jpeg'
 import GDLLogo from '../../assets/images/crosschain/GDL.png'
+import BIOSLogo from '../../assets/images/crosschain/BIOS.png'
+import XIOTLogo from '../../assets/images/crosschain/XIOT.png'
 import Logo from '../Logo'
 import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
 import USDTLogo from '../../assets/images/crosschain/wUSDT.png'
@@ -33,10 +35,7 @@ import { crosschainConfig as crosschainConfigMainnet } from '../../constants/Cro
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
 
-const getTokenLogoURL = (address: string) => {
-  // return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/avalanche-tokens/${address}/logo.png`
-  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-}
+
 
 const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
@@ -53,6 +52,12 @@ const StyledLogo = styled(Logo) <{ size: string }>`
   border-radius: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
 `
+const StyledLogoURI = styled.img`
+  border-radius: 50%;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
+  width: 24px;
+  height: 24px;
+`
 
 export default function CurrencyLogo({
   currency,
@@ -63,6 +68,9 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
+  const getTokenLogoURL = (chain: string, address: string) => {
+    return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`    
+  }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
@@ -71,12 +79,17 @@ export default function CurrencyLogo({
       // find logos on ETH address for non-ETH assets
       let logoAddress = currency.address
       const allConfigTokens: any = []
+      // eslint-disable-next-line 
       crosschainConfig.chains.map(chain => {
+        // eslint-disable-next-line 
         chain.tokens.map(token => {
           allConfigTokens.push(token)
         })
       })
       const chosenToken = allConfigTokens.find((token: any) => token.address === currency.address)
+      const chosenTokenChainName = crosschainConfig.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
+      const chainName = !chosenTokenChainName ? 'ethereum': (chosenTokenChainName === 'Smart Chain' ) ? 'binance': chosenTokenChainName.toLowerCase()
+      
       const ethToken = crosschainConfig.chains[0].tokens.find(
         (token: any) => token?.assetBase === chosenToken?.assetBase
       )
@@ -85,15 +98,18 @@ export default function CurrencyLogo({
       }
 
       if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, getTokenLogoURL(logoAddress)]
+        return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
       }
 
-      return [getTokenLogoURL(logoAddress)]
+      return [getTokenLogoURL(chainName, logoAddress)]
     }
     return []
   }, [currency, uriLocations])
 
-  if (currency === ETHER) {
+  if(currency?.logoURI) {
+    return <StyledLogoURI src={currency?.logoURI} alt={`${currency?.symbol ?? 'token'} logo`} />
+  }
+  if (currency === ETHER || currency.symbol === 'ETH') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
 
@@ -131,6 +147,14 @@ export default function CurrencyLogo({
 
   if (['GDL'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />
+  }
+
+  if (['XIOT'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={XIOTLogo} size={size} style={style} />
+  }
+
+  if (['BIOS'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={BIOSLogo} size={size} style={style} />
   }
 
   // cross chain

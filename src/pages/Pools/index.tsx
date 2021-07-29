@@ -1,15 +1,12 @@
 import {
   AprObjectProps,
   setAprData,
-  setPoolsData,
-  setStackingInfo,
-  setToggle,
   setPoolEarnings
 } from './../../state/pools/actions'
 import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { filterPoolsItems, searchItems, setOptions } from 'utils/sortPoolsPage'
+import { filterPoolsItems, setOptions } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
@@ -240,7 +237,6 @@ export default function Pools() {
   const aprAllData = usePoolsState()
   const {
     aprData,
-    poolsData,
     weeklyEarnings,
     readyForHarvest,
     totalLiquidity,
@@ -289,8 +285,6 @@ export default function Pools() {
         aprData.forEach((dataItem: AprObjectProps) => {
           if (dataItem?.contract_addr === arrItem.stakingRewardAddress && !arrItem['APR']) {
             arrItem['APR'] = dataItem.APY
-          } else if (arrItem?.gondolaTokenId) {
-            arrItem['APR'] = (Math.random() * (50 - 30) + 30).toFixed(2)
           }
         })
       })
@@ -322,6 +316,7 @@ export default function Pools() {
     if (weeklyEarningsTotalValue !== earnings || readyForHarvestTotalValue !== harvest) {
       dispatch(setPoolEarnings({ weeklyEarningsTotalValue: earnings, readyForHarvestTotalValue: harvest }))
     }
+    // eslint-disable-next-line 
   }, [weeklyEarnings, readyForHarvest, stakingInfos])
 
   const onSortChange = (key: string, value: string | boolean) => {

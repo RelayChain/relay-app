@@ -1,17 +1,11 @@
-import { BigNumber, ethers, utils } from 'ethers'
-import React, { useEffect, useState } from 'react'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getSigner } from '../../utils'
-import styled, { ThemeContext } from 'styled-components'
-import { useTokenContract, useWDSDepositContract, useWISESaleContract } from '../../hooks/useContract'
-
-import { AutoColumn } from '../../components/Column'
+import { ethers } from 'ethers'
+import React, { useState } from 'react'
+import { getEtherscanLink } from '../../utils'
+import styled from 'styled-components'
+import { useWISESaleContract } from '../../hooks/useContract'
 import { ButtonOutlined } from '../../components/Button'
 import { ChainId } from '@zeroexchange/sdk'
 import { useActiveWeb3React } from '../../hooks'
-import useGasPrice from 'hooks/useGasPrice'
-
-const USDTTokenABI = require('../../constants/abis/USDTABI.json')
-
 
 const SwapFlexRow = styled.div`
 flex: 1;
@@ -91,17 +85,7 @@ const BuyWrap = styled.div`
       margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
 `
-const MaxButton = styled.p`
-  position: absolute;
-  font-size: .85;
-  right: 45px;
-  margin-top: 54px;
-  color: #1EF7E7;
-  cursor: pointer;
-`
-
 let web3React: any
-const WithDecimalsHexString = (value: string, decimals: number) => BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 
 const DEPOSIT_CONTRACT_ADDR = '0xe691fD6Ea139De7b28392e527124e82Cd0FF15Cc';
 
@@ -109,9 +93,7 @@ export default function WSDSale() {
   web3React = useActiveWeb3React()
   const wiseSale = useWISESaleContract(DEPOSIT_CONTRACT_ADDR)
 
-  const [limits, setLimits] = useState('0.0')
   const [amount, setAmount] = useState('0.0')
-  const [isLoading, setIsLoading] = useState(false)
   const [isPendingBuy, setIsPendingBuy] = useState(false)
   const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
 
@@ -133,9 +115,7 @@ export default function WSDSale() {
     }
   };
 
-
-
-  if (web3React.chainId != ChainId.SMART_CHAIN) {
+  if (web3React.chainId !== ChainId.SMART_CHAIN) {
     return (<>
       <div style={{ textAlign: 'center', fontSize: '1.5rem', display: 'block', background: 'rgba(0,0,0,.25)', borderRadius: '44px', padding: '2rem' }}>Switch to Binance Smart Chain!</div>
     </>);
@@ -167,7 +147,7 @@ export default function WSDSale() {
                   <p>Deposited successfully</p>
                   <a
                     href={getEtherscanLink(web3React.chainId as number, depositSuccessHash as string, 'transaction')}
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     View tx on the block explorer

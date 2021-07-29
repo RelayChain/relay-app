@@ -14,7 +14,6 @@ import styled from 'styled-components'
 import transactions from '../../graphql/queries/transactions'
 import { useQuery } from '@apollo/client'
 import useWindowDimensions from './../../hooks/useWindowDimensions'
-import zeroDayDatas from '../../graphql/queries/zeroDayDatas'
 import { dateFormatted } from 'utils/getFormattedMonth'
 import { Title } from '../../theme'
 
@@ -22,13 +21,13 @@ const BubbleMarginWrap = styled.div`
   display: flex;
   gap: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
- width: 100%;
- justify-content: space-between;
- align-items: center;
-`};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
- gap: 0.1rem;
-`};
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  `};
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  gap: 0.1rem;
+  `};
 `
 const Flex = styled.div<{ isColumn: boolean }>`
   margin: 20px auto 0;
@@ -100,7 +99,6 @@ export default function Home() {
   const [tvlData, setTvlData] = useState<TVLHistoryData[]>([])
 
   const { width } = useWindowDimensions()
-  const zeroData = useQuery(zeroDayDatas)
   const transactionsData = useQuery(transactions, {
     variables: {
       first: 12,

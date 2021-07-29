@@ -6,7 +6,6 @@ import { ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import styled from 'styled-components'
-import { useCrosschainState } from '../../state/crosschain/hooks'
 
 const Container = styled.div`
   border-radius: 14px;
@@ -134,7 +133,6 @@ const BlockchainSelector = ({
   onShowCrossChainModal: () => void
   onShowTransferChainModal: () => void
 }) => {
-  const { transferAmount } = useCrosschainState()
 
   const openChangeChainInfo = () => {
     onShowCrossChainModal()
