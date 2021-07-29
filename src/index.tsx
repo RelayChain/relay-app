@@ -9,7 +9,6 @@ import App from './pages/App'
 import ApplicationUpdater from './state/application/updater'
 import Blocklist from './components/Blocklist'
 import { HashRouter } from 'react-router-dom'
-import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
 import { NetworkContextName } from './constants'
 import { Provider } from 'react-redux'
@@ -28,6 +27,12 @@ const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
+
+console.debug = function() {
+  if(!process.env.REACT_APP_TESTNET) return;
+  const argumentsTyped: any = arguments;
+  console.log.apply(this, argumentsTyped);
+};
 
 function Updaters() {
   return (

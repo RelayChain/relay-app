@@ -749,12 +749,12 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x0000000000000000000000b67176655e7919a27aA34C279157124619aDFd4B05',
         },
         {
-          address: '0xEa83FCEe5875c8f09B0a9B999CBbB1CeD26A462B',
+          address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b',
           name: 'zAVAX',
           symbol: 'zAVAX',
           assetBase: 'AVAX',
           decimals: 18,
-          resourceId: '0x0000000000000000000000Ea83FCEe5875c8f09B0a9B999CBbB1CeD26A462B05',
+          resourceId: '0x00000000000000000000002C89bbc92BD86F8075d1DEcc58C7F4E0107f286b05',
         },
         {
           address: '0x317Edd9783a712Cb412806e6273d7c81C6738D98',

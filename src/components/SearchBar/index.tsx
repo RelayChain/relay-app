@@ -41,6 +41,7 @@ interface Props {
 }
 
 const SearchBar: React.FC<Props> = ({ value, onChange }) => {
+  // eslint-disable-next-line 
   const [toggled, setToggled] = useState(false)
   const inputEl = useRef(null)
 

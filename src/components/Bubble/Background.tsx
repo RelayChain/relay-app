@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import useWindowDimensions from './../../hooks/useWindowDimensions'
 import { isIOS, isFirefox } from 'react-device-detect'
 
 const BackgroundWrap = styled.div`

@@ -41,9 +41,6 @@ export default function BlockchainSearchModal({
   const handleClickChangeList = useCallback(() => {
     setListView(true)
   }, [])
-  const handleClickBack = useCallback(() => {
-    setListView(false)
-  }, [])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>

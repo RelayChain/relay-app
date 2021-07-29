@@ -1,4 +1,4 @@
-import { Book, BookOpen, DollarSign, Info, MessageCircle } from 'react-feather'
+import { Book, BookOpen, Info, MessageCircle } from 'react-feather'
 
 import { ExternalLink } from '../../theme'
 import Modal from '../Modal'

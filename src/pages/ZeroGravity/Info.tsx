@@ -10,7 +10,6 @@ import PageContainer from 'components/PageContainer';
 import { Title } from '../../theme'
 import WISESale from './wiseSale';
 import WSDSale from './wsdSale';
-import GrowSale from './growSale';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -20,12 +19,6 @@ const ImageContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-`
-const MiniImageContainer = styled.div`
-  height: 1.2rem;
-  & img {
-    height: 100%;
-  }
 `
 const InfoSection = styled.div`
   margin: 1rem 0;
@@ -226,10 +219,6 @@ export default function ZeroGravityInfo() {
         </ImageContainer>
         <InfoSection>
           <p>Future</p>
-          {/*<VerticalLine />
-          <MiniImageContainer>
-            <img src={idoData?.logo ?? ''} alt={idoData?.idoURL ?? ''}/>
-          </MiniImageContainer>*/}
           <VerticalLine />
           <p>{launchingString}</p>
         </InfoSection>
@@ -255,9 +244,8 @@ export default function ZeroGravityInfo() {
           </ButtonsSection>
         )}
         {
-          idoData?.idoURL == 'wise' ? <WISESale /> 
-          : idoData?.idoURL == 'wasder' ? <WSDSale /> 
-          // : idoData?.idoURL == 'grow' ? <GrowSale /> 
+          idoData?.idoURL === 'wise' ? <WISESale /> 
+          : idoData?.idoURL === 'wasder' ? <WSDSale />
           : <></>
         }
         <BgWrapper>

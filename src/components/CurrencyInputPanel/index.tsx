@@ -144,49 +144,6 @@ const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
   z-index: 1;
 `
 
-const CopyRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 1rem;
-  margin-top: -5px;
-  p {
-    margin-top: 0;
-    margin-bottom: 0;
-    background: rgba(255, 255, 255, 0.075);
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    opacity: 0.75;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    min-height: 25px;
-    min-width: 86px;
-    span {
-      margin-right: 4px;
-    }
-    .active {
-      display: block;
-    }
-    .inactive {
-      display: none;
-    }
-    &:active {
-      opacity: 1;
-      .active {
-        display: none;
-      }
-      .inactive {
-        display: block;
-      }
-    }
-  }
-`
-
 const Container = styled.div<{ hideInput: boolean }>`
   padding: 1rem 1.5rem;
   &.grayed-out {
@@ -305,6 +262,7 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+  // eslint-disable-next-line
   const [modal2Open, setModal2Open] = useState(false)
   const { account, chainId } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, chainId)

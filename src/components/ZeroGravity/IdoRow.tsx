@@ -1,4 +1,4 @@
-import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 
 import { NavLink } from 'react-router-dom'
 import React from 'react'
@@ -60,7 +60,7 @@ export default function IdoRow({ idoInfo}: { idoInfo: any }) {
   return (
     <RowContainer>
       <LogoWrapper>
-        <img src={idoInfo.logo} />
+        <img src={idoInfo.logo} alt='' />
       </LogoWrapper>
       <InfoSection className="mobile-hidden">
         {idoInfo.tierName}

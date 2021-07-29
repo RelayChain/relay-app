@@ -44,9 +44,6 @@ export default function CurrencySearchModal({
   const handleClickChangeList = useCallback(() => {
     setListView(true)
   }, [])
-  const handleClickBack = useCallback(() => {
-    setListView(false)
-  }, [])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={84} minHeight={listView ? 40 : 84}>

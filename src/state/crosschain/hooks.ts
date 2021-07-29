@@ -17,7 +17,6 @@ import {
   setCrosschainSwapDetails,
   setCrosschainTransferStatus,
   setCurrentChain,
-  setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
   setPendingTransfer,
@@ -235,7 +234,6 @@ export function useCrosschainHooks() {
     )
 
     const crosschainState = getCrosschainState()
-    console.log(crosschainState.currentChain.chainID);
     console.log(crosschainState.currentChain.chainID);
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     // const currentToken = currentChain.tokens
@@ -485,14 +483,17 @@ export function useCrosschainHooks() {
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+    if(currentToken.address !== '') {
+      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
 
-    const balance = (await tokenContract.balanceOf(web3React.account)).toString()
-    dispatch(
-      setCurrentTokenBalance({
-        balance: WithDecimals(balance)
-      })
-    )
+      const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+      dispatch(
+        setCurrentTokenBalance({
+          balance: WithDecimals(balance)
+        })
+      )
+    }
+
   }
 
   const UpdateFee = async () => {
@@ -525,6 +526,7 @@ export function useCrosschainHooks() {
 }
 
 export function useCrossChain() {
+
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
 
@@ -556,6 +558,7 @@ export function useCrossChain() {
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
+    
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
@@ -577,7 +580,7 @@ export function useCrossChain() {
       })
     )
     dispatch(setTransferAmount({ amount: '' }))
-    UpdateOwnTokenBalance().catch(console.error)
+    UpdateOwnTokenBalance() // .catch(console.error)
     UpdateFee().catch(console.error)
   }
 

@@ -5,9 +5,9 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { Activity } from 'react-feather'
 import { AppDispatch } from 'state'
 import { ButtonSecondary } from '../Button'
 import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
@@ -23,7 +23,6 @@ import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import WalletModal from '../WalletModal'
 import { shortenAddress } from '../../utils'
 import { useActiveWeb3React } from 'hooks'
-import { useCrosschainState } from 'state/crosschain/hooks'
 import { useDispatch } from 'react-redux'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -126,13 +125,6 @@ const Text = styled.p`
   width: fit-content;
   font-weight: 500;
 `
-
-const NetworkIcon = styled(Activity)`
-  margin-left: 0.25rem;
-  margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
-`
 const HeaderRowBetween = styled(RowBetween)`
     align-items: center;
 `
@@ -186,6 +178,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
+  useCrossChain();
   const {
     availableChains: allChains,
   } = useCrosschainState()
@@ -199,7 +192,7 @@ function Web3StatusInner() {
 
   const availableChains = useMemo(() => {
     return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
-  }, [allChains])
+  }, [allChains, chainId])
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -216,7 +209,7 @@ function Web3StatusInner() {
     setShowCrossChainModal(false)
   }
 
-  const [chainIdError, setChainIdError] = useState({} as UnsupportedChainIdError)
+  const [chainIdError] = useState({} as UnsupportedChainIdError)
   const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
 
   useEffect(() => {
@@ -224,6 +217,7 @@ function Web3StatusInner() {
       chainIdErrorPrev.current = chainIdError : chainIdErrorPrev.current
   }, [chainIdError])
 
+  // eslint-disable-next-line
   const checkCrossChainId = useCallback(() => {
     if (chainIdErrorPrev.current !== chainIdError) {
       setShowCrossChainModal(true)
@@ -250,6 +244,7 @@ function Web3StatusInner() {
       )
     }
 
+    // eslint-disable-next-line
   }, [chainIdErrorPrev])
   const onSelectTransferChain = (chain: CrosschainChain) => {
     dispatch(
