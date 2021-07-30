@@ -558,6 +558,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000f236c7EDda9c1e87036dD258bd9D1bcC37EA66C03'
         },
+        {
+          address: '0xb9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d6',
+          name: 'PERA',
+          symbol: 'PERA',
+          assetBase: 'PERA',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000b9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d603'
+        },
       ]
     },
     {
@@ -860,6 +868,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'WAS',
           decimals: 18,
           resourceId: '0x0000000000000000000000faEF64930CDD15a19B24EA71Efa14d37f240116905'
+        },
+        {
+          address: '0x52dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a47',
+          name: 'PERA',
+          symbol: 'PERA',
+          assetBase: 'PERA',
+          decimals: 18,
+          resourceId: '0x000000000000000000000052dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a4705'
         },
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
