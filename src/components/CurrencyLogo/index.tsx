@@ -86,17 +86,9 @@ export default function CurrencyLogo({
           allConfigTokens.push(token)
         })
       })
-      const chosenToken = allConfigTokens.find((token: any) => token.address === currency.address)
       const chosenTokenChainName = crosschainConfig.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
       const chainName = !chosenTokenChainName ? 'ethereum': (chosenTokenChainName === 'Smart Chain' ) ? 'binance': chosenTokenChainName.toLowerCase()
       
-      const ethToken = crosschainConfig.chains[0].tokens.find(
-        (token: any) => token?.assetBase === chosenToken?.assetBase
-      )
-      if (ethToken) {
-        logoAddress = ethToken.address
-      }
-
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
       }
@@ -158,7 +150,7 @@ export default function CurrencyLogo({
   }
 
   // cross chain
-  if (currency?.symbol === 'ETH' || currency?.symbol === 'wETH') {
+  if (['ETH', 'wETH', 'pngETH'].includes(currency?.symbol)) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   }
   if (currency?.symbol === 'USDT' || currency?.symbol === 'wUSDT') {
@@ -170,7 +162,7 @@ export default function CurrencyLogo({
   if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {
     return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
   }
-  if (currency?.symbol === 'DAI' || currency?.symbol === 'wDAI') {
+  if (['DAI', 'wDAI', 'pngDAI'].includes(currency?.symbol)) {
     return <StyledEthereumLogo src={DAILogo} size={size} style={style} />
   }
   if (currency?.symbol === 'WISB') {
@@ -241,6 +233,7 @@ export const getCurrencyLogoImage = (symbol: string | undefined) => {
     case 'GDL':
       return GDLLogo
     case 'ETH':
+      return EthereumLogo
     case 'wETH':
       return EthereumLogo
     case 'USDT':
@@ -253,6 +246,7 @@ export const getCurrencyLogoImage = (symbol: string | undefined) => {
     case 'wBTC':
       return BTCLogo
     case 'DAI':
+      return DAILogo
     case 'wDAI':
       return DAILogo
     case 'WISB':
