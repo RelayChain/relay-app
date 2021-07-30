@@ -603,6 +603,7 @@ export function useCrossChain() {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     UpdateOwnTokenBalance().catch(console.error)
     UpdateFee().catch(console.error)
+    // eslint-disable-next-line
   }, [account, currentToken, targetChain])
 }
 
