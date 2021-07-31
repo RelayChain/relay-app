@@ -45,6 +45,7 @@ import ZeroGravityInfo from './ZeroGravity/Info';
 import ZeroGravityKyc from './ZeroGravity/Kyc';
 import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
+import RelaySale from './Relay/relaySale'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -132,6 +133,7 @@ export default function App() {
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route exact strict path="/vote/:id" component={VotePage} />
                 <Route exact strict path="/transfer" component={Transfer} />
+                <Route exact strict path="/relay-sale" component={RelaySale} />
                 <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
                 <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
                 <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />

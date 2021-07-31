@@ -163,7 +163,7 @@ export default function SideMenu() {
           </HeaderExternalLink>
           <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
             <IconLink>
-              <Icon icon="planet" active={pathname.includes('zero-gravity')} />
+              <Icon icon="trade" active={pathname.includes('zero-gravity')} />
             </IconLink>
             <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
           </StyledNavLink>
@@ -180,6 +180,12 @@ export default function SideMenu() {
             </IconLink>
             Buy ZERO
           </HeaderExternalLink>
+          <StyledNavLink id={`pools-nav-link`} to={'/relay-sale'} onClick={handleSideMenuOpen}>
+            <IconLink>
+              <Icon icon="planet" active={pathname.includes('relay-sale')} />
+            </IconLink>
+            <span className={pathname.includes('relay-sale') ? 'active' : ''}>{t('Zero to Relay')}</span>
+          </StyledNavLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px' }}>
               <Icon icon="more" />
