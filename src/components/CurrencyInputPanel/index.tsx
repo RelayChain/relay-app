@@ -102,7 +102,7 @@ const SectionLabel = styled.span`
 `};
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
@@ -117,7 +117,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
   display: none;
   margin: 0 0.25rem 0 0.5rem;
   path {
@@ -283,14 +283,14 @@ export default function CurrencyInputPanel({
   return (
     <>
       <InputPanel id={id} transferPage={transferPage}>
-        <Container hideInput={hideInput} className={ grayedOut ? 'grayed-out' : ''}>
+        <Container hideInput={hideInput} className={grayedOut ? 'grayed-out' : ''}>
           {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
               <RowBetweenTransfer>
                 <SectionLabel>{label}</SectionLabel>
                 {account && (
                   <TYPE.body
-                    onClick={hasABalance ? onMax : () => {}}
+                    onClick={hasABalance ? onMax : () => { }}
                     color={theme.text2}
                     fontWeight={500}
                     fontSize={14}
@@ -298,8 +298,8 @@ export default function CurrencyInputPanel({
                   >
                     {!hideBalance && !!altCurrency && selectedCurrencyBalance && hasABalance
                       ? (customBalanceText ?? 'Balance: ') +
-                        `${selectedCurrencyBalance
-                          ?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
+                      `${selectedCurrencyBalance
+                        ?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
                           groupSeparator: ','
                         })}`
                       : ''}
@@ -329,7 +329,7 @@ export default function CurrencyInputPanel({
               <CurrencySelect
                 style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
                 selected={!!altCurrency}
-                className={`open-currency-select-button ${ hideInput ? 'centered' : ''}`}
+                className={`open-currency-select-button ${hideInput ? 'centered' : ''}`}
                 onClick={() => {
                   if (!disableCurrencySelect) {
                     setModalOpen(true)
@@ -354,13 +354,13 @@ export default function CurrencyInputPanel({
                       {isCrossChain && label === 'To'
                         ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                         : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                            ? altCurrency.symbol.slice(0, 4) +
-                              '...' +
-                              altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                            : altCurrency?.symbol) ||
-                            <StyledTokenNameDeafult>
-                              { !disableCurrencySelect ? t('selectToken') : ''}
-                            </StyledTokenNameDeafult>}
+                          ? altCurrency.symbol.slice(0, 4) +
+                          '...' +
+                          altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                          : altCurrency?.symbol) ||
+                        <StyledTokenNameDeafult>
+                          {!disableCurrencySelect ? t('selectToken') : ''}
+                        </StyledTokenNameDeafult>}
                     </StyledTokenName>
                   )}
                   {!disableCurrencySelect && !disableBlockchainSelect && <StyledDropDown selected={!!altCurrency} />}

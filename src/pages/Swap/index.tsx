@@ -276,13 +276,13 @@ export default function Swap({
 
   const parsedAmounts = showWrap
     ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
-      }
+      [Field.INPUT]: parsedAmount,
+      [Field.OUTPUT]: parsedAmount
+    }
     : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-      }
+      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+    }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -372,7 +372,7 @@ export default function Swap({
           txHash: undefined
         })
       })
-      // eslint-disable-next-line 
+    // eslint-disable-next-line 
   }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
 
   // errors
@@ -530,13 +530,13 @@ export default function Swap({
       })
       .concat(userTokens, stakedTokens)
 
-      const filteredArray: any = [];
-      arr.forEach((item: any) => {
-        const i = filteredArray.findIndex((x: any) => x.address === item.address);
-        if(i <= -1){
-          filteredArray.push(item);
-        }
-      })
+    const filteredArray: any = [];
+    arr.forEach((item: any) => {
+      const i = filteredArray.findIndex((x: any) => x.address === item.address);
+      if (i <= -1) {
+        filteredArray.push(item);
+      }
+    })
 
     return [...new Set(filteredArray)]
     // eslint-disable-next-line
@@ -800,8 +800,8 @@ export default function Swap({
                             {swapInputError
                               ? swapInputError
                               : priceImpactSeverity > 3 && !isExpertMode
-                              ? `Price Impact Too High`
-                              : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                                ? `Price Impact Too High`
+                                : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                           </Text>
                           <IconWrap>
                             <Icon icon="swap" color="white" />

@@ -53,6 +53,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 6,
           resourceId: '0x0000000000000000000000c66227E44bf1E6F043919A65707b826e3E9f113201'
         },
+        {
+          address: '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a',
+          name: 'ZERO',
+          symbol: 'ZERO',
+          assetBase: 'ZERO',
+          decimals: 18,
+          resourceId: '0x00000000000000000000009EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a01'
+        },
+        {
+          address: '0x2f56F53904AE2e8b7185d2bDb0D86Eb50dA85a55',
+          name: 'RELAY',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x00000000000000000000002f56F53904AE2e8b7185d2bDb0D86Eb50dA85a5501'
+        },
       ]
     },
     {
