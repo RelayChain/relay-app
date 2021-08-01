@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from 'react'
 import { RowBetween, RowFixed } from '../Row'
-import { X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -15,6 +14,7 @@ import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import { X } from 'react-feather'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 // const StyledMenuIcon = styled(Settings)`
@@ -80,7 +80,7 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span<{isLightMode?: boolean}>`
   min-width: 21.125rem;
-  background: ${({isLightMode}) => isLightMode ? 'rgba(47,53,115,0.72)' : 'mediumpurple'} ; 
+  background: ${({isLightMode}) => isLightMode ? 'rgba(47,53,115,0.72)' : 'mediumpurple'} ;
   backdrop-filter: blur(100px);
   border-radius: 44px;
   padding: 10px;
@@ -118,7 +118,7 @@ const ModalContentWrapper = styled.div`
   border-radius: 44px;
 `
  interface SettingsTabProps {
-  isLightMode:boolean
+  isLightMode?:boolean
 }
 
 

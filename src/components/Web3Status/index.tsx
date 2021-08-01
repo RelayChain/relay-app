@@ -5,6 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components'
+import { useApplicationState, useWalletModalToggle } from '../../state/application/hooks'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Activity } from 'react-feather'
@@ -28,7 +29,6 @@ import { useDispatch } from 'react-redux'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useTranslation } from 'react-i18next'
-import { useWalletModalToggle, useApplicationState } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -194,6 +194,8 @@ function Web3StatusInner() {
   const { account, connector, error } = useWeb3React()
   const { ENSName } = useENSName(account ?? undefined)
 
+  console.log("ALLL ============ ", useWeb3React());
+  
   const allTransactions = useAllTransactions()
   const { chainId } = useActiveWeb3React()
 
