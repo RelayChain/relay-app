@@ -4,6 +4,7 @@ import {
   OpenClaimAddressModalAndRedirectToSwap,
   RedirectPathToHomeOnly,
   RedirectPathToSwapOnly,
+  RedirectPathToTransferOnly,
   RedirectToSwap
 } from './Swap/redirects'
 import React, { Suspense } from 'react'
@@ -32,6 +33,7 @@ import PoolFinder from './PoolFinder'
 import Pools from './Pools'
 import Popups from '../components/Popups'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
+import RelaySale from './Relay/relaySale'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import SideMenu from '../components/SideMenu'
@@ -45,7 +47,6 @@ import ZeroGravityInfo from './ZeroGravity/Info';
 import ZeroGravityKyc from './ZeroGravity/Kyc';
 import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
-import RelaySale from './Relay/relaySale'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -137,7 +138,7 @@ export default function App() {
                 <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
                 <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
                 <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />
-                <Route component={RedirectPathToHomeOnly} />
+                <Route component={RedirectPathToTransferOnly} />
               </Switch>
             </Web3ReactManager>
           </BodyWrapper>
