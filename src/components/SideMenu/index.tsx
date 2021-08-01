@@ -101,6 +101,7 @@ const Title = styled.a`
   width: 66px;
   height: 66px;
   cursor: pointer;
+  z-index: 999;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   display: none;
   `};
