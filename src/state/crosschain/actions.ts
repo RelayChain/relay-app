@@ -25,6 +25,9 @@ export interface CrosschainChain {
   resourceId?: string
   isNativeWrappedToken?: boolean
   assetBase?: string
+  exchangeContractAddress?: string
+  rateZeroToRelay?: number
+  zeroContractAddress?: string
 }
 
 export enum ChainTransferState {

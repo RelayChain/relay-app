@@ -80,7 +80,16 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
       result = {
         name: chain.name,
         chainID: String(chain.chainId),
-        symbol: chain.nativeTokenSymbol
+        symbol: chain.nativeTokenSymbol,
+
+      }
+      if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
+        const exchangeFields = {
+          exchangeContractAddress: chain.exchangeContractAddress,
+          rateZeroToRelay: chain.rateZeroToRelay,
+          zeroContractAddress: chain.zeroContractAddress
+        }
+        result = { ...result, ...exchangeFields }
       }
     }
   }
@@ -483,7 +492,7 @@ export function useCrosschainHooks() {
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    if(currentToken.address !== '') {
+    if (currentToken.address !== '') {
       const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
 
       const balance = (await tokenContract.balanceOf(web3React.account)).toString()
@@ -509,7 +518,7 @@ export function useCrosschainHooks() {
     const value = WithDecimals(fee);
 
     dispatch(
-      setCrosschainFee({   
+      setCrosschainFee({
         value
       })
     )
@@ -558,7 +567,7 @@ export function useCrossChain() {
 
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
-    
+
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
