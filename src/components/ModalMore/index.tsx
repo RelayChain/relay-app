@@ -101,7 +101,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Guides
         </MenuItem>
 
-        <MenuItem id="link" href="https://0.exchange">
+        <MenuItem id="link" href="https://relaychain.com">
           <IconLink>
             <Info size={20} />
           </IconLink>
