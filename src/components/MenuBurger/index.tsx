@@ -1,6 +1,6 @@
+import LogoDark from './../../assets/images/relay-icon.png'
 import React from 'react'
 import styled from 'styled-components'
-import LogoDark from './../../assets/images/0-icon.png'
 
 const Header = styled.div`
   display: none;
@@ -68,7 +68,7 @@ const StyledBurger = styled.button<{ open?: boolean }>`
     :nth-child(3) {
       transform: ${({ open }) =>
         open ? `rotate(-45deg) scaleX(${Math.sqrt(2)})` : `rotate(0) scaleX(${Math.sqrt(2)})`};
-    
+
   }
 `
 
