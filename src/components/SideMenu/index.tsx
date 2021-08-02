@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
-import LogoDark from './../../assets/images/0-icon.png'
+import LogoDark from './../../assets/images/relay-icon.png'
 import MenuBurger from './../MenuBurger'
 import ModalMore from './../ModalMore'
 import { NavLink } from 'react-router-dom'
@@ -101,6 +101,7 @@ const Title = styled.a`
   width: 66px;
   height: 66px;
   cursor: pointer;
+  z-index: 999;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   display: none;
   `};
@@ -131,11 +132,17 @@ export default function SideMenu() {
           <img width={'100%'} src={LogoDark} alt="logo" />
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={handleSideMenuOpen}>
+          {/*<StyledNavLink id={`swap-nav-link`} to={'/home'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="home" active={pathname === '/home'} />
             </IconLink>
             <span className={pathname === '/home' ? 'active' : ''}>{t('Home')}</span>
+          </StyledNavLink> */}
+          <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={handleSideMenuOpen}>
+            <IconLink>
+              <Icon icon="bridges" active={pathname === '/transfer'} />
+            </IconLink>
+            <span className={pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={handleSideMenuOpen}>
             <IconLink>
@@ -143,24 +150,20 @@ export default function SideMenu() {
             </IconLink>
             <span className={pathname === '/swap' ? 'active' : ''}>{t('Swap')}</span>
           </StyledNavLink>
-          <StyledNavLink id={`transfer-nav-link`} to={'/transfer'} onClick={handleSideMenuOpen}>
-            <IconLink>
-              <Icon icon="bridges" active={pathname === '/transfer'} />
-            </IconLink>
-            <span className={pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
-          </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
             <span className={pathname === '/pools' ? 'active' : ''}>{t('Pools')}</span>
           </StyledNavLink>
-          <HeaderExternalLink href={`https://charts.0.exchange`}>
-            <IconLink>
-              <Icon icon="charts" />
-            </IconLink>
-            {t('Charts')}
-          </HeaderExternalLink>
+          {/*
+            <HeaderExternalLink href={`https://charts.0.exchange`}>
+              <IconLink>
+                <Icon icon="charts" />
+              </IconLink>
+              {t('Charts')}
+            </HeaderExternalLink>
+          */}
           <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="trade" active={pathname.includes('zero-gravity')} />

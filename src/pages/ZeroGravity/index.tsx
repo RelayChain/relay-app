@@ -1,13 +1,13 @@
-import { ButtonOutlined } from '../../components/Button'
+import { ExternalLink, Title } from '../../theme'
 import React, { useMemo, useState } from 'react';
 
-import { ExternalLink, Title } from '../../theme'
+import { ButtonOutlined } from '../../components/Button'
 import { IDO_LIST } from '../../constants/idos';
 import IdoRow from '../../components/ZeroGravity/IdoRow';
 import PageContainer from '../../components/PageContainer'
 import Toggle from '../../components/Toggle';
-import styled from 'styled-components';
 import moment from 'moment';
+import styled from 'styled-components';
 
 const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none !important;
@@ -109,11 +109,8 @@ export default function ZeroGravityList() {
             toggle={onHandleToggleActive}
             activeText="Live"
             inActiveText="Finished"
-            width="186px" 
+            width="186px"
           />
-          <StyledExternalLink href={`https://0.exchange/partners`}>
-            <ButtonOutlined className="launch-button green">Launch My Token</ButtonOutlined>
-          </StyledExternalLink>
         </ControlsContainer>
 
         <ListContainer>

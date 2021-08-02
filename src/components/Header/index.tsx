@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { useCrosschainState } from 'state/crosschain/hooks'
 
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
@@ -15,6 +14,7 @@ import { YellowCard } from '../Card'
 import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
 const HeaderFrame = styled.div`
@@ -47,6 +47,9 @@ const HideSmall = styled.span`
 const LogoContainer = styled.div`
   display: flex;
   flex-grow: 1;
+`
+const SupTitle = styled.h1`
+  font-size: 40px;
 `
 const HeaderControls = styled.div`
   padding: 22px 19px;
@@ -252,7 +255,7 @@ const NetworkSwitcher = () => {
   )
 }
 const Header = () => {
-  
+
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
   let label,
@@ -268,7 +271,7 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <img src={ZeroLogo} alt="Zero logotype" />
+          <SupTitle>Relay</SupTitle>
         </LogoContainer>
       </HideMedium>
       {account ? (

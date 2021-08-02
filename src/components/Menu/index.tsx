@@ -99,30 +99,30 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="guides-link" href="https://zero-exchange.gitbook.io/zero-exchange-docs/">
+          <MenuItem id="guides-link" href="https://docs.relaychain.com">
             <BookOpen size={14} />
-            Guides
+            Docs
           </MenuItem>
-          <MenuItem id="home-link" href="https://0.exchange">
+          <MenuItem id="home-link" href="https://relaychain.com">
             <Info size={14} />
             Homepage
           </MenuItem>
-          <MenuItem id="blog-link" href="https://medium.com/@OfficialZeroDex/">
+          <MenuItem id="blog-link" href="https://medium.com/@Relay_Chain">
             <BookOpen size={14} />
             Blog
           </MenuItem>
-          <MenuItem id="telegram-link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+          <MenuItem id="telegram-link" href="https://t.me/relaychaincommunity">
             <MessageCircle size={14} />
             Telegram
           </MenuItem>
-          <MenuItem id="discord-link" href="https://discord.gg/XtZTNVTX5T">
+          <MenuItem id="discord-link" href="https://discord.gg/sm6sbUFY">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="coingecko-link" href="https://www.coingecko.com/en/coins/zero-exchange">
+          {/*<MenuItem id="coingecko-link" href="https://www.coingecko.com/en/coins/zero-exchange">
             <img style={{ float: 'left', width: '14px', height: '14px', marginRight: '9px', marginTop: '3px' }}src="/images/coingecko.png" />
             CoinGecko
-          </MenuItem>
+          </MenuItem>*/}
         </MenuFlyout>
       )}
     </StyledMenu>
