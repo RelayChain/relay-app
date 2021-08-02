@@ -1,85 +1,84 @@
+import React, { useMemo, useState, useEffect } from 'react'
 import { BigNumber, ethers, utils } from 'ethers'
-import React, { useMemo, useState } from 'react'
-import { getEtherscanLink } from '../../utils'
+import { Token } from '@zeroexchange/sdk'
 import styled from 'styled-components'
+import { getEtherscanLink } from '../../utils'
 import { useRelayaleContract, useZeroContract } from '../../hooks/useContract'
 import { ButtonOutlined } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
-import { useEffect } from 'react'
 import { useETHBalances } from 'state/wallet/hooks'
 import BalanceItem from 'components/BalanceItem'
 import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
-import { ChainId, CurrencyAmount, JSBI, Token, Trade } from '@zeroexchange/sdk'
 import { useUserAddedTokens } from 'state/user/hooks'
 import useWindowDimensions from 'hooks/useWindowDimensions'
-import { parseUnits } from 'ethers/lib/utils'
+
 
 const SwapFlexRow = styled.div`
-flex: 1;
-width: 100%;
-margin-left: auto;
-margin-right: auto;
+    flex: 1;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 `
 const InputWrap = styled.div` 
-display: flex
+    display: flex
 `
 const SwapWrap = styled.div`
-font-family: Poppins;
-position: relative;
-width: 400px;
-max-width: 100%;
-padding: 28px 34px;
-background: rgba(47, 53, 115, 0.32);
-box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
-backdrop-filter: blur(28px);
-border-radius: 44px;
-margin-left: auto;
-margin-right: auto;
-margin-top: 2rem;
-${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-top: 20px
-    margin-right: auto;
+    font-family: Poppins;
+    position: relative;
+    width: 400px;
+    max-width: 100%;
+    padding: 28px 34px;
+    background: rgba(47, 53, 115, 0.32);
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+    backdrop-filter: blur(28px);
+    border-radius: 44px;
     margin-left: auto;
-`};
-${({ theme }) => theme.mediaWidth.upToSmall`
-width: 100%;
-`};
+    margin-right: auto;
+    margin-top: 2rem;
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        margin-top: 20px
+        margin-right: auto;
+        margin-left: auto;
+    `};
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    `};
 `
 const StyledBalanceMax = styled.button`
-  height: 35px;
-  border: 2px solid #1ef7e7;
-  background: transparent;
-  border-radius: 100px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: #1ef7e7;
-  transition: all 0.2s ease-in-out;
-  padding-left: 10px;
-  padding-right: 10px;
-  :hover {
+height: 35px;
+border: 2px solid #1ef7e7;
+background: transparent;
+border-radius: 100px;
+font-size: 0.875rem;
+font-weight: 500;
+cursor: pointer;
+margin-right: 0.5rem;
+color: #1ef7e7;
+transition: all 0.2s ease-in-out;
+padding-left: 10px;
+padding-right: 10px;
+:hover {
     opacity: 0.9;
-  }
-  :focus {
+    }
+    :focus {
     outline: none;
-  }
+}
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 15px auto 0;
-  `};
+    `};
 `
 
 const SwapFlex = styled.div`
-display: flex;
-justify-content: space-between;
-width: 100%;
-flex-wrap: wrap;
-gap: 1rem;
-${({ theme }) => theme.mediaWidth.upToMedium`
-flex-direction: column;
-align-items: center;
-`};
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 1rem;
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+    align-items: center;
+    `};
 `
 const ButtonsFlex = styled.div`
     display: flex;
@@ -122,56 +121,52 @@ const BuyWrap = styled.div`
 `
 
 const TextBalance = styled.h3`
-  font-size: 32px;
-  white-space: nowrap;
-  margin-bottom: 1rem;
-  text-align: center;
-  margin-bottom: -4px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  font-size: 24px;
-`};
+    font-size: 32px;
+    white-space: nowrap;
+    margin-bottom: 1rem;
+    text-align: center;
+    margin-bottom: -4px;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 24px;
+    `};
 `
 const BalanceRow = styled.div<{ isColumn?: boolean }>`
-  flex: 1;
-  width: 100%;
-  display: ${({ isColumn }) => (isColumn ? 'flex' : 'block')};
-  flex-direction: ${({ isColumn }) => (isColumn ? 'column' : 'row')};
-  align-items: ${({ isColumn }) => (isColumn ? 'center' : '')};
-  min-width: 300px;
-  max-height: 570px;
-  border-radius: 44px;
-  overflow-y: scroll;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  #style-7::-webkit-scrollbar-track {
+    flex: 1;
+    width: 100%;
+    display: ${({ isColumn }) => (isColumn ? 'flex' : 'block')};
+    flex-direction: ${({ isColumn }) => (isColumn ? 'column' : 'row')};
+    align-items: ${({ isColumn }) => (isColumn ? 'center' : '')};
+    min-width: 300px;
+    max-height: 570px;
+    border-radius: 44px;
+    overflow-y: scroll;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    #style-7::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 10px;
-  }
+    }
 
-  &::-webkit-scrollbar {
+    &::-webkit-scrollbar {
     width: 10px;
     background-color: rgba(0, 0, 0, 0.5);
-  }
+    }
 
-  &::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0.44, rgb(41, 32, 98)),
-      color-stop(0.72, rgb(51, 40, 123)),
-      color-stop(0.86, rgb(61, 49, 148))
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.44, rgb(41, 32, 98)),
+    color-stop(0.72, rgb(51, 40, 123)),
+    color-stop(0.86, rgb(61, 49, 148))
     );
-  }
+    }
 `
 
 let web3React: any
-
-const EXCHANGE_CONTRACT_ADDR = '0xAAD98cC51e7D5F0BA6349Dd165188aE842aD739F'
-const ZERO_CONTRACT_ADDR = '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a'
-const RATE_ZERO_TO_RELAY = 0.01
 
 export default function RelaySale() {
     const {
@@ -179,40 +174,47 @@ export default function RelaySale() {
         currentChain
     } = useCrosschainState()
     web3React = useActiveWeb3React()
-    const exchangeContract = useRelayaleContract(EXCHANGE_CONTRACT_ADDR)
-    const zeroContract = useZeroContract(ZERO_CONTRACT_ADDR)
+    const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
+    const zeroContract = useZeroContract(currentChain.zeroContractAddress)
     const { account, chainId } = useActiveWeb3React()
     const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountZero, setAmountZero] = useState('0.0')
+    const [maxAmountZero, setMaxAmountZero] = useState('0.0')
     const [amountRelay, setAmountRelay] = useState('0.0')
-    const [isPendingExchange, setisPendingExchange] = useState(false)
+    const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
     let resSwap: any = null
     const onSwap = async () => {
         try {
-            setisPendingExchange(true)
-            // const amountToSpend = await zeroContract?.allowance('0x4D1E260E63e9331C4552991874dA4FBF4Aa6A3df', EXCHANGE_CONTRACT_ADDR)
-            // const maxAmount = BigNumber.from(amountToSpend)
+            setIsPending(true)
             const inputValue = BigNumber.from(utils.parseUnits(amountZero, 18))
-            //const isSwapAvailable = maxAmount.gte(inputValue)             
             if (isApprove) {
+                resSwap = await zeroContract?.approve(currentChain.exchangeContractAddress, inputValue.toString())
+                await resSwap.wait()
+                setDepositSuccessHash(resSwap.hash)
+                if (depositSuccessHash) {
+                    setIsPending(false)
+                }
+
+            } else {
                 resSwap = await exchangeContract?.swap(inputValue.toHexString(), {
                     gasPrice: 10 * 10 ** 9,
                     gasLimit: 150000,
                 })
                 await resSwap.wait()
                 setDepositSuccessHash(resSwap.hash)
-            } else {
-                await zeroContract?.approve(EXCHANGE_CONTRACT_ADDR, inputValue.toHexString())
+                if (depositSuccessHash) {
+                    setIsPending(false)
+                }
             }
 
         } catch (e) {
-            setisPendingExchange(false)
+            setIsPending(false)
             console.log(e)
         } finally {
-            setisPendingExchange(false)
+            setIsPending(false)
         }
     };
     useEffect(() => {
@@ -223,8 +225,10 @@ export default function RelaySale() {
 
     useEffect(() => {
         const getMaxAmount = async () => {
-            const amountToSpend = await zeroContract?.allowance(account, EXCHANGE_CONTRACT_ADDR)
+            const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress)
             setAllowanceAmount(BigNumber.from(amountToSpend))
+            const maxUserBalance = await zeroContract?.balanceOf(account)
+            setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
         }
         getMaxAmount()
 
@@ -237,17 +241,19 @@ export default function RelaySale() {
         }
 
 
-    }, [amountZero])
+    }, [amountZero, allowanceAmount])
     useEffect(() => {
-        const equalRelayAmount = String(+amountZero * RATE_ZERO_TO_RELAY)
-        setAmountRelay(equalRelayAmount)
-    }, [amountZero])
+        if (currentChain?.rateZeroToRelay) {
+            const equalRelayAmount = String(+amountZero * currentChain?.rateZeroToRelay)
+            setAmountRelay(equalRelayAmount)
+        }
+
+    }, [amountZero, currentChain])
     const userTokens = useUserAddedTokens()
         ?.filter((x: any) => x.chainId === chainId)
         ?.map((x: any) => {
             return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
         })
-    const [stakedTokens, setStakedTokens] = useState<Token[]>([])
 
     const tokenBalances = useMemo(() => {
         const arr = availableTokens
@@ -262,7 +268,6 @@ export default function RelaySale() {
                     tokenData?.name
                 )
             })
-            .concat(userTokens, stakedTokens)
 
         const filteredArray: any = [];
         arr.forEach((item: any) => {
@@ -285,12 +290,13 @@ export default function RelaySale() {
     }
 
     useEffect(() => {
-    }, [tokenBalances])
+        if (+amountZero >= +maxAmountZero) {
+            setAmountZero(maxAmountZero)
+        }
+    }, [amountZero, maxAmountZero])
 
     const maxBalance = async () => {
-        const maxBalance = await zeroContract?.balanceOf(account)
-        console.log('maxBalance.toString() :>> ', maxBalance.toString());
-        return maxBalance
+        setAmountZero(maxAmountZero)
     }
     return (
         <>
@@ -305,19 +311,19 @@ export default function RelaySale() {
                                     <>
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountZero} onChange={e => setAmountZero(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
-                                        <div>{amountRelay} Relay</div>
+                                        {!isApprove && <div>{amountRelay} Relay</div>}
                                         <ButtonsFlex>
 
-                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPendingExchange ? 'disabled' : ''}`} onClick={onSwap}>
-                                                {isApprove ? 'Approve' : 'Swap'}{isPendingExchange ? '... pending' : ''}
+                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending ? 'disabled' : ''}`} onClick={onSwap}>
+                                                {isApprove ? 'Approve' : 'Swap'}{isPending ? '... pending' : ''}
                                             </ButtonOutlined>
                                         </ButtonsFlex>
                                     </>
                                 )}
                             </>
-                            {depositSuccessHash ? (
+                            {depositSuccessHash && !isPending ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <p>Exchange successfully</p>
+                                    {isApprove ? <p> Approve successfully</p> : <p>Exchange successfully</p>}
                                     <a
                                         href={getEtherscanLink(web3React.chainId as number, depositSuccessHash as string, 'transaction')}
                                         rel="noopener noreferrer"

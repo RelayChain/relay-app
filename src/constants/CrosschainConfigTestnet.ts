@@ -26,6 +26,9 @@ export type BridgeConfig = {
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string
   defaultGasPrice?: number
+  exchangeContractAddress?: string
+  rateZeroToRelay?: number
+  zeroContractAddress?: string
 }
 
 export type ChainbridgeConfig = {
@@ -44,6 +47,9 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       blockExplorer: 'https://rinkeby.etherscan.io',
       nativeTokenSymbol: 'ETH',
+      exchangeContractAddress: '0xAAD98cC51e7D5F0BA6349Dd165188aE842aD739F',
+      rateZeroToRelay: 0.01,
+      zeroContractAddress: '0x9EfCe00Be4E0c2D9aEF18aACe4e273D9ebcf574a',
       tokens: [
         {
           address: '0xc66227E44bf1E6F043919A65707b826e3E9f1132',
