@@ -14,6 +14,7 @@ import HTLogo from '../../assets/images/ht.png'
 // import DEVLogo from '../../assets/images/dev-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import INDALogo from '../../assets/images/crosschain/INDA.png'
+import RELAYLogo from '../../assets/images/crosschain/RELAY.png'
 import WASLogo from '../../assets/images/crosschain/WAS.jpeg'
 import GDLLogo from '../../assets/images/crosschain/GDL.png'
 import BIOSLogo from '../../assets/images/crosschain/BIOS.png'
@@ -147,6 +148,10 @@ export default function CurrencyLogo({
 
   if (['BIOS'].includes(String(currency?.symbol))) {
     return <StyledEthereumLogo src={BIOSLogo} size={size} style={style} />
+  }
+
+  if (['RELAY'].includes(String(currency?.symbol))) {
+    return <StyledEthereumLogo src={RELAYLogo} size={size} style={style} />
   }
 
   // cross chain
