@@ -1,7 +1,6 @@
-import { ExternalLink, Title } from '../../theme'
+import { Title } from '../../theme'
 import React, { useMemo, useState } from 'react';
 
-import { ButtonOutlined } from '../../components/Button'
 import { IDO_LIST } from '../../constants/idos';
 import IdoRow from '../../components/ZeroGravity/IdoRow';
 import PageContainer from '../../components/PageContainer'
@@ -9,13 +8,6 @@ import Toggle from '../../components/Toggle';
 import moment from 'moment';
 import styled from 'styled-components';
 
-const StyledExternalLink = styled(ExternalLink)`
-  text-decoration: none !important;
-  margin-left: auto;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-right: auto;
-  `};
-`
 
 const SubTitle = styled.h3`
   width: 100%;

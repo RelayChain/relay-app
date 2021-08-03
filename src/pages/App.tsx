@@ -2,7 +2,6 @@ import './snow.css'
 
 import {
   OpenClaimAddressModalAndRedirectToSwap,
-  RedirectPathToHomeOnly,
   RedirectPathToSwapOnly,
   RedirectPathToTransferOnly,
   RedirectToSwap
