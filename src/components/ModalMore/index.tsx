@@ -94,11 +94,11 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
       <ModalContainer>
         <Cross onClick={onDismiss} />
 
-        <MenuItem href={`https://0-exchange.gitbook.io/0-exchange-docs/`}>
+        <MenuItem href={`https://docs.relaychain.com`}>
           <IconLink>
             <Book size={20} />
           </IconLink>
-          Guides
+          Docs
         </MenuItem>
 
         <MenuItem id="link" href="https://relaychain.com">
@@ -108,32 +108,25 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Home
         </MenuItem>
 
-        <MenuItem id="link" href="https://medium.com/@OfficialZeroDex">
+        <MenuItem id="link" href="https://medium.com/@Relay_Chain">
           <IconLink>
             <BookOpen size={20} />
           </IconLink>
           Blog
         </MenuItem>
 
-        <MenuItem id="link" href="https://web.telegram.org/#/im?p=@ZeroExchangeCommunity">
+        <MenuItem id="link" href="https://t.me/relaychaincommunity">
           <IconLink>
             <MessageCircle size={20} />
           </IconLink>
           Telegram
         </MenuItem>
 
-        <MenuItem id="link" href="https://discord.gg/XtZTNVTX5T">
+        <MenuItem id="link" href="https://discord.gg/sm6sbUFY">
           <IconLink>
             <MessageCircle size={20} />
           </IconLink>
           Discord
-        </MenuItem>
-
-        <MenuItem id="link" href="https://www.coingecko.com/en/coins/zero-exchange">
-          <IconLink>
-            <img alt="coingecko" style={{ float: 'left', width: '20px', height: '20px' }} src="/images/coingecko.png" />
-          </IconLink>
-          CoinGecko
         </MenuItem>
       </ModalContainer>
     </Modal>

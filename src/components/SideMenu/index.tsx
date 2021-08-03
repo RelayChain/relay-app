@@ -144,12 +144,12 @@ export default function SideMenu() {
             </IconLink>
             <span className={pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} onClick={handleSideMenuOpen}>
+          <HeaderExternalLink href={`https://quickswap.exchange/#/swap?inputCurrency=0x831753dd7087cac61ab5644b308642cc1c33dc13&outputCurrency=0x904371845bc56dcbbcf0225ef84a669b2fd6bd0d`}>
             <IconLink>
-              <Icon icon="swap" active={pathname === '/swap'} />
+              <Icon icon="swap" />
             </IconLink>
-            <span className={pathname === '/swap' ? 'active' : ''}>{t('Swap')}</span>
-          </StyledNavLink>
+            {t('Swap')}
+          </HeaderExternalLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="earn" active={pathname === '/pools'} />
@@ -164,12 +164,14 @@ export default function SideMenu() {
               {t('Charts')}
             </HeaderExternalLink>
           */}
-          <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
-            <IconLink>
-              <Icon icon="trade" active={pathname.includes('zero-gravity')} />
-            </IconLink>
-            <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
-          </StyledNavLink>
+          {/*
+            <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
+              <IconLink>
+                <Icon icon="trade" active={pathname.includes('zero-gravity')} />
+              </IconLink>
+              <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
+            </StyledNavLink>
+          */}
           {/* <StyledNavLink id={`staking-nav-link`} to={'/staking'} onClick={hanldeSidemenuOpen}>
             <IconLink>
               <Icon icon="market" active={pathname === '/staking'} />
@@ -177,12 +179,13 @@ export default function SideMenu() {
 
             <span className={pathname === '/staking' ? 'active' : ''}>{t('Staking')}</span>
           </StyledNavLink> */}
-          <HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem' }}>
+          {/*<HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem' }}>
             <IconLink>
               <DollarSign size={20} />
             </IconLink>
             Buy ZERO
           </HeaderExternalLink>
+          */}
           <StyledNavLink id={`pools-nav-link`} to={'/relay-sale'} onClick={handleSideMenuOpen}>
             <IconLink>
               <Icon icon="planet" active={pathname.includes('relay-sale')} />

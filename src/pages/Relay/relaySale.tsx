@@ -304,7 +304,7 @@ export default function RelaySale() {
     }
     return (
         <>
-            <SwapFlex style={{ marginTop: '3rem'}}>
+            <SwapFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto'}}>
                 <SwapFlexRow>
                     <SwapWrap>
                         <BuyWrap>
