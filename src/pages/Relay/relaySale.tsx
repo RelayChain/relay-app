@@ -1,17 +1,17 @@
-import React, { useMemo, useState, useEffect } from 'react'
 import { BigNumber, ethers, utils } from 'ethers'
-import { Token } from '@zeroexchange/sdk'
-import styled from 'styled-components'
-import { getEtherscanLink } from '../../utils'
+import React, { useEffect, useMemo, useState } from 'react'
+import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
 import { useRelayaleContract, useZeroContract } from '../../hooks/useContract'
+
+import BalanceItem from 'components/BalanceItem'
 import { ButtonOutlined } from '../../components/Button'
+import { Token } from '@zeroexchange/sdk'
+import { getEtherscanLink } from '../../utils'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from 'state/wallet/hooks'
-import BalanceItem from 'components/BalanceItem'
-import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import useWindowDimensions from 'hooks/useWindowDimensions'
-
 
 const SwapFlexRow = styled.div`
     flex: 1;
@@ -19,7 +19,7 @@ const SwapFlexRow = styled.div`
     margin-left: auto;
     margin-right: auto;
 `
-const InputWrap = styled.div` 
+const InputWrap = styled.div`
     display: flex
 `
 const SwapWrap = styled.div`
@@ -226,9 +226,13 @@ export default function RelaySale() {
     useEffect(() => {
         const getMaxAmount = async () => {
             const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress)
-            setAllowanceAmount(BigNumber.from(amountToSpend))
+            if (amountToSpend) {
+              setAllowanceAmount(BigNumber.from(amountToSpend))
+            }
             const maxUserBalance = await zeroContract?.balanceOf(account)
-            setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
+            if (maxUserBalance) {
+              setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
+            }
         }
         getMaxAmount()
 
@@ -300,7 +304,7 @@ export default function RelaySale() {
     }
     return (
         <>
-            <SwapFlex>
+            <SwapFlex style={{ marginTop: '3rem'}}>
                 <SwapFlexRow>
                     <SwapWrap>
                         <BuyWrap>
