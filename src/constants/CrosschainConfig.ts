@@ -201,6 +201,30 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
         },
+        {
+          address: '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
+        },
+        {
+          address: '0x265Bd427974812123fC1489Cb8B3192AD10791e6',
+          name: 'Binance token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000265Bd427974812123fC1489Cb8B3192AD10791e601'
+        },
+        {
+          address: '0x700e5679684398B9b6FB545cf520C647C0a0066E',
+          name: 'Huobi token',
+          symbol: 'HT',
+          assetBase: 'HT',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000700e5679684398B9b6FB545cf520C647C0a0066E01'
+        },        
       ]
     },
     {
@@ -384,6 +408,30 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000DE03bB9EFf0804516Be4Bdac5761b7526798aF0F02'
         },
+        {
+          address: '0x78c42324016cd91D1827924711563fb66E33A83A',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x000000000000000000000078c42324016cd91D1827924711563fb66E33A83A02'
+        },
+        {
+          address: '0x217F94a628A23273b97770C20A5e134D40B87b5F',
+          name: 'Binance token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000217F94a628A23273b97770C20A5e134D40B87b5F02'
+        },
+        {
+          address: '0xCDEB5641dC5BF05845317B00643A713CCC3b22e6',
+          name: 'Huobi token',
+          symbol: 'HT',
+          assetBase: 'HT',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000CDEB5641dC5BF05845317B00643A713CCC3b22e602'
+        },        
       ]
     },
     {
@@ -569,6 +617,31 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000b9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d603'
         },
+        {
+          address: '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000E338D4250A4d959F88Ff8789EaaE8c32700BD17503'
+        },
+        {
+          address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+          name: 'Binance token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+        },
+        {
+          address: '0xd4a8D3A592C109D17ECcE6f974d80249F9630c17',
+          name: 'Huobi token',
+          symbol: 'HT',
+          assetBase: 'HT',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000d4a8D3A592C109D17ECcE6f974d80249F9630c1703'
+        },
+        
       ]
     },
     {
@@ -720,7 +793,30 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000c9EFDAC4fE5828361b0aE69d1C16670CDa712BDc04'
         },
-
+        {
+          address: '0xf1361d97a1b134eBF96A9aA482BC005D4F41177e',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000f1361d97a1b134eBF96A9aA482BC005D4F41177e04'
+        },
+        {
+          address: '0x62351EC62b06e4122eDf19b84655D5846CB343bE',
+          name: 'Binance token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x000000000000000000000062351EC62b06e4122eDf19b84655D5846CB343bE04'
+        },
+        {
+          address: '0x5545153CCFcA01fbd7Dd11C0b23ba694D9509A6F',
+          name: 'Huobi token',
+          symbol: 'HT',
+          assetBase: 'HT',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
+        },        
       ]
     },
     {
@@ -880,6 +976,30 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x000000000000000000000052dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a4705'
         },
+        {
+          address: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000904371845Bc56dCbBcf0225ef84a669b2fD6bd0d05'
+        },
+        {
+          address: '0x5c4b7CCBF908E64F32e12c6650ec0C96d717f03F',
+          name: 'Binance token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005c4b7CCBF908E64F32e12c6650ec0C96d717f03F05'
+        },
+        {
+          address: '0xA731349fa468614c1698fc46ebf06Da6F380239e',
+          name: 'Huobi token',
+          symbol: 'HT',
+          assetBase: 'HT',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000A731349fa468614c1698fc46ebf06Da6F380239e05'
+        },        
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
         //   name: 'MINT',
