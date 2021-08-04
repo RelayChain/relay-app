@@ -247,9 +247,7 @@ export default function RelaySale() {
                 const formatted = Number(ethers.utils.formatEther(maxRelayBalance)).toFixed()
                 setMaxAmountRelay(formatted);
             }
-            if (+amountZero >= +maxAmountRelay) {
-                setAmountZero(maxAmountRelay)
-            }
+            setAmountZero(String(Math.min(+amountZero, +maxAmountRelay * 100)))
         }
         getMaxAmountRelay()
 
@@ -341,10 +339,10 @@ export default function RelaySale() {
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountZero} onChange={e => setAmountZero(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
                                         {!isApprove && <div>{amountRelay} Relay</div>}
-                                        {!isApprove && <div>Max amount available to swap: {maxAmountRelay} Relay</div>}
+                                        {!isApprove && <div>Max amount available to swap: {maxAmountRelay} Relay{maxAmountRelay == '0' ? '. Come back tomorrow!' : ''}</div>}
                                         <ButtonsFlex>
 
-                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending ? 'disabled' : ''}`} onClick={onSwap}>
+                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending || maxAmountRelay == '0' ? 'disabled' : ''}`} onClick={onSwap}>
                                                 {isApprove ? 'Approve' : 'Swap'}{isPending ? '... pending' : ''}
                                             </ButtonOutlined>
                                         </ButtonsFlex>
