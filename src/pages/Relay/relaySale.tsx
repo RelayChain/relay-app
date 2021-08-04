@@ -260,7 +260,7 @@ export default function RelaySale() {
 
     const tokenBalances = useMemo(() => {
         const arr = availableTokens?.filter(token => token?.symbol === 'RELAY' || token?.symbol === 'ZERO')
-        .map((x: any) => {
+            .map((x: any) => {
                 const address = toCheckSumAddress(x?.address)
                 const tokenData = { ...x, address }
                 return new Token(
@@ -301,10 +301,10 @@ export default function RelaySale() {
     }, [amountZero, maxAmountZero])
 
     useEffect(() => {
-        if(currentChain.name === 'Ethereum') {
+        if (currentChain.name === 'Ethereum' || currentChain.name === 'Polygon' || currentChain.name === 'Smart Chain') {
             setEthChain(true)
         }
-},[currentChain])
+    }, [currentChain])
 
     const maxBalance = async () => {
         setAmountZero(maxAmountZero)
@@ -365,7 +365,7 @@ export default function RelaySale() {
                         })}
                     </BalanceRow>
                 )}
-            </SwapFlex> : <SwapFlex> <SwapWrap>{"Zero to Relay swaps work only on Ethereum network. Please switch to Ethereum and try again."}</SwapWrap></SwapFlex> }
+            </SwapFlex> : <SwapFlex> <SwapWrap>{"Zero to Relay swaps work only on Ethereum network. Please switch to Ethereum and try again."}</SwapWrap></SwapFlex>}
         </>
     )
 }
