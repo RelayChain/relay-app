@@ -175,7 +175,12 @@ export default function RelaySale() {
     web3React = useActiveWeb3React()
     const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
     const zeroContract = useZeroContract(currentChain.zeroContractAddress)
-    const relayContract = useRelayTokenContract(currentChain.relayContractAddress)
+    const relayAddress = ({
+        '1': '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
+        '3': '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
+        '5': '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
+    })[currentChain.chainID]
+    const relayContract = useRelayTokenContract(relayAddress);
     const { account, chainId } = useActiveWeb3React()
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountZero, setAmountZero] = useState('0')
@@ -244,7 +249,8 @@ export default function RelaySale() {
 
             const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress)
             if (maxRelayBalance) {
-                const formatted = Number(ethers.utils.formatEther(maxRelayBalance)).toFixed()
+                const relayBalance = ethers.utils.formatEther(maxRelayBalance);
+                const formatted = Number(relayBalance).toFixed()
                 setMaxAmountRelay(formatted);
             }
             setAmountZero(String(Math.min(+amountZero, +maxAmountRelay * 100)))
