@@ -190,7 +190,7 @@ export default function RelaySale() {
             setIsPending(true)
             const inputValue = BigNumber.from(utils.parseUnits(amountZero, 18))
             if (isApprove) {
-                resSwap = await zeroContract?.approve(currentChain.exchangeContractAddress, inputValue.toString())
+                resSwap = await zeroContract?.approve(currentChain.exchangeContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
                 await resSwap.wait()
                 setDepositSuccessHash(resSwap.hash)
                 if (depositSuccessHash) {
@@ -240,7 +240,7 @@ export default function RelaySale() {
     useEffect(() => {
         if (+amountZero > 0) {
             const inputValue = BigNumber.from(utils.parseUnits(amountZero, 18))
-            setIsApprove(allowanceAmount.lte(inputValue))
+            setIsApprove(allowanceAmount.lt(inputValue))
         }
 
 
@@ -365,7 +365,7 @@ export default function RelaySale() {
                         })}
                     </BalanceRow>
                 )}
-            </SwapFlex> : <SwapFlex> <SwapWrap>{"Zero to Relay swaps work only on Ethereum network. Please switch to Ethereum and try again."}</SwapWrap></SwapFlex>}
+            </SwapFlex> : <SwapFlex> <SwapWrap>{"Zero to Relay swaps work only on Ethereum, Binance and Polygon networks. Please switch any of those chains."}</SwapWrap></SwapFlex>}
         </>
     )
 }
