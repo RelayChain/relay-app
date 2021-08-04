@@ -24,7 +24,7 @@ const InputWrap = styled.div`
 const SwapWrap = styled.div`
     font-family: Poppins;
     position: relative;
-    width: 400px;
+    width: 600px;
     max-width: 100%;
     padding: 28px 34px;
     background: rgba(47, 53, 115, 0.32);
