@@ -48,6 +48,9 @@ export const crosschainConfig: ChainbridgeConfig = {
       type: 'Ethereum',
       blockExplorer: 'https://etherscan.io/tx',
       nativeTokenSymbol: 'ETH',
+      exchangeContractAddress: '0x63ec665a5df5be71f74c77b144894b7befcfdaef', 
+      rateZeroToRelay: 0.01,
+      zeroContractAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
       tokens: [
         {
           address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',

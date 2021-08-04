@@ -182,6 +182,7 @@ export default function RelaySale() {
     const [amountRelay, setAmountRelay] = useState('0')
     const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
+    const [ethChain, setEthChain] = useState(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
     let resSwap: any = null
     const onSwap = async () => {
@@ -299,12 +300,18 @@ export default function RelaySale() {
         }
     }, [amountZero, maxAmountZero])
 
+    useEffect(() => {
+        if(currentChain.name === 'Ethereum') {
+            setEthChain(true)
+        }
+},[currentChain])
+
     const maxBalance = async () => {
         setAmountZero(maxAmountZero)
     }
     return (
         <>
-            <SwapFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
+            {ethChain ? <SwapFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <SwapFlexRow>
                     <SwapWrap>
                         <BuyWrap>
@@ -358,7 +365,7 @@ export default function RelaySale() {
                         })}
                     </BalanceRow>
                 )}
-            </SwapFlex>
+            </SwapFlex> : <SwapFlex> <SwapWrap>{"Zero to Relay swaps work only on Ethereum network. Please switch to Ethereum and try again."}</SwapWrap></SwapFlex> }
         </>
     )
 }
