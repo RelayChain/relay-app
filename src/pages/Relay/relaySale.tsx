@@ -9,7 +9,6 @@ import { Token } from '@zeroexchange/sdk'
 import { getEtherscanLink } from '../../utils'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useETHBalances } from 'state/wallet/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import useWindowDimensions from 'hooks/useWindowDimensions'
 
@@ -177,11 +176,10 @@ export default function RelaySale() {
     const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
     const zeroContract = useZeroContract(currentChain.zeroContractAddress)
     const { account, chainId } = useActiveWeb3React()
-    const userEthBalance = useETHBalances(account ? [account] : [], chainId)?.[account ?? '']
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
-    const [amountZero, setAmountZero] = useState('0.0')
-    const [maxAmountZero, setMaxAmountZero] = useState('0.0')
-    const [amountRelay, setAmountRelay] = useState('0.0')
+    const [amountZero, setAmountZero] = useState('0')
+    const [maxAmountZero, setMaxAmountZero] = useState('0')
+    const [amountRelay, setAmountRelay] = useState('0')
     const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
@@ -227,11 +225,11 @@ export default function RelaySale() {
         const getMaxAmount = async () => {
             const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress)
             if (amountToSpend) {
-              setAllowanceAmount(BigNumber.from(amountToSpend))
+                setAllowanceAmount(BigNumber.from(amountToSpend))
             }
             const maxUserBalance = await zeroContract?.balanceOf(account)
             if (maxUserBalance) {
-              setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
+                setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
             }
         }
         getMaxAmount()
@@ -260,8 +258,8 @@ export default function RelaySale() {
         })
 
     const tokenBalances = useMemo(() => {
-        const arr = availableTokens
-            .map((x: any) => {
+        const arr = availableTokens?.filter(token => token?.symbol === 'RELAY' || token?.symbol === 'ZERO')
+        .map((x: any) => {
                 const address = toCheckSumAddress(x?.address)
                 const tokenData = { ...x, address }
                 return new Token(
@@ -274,7 +272,7 @@ export default function RelaySale() {
             })
 
         const filteredArray: any = [];
-        arr.forEach((item: any) => {
+        arr?.forEach((item: any) => {
             const i = filteredArray.findIndex((x: any) => x.address === item.address);
             if (i <= -1) {
                 filteredArray.push(item);
@@ -283,8 +281,10 @@ export default function RelaySale() {
 
         return [...new Set(filteredArray)]
         // eslint-disable-next-line
-    }, [availableTokens, userTokens])
+    }, [availableTokens, userTokens, currentChain])
+
     const { width } = useWindowDimensions()
+
     let isColumn = false
     if (width < 1350) {
         isColumn = true
@@ -304,7 +304,7 @@ export default function RelaySale() {
     }
     return (
         <>
-            <SwapFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto'}}>
+            <SwapFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <SwapFlexRow>
                     <SwapWrap>
                         <BuyWrap>
@@ -341,16 +341,9 @@ export default function RelaySale() {
                     </SwapWrap>
                 </SwapFlexRow>
 
-                {account && userEthBalance && tokenBalances && (
+                {account && tokenBalances && (
                     <BalanceRow isColumn={isColumn}>
                         <TextBalance>{currentChain.name} Balances</TextBalance>
-                        <BalanceItem
-                            currentChain={currentChain}
-                            chainId={chainId}
-                            isNative={true}
-                            userEthBalance={userEthBalance}
-                            selectBalance={() => { onSelectBalance(true, currentChain) }}
-                        ></BalanceItem>
                         {tokenBalances?.map((token: any, index) => {
                             return (
                                 <BalanceItem
