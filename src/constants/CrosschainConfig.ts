@@ -30,6 +30,7 @@ export type BridgeConfig = {
   exchangeContractAddress?: string
   rateZeroToRelay?: number
   zeroContractAddress?: string
+  relayContractAddress?: string
 }
 
 export type ChainbridgeConfig = {
@@ -51,6 +52,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       exchangeContractAddress: '0x63ec665a5df5be71f74c77b144894b7befcfdaef',
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+      relayContractAddress: '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
       tokens: [
         {
           address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -452,6 +454,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       exchangeContractAddress: '0xFCB89d87FF5c07B44B774806063318c1D411571d',
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
+      relayContractAddress: '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
       tokens: [
         {
           address: '0xBF7e0761417F49b3FAFae564C842823f5f79DB15',
@@ -840,6 +843,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       exchangeContractAddress: '0xb0dcE4EE2CF51B2E27a7C368EA36A4af16603b58',
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0xb67176655e7919a27aA34C279157124619aDFd4B',
+      relayContractAddress: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
       tokens: [
         {
           address: '0x404Ab89684d499Dbe864a1B9811fEb9be2fFADA2',

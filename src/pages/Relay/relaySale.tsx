@@ -175,7 +175,7 @@ export default function RelaySale() {
     web3React = useActiveWeb3React()
     const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
     const zeroContract = useZeroContract(currentChain.zeroContractAddress)
-    const relayContract = useRelayTokenContract(currentChain.zeroContractAddress)
+    const relayContract = useRelayTokenContract(currentChain.relayContractAddress)
     const { account, chainId } = useActiveWeb3React()
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountZero, setAmountZero] = useState('0')
@@ -244,7 +244,8 @@ export default function RelaySale() {
 
             const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress)
             if (maxRelayBalance) {
-                setMaxAmountRelay(ethers.utils.formatUnits(maxRelayBalance, 'ether'))
+                const formatted = Number(ethers.utils.formatEther(maxRelayBalance)).toFixed()
+                setMaxAmountRelay(formatted);
             }
             if (+amountZero >= +maxAmountRelay) {
                 setAmountZero(maxAmountRelay)
@@ -340,7 +341,7 @@ export default function RelaySale() {
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountZero} onChange={e => setAmountZero(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
                                         {!isApprove && <div>{amountRelay} Relay</div>}
-                                        {!isApprove && <div>Max amount available to swap {maxAmountRelay} Relay</div>}
+                                        {!isApprove && <div>Max amount available to swap: {maxAmountRelay} Relay</div>}
                                         <ButtonsFlex>
 
                                             <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending ? 'disabled' : ''}`} onClick={onSwap}>
