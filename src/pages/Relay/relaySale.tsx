@@ -1,7 +1,7 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
 import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
-import { useRelayaleContract, useZeroContract } from '../../hooks/useContract'
+import { useRelayaleContract, useRelayTokenContract, useZeroContract } from '../../hooks/useContract'
 
 import BalanceItem from 'components/BalanceItem'
 import { ButtonOutlined } from '../../components/Button'
@@ -175,10 +175,12 @@ export default function RelaySale() {
     web3React = useActiveWeb3React()
     const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
     const zeroContract = useZeroContract(currentChain.zeroContractAddress)
+    const relayContract = useRelayTokenContract(currentChain.zeroContractAddress)
     const { account, chainId } = useActiveWeb3React()
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountZero, setAmountZero] = useState('0')
     const [maxAmountZero, setMaxAmountZero] = useState('0')
+    const [maxAmountRelay, setMaxAmountRelay] = useState('0')
     const [amountRelay, setAmountRelay] = useState('0')
     const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
@@ -238,13 +240,28 @@ export default function RelaySale() {
     })
 
     useEffect(() => {
-        if (+amountZero > 0) {
+        const getMaxAmountRelay = async () => {
+
+            const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress)
+            if (maxRelayBalance) {
+                setMaxAmountRelay(ethers.utils.formatUnits(maxRelayBalance, 'ether'))
+            }
+            if (+amountZero >= +maxAmountRelay) {
+                setAmountZero(maxAmountRelay)
+            }
+        }
+        getMaxAmountRelay()
+
+    }, [currentChain])
+
+    useEffect(() => {
+        if (+amountZero > 0 && +maxAmountZero >= +amountZero && maxAmountZero.length >= amountZero.length) {
             const inputValue = BigNumber.from(utils.parseUnits(amountZero, 18))
             setIsApprove(allowanceAmount.lt(inputValue))
         }
 
-
     }, [amountZero, allowanceAmount])
+
     useEffect(() => {
         if (currentChain?.rateZeroToRelay) {
             const equalRelayAmount = String(+amountZero * currentChain?.rateZeroToRelay)
@@ -323,6 +340,7 @@ export default function RelaySale() {
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountZero} onChange={e => setAmountZero(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
                                         {!isApprove && <div>{amountRelay} Relay</div>}
+                                        {!isApprove && <div>Max amount available to swap {maxAmountRelay} Relay</div>}
                                         <ButtonsFlex>
 
                                             <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending ? 'disabled' : ''}`} onClick={onSwap}>

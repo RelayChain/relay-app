@@ -204,3 +204,7 @@ export function useRelayaleContract(address?: string, withSignerIfPossible?: boo
 export function useZeroContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(address, ZERO_ABI, withSignerIfPossible)
 }
+
+export function useRelayTokenContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, ZERO_ABI, withSignerIfPossible)
+}
