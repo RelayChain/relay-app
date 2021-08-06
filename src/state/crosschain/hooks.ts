@@ -277,7 +277,7 @@ export function useCrosschainHooks() {
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     const resultDepositTx = await bridgeContract
-      .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
+      .deposit(targetChain.chainId, currentToken.resourceId, data/* , auxData */, {
         gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
         value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
