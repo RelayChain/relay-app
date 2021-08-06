@@ -37,7 +37,8 @@ import useGasPrice from 'hooks/useGasPrice'
 
 // import { afterWrite } from '@popperjs/core'
 
-const BridgeABI = require('../../constants/abis/Bridge.json').abi
+// const BridgeABI = require('../../constants/abis/Bridge.json').abi
+const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
@@ -513,7 +514,8 @@ export function useCrosschainHooks() {
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
     const targetChain = crosschainState.targetChain.chainID;
-    const feeResult = await bridgeContract._fees(targetChain);
+    // const feeResult = await bridgeContract._fees(targetChain);
+    const feeResult = await bridgeContract._fee();
     const fee = feeResult.toString()
     const value = WithDecimals(fee);
 
