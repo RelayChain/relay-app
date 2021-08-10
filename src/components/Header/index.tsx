@@ -11,7 +11,6 @@ import { PopupContent } from 'state/application/actions'
 import { Text } from 'rebass'
 import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
-import ZeroLogo from '../../assets/images/zero-logo-text.png'
 import { useActiveWeb3React, useEagerConnect } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 

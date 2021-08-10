@@ -31,6 +31,7 @@ export type BridgeConfig = {
   rateZeroToRelay?: number
   zeroContractAddress?: string
   relayContractAddress?: string
+  marketPlace?: string
 }
 
 export type ChainbridgeConfig = {
@@ -53,6 +54,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
       relayContractAddress: '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
+      marketPlace: 'https://app.uniswap.org/',
       tokens: [
         {
           address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -243,6 +245,10 @@ export const crosschainConfig: ChainbridgeConfig = {
       blockExplorer: 'https://blockscout.com/etc/kotti/tx',
       nativeTokenSymbol: 'AVAX',
       defaultGasPrice: 225,
+      rateZeroToRelay: 0.01,
+      zeroContractAddress: '',
+      relayContractAddress: '',
+      marketPlace: 'https://app.pangolin.exchange/',
       tokens: [
         {
           address: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183',
@@ -454,6 +460,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
       relayContractAddress: '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
+      marketPlace: 'https://pancakeswap.finance/',
       tokens: [
         {
           address: '0xBF7e0761417F49b3FAFae564C842823f5f79DB15',
@@ -843,6 +850,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rateZeroToRelay: 0.01,
       zeroContractAddress: '0xb67176655e7919a27aA34C279157124619aDFd4B',
       relayContractAddress: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
+      marketPlace: 'https://quickswap.exchange/',
       tokens: [
         {
           address: '0x404Ab89684d499Dbe864a1B9811fEb9be2fFADA2',

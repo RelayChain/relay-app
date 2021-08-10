@@ -11,6 +11,7 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import { useCrosschainState } from 'state/crosschain/hooks'
 
 const SideMenuWrapper = styled.div<{ open?: boolean }>`
   height: 100%;
@@ -110,6 +111,8 @@ const Title = styled.a`
 export default function SideMenu() {
   const { t } = useTranslation()
   const { width } = useWindowDimensions()
+  const {currentChain} = useCrosschainState()
+
   const history = useHistory()
   const location = useLocation()
   const [pathname, setPathname] = useState(location.pathname)
@@ -144,7 +147,8 @@ export default function SideMenu() {
             </IconLink>
             <span className={pathname === '/transfer' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
-          <HeaderExternalLink href={`https://quickswap.exchange/#/swap?inputCurrency=0x831753dd7087cac61ab5644b308642cc1c33dc13&outputCurrency=0x904371845bc56dcbbcf0225ef84a669b2fd6bd0d`}>
+          <HeaderExternalLink href={`${currentChain.marketPlace !== undefined ? currentChain.marketPlace : 'https://app.pangolin.exchange/'}`}>
+          
             <IconLink>
               <Icon icon="swap" />
             </IconLink>

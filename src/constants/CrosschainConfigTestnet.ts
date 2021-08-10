@@ -29,6 +29,7 @@ export type BridgeConfig = {
   exchangeContractAddress?: string
   rateZeroToRelay?: number
   zeroContractAddress?: string
+  marketPlace?: string
 }
 
 export type ChainbridgeConfig = {
