@@ -74,7 +74,12 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WETH[ChainId.MAINNET], RELAY],
-      stakingRewardAddress: '0xfF9a9cfba892Feb256b365363Ddafd78ff719852'
+      stakingRewardAddress: '0xfF9a9cfba892Feb256b365363Ddafd78ff719852',
+      rewardInfo: {
+        rewardToken: RELAY,
+        addLiquidityLink: 'https://app.uniswap.org/#/add/v2/ETH/0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
+        removeLiquidityLink: 'https://app.uniswap.org/#/remove/v2/ETH/0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
+      }
     },
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
@@ -199,7 +204,12 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WAVAX, aRELAY],
-      stakingRewardAddress: '0xAAD98cC51e7D5F0BA6349Dd165188aE842aD739F'
+      stakingRewardAddress: '0xAAD98cC51e7D5F0BA6349Dd165188aE842aD739F',
+      rewardInfo: {
+        rewardToken: aRELAY,
+        addLiquidityLink: 'https://www.traderjoexyz.com/#/pool/AVAX/0x78c42324016cd91D1827924711563fb66E33A83A',
+        removeLiquidityLink: 'https://www.traderjoexyz.com/#/pool/AVAX/0x78c42324016cd91D1827924711563fb66E33A83A',
+      }
     },
     {
       tokens: [zZERO, zETH],
@@ -267,7 +277,12 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       tokens: [WBNB, bscRELAY],
-      stakingRewardAddress: '0xe3EE311000342F7302E69eE6FE021698C08D04D9'
+      stakingRewardAddress: '0xe3EE311000342F7302E69eE6FE021698C08D04D9',
+      rewardInfo: {
+        rewardToken: bscRELAY,
+        addLiquidityLink: 'https://pancakeswap.finance/add/BNB/0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
+        removeLiquidityLink: 'https://pancakeswap.finance/remove/BNB/0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
+      },
     },
     {
       tokens: [bscZERO, bscBUSD],
