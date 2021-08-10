@@ -31,6 +31,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import toEllipsis from 'utils/toEllipsis'
 
+const ethers = require('ethers')
 const moment = require('moment')
 
 const PageWrapper = styled.div`
@@ -309,9 +310,9 @@ export default function Manage({
   )
 
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
-
+  
   const stakedAmount = stakingInfo?.stakedAmount ?
-    JSBI.divide(JSBI.BigInt(stakingInfo?.stakedAmount.raw), JSBI.BigInt((stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)))
+    JSBI.divide(JSBI.BigInt(stakingInfo?.stakedAmount.raw), JSBI.BigInt((stakingInfo?.rewardInfo?.rewardsMultiplier ?? 1)))
     : JSBI.BigInt(0)
   // get the USD value of staked WETH
   const USDPrice = useUSDCPrice(WETH)
@@ -383,7 +384,7 @@ export default function Manage({
       pair?.token1?.symbol === stakingTokenPair?.token1?.symbol
     )
   }
-
+  
   const symbol = WETH?.symbol
   return (
     <>
@@ -548,7 +549,7 @@ export default function Manage({
                 <StatLabel style={{ color: '#A7B1F4' }}>{`Current ${isSingleSided ? 'Token Deposit' : 'Liquidity Deposits:'}`}</StatLabel>
                 <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
                   <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                    {JSBI.toNumber(stakedAmount).toFixed(
+                    {Number(ethers.utils.formatUnits(stakedAmount.toString(), stakingInfo?.earnedAmount?.currency.decimals)).toFixed(
                       Math.min(6, stakingInfo?.earnedAmount?.currency.decimals ?? 18)) ?? '-'}
 
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
