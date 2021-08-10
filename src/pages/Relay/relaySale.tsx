@@ -256,7 +256,7 @@ export default function RelaySale() {
             setAmountZero(String(Math.min(+amountZero, +maxAmountRelay * 100)))
         }
         getMaxAmountRelay()
-
+    // eslint-disable-next-line
     }, [currentChain])
 
     useEffect(() => {
@@ -265,7 +265,7 @@ export default function RelaySale() {
             setIsApprove(allowanceAmount.lt(inputValue))
         }
 
-    }, [amountZero, allowanceAmount])
+    }, [amountZero, allowanceAmount, maxAmountZero])
 
     useEffect(() => {
         if (currentChain?.rateZeroToRelay) {
@@ -345,10 +345,10 @@ export default function RelaySale() {
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountZero} onChange={e => setAmountZero(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
                                         {!isApprove && <div>{amountRelay} RELAY</div>}
-                                        {!isApprove && <div>Max amount available to swap: {maxAmountRelay} RELAY{maxAmountRelay == '0' ? '. Come back tomorrow!' : ''}</div>}
+                                        {!isApprove && <div>Max amount available to swap: {maxAmountRelay} RELAY{maxAmountRelay === '0' ? '. Come back tomorrow!' : ''}</div>}
                                         <ButtonsFlex>
 
-                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending || maxAmountRelay == '0' ? 'disabled' : ''}`} onClick={onSwap}>
+                                            <ButtonOutlined className={`green ${depositSuccessHash} ${parseFloat(amountZero) === 0 || !amountZero || isPending || maxAmountRelay === '0' ? 'disabled' : ''}`} onClick={onSwap}>
                                                 {isApprove ? 'Approve' : 'Swap'}{isPending ? '... pending' : ''}
                                             </ButtonOutlined>
                                         </ButtonsFlex>

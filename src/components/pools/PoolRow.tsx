@@ -153,7 +153,7 @@ export default function PoolRow({
               ?.toFixed(0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
-            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'RELAY'} / week`}
           </TYPE.main>
         </Cell>
         <Cell mobile={false}>

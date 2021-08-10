@@ -136,7 +136,7 @@ export default function PoolCard({ stakingInfoTop, onHarvest }: { stakingInfoTop
               ? stakingInfo?.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                 '-'
               : '0'}
-            {` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}
+            {` ${stakingInfo?.rewardsTokenSymbol ?? 'RELAY'} / week`}
           </TYPE.main>
         </Row>
         <Row style={{ marginBottom: '10px' }}>

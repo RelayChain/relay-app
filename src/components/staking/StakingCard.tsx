@@ -149,8 +149,8 @@ const StakingCard = () => {
       <Header>
         <Flex>
           <div>
-            <Title>Manual ZERO</Title>
-            <Description>Stake ZERO</Description>
+            <Title>Manual RELAY</Title>
+            <Description>Stake RELAY</Description>
           </div>
           <LogoWrapper>
             <img src={ZeroLogo} alt="logo" />
@@ -171,7 +171,7 @@ const StakingCard = () => {
             </div>
           </div>
         </Flex>
-        <TextEarned>ZERO EARNED</TextEarned>
+        <TextEarned>RELAY EARNED</TextEarned>
         <Flex>
           <div>
             <TextApr>0</TextApr>
@@ -179,7 +179,7 @@ const StakingCard = () => {
           </div>
           <EarnButton className="launch-button green">HARVEST</EarnButton>
         </Flex>
-        <TextEarned>STAKE ZERO</TextEarned>
+        <TextEarned>STAKE RELAY</TextEarned>
         <ButtonOutlined>ENABLE</ButtonOutlined>
       </CenterWrap>
       <BottomWrap>
@@ -202,7 +202,7 @@ const StakingCard = () => {
         <DetailsWrap>
           <Flex>
             <h5>Total staked:</h5>
-            <h5>189,628.378 ZERO</h5>
+            <h5>189,628.378 RELAY</h5>
           </Flex>
           <Flex>
             <h5>End:</h5>

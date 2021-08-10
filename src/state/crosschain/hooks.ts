@@ -270,7 +270,7 @@ export function useCrosschainHooks() {
         .substr(2) + // Deposit Amount (32 bytes)
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    const auxData = '0xdeadbeef';
+    // const auxData = '0xdeadbeef';
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
@@ -513,7 +513,7 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-    const targetChain = crosschainState.targetChain.chainID;
+    // const targetChain = crosschainState.targetChain.chainID;
     // const feeResult = await bridgeContract._fees(targetChain);
     const feeResult = await bridgeContract._fee();
     const fee = feeResult.toString()

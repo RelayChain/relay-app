@@ -62,11 +62,13 @@ export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a
 export const WAS = new Token(ChainId.MAINNET, '0x0c572544a4Ee47904d54aaA6A970AF96B6f00E1b', 18, 'WAS', 'Wasder Token')
 export const BIOS = new Token(ChainId.MAINNET, '0xAACa86B876ca011844b5798ECA7a67591A9743C8', 18, 'BIOS', 'BIOS')
 export const XIOT = new Token(ChainId.MAINNET, '0x31024A4C3e9aEeb256B825790F5cb7ac645e7cD5', 3, 'XIOT', 'Xiotri')
+export const RELAY = new Token(ChainId.MAINNET, '0x5D843Fa9495d23dE997C394296ac7B4D721E841c', 18, 'RELAY', 'Relay in Ethereum')
 
 export const CHART = new Token(ChainId.AVALANCHE, '0x1d37986F252d0e349522EA6C3B98Cb935495E63E', 18, 'CHART', 'ChartEx')
 
 export const WAVAX = new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Avalanche')
 export const zZERO = new Token(ChainId.AVALANCHE, '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7', 18, 'ZERO', 'Zero Exchange')
+export const aRELAY = new Token(ChainId.AVALANCHE, '0x78c42324016cd91D1827924711563fb66E33A83A', 18, 'RELAY', 'RELAY in Avalanche')
 export const zDAI = new Token(ChainId.AVALANCHE, '0x12f108E6138d4A9c58511e042399cF8f90D5673f', 18, 'zDAI', 'Dai Stablecoin')
 export const zUSDC = new Token(ChainId.AVALANCHE, '0x474Bb79C3e8E65DcC6dF30F9dE68592ed48BBFDb', 6, 'zUSDC', 'zUSDC')
 export const zETH = new Token(ChainId.AVALANCHE, '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183', 6, 'zETH', 'Ether')
@@ -99,12 +101,13 @@ export const bscETH = new Token(ChainId.SMART_CHAIN, '0x7c815BBc21FED2B97CA16355
 export const bscINDA = new Token(ChainId.SMART_CHAIN, '0xc878a79b63a41a831e469ae1a830a765efd9d468', 2, 'INDA', 'INDA');
 export const bscCHART = new Token(ChainId.SMART_CHAIN, '0xc33A42C9D19f944FA12ff46f27B3B85e18a13778', 18, 'CHART', 'ChartEx')
 export const bscWISB = new Token(ChainId.SMART_CHAIN, '0x4f491d389A5bF7C56bd1e4d8aF2280fD217C8543', 18, 'WISB', 'Wise Token')
+export const bscRELAY = new Token(ChainId.SMART_CHAIN, '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175', 18, 'RELAY', 'RELAY in BSC')
 
 export const WMATIC = new Token(ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped Matic (WMATIC)')
 export const MZERO = new Token(ChainId.MATIC, '0xb67176655e7919a27aA34C279157124619aDFd4B', 18, 'MZERO', 'ZERO in Polygon')
 // a test token, mintable by anyone
 export const MINT = new Token(ChainId.MATIC, '0x08193764bd81a742c15125e48f41b1232068c912', 18, 'MINT', 'Mintable Token')
-
+export const mRELAY = new Token(ChainId.MATIC, '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d', 18, 'RELAY', 'RELAY in Polygon')
 
 export const WHT = new Token(ChainId.HECO, '0x5545153ccfca01fbd7dd11c0b23ba694d9509a6f', 18, 'WHT', 'Wrapped HECO in HUOBI')
 export const hINDA = new Token(ChainId.HECO, '0x4E76805F76c13BfaA1D6558596A12086e4bE3E2C', 2, 'HINDA', 'INDA in HUOBI');
