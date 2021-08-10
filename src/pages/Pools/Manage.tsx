@@ -52,6 +52,12 @@ const Columns = styled.div`
     flex-direction: column;
   `};
 `
+const HeadDeposit = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
 const SingleColumn = styled.div`
   display: flex;
   flex-grow: 1;
@@ -576,16 +582,9 @@ export default function Manage({
                       ) ? null :
                         (
                           <>
+                          <HeadDeposit>
                             <StatLabel style={{ color: '#A7B1F4' }}>{isSingleSided ? `${currencyA?.symbol} to deposit` : 'LP To Deposit:'}</StatLabel>
-                            <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
-                              <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
-                                {
-                                  userLiquidityUnstaked?.toSignificant(
-                                    Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
-                                }
-                                <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
-                              </TYPE.white>
-                              <ButtonOutlined
+                            <ButtonOutlined
                                 disabled={stakingInfo?.rewardInfo?.disableDeposit}
                                 className="remove-liquidity-button green"
                                 onClick={handleDepositClick}
@@ -593,6 +592,16 @@ export default function Manage({
                               >
                                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit'}
                               </ButtonOutlined>
+                              </HeadDeposit>
+                            <RowBetween className="is-mobile" style={{ marginBottom: '2rem' }}>
+                              <TYPE.white fontWeight={600} fontSize={[24, 32]} style={{ textOverflow: 'ellipsis' }}>
+                                {
+                                  userLiquidityUnstaked?.toSignificant(
+                                    Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
+                                }
+                                <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}`}</span>
+                              </TYPE.white>
+                              
                             </RowBetween>
                           </>
                         )}

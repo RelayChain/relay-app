@@ -83,7 +83,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   } else {
     pairAddress = stakingInfo?.stakedAmount?.token.address;
   }
-  
+
   const pairContract = usePairContract(pairAddress);
 
   // approval data for stake
@@ -97,7 +97,13 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
+        const response: TransactionResponse = await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
+        if (response.hash) {
+          addTransaction(response, {
+            summary: `Deposit liquidity`
+          })
+          setHash(response.hash)
+        }
       } else if (signatureData) {
         stakingContract
           .stakeWithPermit(
@@ -137,8 +143,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const handleMax = useCallback(() => {
     maxAmountInput && onUserInput(
       maxAmountInput
-      ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
-      )
+        ?.toSignificant(Math.min(4, stakingInfo?.earnedAmount?.currency.decimals))
+    )
   }, [maxAmountInput, onUserInput, stakingInfo])
 
   async function onAttemptToApprove() {
@@ -152,7 +158,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
     const otherExchagesPairs = [
       '0xE9a889E6963f122a98f8083d951c71329c726c0A',
-      '0x1dE027DED494175C229c016A9697F85794006a59', 
+      '0x1dE027DED494175C229c016A9697F85794006a59',
       '0x3AEd5B9062A222721051759568CcD68d09f3d927', // uniswap
       '0x41f3092d6Dd8dB25ec0f7395F56CAc107EcB7A12',
     ];
@@ -171,9 +177,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: `${
-        chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
-      }`,
+      name: `${chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) ? 'Uniswap V2' : 'ZERO-LP-Token'
+        }`,
       version: '1',
       chainId: chainId,
       verifyingContract: pairContract.address
@@ -254,8 +259,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
             <TYPE.black>
               {hypotheticalRewardRate
-              .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
-              .toSignificant(4, { groupSeparator: ',' })}{' '}
+                .divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
+                .toSignificant(4, { groupSeparator: ',' })}{' '}
               {stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week
             </TYPE.black>
           </HypotheticalRewardRate>

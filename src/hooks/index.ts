@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 
-import { ChainId } from '@zeroexchange/sdk'
+import { ChainId, CurrencyAmount, JSBI } from '@zeroexchange/sdk'
 import { NetworkContextName } from '../constants'
 import { Web3Provider } from '@ethersproject/providers'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { injected } from '../connectors'
-import { isMobile } from 'react-device-detect'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore<Web3Provider>()
@@ -15,35 +16,39 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
 }
 
 export function useEagerConnect() {
-  const { activate, active } = useWeb3ReactCore() // specifically using useWeb3ReactCore because of what this hook does
+  const { library, account, chainId, active, activate } = useWeb3ReactCore()
+  const dispatch = useDispatch<AppDispatch>()
+
   const [tried, setTried] = useState(false)
+  const [currencyAmount, setCurrencyAmount] = useState('')
 
   useEffect(() => {
-    injected.isAuthorized().then(isAuthorized => {
+    injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
-          setTried(true)
-        })
-      } else {
-        if (isMobile && window.ethereum) {
-          activate(injected, undefined, true).catch(() => {
+        activate(injected, undefined, true)
+          .then(async () => {
+            const ethBalance = await onSignIn({ account, chainId })
+            if (ethBalance) {
+              setCurrencyAmount(ethBalance)
+            }
+          })
+          .catch(() => {
             setTried(true)
           })
-        } else {
-          setTried(true)
-        }
+      } else {
+        setTried(true)
       }
     })
-  }, [activate]) // intentionally only running on mount (make sure it's only mounted once :))
+  }, [activate, dispatch, library, account, chainId]) // intentionally only running on mount (make sure it's only mounted once :))
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
-    if (active) {
+    if (!tried && active) {
       setTried(true)
     }
-  }, [active])
+  }, [tried, active])
 
-  return tried
+  return [tried, currencyAmount]
 }
 
 /**
@@ -64,12 +69,12 @@ export function useInactiveListener(suppress = false) {
         })
       }
 
-      const handleNetworkChanged = (network: any) => {
-        // eat errors
-        activate(injected, undefined, true).catch(error => {
-          console.error('Failed to activate after networkChanged changed', error)
-        })
-      }
+      // const handleNetworkChanged = (network: any) => {
+      //   // eat errors
+      //   activate(injected, undefined, true).catch(error => {
+      //     console.error('Failed to activate after networkChanged changed', error)
+      //   })
+      // }
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
@@ -81,17 +86,26 @@ export function useInactiveListener(suppress = false) {
       }
 
       ethereum.on('chainChanged', handleChainChanged)
-      ethereum.on('networkChanged', handleNetworkChanged)
+      // ethereum.on('networkChanged', handleNetworkChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('chainChanged', handleChainChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
-          ethereum.removeListener('networkChanged', handleNetworkChanged)
+          // ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
       }
     }
     return undefined
   }, [active, error, suppress, activate])
+}
+
+
+const onSignIn = async ({ account, chainId }: any) => {
+  if (!account || !chainId) return
+  const { ethereum } = window as any
+  const balance = await ethereum.request({ method: 'eth_getBalance', params: [account] })
+  return CurrencyAmount.ether(JSBI.BigInt(balance.toString()), chainId).toSignificant(6)
+
 }

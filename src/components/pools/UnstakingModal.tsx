@@ -117,10 +117,10 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount
               ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
-              ?.toSignificant(4)} ZERO LP</TYPE.body>
+              ?.toSignificant(4)} LP Tokens</TYPE.body>
             <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount
               ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
-              ?.toSignificant(4)} ZERO</TYPE.body>
+              ?.toSignificant(4)} LP Tokens</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
