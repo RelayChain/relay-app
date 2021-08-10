@@ -453,7 +453,7 @@ export default function Manage({
                       ?.divide(stakingInfo?.rewardInfo?.rewardsMultiplier ? stakingInfo?.rewardInfo?.rewardsMultiplier : 1)
                       ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
                     : '0'}
-                  <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
+                  <span>{` ${stakingInfo?.rewardsTokenSymbol ?? 'RELAY'} / week`}</span>
                 </StatValue>
               </Stat>
               <StyledButtonsWrap>
@@ -542,7 +542,7 @@ export default function Manage({
                       : '0'}
                     <span
                       style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}
-                    >{` ${stakingInfo?.rewardsTokenSymbol ?? 'ZERO'} / week`}</span>
+                    >{` ${stakingInfo?.rewardsTokenSymbol ?? 'RELAY'} / week`}</span>
                   </TYPE.white>
                 </RowBetween>
                 <StatLabel style={{ color: '#A7B1F4' }}>{`Current ${isSingleSided ? 'Token Deposit' : 'Liquidity Deposits:'}`}</StatLabel>
@@ -552,7 +552,7 @@ export default function Manage({
                       Math.min(6, stakingInfo?.earnedAmount?.currency.decimals ?? 18)) ?? '-'}
 
                     <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>
-                      {isSingleSided ? `${currencyA?.symbol}` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '} ${currencyA?.symbol}-${currencyB?.symbol}`}
+                      {isSingleSided ? `${currencyA?.symbol}` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'RELAY '} ${currencyA?.symbol}-${currencyB?.symbol}`}
                     </span>
                   </TYPE.white>
                 </RowBetween>
@@ -582,7 +582,7 @@ export default function Manage({
                                   userLiquidityUnstaked?.toSignificant(
                                     Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
                                 }                                
-                                <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
+                                <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'RELAY '}  LP tokens`}</span>
                               </TYPE.white>
                               <ButtonOutlined
                                 disabled={stakingInfo?.rewardInfo?.disableDeposit}
