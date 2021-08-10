@@ -143,7 +143,6 @@
     "@uniswap/default-token-list": "^2.0.0",
     "@zeroexchange/sdk": "^3.2.20",
     "axios": "^0.21.1",
-    "bignumber.js": "^9.0.1",
     "highcharts": "^9.0.1",
     "highcharts-react-official": "^3.0.0",
     "moment": "^2.29.1",

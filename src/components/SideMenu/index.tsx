@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
-import { DollarSign } from 'react-feather'
+// import { DollarSign } from 'react-feather'
 import { ExternalLink } from '../../theme'
 import Icon from '../Icon'
 import LogoDark from './../../assets/images/relay-icon.png'

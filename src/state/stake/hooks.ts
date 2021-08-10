@@ -31,7 +31,12 @@ import {
   zZERO,
   zCHART,
   bscWISB,
-  MZERO
+  MZERO,
+  WMATIC,
+  mRELAY,
+  RELAY,
+  bscRELAY,
+  aRELAY
 } from '../../constants'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 
@@ -66,6 +71,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
       stakingRewardAddress: '0xBab3c860Dc02ECF21c63416858aBFe296448f5A6'
+    },
+    {
+      tokens: [WETH[ChainId.MAINNET], RELAY],
+      stakingRewardAddress: '0xfF9a9cfba892Feb256b365363Ddafd78ff719852'
     },
     {
       tokens: [WETH[ChainId.MAINNET], ZERO],
@@ -189,6 +198,10 @@ export const STAKING_REWARDS_INFO: {
       stakingRewardAddress: '0x8754699cf9f32B56654F7dA44fF580BdF09f3526'
     },
     {
+      tokens: [WAVAX, aRELAY],
+      stakingRewardAddress: '0xAAD98cC51e7D5F0BA6349Dd165188aE842aD739F'
+    },
+    {
       tokens: [zZERO, zETH],
       stakingRewardAddress: '0x869bE5d543226e0Cda93416aaC093b472c99c3A8'
     },
@@ -251,6 +264,10 @@ export const STAKING_REWARDS_INFO: {
     {
       tokens: [WBNB, bscZERO],
       stakingRewardAddress: '0x4564c264ED7CC55CfAeffAF03F662c3a68602e6A'
+    },
+    {
+      tokens: [WBNB, bscRELAY],
+      stakingRewardAddress: '0xe3EE311000342F7302E69eE6FE021698C08D04D9'
     },
     {
       tokens: [bscZERO, bscBUSD],
@@ -346,10 +363,14 @@ export const STAKING_REWARDS_INFO: {
       tokens: [WETH[ChainId.MATIC], MZERO],
       stakingRewardAddress: '0xc095c481c27e1d8E3DF69610d0d5A1cb8F36cE8B'
     },
+    {
+      tokens: [WMATIC, mRELAY],
+      stakingRewardAddress: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d'
+    },
   ],
   [ChainId.HECO]: [
-    
-    
+
+
   ]
 }
 
