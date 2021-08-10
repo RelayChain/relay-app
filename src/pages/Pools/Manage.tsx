@@ -359,7 +359,7 @@ export default function Manage({
 
   // const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   // const v2IsLoading =
-    // fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+  // fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
 
   // const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
@@ -581,7 +581,7 @@ export default function Manage({
                                 {
                                   userLiquidityUnstaked?.toSignificant(
                                     Math.min(6, (stakingInfo && stakingInfo?.earnedAmount?.currency.decimals) || 0)).toString()
-                                }                                
+                                }
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}  LP tokens`}</span>
                               </TYPE.white>
                               <ButtonOutlined
