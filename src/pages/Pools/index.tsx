@@ -3,14 +3,13 @@ import {
   setAprData,
   setPoolEarnings
 } from './../../state/pools/actions'
-import { CustomLightSpinner, StyledInternalLink, TYPE, Title } from '../../theme'
+import { CustomLightSpinner, TYPE, Title } from '../../theme'
 import React, { useEffect, useState } from 'react'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { filterPoolsItems, setOptions } from 'utils/sortPoolsPage'
 import styled, { keyframes } from 'styled-components'
 
 import { AppDispatch } from '../../state'
-import { ButtonOutlined } from '../../components/Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
 import DropdownArrow from './../../assets/svg/DropdownArrow'
@@ -103,20 +102,6 @@ const opacity = keyframes`
   50%  {  opacity: 0.3;}
   to {
     opacity: .8;
-  }
-`
-
-const TextLink = styled.div`
-  font-size: 1rem;
-  font-weight: bold;
-  color: #6752f7;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  &.pink {
-    color: #b368fc;
-  }
-  &:hover {
-    opacity: 0.9;
   }
 `
 
@@ -391,12 +376,6 @@ export default function Pools() {
                 {numeral(readyForHarvestTotalValue).format('0,0.00')} <span>Tokens</span>
               </StatValue>
             </Stat>
-            <StyledInternalLink className="add-liquidity-link" to={{ pathname: `/add` }}>
-              <ButtonOutlined className="add-liquidity-button">Add Liquidity</ButtonOutlined>
-            </StyledInternalLink>
-            <StyledInternalLink className="remove-liquidity-link" to={{ pathname: `/remove` }}>
-              <TextLink>Remove Liquidity</TextLink>
-            </StyledInternalLink>
           </StatsWrapper>
         )}
         <PageWrapper>
