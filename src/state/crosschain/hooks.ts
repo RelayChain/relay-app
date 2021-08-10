@@ -88,7 +88,8 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         const exchangeFields = {
           exchangeContractAddress: chain.exchangeContractAddress,
           rateZeroToRelay: chain.rateZeroToRelay,
-          zeroContractAddress: chain.zeroContractAddress
+          zeroContractAddress: chain.zeroContractAddress,
+          marketPlace: chain.marketPlace
         }
         result = { ...result, ...exchangeFields }
       }

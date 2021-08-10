@@ -29,6 +29,7 @@ export interface CrosschainChain {
   rateZeroToRelay?: number
   zeroContractAddress?: string
   relayContractAddress?: string
+  marketPlace?: string
 }
 
 export enum ChainTransferState {

@@ -30,6 +30,7 @@ import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import toEllipsis from 'utils/toEllipsis'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 
 const ethers = require('ethers')
 const moment = require('moment')
@@ -254,7 +255,7 @@ export default function Manage({
   if (!stakingRewardAddress) {
     history.push('/pools')
   }
-
+const {currentChain} = useCrosschainState()
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
@@ -464,15 +465,18 @@ export default function Manage({
                 </StatValue>
               </Stat>
               <StyledButtonsWrap>
-                <StyledTradelLink
+                {/* <StyledTradelLink
                   className="trade-button-link"
                   to={{
                     pathname: `/swap`,
                     state: { token0: `${currencyA && currencyId(currencyA)}`, token1: `${currencyB && currencyId(currencyB)}` }
                   }}
-                >
-                  <ButtonOutlined className="add-liquidity-button">Trade</ButtonOutlined>
-                </StyledTradelLink>
+                > */}
+                  <ExternalLink href={`${currentChain.marketPlace !== undefined ? currentChain.marketPlace : 'https://app.pangolin.exchange/'}${currentChain.name === 'Smart Chain' ? '' : '#/'}swap?inputCurrency=${currencyA && currencyId(currencyA)}&outputCurrency=${currencyB && currencyId(currencyB)}`}>
+                  <ButtonOutlined className="trade-button-link">Trade</ButtonOutlined>
+                  </ExternalLink>
+                  
+                {/* </StyledTradelLink> */}
 
                 {isSingleSided ? <></>
                   :
