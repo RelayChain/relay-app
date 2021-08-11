@@ -245,9 +245,10 @@ export const crosschainConfig: ChainbridgeConfig = {
       blockExplorer: 'https://blockscout.com/etc/kotti/tx',
       nativeTokenSymbol: 'AVAX',
       defaultGasPrice: 225,
+      exchangeContractAddress: '0x3f9F80f64a921Db7956Fc285f96b97FfB9B9b1b1',
       rateZeroToRelay: 0.01,
-      zeroContractAddress: '',
-      relayContractAddress: '',
+      zeroContractAddress: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+      relayContractAddress: '0x78c42324016cd91D1827924711563fb66E33A83A',
       marketPlace: 'https://www.traderjoexyz.com/',
       tokens: [
         {

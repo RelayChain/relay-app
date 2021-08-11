@@ -1,11 +1,11 @@
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
-import { ChainId, ETHER_CURRENCIES, JSBI, TokenAmount } from '@zeroexchange/sdk'
+import { ETHER_CURRENCIES, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { ExternalLink, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useCallback, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
@@ -219,15 +219,6 @@ const TextLink = styled.div`
   }
   &:hover {
     opacity: 0.9;
-  }
-`
-const StyledTradelLink = styled(StyledInternalLink)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 10px;
-`};
-  button {
-    background: rgba(30, 247, 231, 0.18);
-    border: 1px solid #1ef7e7;
   }
 `
 const StyledButtonsWrap = styled.div`
