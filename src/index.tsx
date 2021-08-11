@@ -13,12 +13,18 @@ import MulticallUpdater from './state/multicall/updater'
 import { NetworkContextName } from './constants'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
+import TagManager from 'react-gtm-module'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import getLibrary from './utils/getLibrary'
 import store from './state'
 
+const tagManagerArgs = {
+    gtmId: 'GTM-5WLVS3B'
+}
+
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+TagManager.initialize(tagManagerArgs)
 
 // if (window.location.hostname.includes('zero')) {
 //   window.location.href = window.location.href.replace('zero', '0');
