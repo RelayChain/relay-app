@@ -1,11 +1,11 @@
-import { JSBI, TokenAmount, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { ButtonOutlined, ButtonPrimary } from '../../components/Button'
+import { ChainId, ETHER_CURRENCIES, JSBI, TokenAmount } from '@zeroexchange/sdk'
 import { ExternalLink, StyledInternalLink, TYPE, Title } from '../../theme'
 import React, { useCallback, useMemo, useState } from 'react'
 import { RowBetween, RowCenter } from '../../components/Row'
-import styled from 'styled-components'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 
 import ClaimRewardModal from '../../components/pools/ClaimRewardModal'
@@ -18,6 +18,8 @@ import { RouteComponentProps } from 'react-router-dom'
 import StakingModal from '../../components/pools/StakingModal'
 import UnstakingModal from '../../components/pools/UnstakingModal'
 import { currencyId } from '../../utils/currencyId'
+import styled from 'styled-components'
+import toEllipsis from 'utils/toEllipsis'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useHistory } from 'react-router'
@@ -29,8 +31,6 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import toEllipsis from 'utils/toEllipsis'
-import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
 
 const ethers = require('ethers')
 const moment = require('moment')
@@ -317,7 +317,7 @@ const {currentChain} = useCrosschainState()
   )
 
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
-  
+
   const stakedAmount = stakingInfo?.stakedAmount ?
     JSBI.divide(JSBI.BigInt(stakingInfo?.stakedAmount.raw), JSBI.BigInt((stakingInfo?.rewardInfo?.rewardsMultiplier ?? 1)))
     : JSBI.BigInt(0)
@@ -354,7 +354,7 @@ const {currentChain} = useCrosschainState()
   )
 
   // fetch the reserves for all V2 pools in which the user has a balance
-  // eslint-disable-next-line 
+  // eslint-disable-next-line
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens?.filter(({ liquidityToken }) => {
@@ -391,8 +391,14 @@ const {currentChain} = useCrosschainState()
       pair?.token1?.symbol === stakingTokenPair?.token1?.symbol
     )
   }
-  
+
   const symbol = WETH?.symbol
+
+  const tradeURL = currentChain?.chainID === "1" ? 'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x5D843Fa9495d23dE997C394296ac7B4D721E841c' :
+                   currentChain?.chainID === "2" ? 'https://www.traderjoexyz.com/#/trade' :
+                   currentChain?.chainID === "5" ? 'https://quickswap.exchange/#/swap?inputCurrency=0x831753dd7087cac61ab5644b308642cc1c33dc13&outputCurrency=0x904371845bc56dcbbcf0225ef84a669b2fd6bd0d' :
+                   currentChain?.chainID === "3" ? 'https://pancakeswap.finance/swap?inputCurrency=BNB&outputCurrency=0xE338D4250A4d959F88Ff8789EaaE8c32700BD175' : '';
+
   return (
     <>
       {stakingInfo && (
@@ -472,10 +478,10 @@ const {currentChain} = useCrosschainState()
                     state: { token0: `${currencyA && currencyId(currencyA)}`, token1: `${currencyB && currencyId(currencyB)}` }
                   }}
                 > */}
-                  <ExternalLink href={`${currentChain.marketPlace !== undefined ? currentChain.marketPlace : 'https://app.pangolin.exchange/'}${currentChain.name === 'Smart Chain' ? '' : '#/'}swap?inputCurrency=${currencyA && currencyId(currencyA)}&outputCurrency=${currencyB && currencyId(currencyB)}`}>
+                  <ExternalLink href={tradeURL}>
                   <ButtonOutlined className="trade-button-link">Trade</ButtonOutlined>
                   </ExternalLink>
-                  
+
                 {/* </StyledTradelLink> */}
 
                 {isSingleSided ? <></>
@@ -605,7 +611,7 @@ const {currentChain} = useCrosschainState()
                                 }
                                 <span style={{ opacity: '.8', marginLeft: '5px', fontSize: '16px' }}>{isSingleSided ? `${currencyA?.symbol} tokens` : `${stakingInfo?.rewardsTokenSymbol ? stakingInfo?.rewardsTokenSymbol : 'ZERO '}`}</span>
                               </TYPE.white>
-                              
+
                             </RowBetween>
                           </>
                         )}

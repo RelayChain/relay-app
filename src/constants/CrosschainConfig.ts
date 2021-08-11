@@ -231,7 +231,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x0000000000000000000000700e5679684398B9b6FB545cf520C647C0a0066E01'
-        },        
+        },
       ]
     },
     {
@@ -248,7 +248,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rateZeroToRelay: 0.01,
       zeroContractAddress: '',
       relayContractAddress: '',
-      marketPlace: 'https://app.pangolin.exchange/',
+      marketPlace: 'https://www.traderjoexyz.com/',
       tokens: [
         {
           address: '0xf6F3EEa905ac1da6F6DD37d06810C6Fcb0EF5183',
@@ -441,7 +441,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x0000000000000000000000CDEB5641dC5BF05845317B00643A713CCC3b22e602'
-        },        
+        },
       ]
     },
     {
@@ -656,7 +656,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000d4a8D3A592C109D17ECcE6f974d80249F9630c1703'
         },
-        
+
       ]
     },
     {
@@ -831,7 +831,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
-        },        
+        },
       ]
     },
     {
@@ -1019,7 +1019,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x0000000000000000000000A731349fa468614c1698fc46ebf06Da6F380239e05'
-        },        
+        },
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
         //   name: 'MINT',
