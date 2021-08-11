@@ -138,6 +138,7 @@
   "dependencies": {
     "@sumsub/websdk": "^1.1.0",
     "@types/react-copy-to-clipboard": "^5.0.0",
+    "@types/react-gtm-module": "^2.0.1",
     "@types/react-window-infinite-loader": "^1.0.3",
     "@types/yup": "^0.29.11",
     "@uniswap/default-token-list": "^2.0.0",
