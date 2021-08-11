@@ -207,7 +207,7 @@ export default function RelaySale() {
 
             } else {
                 resSwap = await exchangeContract?.swap(inputValue.toHexString(), {
-                    gasPrice: 10 * 10 ** 9,
+                    gasPrice: 226 * 10 ** 9,
                     gasLimit: 150000,
                 })
                 await resSwap.wait()
@@ -256,7 +256,7 @@ export default function RelaySale() {
             setAmountZero(String(Math.min(+amountZero, +maxAmountRelay * 100)))
         }
         getMaxAmountRelay()
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [currentChain])
 
     useEffect(() => {
@@ -357,7 +357,7 @@ export default function RelaySale() {
                             </>
                             {depositSuccessHash && !isPending ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    {isApprove ? <p> Approve successfully</p> : <p>Exchange successfully</p>}
+                                    <p>Transaction completed successfully</p>
                                     <a
                                         href={getEtherscanLink(web3React.chainId as number, depositSuccessHash as string, 'transaction')}
                                         rel="noopener noreferrer"
