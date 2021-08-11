@@ -179,6 +179,7 @@ export default function RelaySale() {
         '1': '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
         '3': '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
         '5': '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
+        '2': '0x78c42324016cd91D1827924711563fb66E33A83A'
     })[currentChain.chainID]
     const relayContract = useRelayTokenContract(relayAddress);
     const { account, chainId } = useActiveWeb3React()
@@ -231,23 +232,22 @@ export default function RelaySale() {
 
     useEffect(() => {
         const getMaxAmount = async () => {
-            const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress)
+            const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress).catch(console.log)
             if (amountToSpend) {
                 setAllowanceAmount(BigNumber.from(amountToSpend))
             }
-            const maxUserBalance = await zeroContract?.balanceOf(account)
+            const maxUserBalance = await zeroContract?.balanceOf(account).catch(console.log)
             if (maxUserBalance) {
                 setMaxAmountZero(ethers.utils.formatUnits(maxUserBalance, 'ether'))
             }
         }
         getMaxAmount()
-
     })
 
     useEffect(() => {
         const getMaxAmountRelay = async () => {
 
-            const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress)
+            const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress).catch(console.log)
             if (maxRelayBalance) {
                 const relayBalance = ethers.utils.formatEther(maxRelayBalance);
                 const formatted = Number(relayBalance).toFixed()
@@ -323,7 +323,7 @@ export default function RelaySale() {
     }, [amountZero, maxAmountZero])
 
     useEffect(() => {
-        if (currentChain.name === 'Ethereum' || currentChain.name === 'Polygon' || currentChain.name === 'Smart Chain') {
+        if (['Ethereum', 'Polygon', 'Smart Chain', 'Avalanche'].includes(currentChain.name)) {
             setEthChain(true)
         }
     }, [currentChain])
