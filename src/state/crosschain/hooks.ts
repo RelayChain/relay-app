@@ -377,17 +377,18 @@ export function useCrosschainHooks() {
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
 
-    // @ts-ignore
+    // @ts-ignore  
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
     const approvedAmount = await tokenContract.allowance(
       crosschainState.currentRecipient,
       currentChain.erc20HandlerAddress
-    )
+    ).catch(console.log)
     const countTokenForTransfer = BigNumber.from(
       WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
     )
-    if (countTokenForTransfer.lte(approvedAmount)) {
+
+    if (approvedAmount && countTokenForTransfer.lte(approvedAmount)) {
       dispatch(
         setCrosschainTransferStatus({
           status: ChainTransferState.ApprovalComplete
@@ -504,7 +505,6 @@ export function useCrosschainHooks() {
         })
       )
     }
-
   }
 
   const UpdateFee = async () => {
@@ -514,8 +514,6 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-    // const targetChain = crosschainState.targetChain.chainID;
-    // const feeResult = await bridgeContract._fees(targetChain);
     const feeResult = await bridgeContract._fee();
     const fee = feeResult.toString()
     const value = WithDecimals(fee);
