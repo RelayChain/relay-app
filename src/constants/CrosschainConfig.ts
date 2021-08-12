@@ -828,7 +828,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0x5545153CCFcA01fbd7Dd11C0b23ba694D9509A6F',
           name: 'Huobi token',
-          symbol: 'HT',
+          symbol: 'WHT',
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
