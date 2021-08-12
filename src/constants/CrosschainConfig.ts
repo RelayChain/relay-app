@@ -669,7 +669,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       rpcUrl: 'https://http-mainnet-node.huobichain.com',
       type: 'Ethereum',
       gasLimit: 60000,
-      defaultGasPrice: 2,
+      defaultGasPrice: 10,
       blockExplorer: 'https://hecoinfo.com/',
       nativeTokenSymbol: 'HT',
       tokens: [

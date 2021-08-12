@@ -102,9 +102,9 @@ export function useInactiveListener(suppress = false) {
 }
 
 
-const onSignIn = async ({ account, chainId }: any) => {
-  if (!account || !chainId) return
+const onSignIn = async ({ account, chainId }: any) => {  
   const { ethereum } = window as any
+  if (!account || !chainId || !ethereum) return
   const balance = await ethereum.request({ method: 'eth_getBalance', params: [account] })
   return CurrencyAmount.ether(JSBI.BigInt(balance.toString()), chainId).toSignificant(6)
 

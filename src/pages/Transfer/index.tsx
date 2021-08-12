@@ -258,7 +258,7 @@ export default function Transfer() {
       }
     },
     // eslint-disable-next-line
-    [onCurrencySelection, dispatch]
+    [onCurrencySelection, dispatch, currentChain, currentToken]
   )
 
   const handleMaxInput = useCallback(() => {
@@ -311,8 +311,10 @@ export default function Transfer() {
     setConfirmTransferModalOpen(false)
   }
   const showConfirmTransferModal = () => {
-    GetAllowance()
-    setConfirmTransferModalOpen(true)
+    if(currentToken.address) {
+      GetAllowance()
+      setConfirmTransferModalOpen(true)
+    }    
   }
 
   // token transfer state
