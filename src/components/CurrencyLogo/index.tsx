@@ -1,42 +1,12 @@
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
 import React, { useMemo } from 'react'
 
-import AvaxLogo from '../../assets/images/avax-logo.png'
-import MaticLogo from '../../assets/images/matic-logo.png'
-import BNBLogo from '../../assets/images/binance-coin-logo.webp'
-// import DEVLogo from '../../assets/images/DEV-logo'
-import BTCLogo from '../../assets/images/crosschain/wBTC.png'
-import BUSDLogo from '../../assets/images/busd-logo.png'
-import DAILogo from '../../assets/images/crosschain/wDAI.png'
-import SushiLogo from '../../assets/images/sushi-logo.png'
-import UNILogo from '../../assets/images/uni-logo.png'
-import HTLogo from '../../assets/images/ht.png'
-// import DEVLogo from '../../assets/images/dev-logo.png'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import INDALogo from '../../assets/images/crosschain/INDA.png'
-import RELAYLogo from '../../assets/images/crosschain/RELAY.png'
-import WASLogo from '../../assets/images/crosschain/WAS.jpeg'
-import GDLLogo from '../../assets/images/crosschain/GDL.png'
-import BIOSLogo from '../../assets/images/crosschain/BIOS.png'
-import XIOTLogo from '../../assets/images/crosschain/XIOT.png'
 import Logo from '../Logo'
-import USDCLogo from '../../assets/images/crosschain/wUSDC.png'
-import USDTLogo from '../../assets/images/crosschain/wUSDT.png'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import ZBTCLogo from '../../assets/images/crosschain/zBTC.png'
-import ZDAILogo from '../../assets/images/crosschain/zDAI.png'
-import ZETHLogo from '../../assets/images/crosschain/zETH.png'
-import ZUSDCLogo from '../../assets/images/crosschain/zUSDC.png'
-import ZUSDTLogo from '../../assets/images/crosschain/zUSDT.png'
-import WISBLogo from '../../assets/images/crosschain/WISB.png'
-import GROWLogo from '../../assets/images/crosschain/GROW.png'
-import ZeroLogo from '../../assets/images/0-icon.png'
 import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { crosschainConfig as crosschainConfigMainnet } from '../../constants/CrosschainConfig'
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
-
-
 
 const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
@@ -59,7 +29,55 @@ const StyledLogoURI = styled.img`
   width: 24px;
   height: 24px;
 `
+const logosNames = {
+  //name logoName of a file in assets/images/crosschain folder   => names
+  'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX'],
+  'ETH': ['ETH', 'pngETH', 'zETH'],
+  'WETH': ['WETH', 'wETH'],
+  'HT': ['HT', 'HECO', 'WHT'],
+  'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB'],
+  'GROW': ['GROW'],
+  'WISB': ['WISB'],
+  'INDA': ['INDA'],
+  'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV'],
+  'XIOT': ['XIOT'],
+  'CHART': ['CHART', 'ChartEx'],
+  'z1INCH': ['z1INCH', '1INCH'],
+  'AAVE': ['zAAVE', 'AAVE'],
+  'ZERO': ['ZERO'],
+  'LINK': ['LINK', 'zLINK'],
+  'UNI': ['zUNI', 'UNI'],
+  'SUSHI': ['zSUSHI', 'SUSHI'],
+  'wUSDT': ['USDT', 'wUSDT'],
+  'zUSDT': ['zUSDT'],
+  'wUSDC': ['USDC', 'wUSDC'],
+  'zUSDC': ['zUSDC'],
+  'zBTC': ['zBTC'],
+  'wBTC': ['wBTC', 'WBTC', 'BTC'],
+  'zDAI': ['zDAI'],
+  'wDAI': ['wDAI', 'DAI', 'pngDAI'],
+  'RELAY': ['RELAY'],
+  'BUSD': ['BUSD'],
+  'WAS': ['WAS'],
+  'GDL': ['GDL'],
+  'BIOS': ['BIOS'],
+  'YFI': ['YFI', 'zYFI'],
+  'PERA': ['PERA']
+}
 
+function getLogoByName(tokenName: string) {
+  return require(`../../assets/images/crosschain/${tokenName}.png`)
+}
+export const getCurrencyLogoImage = (symbol: string | undefined) => {
+  if (!symbol) return ''
+  let logoName = ''
+  for (const [key, names] of Object.entries(logosNames)) {
+    if (names.includes(symbol)) {
+      logoName = key
+    }
+  }
+  return logoName
+}
 export default function CurrencyLogo({
   currency,
   size = '24px',
@@ -70,214 +88,46 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const getTokenLogoURL = (chain: string, address: string) => {
-    return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`    
+    return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
   }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+  const logoName = getCurrencyLogoImage(String(currency?.symbol))
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
     if (currency && currency.symbol === 'ZERO') return []
-    if (currency instanceof Token) {
-      // find logos on ETH address for non-ETH assets
-      let logoAddress = currency.address
-      const allConfigTokens: any = []
-      // eslint-disable-next-line 
-      crosschainConfig.chains.map(chain => {
+    if (logoName === '') {
+      if (currency instanceof Token) {
+        // find logos on ETH address for non-ETH assets
+        let logoAddress = currency.address
+        const allConfigTokens: any = []
         // eslint-disable-next-line 
-        chain.tokens.map(token => {
-          allConfigTokens.push(token)
+        crosschainConfig.chains.map(chain => {
+          // eslint-disable-next-line 
+          chain.tokens.map(token => {
+            allConfigTokens.push(token)
+          })
         })
-      })
-      const chosenTokenChainName = crosschainConfig.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
-      const chainName = !chosenTokenChainName ? 'ethereum': (chosenTokenChainName === 'Smart Chain' ) ? 'binance': chosenTokenChainName.toLowerCase()
-      
-      if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
+        const chosenTokenChainName = crosschainConfig.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
+        const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
+
+        if (currency instanceof WrappedTokenInfo) {
+          return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
+        }
+
+        return [getTokenLogoURL(chainName, logoAddress)]
       }
-
-      return [getTokenLogoURL(chainName, logoAddress)]
     }
-    return []
-  }, [currency, uriLocations])
 
-  if(currency?.logoURI) {
+    return []
+  }, [logoName, currency, uriLocations])
+
+  if (currency?.logoURI) {
     return <StyledLogoURI src={currency?.logoURI} alt={`${currency?.symbol ?? 'token'} logo`} />
   }
-  if (currency === ETHER || currency.symbol === 'ETH') {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
-  }
 
-  if (['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={AvaxLogo} size={size} style={style} />
-  }
-
-  if (['BNB', 'WBNB', 'wBNB', 'eBNB'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={BNBLogo} alt="BNB" size={size} style={style} />
-  }
-
-  if (['HT', 'HECO'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={HTLogo} alt="Huobi Token" size={size} style={style} />
-  }
-  // [ChainId.MUMBAI]: 'Mumbai'
-  if (
-    ['DEV', 'WDEV', 'wDEV', 'eDEV'].includes(String(currency?.symbol))
-  ) {
-    return <StyledEthereumLogo src="" alt="DEV" size={size} style={style} />
-  }
-
-  if (
-    ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC'].includes(String(currency?.symbol))
-  ) {
-    return <StyledEthereumLogo src={MaticLogo} alt="MATIC" size={size} style={style} />
-  }
-
-  if (['INDA'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={INDALogo} size={size} style={style} />
-  }
-
-  if (['WAS'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={WASLogo} size={size} style={style} />
-  }
-
-  if (['GDL'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={GDLLogo} size={size} style={style} />
-  }
-
-  if (['XIOT'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={XIOTLogo} size={size} style={style} />
-  }
-
-  if (['BIOS'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={BIOSLogo} size={size} style={style} />
-  }
-
-  if (['RELAY'].includes(String(currency?.symbol))) {
-    return <StyledEthereumLogo src={RELAYLogo} size={size} style={style} />
-  }
-
-  // cross chain
-  if (['ETH', 'wETH', 'pngETH'].includes(currency?.symbol)) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'USDT' || currency?.symbol === 'wUSDT') {
-    return <StyledEthereumLogo src={USDTLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'USDC' || currency?.symbol === 'wUSDC') {
-    return <StyledEthereumLogo src={USDCLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'BTC' || currency?.symbol === 'wBTC') {
-    return <StyledEthereumLogo src={BTCLogo} size={size} style={style} />
-  }
-  if (['DAI', 'wDAI', 'pngDAI'].includes(currency?.symbol)) {
-    return <StyledEthereumLogo src={DAILogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'WISB') {
-    return <StyledEthereumLogo src={WISBLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zETH') {
-    return <StyledEthereumLogo src={ZETHLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zUSDT') {
-    return <StyledEthereumLogo src={ZUSDTLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zUSDC') {
-    return <StyledEthereumLogo src={ZUSDCLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zBTC') {
-    return <StyledEthereumLogo src={ZBTCLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'BUSD') {
-    return <StyledEthereumLogo src={BUSDLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zDAI') {
-    return <StyledEthereumLogo src={ZDAILogo} size={size} style={style} />
-  }
-  if (currency && currency.symbol === 'ZERO') {
-    return <StyledEthereumLogo src={ZeroLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zSUSHI') {
-    return <StyledEthereumLogo src={SushiLogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'zUNI') {
-    return <StyledEthereumLogo src={UNILogo} size={size} style={style} />
-  }
-  if (currency?.symbol === 'GROW') {
-    return <StyledEthereumLogo src={GROWLogo} size={size} style={style} />
-  }
-  return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
-}
-
-export const getCurrencyLogoImage = (symbol: string | undefined) => {
-  switch (symbol) {
-    case 'AVAX':
-    case 'WAVAX':
-    case 'AWAX':
-    case 'zAWAX':
-    case 'wAVAX':
-    case 'AVA':
-    case 'zAVAX':
-    case 'eAVAX':
-      return AvaxLogo
-    case 'BNB':
-    case 'WBNB':
-    case 'wBNB':
-    case 'eBNB':
-      return BNBLogo
-    case 'DEV':
-    case 'WDEV':
-    case 'wDEV':
-    case 'eDEV':
-    case 'MATIC':
-    case 'WMATIC':
-    case 'wMATIC':
-    case 'eMATIC':
-      return ''
-    case 'INDA':
-      return INDALogo
-    case 'WAS':
-      return WASLogo
-    case 'GDL':
-      return GDLLogo
-    case 'ETH':
-      return EthereumLogo
-    case 'wETH':
-      return EthereumLogo
-    case 'USDT':
-    case 'wUSDT':
-      return USDTLogo
-    case 'USDC':
-    case 'wUSDC':
-      return USDCLogo
-    case 'BTC':
-    case 'wBTC':
-      return BTCLogo
-    case 'DAI':
-      return DAILogo
-    case 'wDAI':
-      return DAILogo
-    case 'WISB':
-      return WISBLogo
-    case 'zETH':
-      return ZETHLogo
-    case 'zUSDT':
-      return ZUSDTLogo
-    case 'zUSDC':
-      return ZUSDCLogo
-    case 'zBTC':
-      return ZBTCLogo
-    case 'BUSD':
-      return BUSDLogo
-    case 'zDAI':
-      return ZDAILogo
-    case 'ZERO':
-      return ZeroLogo
-    case 'zSUSHI':
-      return SushiLogo
-    case 'zUNI':
-      return UNILogo
-    case 'HT':
-    case 'HECO':
-      return HTLogo  
-    default:
-      return ''
+  if (logoName !== '') {
+    return <StyledEthereumLogo src={getLogoByName(logoName)} size={size} style={style} />
+  } else {
+    return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
   }
 }
