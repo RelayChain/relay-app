@@ -52,7 +52,7 @@ class MiniRpcProvider implements AsyncSendable {
 
   public readonly clearBatch = async () => {
     console.debug('Clearing batch', this.batch)
-    const batch = this.batch
+    const batch = this.batch.filter(item => item.request.method !== 'eth_accounts')
     this.batch = []
     this.batchTimeoutId = null
     let response: Response
@@ -114,6 +114,9 @@ class MiniRpcProvider implements AsyncSendable {
     method: string | { method: string; params: unknown[] },
     params?: unknown[] | object
   ): Promise<unknown> => {
+    // if(method === 'eth_accounts') {
+    //   return `0x${this.chainId.toString(16)}`
+    // }
     if (typeof method !== 'string') {
       return this.request(method.method, method.params)
     }
