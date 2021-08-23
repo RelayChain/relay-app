@@ -672,6 +672,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       defaultGasPrice: 10,
       blockExplorer: 'https://hecoinfo.com/',
       nativeTokenSymbol: 'HT',
+      marketPlace: 'https://ht.mdex.com/#/swap?lang=en',
       tokens: [
         {
           address: '0xaC021dF3FF6939CFdCA4ce5a3D1b6048CA5aaBF4',
