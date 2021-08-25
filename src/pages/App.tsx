@@ -28,7 +28,6 @@ import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import Polling from '../components/Header/Polling'
 // import Pool from './Pool'
-import PoolFinder from './PoolFinder'
 import Pools from './Pools'
 import Popups from '../components/Popups'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -111,7 +110,6 @@ export default function App() {
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                <Route exact strict path="/find" component={PoolFinder} />
                 {/* <Route exact strict path="/staking" component={Staking} /> */}
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
