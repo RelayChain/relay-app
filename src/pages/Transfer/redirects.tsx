@@ -38,10 +38,10 @@ export function RedirectToSwap(props: RouteComponentProps<{ outputCurrency: stri
   )
 }
 
-export function OpenClaimAddressModalAndRedirectToSwap(props: RouteComponentProps) {
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    dispatch(setOpenModal(ApplicationModal.ADDRESS_CLAIM))
-  }, [dispatch])
-  return <RedirectPathToSwapOnly {...props} />
-}
+// export function OpenClaimAddressModalAndRedirectToSwap(props: RouteComponentProps) {
+//   const dispatch = useDispatch<AppDispatch>()
+//   useEffect(() => {
+//     dispatch(setOpenModal(ApplicationModal.ADDRESS_CLAIM))
+//   }, [dispatch])
+//   return <RedirectPathToSwapOnly {...props} />
+// }

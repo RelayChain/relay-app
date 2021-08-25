@@ -4,7 +4,6 @@ import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
 import { ChainId } from '@zeroexchange/sdk'
-import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
@@ -266,7 +265,6 @@ const Header = () => {
 
   return (
     <HeaderFrame>
-      <ClaimModal />
       <HideMedium>
         <LogoContainer>
           <SupTitle>Relay</SupTitle>

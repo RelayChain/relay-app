@@ -1,7 +1,7 @@
 import './snow.css'
 
 import {
-  OpenClaimAddressModalAndRedirectToSwap,
+  //OpenClaimAddressModalAndRedirectToSwap,
   RedirectPathToSwapOnly,
   RedirectPathToTransferOnly,
   RedirectToSwap
@@ -13,11 +13,8 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import { Route, Switch } from 'react-router-dom'
-import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
-import { ApplicationModal } from '../state/application/actions'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import GraphQLProvider from './../graphql'
 import Guides from './Guides'
@@ -79,12 +76,6 @@ const BodyWrapper = styled.div`
   z-index: 1;
 `
 
-function TopLevelModals() {
-  const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
-  const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-
-  return <AddressClaimModal isOpen={open} onDismiss={toggle} />
-}
 
 export default function App() {
   return (
@@ -103,12 +94,11 @@ export default function App() {
             </HeaderWrapper>
             <Popups />
             <Polling />
-            <TopLevelModals />
             <Web3ReactManager>
               <Switch>
                 <Route exact strict path="/home" component={Home} />
                 {/* <Route exact strict path="/swap" component={Swap} /> */}
-                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
+                {/* <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} /> */}
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/find" component={PoolFinder} />
