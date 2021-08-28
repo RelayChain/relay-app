@@ -37,8 +37,8 @@ import useGasPrice from 'hooks/useGasPrice'
 
 // import { afterWrite } from '@popperjs/core'
 
-// const BridgeABI = require('../../constants/abis/Bridge.json').abi
-const BridgeABI = require('../../constants/abis/OldBridge.json')
+const BridgeABI = require('../../constants/abis/Bridge.json').abi
+// const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
@@ -271,14 +271,14 @@ export function useCrosschainHooks() {
         .substr(2) + // Deposit Amount (32 bytes)
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    // const auxData = '0xdeadbeef';
+    const auxData = '0x00';
     const gasPriceFromChain =
       crosschainState.currentChain.name === 'Ethereum'
         ? WithDecimalsHexString(currentGasPrice, 0)
         : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     const resultDepositTx = await bridgeContract
-      .deposit(targetChain.chainId, currentToken.resourceId, data/* , auxData */, {
+      .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
         gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
         value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
@@ -432,7 +432,7 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
       .approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(transferAmount, currentToken.decimals), {
-        gasLimit: '50000',
+        gasLimit: '70000',
         gasPrice: gasPriceFromChain,
         nonce: await getNonce()
       })
@@ -514,7 +514,8 @@ export function useCrosschainHooks() {
     // @ts-ignore
     const signer = web3React.library.getSigner()
     const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-    const feeResult = await bridgeContract._fee();
+    const targetChain = crosschainState.targetChain.chainID;
+    const feeResult = await bridgeContract._fees(targetChain);
     const fee = feeResult.toString()
     const value = WithDecimals(fee);
 
