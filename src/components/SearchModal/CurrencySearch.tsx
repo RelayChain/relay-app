@@ -119,7 +119,7 @@ export function CurrencySearch({
             .filter(y => !y.disableTransfer)
             .map((x: any) => {
               return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-            })
+            }).concat(userTokens)
         : isCoingeckoListOn && isEthChain
         ? [...availableTokens, ...checksumedCoingeckoList]
             .map((x: any) => {
@@ -380,7 +380,7 @@ export function CurrencySearch({
               </Text>
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
-            {!isCrossChain && (
+            {(
               <SearchInput
                 type="text"
                 id="token-search-input"

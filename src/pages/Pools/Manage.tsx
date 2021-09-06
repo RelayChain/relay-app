@@ -304,7 +304,6 @@ const {currentChain} = useCrosschainState()
         ?.toSignificant(6, { groupSeparator: ',' }).length - 16
       : 0
       : 0
-
   )
 
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
@@ -525,8 +524,8 @@ const {currentChain} = useCrosschainState()
                       key={countUpAmount}
                       isCounting
                       decimalPlaces={4}
-                      start={parseFloat(countUpAmountPrevious)}
-                      end={parseFloat(countUpAmount)}
+                      start={parseFloat(countUpAmountPrevious.split(',').join(''))}
+                      end={parseFloat(countUpAmount.split(',').join(''))}
                       thousandsSeparator={','}
                       duration={1}
                     />
