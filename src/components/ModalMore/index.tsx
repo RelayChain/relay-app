@@ -122,7 +122,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Telegram
         </MenuItem>
 
-        <MenuItem id="link" href="https://discord.gg/sm6sbUFY">
+        <MenuItem id="link" href="https://discord.gg/TP7XHZwPkw">
           <IconLink>
             <MessageCircle size={20} />
           </IconLink>

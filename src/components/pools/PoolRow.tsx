@@ -202,8 +202,8 @@ export default function PoolRow({
                         key={countUpAmount}
                         isCounting
                         decimalPlaces={4}
-                        start={parseFloat(countUpAmountPrevious)}
-                        end={parseFloat(countUpAmount)}
+                        start={parseFloat(countUpAmountPrevious.split(',').join(''))}
+                        end={parseFloat(countUpAmount.split(',').join(''))}
                         thousandsSeparator={','}
                         duration={1}
                       />
