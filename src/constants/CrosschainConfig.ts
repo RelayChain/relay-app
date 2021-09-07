@@ -96,14 +96,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
         },
-        {
-          address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
-          name: 'ZERO(ETH)',
-          symbol: 'ZERO',
-          assetBase: 'ZERO',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
-        },
+        // {
+        //   address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
+        //   name: 'ZERO(ETH)',
+        //   symbol: 'ZERO',
+        //   assetBase: 'ZERO',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
+        // },
         {
           address: '0x743864B0562754F47f91CD400Ac8d4356a8fc720',
           name: 'eAVAX',
@@ -291,14 +291,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
         },
-        {
-          address: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
-          name: 'ZERO',
-          symbol: 'ZERO',
-          assetBase: 'ZERO',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
-        },
+        // {
+        //   address: '0x008E26068B3EB40B443d3Ea88c1fF99B789c10F7',
+        //   name: 'ZERO',
+        //   symbol: 'ZERO',
+        //   assetBase: 'ZERO',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
+        // },
         {
           address: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
           name: 'WAVAX',
@@ -479,14 +479,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01',
         },
-        {
-          address: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
-          name: 'ZERO(BSC)',
-          symbol: 'ZERO',
-          assetBase: 'ZERO',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401',
-        },
+        // {
+        //   address: '0x1f534d2B1ee2933f1fdF8e4b63A44b2249d77EAf',
+        //   name: 'ZERO(BSC)',
+        //   symbol: 'ZERO',
+        //   assetBase: 'ZERO',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401',
+        // },
         {
           address: '0xaC532d2FC81a077C9F93Be7ea698E2f1d224Ec04',
           name: 'zAVAX',
@@ -681,14 +681,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
         },
-        {
-          address: '0x0E4564692B15Af6526b6910CFd9E1F4B6671CA1A',
-          name: 'ZERO',
-          symbol: 'ZERO',
-          assetBase: 'ZERO',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
-        },
+        // {
+        //   address: '0x0E4564692B15Af6526b6910CFd9E1F4B6671CA1A',
+        //   name: 'ZERO',
+        //   symbol: 'ZERO',
+        //   assetBase: 'ZERO',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401'
+        // },
         {
           address: '0x96b59499D6067B94ee2D1C558A31fA8dC4E3640d',
           name: 'zAVAX',
@@ -869,14 +869,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01',
         },
-        {
-          address: '0xb67176655e7919a27aA34C279157124619aDFd4B',
-          name: 'ZERO(Matic)',
-          symbol: 'ZERO',
-          assetBase: 'ZERO',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401',
-        },
+        // {
+        //   address: '0xb67176655e7919a27aA34C279157124619aDFd4B',
+        //   name: 'ZERO(Matic)',
+        //   symbol: 'ZERO',
+        //   assetBase: 'ZERO',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000F0939011a9bb95c3B791f0cb546377Ed2693a57401',
+        // },
         {
           address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b',
           name: 'zAVAX',
