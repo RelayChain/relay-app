@@ -46,7 +46,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       name: 'Ethereum',
       bridgeAddress: '0x820BCd8dBA1D4343e4c4Aa071CeA6450ee99a318',
       erc20HandlerAddress: '0xF687e1481d85F8b9F4D1f4D4C15348CeF8E5a762',
-      rpcUrl: 'https://mainnet.infura.io/v3/8ea75892f7044dd59127696bd2d3b114',
+      rpcUrl: 'https://main-light.eth.linkpool.io/',
       type: 'Ethereum',
       blockExplorer: 'https://etherscan.io/tx',
       nativeTokenSymbol: 'ETH',
