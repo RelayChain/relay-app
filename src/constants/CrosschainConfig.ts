@@ -160,14 +160,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
         },
-        {
-          address: '0x823cE9cca0b9eE2BC4C2d764d304691d770DbBe9',
-          name: 'Gondola',
-          symbol: 'GDL',
-          assetBase: 'GDL',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000823cE9cca0b9eE2BC4C2d764d304691d770DbBe901'
-        },
+        // {
+        //   address: '0x823cE9cca0b9eE2BC4C2d764d304691d770DbBe9',
+        //   name: 'Gondola',
+        //   symbol: 'GDL',
+        //   assetBase: 'GDL',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000823cE9cca0b9eE2BC4C2d764d304691d770DbBe901'
+        // },
         {
           address: '0x433d86336dB759855A66cCAbe4338313a8A7fc77',
           name: 'INDA',
@@ -355,14 +355,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01'
         },
-        {
-          address: '0xd606199557c8ab6f4cc70bd03facc96ca576f142',
-          name: 'Gondola',
-          symbol: 'GDL',
-          assetBase: 'GDL',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000D606199557c8Ab6F4Cc70bD03FaCc96ca576f14202'
-        },
+        // {
+        //   address: '0xd606199557c8ab6f4cc70bd03facc96ca576f142',
+        //   name: 'Gondola',
+        //   symbol: 'GDL',
+        //   assetBase: 'GDL',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000D606199557c8Ab6F4Cc70bD03FaCc96ca576f14202'
+        // },
         {
           address: '0x791FD27ef5ea8deE4746A1b2A1b95b6247f67b7D',
           name: 'INDA',
@@ -543,22 +543,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e01',
         },
-        {
-          address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-          name: 'BUSD',
-          symbol: 'BUSD',
-          assetBase: 'BUSD',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
-        },
-        {
-          address: '0xd705223747C7AF3386a70abbE586d390A6877687',
-          name: 'Gondola (GDL)',
-          symbol: 'GDL',
-          assetBase: 'GDL',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000d705223747C7AF3386a70abbE586d390A687768703'
-        },
+        // {
+        //   address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+        //   name: 'BUSD',
+        //   symbol: 'BUSD',
+        //   assetBase: 'BUSD',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000aaa777E372788F498462B7ed0fAaad7BA264586D03'
+        // },
+        // {
+        //   address: '0xd705223747C7AF3386a70abbE586d390A6877687',
+        //   name: 'Gondola (GDL)',
+        //   symbol: 'GDL',
+        //   assetBase: 'GDL',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000d705223747C7AF3386a70abbE586d390A687768703'
+        // },
         {
           address: '0xC878A79B63A41a831E469AE1A830A765eFd9d468',
           name: 'INDA',
@@ -601,14 +601,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
         },
-        {
-          address: '0xb9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d6',
-          name: 'PERA',
-          symbol: 'PERA',
-          assetBase: 'PERA',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000b9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d603'
-        },
+        // {
+        //   address: '0xb9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d6',
+        //   name: 'PERA',
+        //   symbol: 'PERA',
+        //   assetBase: 'PERA',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000b9D8592E16A9c1a3AE6021CDDb324EaC1Cbc70d603'
+        // },
         {
           address: '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
           name: 'Relay Token',
@@ -965,14 +965,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000c572544a4Ee47904d54aaA6A970AF96B6f00E1b01'
         },
-        {
-          address: '0x52dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a47',
-          name: 'PERA',
-          symbol: 'PERA',
-          assetBase: 'PERA',
-          decimals: 18,
-          resourceId: '0x000000000000000000000052dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a4705'
-        },
+        // {
+        //   address: '0x52dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a47',
+        //   name: 'PERA',
+        //   symbol: 'PERA',
+        //   assetBase: 'PERA',
+        //   decimals: 18,
+        //   resourceId: '0x000000000000000000000052dd5771Cd20Fbb5B4B1E6FBd5e92F6290de6a4705'
+        // },
         {
           address: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
           name: 'Relay Token',
