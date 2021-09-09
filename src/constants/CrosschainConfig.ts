@@ -235,8 +235,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0x6Ac493F0A7b0eC7946fe026d67B492bb64710807',
           name: 'MAI',
-          symbol: 'miMatic',
-          assetBase: 'miMatic',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
@@ -430,8 +430,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0x3B55E45fD6bd7d4724F5c47E0d1bCaEdd059263e',
           name: 'MAI',
-          symbol: 'miMatic',
-          assetBase: 'miMatic',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
@@ -652,8 +652,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0xAff99EaaEdd9429ff46B18b554837bba353d7858',
           name: 'MAI',
-          symbol: 'miMatic',
-          assetBase: 'miMatic',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
@@ -836,8 +836,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0xe73A1e986978Ec0Be829C04a110447644E08Ab71',
           name: 'MAI',
-          symbol: 'miMatic',
-          assetBase: 'miMatic',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
@@ -1032,8 +1032,8 @@ export const crosschainConfig: ChainbridgeConfig = {
         {
           address: '0xa3fa99a148fa48d14ed51d610c367c61876997f1',
           name: 'MAI',
-          symbol: 'miMatic',
-          assetBase: 'miMatic',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
