@@ -129,7 +129,7 @@ export function GetTokenByAddrAndChainId(address: string, chainId: string): Toke
     assetBase: ''
   }
   const tokens = crosschainConfig.chains.find(c => String(c.chainId) === chainId)?.tokens ?? [];
-  return tokens.find(t => t.address === address) ?? result;
+  return tokens.find(t => t.address.toLowerCase() === address.toLowerCase()) ?? result;
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
@@ -377,7 +377,7 @@ export function useCrosschainHooks() {
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
 
-    // @ts-ignore  
+    // @ts-ignore
     const signer = web3React.library.getSigner()
     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
     const approvedAmount = await tokenContract.allowance(
