@@ -232,6 +232,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
         },
+        {
+          address: '0x6Ac493F0A7b0eC7946fe026d67B492bb64710807',
+          name: 'MAI',
+          symbol: 'miMatic',
+          assetBase: 'miMatic',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
+        },
       ]
     },
     {
@@ -418,6 +426,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
+        },
+        {
+          address: '0x3B55E45fD6bd7d4724F5c47E0d1bCaEdd059263e',
+          name: 'MAI',
+          symbol: 'miMatic',
+          assetBase: 'miMatic',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
       ]
     },
@@ -633,6 +649,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
         },
+        {
+          address: '0xAff99EaaEdd9429ff46B18b554837bba353d7858',
+          name: 'MAI',
+          symbol: 'miMatic',
+          assetBase: 'miMatic',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
+        },
       ]
     },
     {
@@ -808,6 +832,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
+        },
+        {
+          address: '0xe73A1e986978Ec0Be829C04a110447644E08Ab71',
+          name: 'MAI',
+          symbol: 'miMatic',
+          assetBase: 'miMatic',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
       ]
     },
@@ -996,6 +1028,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'HT',
           decimals: 18,
           resourceId: '0x00000000000000000000005545153CCFcA01fbd7Dd11C0b23ba694D9509A6F04'
+        },
+        {
+          address: '0xa3fa99a148fa48d14ed51d610c367c61876997f1',
+          name: 'MAI',
+          symbol: 'miMatic',
+          assetBase: 'miMatic',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
