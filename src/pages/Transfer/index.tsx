@@ -11,7 +11,7 @@ import {
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components'
+import { TYPE, Title } from '../../theme'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -37,9 +37,9 @@ import { GreyCard } from '../../components/Card'
 import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { RowBetween } from '../../components/Row'
-import { TYPE, Title } from '../../theme'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
@@ -269,7 +269,7 @@ export default function Transfer() {
   }, [maxAmountInput, onUserInput, handleInputAmountChange])
 
   // eslint-disable-next-line
-  const [isCrossChain, setIsCrossChain] = useState<boolean>(true)  
+  const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
 
   const startNewSwap = () => {
     BreakCrosschainSwap()
@@ -314,7 +314,7 @@ export default function Transfer() {
     if(currentToken.address) {
       GetAllowance()
       setConfirmTransferModalOpen(true)
-    }    
+    }
   }
 
   // token transfer state

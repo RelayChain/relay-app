@@ -38,12 +38,12 @@ const logosNames = {
   'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB'],
   'GROW': ['GROW'],
   'WISB': ['WISB'],
-  'INDA': ['INDA'],
+  // 'INDA': ['INDA'],
   'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV'],
   'XIOT': ['XIOT'],
   'CHART': ['CHART', 'ChartEx'],
   'z1INCH': ['z1INCH', '1INCH'],
-  'AAVE': ['zAAVE', 'AAVE'],
+  //'AAVE': ['zAAVE', 'AAVE'],
   'ZERO': ['ZERO'],
   'LINK': ['LINK', 'zLINK'],
   'UNI': ['zUNI', 'UNI'],
@@ -58,11 +58,12 @@ const logosNames = {
   'wDAI': ['wDAI', 'DAI', 'pngDAI'],
   'RELAY': ['RELAY'],
   'BUSD': ['BUSD'],
-  'WAS': ['WAS'],
+  // 'WAS': ['WAS'],
   'GDL': ['GDL'],
   'BIOS': ['BIOS'],
-  'YFI': ['YFI', 'zYFI'],
-  'PERA': ['PERA']
+  // 'YFI': ['YFI', 'zYFI'],
+  'PERA': ['PERA'],
+  'MAI': ['MAI', 'MAI (miMatic)']
 }
 
 function getLogoByName(tokenName: string) {
