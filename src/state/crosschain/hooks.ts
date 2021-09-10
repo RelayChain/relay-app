@@ -509,21 +509,23 @@ export function useCrosschainHooks() {
 
   const UpdateFee = async () => {
     const crosschainState = getCrosschainState()
-    const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-
-    // @ts-ignore
-    const signer = web3React.library.getSigner()
-    const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
     const targetChain = crosschainState.targetChain.chainID;
-    const feeResult = await bridgeContract._fees(targetChain);
-    const fee = feeResult.toString()
-    const value = WithDecimals(fee);
+    if (targetChain) {
+      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
 
-    dispatch(
-      setCrosschainFee({
-        value
-      })
-    )
+      // @ts-ignore
+      const signer = web3React.library.getSigner()
+      const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
+      const feeResult = await bridgeContract._fees(targetChain)
+      const fee = feeResult.toString()
+      const value = WithDecimals(fee)
+
+      dispatch(
+        setCrosschainFee({
+          value
+        })
+      )
+    }
   }
 
   return {
