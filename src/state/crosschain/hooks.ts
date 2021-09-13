@@ -525,6 +525,13 @@ export function useCrosschainHooks() {
           value
         })
       )
+    } else {
+      
+      dispatch(
+        setCrosschainFee({
+          value: '0'
+        })
+      )
     }
   }
 
