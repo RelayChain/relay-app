@@ -240,6 +240,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0xd4a8D3A592C109D17ECcE6f974d80249F9630c17',
+          name: 'Canary',
+          symbol: 'CNR',
+          assetBase: 'CNR',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
+        }
       ]
     },
     {
@@ -435,6 +443,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0x8D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf',
+          name: 'Canary',
+          symbol: 'CNR',
+          assetBase: 'CNR',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
+        }
       ]
     },
     {
@@ -657,6 +673,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0x7Ea7D47f638C100481D1347BacF1CdF1F4054454',
+          name: 'Canary',
+          symbol: 'CNR',
+          assetBase: 'CNR',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
+        }
       ]
     },
     {
@@ -841,6 +865,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0x9583b56B806AD0BafD554f2DE9C6f0246BC464A9',
+          name: 'Canary',
+          symbol: 'CNR',
+          assetBase: 'CNR',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
+        }
       ]
     },
     {
@@ -1037,6 +1069,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0x34421517f71e1B888eF40D7f176469263Fa92Cc8',
+          name: 'Canary',
+          symbol: 'CNR',
+          assetBase: 'CNR',
+          decimals: 18,
+          resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
+        }
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
         //   name: 'MINT',

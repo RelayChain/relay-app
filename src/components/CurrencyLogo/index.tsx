@@ -63,7 +63,8 @@ const logosNames = {
   'BIOS': ['BIOS'],
   // 'YFI': ['YFI', 'zYFI'],
   'PERA': ['PERA'],
-  'MAI': ['MAI', 'MAI (miMatic)']
+  'MAI': ['MAI', 'MAI (miMatic)'],
+  'CNR': ['CNR', 'Canary']
 }
 
 function getLogoByName(tokenName: string) {
