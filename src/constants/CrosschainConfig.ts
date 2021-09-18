@@ -56,46 +56,46 @@ export const crosschainConfig: ChainbridgeConfig = {
       relayContractAddress: '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
       marketPlace: 'https://app.uniswap.org/',
       tokens: [
-        {
-          address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-          name: 'WETH',
-          symbol: 'WETH',
-          assetBase: 'ETH',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201'
-        },
-        {
-          address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-          name: "USDT",
-          symbol: "USDT",
-          assetBase: 'USDT',
-          decimals: 6,
-          resourceId: "0x0000000000000000000000dAC17F958D2ee523a2206206994597C13D831ec701",
-        },
-        {
-          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-          name: 'USDC',
-          symbol: 'USDC',
-          assetBase: 'USDC',
-          decimals: 6,
-          resourceId: '0x0000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4801'
-        },
-        {
-          address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-          name: 'wBTC',
-          symbol: 'wBTC',
-          assetBase: 'BTC',
-          decimals: 8,
-          resourceId: '0x00000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c59901'
-        },
-        {
-          address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-          name: 'DAI',
-          symbol: 'DAI',
-          assetBase: 'DAI',
-          decimals: 18,
-          resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
-        },
+        // {
+        //   address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        //   name: 'WETH',
+        //   symbol: 'WETH',
+        //   assetBase: 'ETH',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201'
+        // },
+        // {
+        //   address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        //   name: "USDT",
+        //   symbol: "USDT",
+        //   assetBase: 'USDT',
+        //   decimals: 6,
+        //   resourceId: "0x0000000000000000000000dAC17F958D2ee523a2206206994597C13D831ec701",
+        // },
+        // {
+        //   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        //   name: 'USDC',
+        //   symbol: 'USDC',
+        //   assetBase: 'USDC',
+        //   decimals: 6,
+        //   resourceId: '0x0000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4801'
+        // },
+        // {
+        //   address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+        //   name: 'wBTC',
+        //   symbol: 'wBTC',
+        //   assetBase: 'BTC',
+        //   decimals: 8,
+        //   resourceId: '0x00000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c59901'
+        // },
+        // {
+        //   address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        //   name: 'DAI',
+        //   symbol: 'DAI',
+        //   assetBase: 'DAI',
+        //   decimals: 18,
+        //   resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
+        // },
         // {
         //   address: '0xF0939011a9bb95c3B791f0cb546377Ed2693a574',
         //   name: 'ZERO(ETH)',
@@ -128,30 +128,30 @@ export const crosschainConfig: ChainbridgeConfig = {
         //   decimals: 18,
         //   resourceId: '0x00000000000000000000007Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE901'
         // },
-        {
-          address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-          name: 'UNI',
-          symbol: 'UNI',
-          assetBase: 'UNI',
-          decimals: 18,
-          resourceId: '0x00000000000000000000001f9840a85d5aF5bf1D1762F925BDADdC4201F98401'
-        },
-        {
-          address: '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
-          name: 'SUSHI',
-          symbol: 'SUSHI',
-          assetBase: 'SUSHI',
-          decimals: 18,
-          resourceId: '0x00000000000000000000006B3595068778DD592e39A122f4f5a5cF09C90fE201'
-        },
-        {
-          address: '0x111111111117dC0aa78b770fA6A738034120C302',
-          name: '1INCH',
-          symbol: '1INCH',
-          assetBase: '1INCH',
-          decimals: 18,
-          resourceId: '0x0000000000000000000000111111111117dc0aa78b770fa6a738034120c30201'
-        },
+        // {
+        //   address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+        //   name: 'UNI',
+        //   symbol: 'UNI',
+        //   assetBase: 'UNI',
+        //   decimals: 18,
+        //   resourceId: '0x00000000000000000000001f9840a85d5aF5bf1D1762F925BDADdC4201F98401'
+        // },
+        // {
+        //   address: '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
+        //   name: 'SUSHI',
+        //   symbol: 'SUSHI',
+        //   assetBase: 'SUSHI',
+        //   decimals: 18,
+        //   resourceId: '0x00000000000000000000006B3595068778DD592e39A122f4f5a5cF09C90fE201'
+        // },
+        // {
+        //   address: '0x111111111117dC0aa78b770fA6A738034120C302',
+        //   name: '1INCH',
+        //   symbol: '1INCH',
+        //   assetBase: '1INCH',
+        //   decimals: 18,
+        //   resourceId: '0x0000000000000000000000111111111117dc0aa78b770fa6a738034120c30201'
+        // },
         // {
         //   address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
         //   name: 'YFI',
