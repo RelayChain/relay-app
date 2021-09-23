@@ -131,7 +131,7 @@ export default function App() {
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route exact strict path="/vote/:id" component={VotePage} />
-                <Route exact strict path="/transfer" component={Transfer} />
+                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />
                 {/*<Route exact strict path="/relay-sale" component={RelaySale} />*/}
                 <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
                 <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
