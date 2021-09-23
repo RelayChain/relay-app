@@ -91,8 +91,15 @@ const Cross = styled.div`
     transform: rotate(-45deg);
   }
 `
-const LogoBlock = styled.img`
+const LogoBlock = styled.img` 
+  height: 20px;
+  width: 20px;
 `
+
+function getLogoByName(tokenName: string) {
+  return require(`../../assets/images/${tokenName}.svg`)
+}
+
 export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
@@ -128,14 +135,14 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
 
         <MenuItem id="link" href="https://t.me/relaychaincommunity">
           <IconLink>
-            <MessageCircle size={20} />
+          <LogoBlock src={getLogoByName('telegram')} />
           </IconLink>
           Telegram
         </MenuItem>
 
         <MenuItem id="link" href="https://discord.gg/TP7XHZwPkw">
           <IconLink>
-            <MessageSquare size={20} />
+          <LogoBlock src={getLogoByName('discord')} />
           </IconLink>
           Discord
         </MenuItem>
@@ -156,7 +163,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
 
         <MenuItem id="link" href="https://www.reddit.com/r/RelayChain/">
           <IconLink>
-            <MessageCircle size={20} />
+          <LogoBlock src={getLogoByName('reddit')} />
           </IconLink>
           Reddit
         </MenuItem>
