@@ -1,4 +1,7 @@
-import { Book, BookOpen, Info, MessageCircle } from 'react-feather'
+import {
+  Book, BookOpen, Info, MessageCircle, Twitter, GitHub,
+  Youtube, BarChart, BarChart2, MessageSquare, Paperclip
+} from 'react-feather'
 
 import { ExternalLink } from '../../theme'
 import Modal from '../Modal'
@@ -29,7 +32,7 @@ const MenuItem = styled(ExternalLink)`
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -88,11 +91,20 @@ const Cross = styled.div`
     transform: rotate(-45deg);
   }
 `
+const LogoBlock = styled.img`
+`
 export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <ModalContainer>
         <Cross onClick={onDismiss} />
+
+        <MenuItem id="link" href="https://relaychain.com">
+          <IconLink>
+            <Info size={20} />
+          </IconLink>
+          Home
+        </MenuItem>
 
         <MenuItem href={`https://docs.relaychain.com`}>
           <IconLink>
@@ -100,12 +112,11 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           </IconLink>
           Docs
         </MenuItem>
-
-        <MenuItem id="link" href="https://relaychain.com">
+        <MenuItem href={`https://www.relaychain.com/whitepaper`}>
           <IconLink>
-            <Info size={20} />
+            <Paperclip size={20} />
           </IconLink>
-          Home
+          Whitepaper
         </MenuItem>
 
         <MenuItem id="link" href="https://medium.com/@Relay_Chain">
@@ -124,9 +135,49 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
 
         <MenuItem id="link" href="https://discord.gg/TP7XHZwPkw">
           <IconLink>
-            <MessageCircle size={20} />
+            <MessageSquare size={20} />
           </IconLink>
           Discord
+        </MenuItem>
+
+        <MenuItem id="link" href="https://twitter.com/relay_chain">
+          <IconLink>
+            <Twitter size={20} />
+          </IconLink>
+          Twitter
+        </MenuItem>
+
+        <MenuItem id="link" href="https://www.youtube.com/channel/UC8q_XLKQtI-x5PUa4Rg3RrQ">
+          <IconLink>
+            <Youtube size={20} />
+          </IconLink>
+          Youtube
+        </MenuItem>
+
+        <MenuItem id="link" href="https://www.reddit.com/r/RelayChain/">
+          <IconLink>
+            <MessageCircle size={20} />
+          </IconLink>
+          Reddit
+        </MenuItem>
+
+        <MenuItem id="link" href="https://coinmarketcap.com/currencies/relay-token/">
+          <IconLink>
+            <BarChart size={20} />
+          </IconLink>
+          Coinmarketcap
+        </MenuItem>
+        <MenuItem id="link" href="https://www.coingecko.com/en/coins/relay-token/">
+          <IconLink>
+            <BarChart2 size={20} />
+          </IconLink>
+          CoinGecko
+        </MenuItem>
+        <MenuItem id="link" href="https://github.com/ZeroExchange/">
+          <IconLink>
+            <GitHub size={20} />
+          </IconLink>
+          Github
         </MenuItem>
       </ModalContainer>
     </Modal>
