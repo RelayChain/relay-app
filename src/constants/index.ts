@@ -141,7 +141,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MOONRIVER]: new Token(ChainId.MOONRIVER, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -169,7 +170,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
-  [ChainId.HECO]: [WETH[ChainId.HECO]]
+  [ChainId.HECO]: [WETH[ChainId.HECO]],
+  [ChainId.MOONRIVER]: [WETH[ChainId.MOONRIVER]],
 }
 
 // used to construct intermediary pairs for trading

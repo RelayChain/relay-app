@@ -1076,7 +1076,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CNR',
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
-        }
+        },
         // {
         //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
         //   name: 'MINT',
@@ -1085,10 +1085,40 @@ export const crosschainConfig: ChainbridgeConfig = {
         //   decimals: 18,
         //   resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
         // },
+        {
+          address: '0x8E1035519567A2C260767f600471bc9Ff3Df896E',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
       ]
-    }
-
-
+    },
+    {
+      chainId: 6,
+      networkId: 1285,
+      name: 'Moonriver',
+      bridgeAddress: "0xc3a720588d915274B3c81c0bDf473D3FFb279017",
+      erc20HandlerAddress: '0x3e3f619940d9a20DbcF3F7c0c7958f4A67Fac688',
+      rpcUrl: 'https://rpc.moonriver.moonbeam.network',
+      type: 'Ethereum',
+      gasLimit: 60000,
+      defaultGasPrice: 2,
+      blockExplorer: 'https://blockscout.moonriver.moonbeam.network/',
+      nativeTokenSymbol: 'MOVR',
+      marketPlace: 'https://ht.mdex.com/#/swap?lang=en',
+      tokens: [
+        {
+          address: '0x98878B06940aE243284CA214f92Bb71a2b032B8A',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
+      ]
+    },
   ]
 
   // rinkeby - FUJI
