@@ -467,6 +467,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
         },
+        {
+          address: '0xA56B1b9f4e5A1A1e0868F5Fd4352ce7CdF0C2A4F',
+          name: 'MATIC',
+          symbol: 'MATIC',
+          assetBase: 'MATIC',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
+        },
       ]
     },
     {
