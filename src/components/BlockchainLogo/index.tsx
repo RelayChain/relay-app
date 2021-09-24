@@ -4,6 +4,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import HecoLogo from '../../assets/images/heco-icon.jpg'
 import PolkadotLogo from '../../assets/images/polkadot-logo.png'
 import PolygonLogo from '../../assets/images/polygon-logo.png'
+import MoonriverLogo from '../../assets/images/crosschain/MOVR.png'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -51,6 +52,10 @@ export default function BlockchainLogo({
 
   if (blockchain === 'HECO' || blockchain === 'heco') {
     return <StyledEthereumLogo src={HecoLogo} alt="HECO" size={size} style={style} />
+  }
+
+  if (blockchain === 'Moonriver') {
+    return <StyledEthereumLogo src={MoonriverLogo} alt="HECO" size={size} style={style} />
   }
   return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
 }

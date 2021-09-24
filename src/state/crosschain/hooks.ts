@@ -191,6 +191,8 @@ function GetChainNameById(chainID: number): string {
     return 'Polygon'
   } else if (chainID === ChainId.HECO) {
     return 'HECO'
+  } else if (chainID === ChainId.MOONRIVER) {
+    return 'Moonriver'
   }
   return ''
 }

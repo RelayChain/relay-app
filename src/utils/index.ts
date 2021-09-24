@@ -38,7 +38,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1287: 'MOONBASE_ALPHA',
   80001: 'MUMBAI',
   137: 'MATIC',
-  128: 'HECO'
+  128: 'HECO',
+  1285: 'MOONRIVER',
 }
 
 export function getEtherscanLink(
