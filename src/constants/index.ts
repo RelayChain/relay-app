@@ -361,7 +361,8 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MATIC]: 'Polygon',
-  [ChainId.HECO]: 'HECO'
+  [ChainId.HECO]: 'HECO',
+  [ChainId.MOONRIVER]: 'Moonriver'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO']
