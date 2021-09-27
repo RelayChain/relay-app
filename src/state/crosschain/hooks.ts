@@ -82,14 +82,13 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         name: chain.name,
         chainID: String(chain.chainId),
         symbol: chain.nativeTokenSymbol,
-
+        marketPlace: chain.marketPlace
       }
       if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
         const exchangeFields = {
           exchangeContractAddress: chain.exchangeContractAddress,
           rateZeroToRelay: chain.rateZeroToRelay,
           zeroContractAddress: chain.zeroContractAddress,
-          marketPlace: chain.marketPlace
         }
         result = { ...result, ...exchangeFields }
       }
