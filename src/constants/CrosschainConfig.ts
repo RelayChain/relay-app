@@ -247,7 +247,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CNR',
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
-        }
+        },
+        {
+          address: '0x6FDE45b643D2F21472Ef42e81146B492b9E68b08',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
       ]
     },
     {
@@ -450,7 +458,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CNR',
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
-        }
+        },
+        {
+          address: '0xF873633DF9D5cDd62BB1f402499CC470a72A02D7',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
       ]
     },
     {
@@ -680,7 +696,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CNR',
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
-        }
+        },
+        {
+          address: '0x0083828F14884667F9Da2E24D583874D1D7EDA72',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
       ]
     },
     {
@@ -872,7 +896,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'CNR',
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
-        }
+        },
+        {
+          address: '0x1F62cb751f2fBac367011bC9F5f6Db310dc0A5e5',
+          name: 'MOVR',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
       ]
     },
     {
@@ -1093,6 +1125,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
         },
+        {
+          address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+          name: 'MATIC',
+          symbol: 'MATIC',
+          assetBase: 'MATIC',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
+        },
       ]
     },
     {
@@ -1110,12 +1150,36 @@ export const crosschainConfig: ChainbridgeConfig = {
       marketPlace: 'https://ht.mdex.com/#/swap?lang=en',
       tokens: [
         {
+          address: '0x14a0243C333A5b238143068dC3A7323Ba4C30ECB',
+          name: 'zAVAX',
+          symbol: 'zAVAX',
+          assetBase: 'AVAX',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000B31f66AA3C1e785363F0875A1B74E27b85FD66c702',
+        },
+        {
+          address: '0xAd7F1844696652ddA7959a49063BfFccafafEfe7',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
+        },
+        {
           address: '0x98878B06940aE243284CA214f92Bb71a2b032B8A',
           name: 'MOVR',
           symbol: 'MOVR',
           assetBase: 'MOVR',
           decimals: 18,
           resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
+        {
+          address: '0x682F81e57EAa716504090C3ECBa8595fB54561D8',
+          name: 'MATIC',
+          symbol: 'MATIC',
+          assetBase: 'MATIC',
+          decimals: 18,
+          resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
         },
       ]
     },
