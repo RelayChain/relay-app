@@ -145,7 +145,7 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   return result
 }
 
-function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
+export function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   const result: Array<CrosschainToken> = []
   for (const chain of crosschainConfig.chains) {
     if (chain.name === chainName) {
@@ -191,6 +191,8 @@ function GetChainNameById(chainID: number): string {
     return 'Polygon'
   } else if (chainID === ChainId.HECO) {
     return 'HECO'
+  } else if (chainID === ChainId.MOONRIVER) {
+    return 'Moonriver'
   }
   return ''
 }

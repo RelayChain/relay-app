@@ -1,7 +1,7 @@
 import { ChainId, Currency, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
-  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
+  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
@@ -134,6 +134,8 @@ export default function RemoveLiquidity({
             ? MUMBAI_ROUTER_ADDRESS
             : chainId === ChainId.HECO
               ? HECO_ROUTER_ADDRESS
+              : chainId === ChainId.MOONRIVER
+                ? MOONRIVER_ROUTER_ADDRESS
               : AVAX_ROUTER_ADDRESS
   )
 
@@ -186,7 +188,9 @@ export default function RemoveLiquidity({
                   ? MATIC_ROUTER_ADDRESS
                   : chainId === ChainId.HECO
                     ? HECO_ROUTER_ADDRESS
-                    : AVAX_ROUTER_ADDRESS,
+                    : chainId === ChainId.MOONRIVER
+                      ? MOONRIVER_ROUTER_ADDRESS
+                      : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -648,17 +652,17 @@ export default function RemoveLiquidity({
                               }`}
                           >
                             {// eslint-disable-next-line 
-                            chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
+                              chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive WETH'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
+                              chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive WAVAX'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
+                              chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive WBNB'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
+                              chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive WDEV'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
+                              chainId && chainId === (ChainId.MUMBAI || chainId === ChainId.MATIC) && 'Receive WMATIC'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === (ChainId.HECO) && 'Receive WHT'}
+                              chainId && chainId === (ChainId.HECO) && 'Receive WHT'}
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -666,15 +670,15 @@ export default function RemoveLiquidity({
                               }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
                             {// eslint-disable-next-line 
-                            chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
+                              chainId && (chainId === ChainId.MAINNET || chainId === ChainId.RINKEBY) && 'Receive ETH'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
+                              chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI && 'Receive AVAX'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
+                              chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST && 'Receive BNB'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
+                              chainId && chainId === ChainId.MOONBASE_ALPHA && 'Receive DEV'}
                             {// eslint-disable-next-line 
-                            chainId && chainId === (ChainId.HECO) && 'Receive HECO'}
+                              chainId && chainId === (ChainId.HECO) && 'Receive HECO'}
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

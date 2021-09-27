@@ -23,7 +23,7 @@ export const HECO_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET
 export const MOONBASE_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0xaD3eE6686B40655b34e0D150f99715c87A75DF37' : ''
 
 export const MUMBAI_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
-
+export const MOONRIVER_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
 
@@ -141,7 +141,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MOONBASE_ALPHA]: new Token(ChainId.MOONBASE_ALPHA, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MOONRIVER]: new Token(ChainId.MOONRIVER, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -169,7 +170,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.MOONBASE_ALPHA]: [WETH[ChainId.MOONBASE_ALPHA]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
-  [ChainId.HECO]: [WETH[ChainId.HECO]]
+  [ChainId.HECO]: [WETH[ChainId.HECO]],
+  [ChainId.MOONRIVER]: [WETH[ChainId.MOONRIVER]],
 }
 
 // used to construct intermediary pairs for trading
@@ -359,7 +361,8 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
   [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MATIC]: 'Polygon',
-  [ChainId.HECO]: 'HECO'
+  [ChainId.HECO]: 'HECO',
+  [ChainId.MOONRIVER]: 'Moonriver'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO']

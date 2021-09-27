@@ -9,8 +9,8 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
-import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import React, { useCallback, useMemo, useState } from 'react'
+import { GetAvailableTokens, GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { TYPE, Title } from '../../theme'
 import {
   useDefaultsFromURLSearch,
@@ -172,6 +172,7 @@ export default function Transfer() {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
+  const [isTransferToken, setIsTransferToken] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -251,7 +252,8 @@ export default function Transfer() {
               address: newToken?.address || '',
               assetBase: newToken?.assetBase || '',
               symbol: newToken?.symbol || '',
-              decimals: newToken?.decimals || 18
+              decimals: newToken?.decimals || 18,
+              resourceId: newToken?.resourceId || ''
             }
           })
         )
@@ -311,7 +313,7 @@ export default function Transfer() {
     setConfirmTransferModalOpen(false)
   }
   const showConfirmTransferModal = () => {
-    if(currentToken.address) {
+    if (currentToken.address) {
       GetAllowance()
       setConfirmTransferModalOpen(true)
     }
@@ -343,6 +345,14 @@ export default function Transfer() {
       showConfirmTransferModal()
     }
   }
+
+  useEffect(() => {
+    if (targetChain && currentToken) {
+      const listTokens = GetAvailableTokens(targetChain.name)
+      const targetToken = listTokens.find(token => token.resourceId === currentToken.resourceId)
+      setIsTransferToken(!!targetToken)
+    }
+  }, [targetChain, currentToken])
 
   // quick enable or disable of bridge
   const bridgeEnabled = true;
@@ -420,30 +430,35 @@ export default function Transfer() {
               </RowBetweenTransfer>
               <RowBetweenTransfer>
                 <TextBottom>
-                  {transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
+                  {isTransferToken && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
                     <SpanAmount>
                       You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name.length > 0 ? targetChain.name : '...'}
                     </SpanAmount>
-                  ) : (
-                    ''
-                  )}
+                  ) : ('')}
                 </TextBottom>
-
+                {( currentToken &&
+                    !isTransferToken &&
+                    targetChain.chainID !== "") ? (
+                  <SpanAmount>
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...' } is not available 
+                  </SpanAmount>
+                ) : ('')}
                 <BottomGroupingTransfer>
                   {isCrossChain &&
-                  transferAmount.length &&
-                  transferAmount !== '0' &&
-                  currentToken &&
-                  targetChain.chainID !== "" &&
-                  targetChain.name.length > 0 &&
-                  currencies[Field.INPUT] ? (
+                    transferAmount.length &&
+                    transferAmount !== '0' &&
+                    currentToken &&
+                    isTransferToken &&
+                    targetChain.chainID !== "" &&
+                    targetChain.name.length > 0 &&
+                    currencies[Field.INPUT] ? (
                     <>
-                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px'}}>
+                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px' }}>
                         <TYPE.white>Transfer</TYPE.white>
                       </ButtonPrimary>
                     </>
                   ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px'}}>Connect Wallet</ButtonLight>
+                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px' }}>Connect Wallet</ButtonLight>
                   ) : (
                     <TransferButton>
                       <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>

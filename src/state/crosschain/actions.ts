@@ -15,6 +15,7 @@ export interface CrosschainToken {
   symbol: string
   decimals: number
   disableTransfer?: boolean
+  resourceId?: string
 }
 
 export interface CrosschainChain {
