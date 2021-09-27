@@ -1155,7 +1155,7 @@ export const crosschainConfig: ChainbridgeConfig = {
       defaultGasPrice: 2,
       blockExplorer: 'https://blockscout.moonriver.moonbeam.network/',
       nativeTokenSymbol: 'MOVR',
-      marketPlace: 'https://ht.mdex.com/#/swap?lang=en',
+      marketPlace: 'https://solarbeam.io/exchange/swap',
       tokens: [
         {
           address: '0x14a0243C333A5b238143068dC3A7323Ba4C30ECB',
