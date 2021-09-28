@@ -1,18 +1,16 @@
-# Zero Exchange App
+# Relay Chain App
 
-[![Lint](https://github.com/zeroexchange/app/workflows/Lint/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ALint)
-[![Tests](https://github.com/zeroexchange/app/workflows/Tests/badge.svg)](https://github.com/zeroexchange/app/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 
-An open source interface for Zero Exchange -- a fork of uniswap providing cross chain liquidity from Ethereum to Avalanche.
+An open source interface for RelayChain -- a fork of uniswap providing cross chain bridges from and to Ethereum, Avalanche, Binance, Heco, Moonriver and Polygon.
 
-- Website: [0.exchange](https://0.exchange/)
-- App: [app.0.exchange](https://app.0.exchange)
-- Blog: [blog.0.exchange/](https://blog.0.exchange/)
-- Twitter: [@OfficialZeroDEX](https://twitter.com/OfficialZeroDEX)
-- Email: [hello@0.exchange](mailto:hello@0.exchange)
-- Discord: [Zero Exchange](https://discord.com/invite/5xwKdqrtDu)
-- Learn More: [Learn More](https://0.exchange/learn-more)
+- Website: [relaychain.com](https://relaychain.com/)
+- App: [app.relaychain.com](https://app.relaychain.com)
+- Blog: [https://medium.com/@Relay_Chain/](https://medium.com/@Relay_Chain)
+- Twitter: [@relay_chain](https://twitter.com/relay_chain)
+- Email: [hello@relaychain.com](mailto:hello@relaychain.com)
+- Discord: [RelayChain](https://discord.com/invite/5xwKdqrtDu)
+- Learn More: [Learn More](https://docs.relaychain.com/)
 
 ## Development
 
