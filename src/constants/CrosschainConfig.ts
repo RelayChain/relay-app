@@ -1166,6 +1166,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x0000000000000000000000B31f66AA3C1e785363F0875A1B74E27b85FD66c702',
         },
         {
+          address: '0x5Bb79B71f06b5bd501f18872199Df644DE2C62dB',
+          name: 'USDC',
+          symbol: 'USDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4801'
+        },
+        {
+          address: '0xF78CD6939Ee62629ea93a33878B3E2a1748ed1c8',
+          name: 'DAI',
+          symbol: 'DAI',
+          assetBase: 'DAI',
+          decimals: 18,
+          resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
+        },
+        {
           address: '0xAd7F1844696652ddA7959a49063BfFccafafEfe7',
           name: 'Relay Token',
           symbol: 'RELAY',
