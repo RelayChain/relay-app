@@ -1210,8 +1210,8 @@ export const crosschainConfig: ChainbridgeConfig = {
       gasLimit: 60000,
       defaultGasPrice: 2,
       blockExplorer: 'https://ftmscan.com/',
-      nativeTokenSymbol: 'MOVR',
-      marketPlace: 'https://solarbeam.io/exchange/swap',
+      nativeTokenSymbol: 'FTM',
+      marketPlace: 'https://pwawallet.fantom.network/',
       tokens: [
         {
           address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
