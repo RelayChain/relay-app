@@ -1141,6 +1141,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
         },
+        {
+          address: '0xB85517b87BF64942adf3A0B9E4c71E4Bc5Caa4e5',
+          name: 'FANTOM',
+          symbol: 'FTM',
+          assetBase: 'FTM',
+          decimals: 18,
+          resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+        }
       ]
     },
     {
@@ -1191,6 +1199,30 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
       ]
     },
+    {
+      chainId: 7,
+      networkId: 250,
+      name: 'Fantom',
+      bridgeAddress: "0xAa6520a71619f3a77F12b87BAfA1f32F7002dFEa",
+      erc20HandlerAddress: '0x502B4683D213C68507fc6d19417df0bB7995b23B',
+      rpcUrl: 'https://rpcapi.fantom.network',
+      type: 'Ethereum',
+      gasLimit: 60000,
+      defaultGasPrice: 2,
+      blockExplorer: 'https://ftmscan.com/',
+      nativeTokenSymbol: 'MOVR',
+      marketPlace: 'https://solarbeam.io/exchange/swap',
+      tokens: [
+        {
+          address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
+          name: 'FANTOM',
+          symbol: 'FTM',
+          assetBase: 'FTM',
+          decimals: 18,
+          resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+        }
+      ] 
+  }
   ]
 
   // rinkeby - FUJI

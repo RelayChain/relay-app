@@ -1,7 +1,7 @@
 import { ChainId, Currency, Percent, WETH, currencyEquals, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS,
-  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS
+  SMART_CHAIN_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS, FANTOM_ROUTER_ADDRESS
 } from '../../constants'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { ArrowDown, Plus } from 'react-feather'
@@ -190,6 +190,8 @@ export default function RemoveLiquidity({
                     ? HECO_ROUTER_ADDRESS
                     : chainId === ChainId.MOONRIVER
                       ? MOONRIVER_ROUTER_ADDRESS
+                      : chainId === ChainId.FANTOM
+                      ? FANTOM_ROUTER_ADDRESS
                       : AVAX_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),

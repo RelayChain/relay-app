@@ -7,7 +7,8 @@ import {
   MUMBAI_ROUTER_ADDRESS,
   MATIC_ROUTER_ADDRESS,
   HECO_ROUTER_ADDRESS,
-  MOONRIVER_ROUTER_ADDRESS
+  MOONRIVER_ROUTER_ADDRESS,
+  FANTOM_ROUTER_ADDRESS
 } from '../constants'
 import { useCallback, useMemo } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -135,6 +136,8 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
                 ? HECO_ROUTER_ADDRESS
                 : chainId === ChainId.MOONRIVER
                 ? MOONRIVER_ROUTER_ADDRESS
+                : chainId === ChainId.FANTOM
+                  ? FANTOM_ROUTER_ADDRESS
                 : AVAX_ROUTER_ADDRESS
 
   )
