@@ -1,7 +1,7 @@
 import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Percent, Token } from '@zeroexchange/sdk'
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
-  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS
+  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS, FANTOM_ROUTER_ADDRESS
 } from '../constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
@@ -40,6 +40,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   137: 'MATIC',
   128: 'HECO',
   1285: 'MOONRIVER',
+  250: 'FANTOM'
 }
 
 export function getEtherscanLink(
@@ -47,7 +48,6 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  console.log("🚀 ~ file: index.ts ~ line 50 ~ data", data)
   let prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
   if (chainId === ChainId.FUJI) {
     prefix = `https://cchain.explorer.avax-test.network`
@@ -158,6 +158,8 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
               ? HECO_ROUTER_ADDRESS
               : chainId === ChainId.MOONRIVER
                 ? MOONRIVER_ROUTER_ADDRESS
+                : chainId === ChainId.FANTOM
+                  ? FANTOM_ROUTER_ADDRESS
               : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,

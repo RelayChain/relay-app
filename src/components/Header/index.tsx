@@ -176,7 +176,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.MATIC]: 'Polygon',
   [ChainId.HECO]: 'HECO',
-  [ChainId.MOONRIVER]: 'Moonriver'
+  [ChainId.MOONRIVER]: 'Moonriver',
+  [ChainId.FANTOM]: 'Fantom'
 }
 
 const NETWORK_SYMBOLS: any = {
@@ -190,7 +191,8 @@ const NETWORK_SYMBOLS: any = {
   Moonbeam: 'DEV',
   Polygon: 'MATIC',
   HECO: 'HT',
-  Moonriver: 'MOVR'
+  Moonriver: 'MOVR',
+  Fantom: 'FTM'
 }
 
 const popupContent: PopupContent = {

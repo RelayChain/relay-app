@@ -1,4 +1,4 @@
-import { AVAX, BNB, DEV, MATIC, HECO, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH, ETHER_CURRENCIES } from '@zeroexchange/sdk'
+import { AVAX, BNB, DEV, MATIC, HECO, MOVR, FTM, ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH, ETHER_CURRENCIES } from '@zeroexchange/sdk'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
   return chainId && currency && ETHER_CURRENCIES.includes(currency)
@@ -24,5 +24,7 @@ export function unwrappedToken(token: Token, chainId?: ChainId): Currency {
   if (token.equals(WETH[token.chainId]) && chainId === ChainId.MOONBASE_ALPHA) return DEV
   if (token.equals(WETH[token.chainId]) && (chainId === ChainId.MUMBAI || chainId === ChainId.MATIC)) return MATIC
   if (token.equals(WETH[token.chainId]) && chainId === ChainId.HECO) return HECO
+  if (token.equals(WETH[token.chainId]) && chainId === ChainId.MOONRIVER) return MOVR
+  if (token.equals(WETH[token.chainId]) && chainId === ChainId.FANTOM) return FTM
   return token
 }
