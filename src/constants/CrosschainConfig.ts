@@ -136,14 +136,14 @@ export const crosschainConfig: ChainbridgeConfig = {
         //   decimals: 18,
         //   resourceId: '0x00000000000000000000001f9840a85d5aF5bf1D1762F925BDADdC4201F98401'
         // },
-        // {
-        //   address: '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
-        //   name: 'SUSHI',
-        //   symbol: 'SUSHI',
-        //   assetBase: 'SUSHI',
-        //   decimals: 18,
-        //   resourceId: '0x00000000000000000000006B3595068778DD592e39A122f4f5a5cF09C90fE201'
-        // },
+        {
+          address: '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
+          name: 'SUSHI',
+          symbol: 'SUSHI',
+          assetBase: 'SUSHI',
+          decimals: 18,
+          resourceId: '0x00000000000000000000006B3595068778DD592e39A122f4f5a5cF09C90fE201'
+        },
         // {
         //   address: '0x111111111117dC0aa78b770fA6A738034120C302',
         //   name: '1INCH',
