@@ -1141,6 +1141,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
         },
+        {
+          address: '0xB85517b87BF64942adf3A0B9E4c71E4Bc5Caa4e5',
+          name: 'FANTOM',
+          symbol: 'FTM',
+          assetBase: 'FTM',
+          decimals: 18,
+          resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+        }
       ]
     },
     {
@@ -1164,6 +1172,22 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'AVAX',
           decimals: 18,
           resourceId: '0x0000000000000000000000B31f66AA3C1e785363F0875A1B74E27b85FD66c702',
+        },
+        {
+          address: '0x5Bb79B71f06b5bd501f18872199Df644DE2C62dB',
+          name: 'USDC',
+          symbol: 'USDC',
+          assetBase: 'USDC',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4801'
+        },
+        {
+          address: '0xF78CD6939Ee62629ea93a33878B3E2a1748ed1c8',
+          name: 'DAI',
+          symbol: 'DAI',
+          assetBase: 'DAI',
+          decimals: 18,
+          resourceId: '0x00000000000000000000006b175474e89094c44da98b954eedeac495271d0f01'
         },
         {
           address: '0xAd7F1844696652ddA7959a49063BfFccafafEfe7',
@@ -1191,6 +1215,30 @@ export const crosschainConfig: ChainbridgeConfig = {
         },
       ]
     },
+    {
+      chainId: 7,
+      networkId: 250,
+      name: 'Fantom',
+      bridgeAddress: "0xAa6520a71619f3a77F12b87BAfA1f32F7002dFEa",
+      erc20HandlerAddress: '0x502B4683D213C68507fc6d19417df0bB7995b23B',
+      rpcUrl: 'https://rpcapi.fantom.network',
+      type: 'Ethereum',
+      gasLimit: 60000,
+      defaultGasPrice: 2,
+      blockExplorer: 'https://ftmscan.com/',
+      nativeTokenSymbol: 'FTM',
+      marketPlace: 'https://pwawallet.fantom.network/',
+      tokens: [
+        {
+          address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
+          name: 'FANTOM',
+          symbol: 'FTM',
+          assetBase: 'FTM',
+          decimals: 18,
+          resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+        }
+      ] 
+  }
   ]
 
   // rinkeby - FUJI

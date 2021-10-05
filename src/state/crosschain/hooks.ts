@@ -192,6 +192,8 @@ function GetChainNameById(chainID: number): string {
     return 'HECO'
   } else if (chainID === ChainId.MOONRIVER) {
     return 'Moonriver'
+  } else if (chainID === ChainId.FANTOM) {
+    return 'Fantom'
   }
   return ''
 }
@@ -280,11 +282,8 @@ export function useCrosschainHooks() {
 
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
-        gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
         value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
-        gasPrice: gasPriceFromChain,
-        nonce: await getNonce()
       })
       .catch((err: any) => {
         console.log(err)
@@ -433,9 +432,6 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
       .approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(transferAmount, currentToken.decimals), {
-        gasLimit: '70000',
-        gasPrice: gasPriceFromChain,
-        nonce: await getNonce()
       })
       .then((resultApproveTx: any) => {
         dispatch(

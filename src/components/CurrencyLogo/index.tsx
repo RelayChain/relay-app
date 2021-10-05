@@ -65,7 +65,8 @@ const logosNames = {
   'PERA': ['PERA'],
   'MAI': ['MAI', 'MAI (miMatic)'],
   'CNR': ['CNR', 'Canary'],
-  'MOVR': ['MOVR', 'Moonriver', 'MOONRIVER']
+  'MOVR': ['MOVR', 'Moonriver', 'MOONRIVER'],
+  'FTM': ['FTM', 'Fantom', 'FANTOM']
 }
 
 function getLogoByName(tokenName: string) {

@@ -24,6 +24,7 @@ export const MOONBASE_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0xaD3eE6
 
 export const MUMBAI_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
 export const MOONRIVER_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
+export const FANTOM_ROUTER_ADDRESS = process.env.REACT_APP_TESTNET ? '0x9310C59b5062e46914Fee525798950aB8eA92dF0' : ''
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const AVAX_ADDRESS = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
 
@@ -143,6 +144,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.HECO]: new Token(ChainId.HECO, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MOONRIVER]: new Token(ChainId.MOONRIVER, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.FANTOM]: new Token(ChainId.FANTOM, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -172,6 +174,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
   [ChainId.HECO]: [WETH[ChainId.HECO]],
   [ChainId.MOONRIVER]: [WETH[ChainId.MOONRIVER]],
+  [ChainId.FANTOM]: [WETH[ChainId.FANTOM]],
 }
 
 // used to construct intermediary pairs for trading
@@ -362,7 +365,8 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MATIC]: 'Polygon',
   [ChainId.HECO]: 'HECO',
-  [ChainId.MOONRIVER]: 'Moonriver'
+  [ChainId.MOONRIVER]: 'Moonriver',
+  [ChainId.FANTOM]: 'Fantom'
 }
 
 export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO']
