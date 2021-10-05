@@ -1213,6 +1213,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
         },
+        {
+          address: '0x7f5a79576620C046a293F54FFCdbd8f2468174F1',
+          name: 'MAI',
+          symbol: 'MAI (miMatic)',
+          assetBase: 'MAI (miMatic)',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
+        },
       ]
     },
     {
