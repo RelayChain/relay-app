@@ -177,7 +177,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MATIC]: 'Polygon',
   [ChainId.HECO]: 'HECO',
   [ChainId.MOONRIVER]: 'Moonriver',
-  [ChainId.FANTOM]: 'Fantom'
+  [ChainId.FANTOM]: 'Fantom',
+  [ChainId.SHIDEN]: 'Shiden'
 }
 
 const NETWORK_SYMBOLS: any = {
@@ -192,7 +193,8 @@ const NETWORK_SYMBOLS: any = {
   Polygon: 'MATIC',
   HECO: 'HT',
   Moonriver: 'MOVR',
-  Fantom: 'FTM'
+  Fantom: 'FTM',
+  Shiden: 'SDN'
 }
 
 const popupContent: PopupContent = {

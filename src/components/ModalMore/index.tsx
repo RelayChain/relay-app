@@ -1,6 +1,6 @@
 import {
-  Book, BookOpen, Info, MessageCircle, Twitter, GitHub,
-  Youtube, BarChart, BarChart2, MessageSquare, Paperclip
+  Book, BookOpen, Info, Twitter, GitHub,
+  Youtube, BarChart, BarChart2, Paperclip
 } from 'react-feather'
 
 import { ExternalLink } from '../../theme'

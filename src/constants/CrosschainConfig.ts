@@ -1117,14 +1117,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
         },
-        // {
-        //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
-        //   name: 'MINT',
-        //   symbol: 'MINT',
-        //   assetBase: 'MINT',
-        //   decimals: 18,
-        //   resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
-        // },
+        {
+          address: '0x08193764bd81a742c15125e48f41b1232068c912',
+          name: 'MINT',
+          symbol: 'MINT',
+          assetBase: 'MINT',
+          decimals: 18,
+          resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
+        },
         {
           address: '0x8E1035519567A2C260767f600471bc9Ff3Df896E',
           name: 'MOVR',
@@ -1246,7 +1246,31 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
         }
       ] 
-  }
+  },
+  {
+    chainId: 8,
+    networkId: 336,
+    name: 'Shiden',
+    bridgeAddress: "0x86355488458DC123184c7cc0fA40DCd7E065Bb67",
+    erc20HandlerAddress: '0x074412fae37D4C3de9964980352faD07aacDd674',
+    rpcUrl: 'https://rpc.shiden.astar.network:8545',
+    type: 'Ethereum',
+    gasLimit: 60000,
+    defaultGasPrice: 2,
+    blockExplorer: 'https://shiden.subscan.io',
+    nativeTokenSymbol: 'SDN',
+    marketPlace: 'https://portal.astar.network/#/balance/balance-plasm',
+    tokens: [
+      {
+        address: '0xe07B88C3879a9bd9687Aa8211B7eD4AA417A8505',
+        name: 'MINT',
+        symbol: 'MINT',
+        assetBase: 'MINT',
+        decimals: 18,
+        resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
+      }
+    ] 
+}
   ]
 
   // rinkeby - FUJI
