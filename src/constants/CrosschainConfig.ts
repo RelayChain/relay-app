@@ -1221,6 +1221,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
         },
+        {
+          address: '0xaD12daB5959f30b9fF3c2d6709f53C335dC39908',
+          name: 'FANTOM',
+          symbol: 'FTM',
+          assetBase: 'FTM',
+          decimals: 18,
+          resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+        }
       ]
     },
     {
