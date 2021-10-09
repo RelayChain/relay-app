@@ -1317,6 +1317,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x0000000000000000000000062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F06'
         },
+        {
+          address: '0x436a2A6e675ECef26aa90c517aBC464882481BA2',
+          name: 'Binance Token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+        },
       ]
     },
     {
@@ -1444,6 +1452,14 @@ export const crosschainConfig: ChainbridgeConfig = {
         assetBase: 'DRAGON',
         decimals: 18,
         resourceId: '0x0000000000000000000000062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F06'
+      },
+      {
+        address: '0x8b0977D8993CB89d7129e7DE4B3f316DC24d237e',
+        name: 'Binance Token',
+        symbol: 'BNB',
+        assetBase: 'BNB',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
       },
     ] 
 }
