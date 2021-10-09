@@ -214,7 +214,8 @@ export function useSwapCallback(
           chainId === ChainId.MUMBAI ||
           chainId === ChainId.MATIC  ||
           chainId === ChainId.HECO ||
-          chainId === ChainId.FANTOM
+          chainId === ChainId.FANTOM || 
+          chainId === ChainId.SHIDEN
             ? BigNumber.from(350000)
             : gasEstimate
 

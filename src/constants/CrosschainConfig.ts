@@ -475,6 +475,38 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000000d500B1d8E8eF31E21C99d1Db9A6444d3ADf127005'
         },
+        {
+          address: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
+          name: 'USD Coin',
+          symbol: 'USDC.e',
+          assetBase: 'USDC.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
+        },
+        {
+          address: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
+          name: 'Tether USD',
+          symbol: 'USDT.e',
+          assetBase: 'USDT.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
+        },
+        {
+          address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
+          name: 'Dai Stablecoin',
+          symbol: 'DAI.e',
+          assetBase: 'DAI.e',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
+        },
+        {
+          address: '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB',
+          name: 'Wrapped Ether',
+          symbol: 'WETH.e',
+          assetBase: 'WETH.e',
+          decimals: 18,
+          resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
+        },
       ]
     },
     {
@@ -1117,14 +1149,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x00000000000000000000008D88e48465F30Acfb8daC0b3E35c9D6D7d36abaf02'
         },
-        // {
-        //   address: '0x08193764bd81a742c15125e48f41b1232068c912',
-        //   name: 'MINT',
-        //   symbol: 'MINT',
-        //   assetBase: 'MINT',
-        //   decimals: 18,
-        //   resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
-        // },
+        {
+          address: '0x08193764bd81a742c15125e48f41b1232068c912',
+          name: 'MINT',
+          symbol: 'MINT',
+          assetBase: 'MINT',
+          decimals: 18,
+          resourceId: '0x000000000000000000000008193764bd81a742c15125e48f41b1232068c91205'
+        },
         {
           address: '0x8E1035519567A2C260767f600471bc9Ff3Df896E',
           name: 'MOVR',
@@ -1228,7 +1260,71 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'FTM',
           decimals: 18,
           resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
-        }
+        },
+        {
+          address: '0x98878B06940aE243284CA214f92Bb71a2b032B8A',
+          name: 'Moonriver Token',
+          symbol: 'MOVR',
+          assetBase: 'MOVR',
+          decimals: 18,
+          resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
+        {
+          address: '0xD8B99eae34afDF1a9bFA5770066404ee4468d0f2',
+          name: 'USD Coin',
+          symbol: 'USDC.e',
+          assetBase: 'USDC.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
+        },
+        {
+          address: '0xf97C8556Af29089D5d1627096958187b11F1915C',
+          name: 'Tether USD',
+          symbol: 'USDT.e',
+          assetBase: 'USDT.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
+        },
+        {
+          address: '0x26dFff76D9123A1C79279AbC29B676c48A8BD77e',
+          name: 'Dai Stablecoin',
+          symbol: 'DAI.e',
+          assetBase: 'DAI.e',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
+        },
+        {
+          address: '0x14f6F4639C6ca0Dcf69bB0911789343D75A54878',
+          name: 'Wrapped Ether',
+          symbol: 'WETH.e',
+          assetBase: 'WETH.e',
+          decimals: 18,
+          resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
+        },
+        {
+          address: '0x63F2ADf5f76F00d48fe2CBef19000AF13Bb8de82',
+          name: 'FreeRiver Token',
+          symbol: 'FREE',
+          assetBase: 'FREE',
+          decimals: 18,
+          resourceId: '0x000000000000000000000063F2ADf5f76F00d48fe2CBef19000AF13Bb8de8206'
+        },
+        {
+          address: '0x062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F',
+          name: 'Dragon Token',
+          symbol: 'DRAGON',
+          assetBase: 'DRAGON',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F06'
+        },
+        {
+          address: '0x436a2A6e675ECef26aa90c517aBC464882481BA2',
+          name: 'Binance Token',
+          symbol: 'BNB',
+          assetBase: 'BNB',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+        },
       ]
     },
     {
@@ -1254,7 +1350,119 @@ export const crosschainConfig: ChainbridgeConfig = {
           resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
         }
       ] 
-  }
+  },
+  {
+    chainId: 8,
+    networkId: 336,
+    name: 'Shiden',
+    bridgeAddress: "0x86355488458DC123184c7cc0fA40DCd7E065Bb67",
+    erc20HandlerAddress: '0x074412fae37D4C3de9964980352faD07aacDd674',
+    rpcUrl: 'https://rpc.shiden.astar.network:8545',
+    type: 'Ethereum',
+    gasLimit: 60000,
+    defaultGasPrice: 2,
+    blockExplorer: 'https://shiden.subscan.io',
+    nativeTokenSymbol: 'SDN',
+    marketPlace: 'https://portal.astar.network/#/balance/balance-plasm',
+    tokens: [
+      {
+        address: '0x17fcCD90a1911c3C2e0cCb7922b233a0f15A46B1',
+        name: 'Moonriver Token',
+        symbol: 'MOVR',
+        assetBase: 'MOVR',
+        decimals: 18,
+        resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+      },
+      {
+        address: '0x64D70C807C20B5F3bCadC4D92874Fc986049D76D',
+        name: 'MAI',
+        symbol: 'miMatic',
+        assetBase: 'miMatic',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
+      },
+      {
+        address: '0xcc4e0a2fc0c95304175236666c80a056E530BA2e',
+        name: 'Avalanche Token',
+        symbol: 'AVAX',
+        assetBase: 'AVAX',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000B31f66AA3C1e785363F0875A1B74E27b85FD66c702'
+      },
+      {
+        address: '0x64D70C807C20B5F3bCadC4D92874Fc986049D76D',
+        name: 'MAI',
+        symbol: 'miMatic',
+        assetBase: 'miMatic',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000a3fa99a148fa48d14ed51d610c367c61876997f105'
+      },
+      {
+        address: '0xe174aa1927a429815c61ae6a7b2608ECd61e100a',
+        name: 'Fantom Token',
+        symbol: 'FTM',
+        assetBase: 'FTM',
+        decimals: 18,
+        resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
+      },
+      {
+        address: '0xb53973ad94eB16FbD138805AcE4173416F016e7E',
+        name: 'USD Coin',
+        symbol: 'USDC.e',
+        assetBase: 'USDC.e',
+        decimals: 6,
+        resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
+      },
+      {
+        address: '0x35188e3CB4e5eb81350f7b47E153354A12794FeC',
+        name: 'Tether USD',
+        symbol: 'USDT.e',
+        assetBase: 'USDT.e',
+        decimals: 6,
+        resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
+      },
+      {
+        address: '0x7b7e696df8Ca22A8dC6c1dC14c4D5bC153a225D5',
+        name: 'Dai Stablecoin',
+        symbol: 'DAI.e',
+        assetBase: 'DAI.e',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
+      },
+      {
+        address: '0x3Fbd1C493227ff8c32be165aCbe483897e3B496d',
+        name: 'Wrapped Ether',
+        symbol: 'WETH.e',
+        assetBase: 'WETH.e',
+        decimals: 18,
+        resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
+      },
+      {
+        address: '0x3671af96072B60296F79e17Df07c4Ac2c3f43dEC',
+        name: 'FreeRiver Token',
+        symbol: 'FREE',
+        assetBase: 'FREE',
+        decimals: 18,
+        resourceId: '0x000000000000000000000063F2ADf5f76F00d48fe2CBef19000AF13Bb8de8206'
+      },
+      {
+        address: '0x30C47c0ceBc79bCEfd3F9714F5FFbc86555D7615',
+        name: 'Dragon Token',
+        symbol: 'DRAGON',
+        assetBase: 'DRAGON',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000062bD733268269d7Ecb85Cd3EA84281E6bEd7f5F06'
+      },
+      {
+        address: '0x8b0977D8993CB89d7129e7DE4B3f316DC24d237e',
+        name: 'Binance Token',
+        symbol: 'BNB',
+        assetBase: 'BNB',
+        decimals: 18,
+        resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+      },
+    ] 
+}
   ]
 
   // rinkeby - FUJI

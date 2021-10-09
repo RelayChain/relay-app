@@ -1,4 +1,5 @@
 import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Percent, Token } from '@zeroexchange/sdk'
+ 
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS, FANTOM_ROUTER_ADDRESS
@@ -11,6 +12,7 @@ import { Contract } from '@ethersproject/contracts'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getAddress } from '@ethersproject/address'
+
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -40,7 +42,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   137: 'MATIC',
   128: 'HECO',
   1285: 'MOONRIVER',
-  250: 'FANTOM'
+  250: 'FANTOM',
+  336: 'SHIDEN'
 }
 
 export function getEtherscanLink(

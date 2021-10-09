@@ -31,15 +31,15 @@ const StyledLogoURI = styled.img`
 `
 const logosNames = {
   //name logoName of a file in assets/images/crosschain folder   => names
-  'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX'],
-  'ETH': ['ETH', 'pngETH', 'zETH'],
+  'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX', 'Avalanche'],
+  'ETH': ['ETH', 'pngETH', 'zETH', 'Ethereum'],
   'WETH': ['WETH', 'wETH'],
-  'HT': ['HT', 'HECO', 'WHT'],
-  'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB'],
+  'HT': ['HT', 'HECO', 'WHT', 'HECO'],
+  'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB', 'Smart Chain', 'SmartChain'],
   'GROW': ['GROW'],
   'WISB': ['WISB'],
   // 'INDA': ['INDA'],
-  'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV'],
+  'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV', 'Polygon'],
   'XIOT': ['XIOT'],
   'CHART': ['CHART', 'ChartEx'],
   'z1INCH': ['z1INCH', '1INCH'],
@@ -66,7 +66,8 @@ const logosNames = {
   'MAI': ['MAI', 'MAI (miMatic)'],
   'CNR': ['CNR', 'Canary'],
   'MOVR': ['MOVR', 'Moonriver', 'MOONRIVER'],
-  'FTM': ['FTM', 'Fantom', 'FANTOM']
+  'FTM': ['FTM', 'Fantom', 'FANTOM'],
+  'SDN': ['SDN', 'Shiden', 'SHIDEN']
 }
 
 function getLogoByName(tokenName: string) {
