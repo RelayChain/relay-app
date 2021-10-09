@@ -1273,7 +1273,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: '0xD8B99eae34afDF1a9bFA5770066404ee4468d0f2',
           name: 'USD Coin',
           symbol: 'USDC.e',
-          assetBase: 'USDC.e',
+          assetBase: 'USDC',
           decimals: 6,
           resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
         },
@@ -1281,7 +1281,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: '0xf97C8556Af29089D5d1627096958187b11F1915C',
           name: 'Tether USD',
           symbol: 'USDT.e',
-          assetBase: 'USDT.e',
+          assetBase: 'USDT',
           decimals: 6,
           resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
         },
@@ -1289,7 +1289,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: '0x26dFff76D9123A1C79279AbC29B676c48A8BD77e',
           name: 'Dai Stablecoin',
           symbol: 'DAI.e',
-          assetBase: 'DAI.e',
+          assetBase: 'DAI',
           decimals: 18,
           resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
         },
@@ -1297,7 +1297,7 @@ export const crosschainConfig: ChainbridgeConfig = {
           address: '0x14f6F4639C6ca0Dcf69bB0911789343D75A54878',
           name: 'Wrapped Ether',
           symbol: 'WETH.e',
-          assetBase: 'WETH.e',
+          assetBase: 'WETH',
           decimals: 18,
           resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
         },
@@ -1409,7 +1409,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         address: '0xb53973ad94eB16FbD138805AcE4173416F016e7E',
         name: 'USD Coin',
         symbol: 'USDC.e',
-        assetBase: 'USDC.e',
+        assetBase: 'USDC',
         decimals: 6,
         resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
       },
@@ -1417,7 +1417,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         address: '0x35188e3CB4e5eb81350f7b47E153354A12794FeC',
         name: 'Tether USD',
         symbol: 'USDT.e',
-        assetBase: 'USDT.e',
+        assetBase: 'USDT',
         decimals: 6,
         resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
       },
@@ -1425,7 +1425,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         address: '0x7b7e696df8Ca22A8dC6c1dC14c4D5bC153a225D5',
         name: 'Dai Stablecoin',
         symbol: 'DAI.e',
-        assetBase: 'DAI.e',
+        assetBase: 'DAI',
         decimals: 18,
         resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
       },
@@ -1433,7 +1433,7 @@ export const crosschainConfig: ChainbridgeConfig = {
         address: '0x3Fbd1C493227ff8c32be165aCbe483897e3B496d',
         name: 'Wrapped Ether',
         symbol: 'WETH.e',
-        assetBase: 'WETH.e',
+        assetBase: 'WETH',
         decimals: 18,
         resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
       },
