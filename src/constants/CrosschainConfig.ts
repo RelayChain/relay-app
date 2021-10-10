@@ -1348,7 +1348,15 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'FTM',
           decimals: 18,
           resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
-        }
+        },
+        {
+          address: '0x338003E074DabFec661E1901bdB397aF9Cab6A76',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
+        },
       ] 
   },
   {
@@ -1460,6 +1468,14 @@ export const crosschainConfig: ChainbridgeConfig = {
         assetBase: 'BNB',
         decimals: 18,
         resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+      },
+      {
+        address: '0x576bD05d4475632D647367394cb3359Fd8E7A6ca',
+        name: 'Relay Token',
+        symbol: 'RELAY',
+        assetBase: 'RELAY',
+        decimals: 18,
+        resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
       },
     ] 
 }
