@@ -10,6 +10,7 @@ import ApplicationUpdater from './state/application/updater'
 import Blocklist from './components/Blocklist'
 import { HashRouter } from 'react-router-dom'
 import MulticallUpdater from './state/multicall/updater'
+import CrosschainUpdater from './state/crosschain/updater'
 import { NetworkContextName } from './constants'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
@@ -44,6 +45,7 @@ function Updaters() {
   return (
     <>
       {/*<ListsUpdater />*/}
+      <CrosschainUpdater />
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />

@@ -3,12 +3,9 @@ import React, { useMemo } from 'react'
 
 import Logo from '../Logo'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
-import { crosschainConfig as crosschainConfigMainnet } from '../../constants/CrosschainConfig'
 import styled from 'styled-components'
 import useHttpLocations from '../../hooks/useHttpLocations'
-
-const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
+import { useCrosschainState } from 'state/crosschain/hooks'
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -91,12 +88,15 @@ export default function CurrencyLogo({
   currency?: Currency | any
   size?: string
   style?: React.CSSProperties
-}) {
+}) { 
+  const {allCrosschainData} = useCrosschainState()
   const getTokenLogoURL = (chain: string, address: string) => {
     return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
   }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const logoName = getCurrencyLogoImage(String(currency?.symbol))
+
+
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
     if (currency && currency.symbol === 'ZERO') return []
@@ -105,26 +105,27 @@ export default function CurrencyLogo({
         // find logos on ETH address for non-ETH assets
         let logoAddress = currency.address
         const allConfigTokens: any = []
-        // eslint-disable-next-line 
-        crosschainConfig.chains.map(chain => {
-          // eslint-disable-next-line 
-          chain.tokens.map(token => {
-            allConfigTokens.push(token)
+        // eslint-disable-next-line  
+          allCrosschainData.chains.map(chain => {
+            // eslint-disable-next-line 
+            chain.tokens.map(token => {
+              allConfigTokens.push(token)
+            })
           })
-        })
-        const chosenTokenChainName = crosschainConfig.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
-        const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
+          const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
+          const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
 
-        if (currency instanceof WrappedTokenInfo) {
-          return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
-        }
+          if (currency instanceof WrappedTokenInfo) {
+            return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
+          }
 
-        return [getTokenLogoURL(chainName, logoAddress)]
-      }
+          return [getTokenLogoURL(chainName, logoAddress)] 
+
+      } 
     }
 
     return []
-  }, [logoName, currency, uriLocations])
+  }, [logoName, currency, uriLocations, allCrosschainData.chains])
 
   if (currency?.logoURI) {
     return <StyledLogoURI src={currency?.logoURI} alt={`${currency?.symbol ?? 'token'} logo`} />

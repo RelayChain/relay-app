@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import { AppDispatch } from 'state'
 import BlockchainLogo from '../BlockchainLogo'
 import Modal from '../Modal'
-import { crosschainConfig } from 'constants/CrosschainConfig'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
+import { getCrosschainState } from 'state/crosschain/hooks'
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -112,10 +112,10 @@ export default function CrossChainModal({
   const [isMetamaskError, setMetamaskError] = useState(false)
   const switchChain = async (chain: CrosschainChain) => {
     let { ethereum } = window
-
-    if (ethereum) {
+    const {allCrosschainData} = getCrosschainState()
+    if (ethereum ) {
       let chainsConfig = null
-      for (const item of crosschainConfig.chains) {
+      for (const item of allCrosschainData.chains) {
         if (item.chainId === +chain.chainID) {
           chainsConfig = item
         }
@@ -169,7 +169,7 @@ export default function CrossChainModal({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </li>
-          { !isTransfer && (activeChain !== 'ethereum' && activeChain !== 'Ethereum') &&
+          {!isTransfer && (activeChain !== 'ethereum' && activeChain !== 'Ethereum') &&
             !supportedChains.find((x: any) => x.chainID === '1') &&
             <li className='selectable' onClick={() => {
               alert('To switch back to Ethereum, please change your RPC inside your wallet.')

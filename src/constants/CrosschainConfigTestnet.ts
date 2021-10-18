@@ -10,6 +10,7 @@ export type TokenConfig = {
   resourceId: string
   isNativeWrappedToken?: boolean
   assetBase: string
+  allowedChainsToTransfer?: number[]
 }
 
 export type BridgeConfig = {
