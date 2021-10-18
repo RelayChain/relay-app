@@ -4,8 +4,8 @@ import React, { useMemo } from 'react'
 import Logo from '../Logo'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import styled from 'styled-components'
-import useHttpLocations from '../../hooks/useHttpLocations'
 import { useCrosschainState } from 'state/crosschain/hooks'
+import useHttpLocations from '../../hooks/useHttpLocations'
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -30,7 +30,7 @@ const logosNames = {
   //name logoName of a file in assets/images/crosschain folder   => names
   'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX', 'Avalanche'],
   'ETH': ['ETH', 'pngETH', 'zETH', 'Ethereum'],
-  'WETH': ['WETH', 'wETH'],
+  'WETH': ['WETH', 'wETH', 'WETH.e'],
   'HT': ['HT', 'HECO', 'WHT', 'HECO'],
   'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB', 'Smart Chain', 'SmartChain'],
   'GROW': ['GROW'],
@@ -45,14 +45,14 @@ const logosNames = {
   'LINK': ['LINK', 'zLINK'],
   'UNI': ['zUNI', 'UNI'],
   'SUSHI': ['zSUSHI', 'SUSHI'],
-  'wUSDT': ['USDT', 'wUSDT'],
+  'wUSDT': ['USDT', 'wUSDT', 'USDT.e'],
   'zUSDT': ['zUSDT'],
-  'wUSDC': ['USDC', 'wUSDC'],
+  'wUSDC': ['USDC', 'wUSDC', 'USDC.e'],
   'zUSDC': ['zUSDC'],
   'zBTC': ['zBTC'],
   'wBTC': ['wBTC', 'WBTC', 'BTC'],
   'zDAI': ['zDAI'],
-  'wDAI': ['wDAI', 'DAI', 'pngDAI'],
+  'wDAI': ['wDAI', 'DAI', 'pngDAI', 'DAI.e'],
   'RELAY': ['RELAY'],
   'BUSD': ['BUSD'],
   // 'WAS': ['WAS'],
@@ -88,7 +88,7 @@ export default function CurrencyLogo({
   currency?: Currency | any
   size?: string
   style?: React.CSSProperties
-}) { 
+}) {
   const {allCrosschainData} = useCrosschainState()
   const getTokenLogoURL = (chain: string, address: string) => {
     return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
@@ -105,9 +105,9 @@ export default function CurrencyLogo({
         // find logos on ETH address for non-ETH assets
         let logoAddress = currency.address
         const allConfigTokens: any = []
-        // eslint-disable-next-line  
+        // eslint-disable-next-line
           allCrosschainData.chains.map(chain => {
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
             chain.tokens.map(token => {
               allConfigTokens.push(token)
             })
@@ -119,9 +119,9 @@ export default function CurrencyLogo({
             return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
           }
 
-          return [getTokenLogoURL(chainName, logoAddress)] 
+          return [getTokenLogoURL(chainName, logoAddress)]
 
-      } 
+      }
     }
 
     return []
