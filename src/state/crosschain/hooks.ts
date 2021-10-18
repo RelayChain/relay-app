@@ -2,7 +2,6 @@ import { BigNumber, ethers, utils } from 'ethers'
 import {
   BridgeConfig,
   TokenConfig,
-  crosschainConfig as crosschainConfigMainnet
 } from '../../constants/CrosschainConfig'
 import {
   ChainTransferState,
@@ -29,21 +28,17 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
-import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
+// import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
-import { useEffect } from 'react'
-import useGasPrice from 'hooks/useGasPrice'
-
-// import { afterWrite } from '@popperjs/core'
-
+import { useEffect } from 'react' 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
-const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
+// const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
 let dispatch: AppDispatch
 let web3React: any
@@ -56,7 +51,7 @@ export function useCrosschainState(): AppState['crosschain'] {
   return useSelector<AppState, AppState['crosschain']>(state => state.crosschain)
 }
 
-function getCrosschainState(): AppState['crosschain'] {
+export function getCrosschainState(): AppState['crosschain'] {
   return store.getState().crosschain || initialState
 }
 
@@ -71,30 +66,35 @@ function WithDecimalsHexString(value: string, decimals: number): string {
   return BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 }
 
+
+
 function GetCurrentChain(currentChainName: string): CrosschainChain {
+  const { allCrosschainData } = getCrosschainState()
   let result: CrosschainChain = {
     name: '',
     chainID: ''
   }
-  for (const chain of crosschainConfig.chains) {
+  //if(allCrosschainData?.chains?.length) {
+  const chains = allCrosschainData?.chains
+  chains?.map(chain => {
     if (chain.name === currentChainName) {
       result = {
         name: chain.name,
         chainID: String(chain.chainId),
         symbol: chain.nativeTokenSymbol,
-
+        marketPlace: chain.marketPlace
       }
       if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
         const exchangeFields = {
           exchangeContractAddress: chain.exchangeContractAddress,
           rateZeroToRelay: chain.rateZeroToRelay,
           zeroContractAddress: chain.zeroContractAddress,
-          marketPlace: chain.marketPlace
         }
         result = { ...result, ...exchangeFields }
       }
     }
-  }
+  })
+  //}
   return result
 }
 
@@ -113,7 +113,8 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
     nativeTokenSymbol: '',
     type: 'Ethereum'
   }
-  for (const chain of crosschainConfig.chains) {
+  const { allCrosschainData } = getCrosschainState()
+  for (const chain of allCrosschainData?.chains) {
     if (chain.chainId === chainID) {
       result = chain
     }
@@ -128,26 +129,32 @@ export function GetTokenByAddrAndChainId(address: string, chainId: string): Toke
     resourceId: '',
     assetBase: ''
   }
-  const tokens = crosschainConfig.chains.find(c => String(c.chainId) === chainId)?.tokens ?? [];
+  const { allCrosschainData } = getCrosschainState()
+  const tokens = allCrosschainData?.chains?.find(c => String(c.chainId) === chainId)?.tokens ?? [];
   return tokens.find(t => t.address.toLowerCase() === address.toLowerCase()) ?? result;
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
-  for (const chain of crosschainConfig.chains) {
+  const { allCrosschainData } = getCrosschainState()
+  const chains = allCrosschainData?.chains
+  chains?.map(chain => {
     if (chain.name !== currentChainName) {
       result.push({
         name: chain.name,
         chainID: String(chain.chainId)
       })
     }
-  }
+  })
+
   return result
 }
 
-function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
+export function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
   const result: Array<CrosschainToken> = []
-  for (const chain of crosschainConfig.chains) {
+  const { allCrosschainData } = getCrosschainState()
+  const chains = allCrosschainData?.chains
+  chains?.map(chain => {
     if (chain.name === chainName) {
       for (const token of chain.tokens) {
         const t = {
@@ -166,7 +173,8 @@ function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
         result.push(t)
       }
     }
-  }
+  })
+  // }
   return result
 }
 
@@ -191,6 +199,12 @@ function GetChainNameById(chainID: number): string {
     return 'Polygon'
   } else if (chainID === ChainId.HECO) {
     return 'HECO'
+  } else if (chainID === ChainId.MOONRIVER) {
+    return 'Moonriver'
+  } else if (chainID === ChainId.FANTOM) {
+    return 'Fantom'
+  } else if (chainID === ChainId.SHIDEN) {
+    return 'Shiden'
   }
   return ''
 }
@@ -233,9 +247,9 @@ export function useCrosschainHooks() {
     )
   }
 
-  const getNonce = async (): Promise<number> => {
-    return await web3React.library.getSigner().getTransactionCount()
-  }
+  // const getNonce = async (): Promise<number> => {
+  //   return await web3React.library.getSigner().getTransactionCount()
+  // }
 
   const MakeDeposit = async () => {
     dispatch(
@@ -251,7 +265,7 @@ export function useCrosschainHooks() {
     //   .find(token => token.address === crosschainState.currentToken.address)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
     const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
-    const currentGasPrice = await useGasPrice()
+    // const currentGasPrice = await useGasPrice()
     dispatch(
       setCurrentTxID({
         txID: ''
@@ -272,18 +286,15 @@ export function useCrosschainHooks() {
       utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
       crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
     const auxData = '0x00';
-    const gasPriceFromChain =
-      crosschainState.currentChain.name === 'Ethereum'
-        ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+    // const gasPriceFromChain =
+    //   crosschainState.currentChain.name === 'Ethereum'
+    //     ? WithDecimalsHexString(currentGasPrice, 0)
+    //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     const resultDepositTx = await bridgeContract
       .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
-        gasLimit: '500000',
         // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
         value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
-        gasPrice: gasPriceFromChain,
-        nonce: await getNonce()
       })
       .catch((err: any) => {
         console.log(err)
@@ -403,7 +414,7 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
-    const currentGasPrice = await useGasPrice()
+    // const currentGasPrice = await useGasPrice()
     dispatch(
       setCurrentTxID({
         txID: ''
@@ -415,10 +426,10 @@ export function useCrosschainHooks() {
       })
     )
 
-    const gasPriceFromChain =
-      crosschainState.currentChain.name === 'Ethereum'
-        ? WithDecimalsHexString(currentGasPrice, 0)
-        : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+    // const gasPriceFromChain =
+    //   crosschainState.currentChain.name === 'Ethereum'
+    //     ? WithDecimalsHexString(currentGasPrice, 0)
+    //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -432,9 +443,6 @@ export function useCrosschainHooks() {
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
       .approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(transferAmount, currentToken.decimals), {
-        gasLimit: '70000',
-        gasPrice: gasPriceFromChain,
-        nonce: await getNonce()
       })
       .then((resultApproveTx: any) => {
         dispatch(
@@ -509,21 +517,30 @@ export function useCrosschainHooks() {
 
   const UpdateFee = async () => {
     const crosschainState = getCrosschainState()
-    const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-
-    // @ts-ignore
-    const signer = web3React.library.getSigner()
-    const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
     const targetChain = crosschainState.targetChain.chainID;
-    const feeResult = await bridgeContract._fees(targetChain);
-    const fee = feeResult.toString()
-    const value = WithDecimals(fee);
+    if (targetChain) {
+      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
 
-    dispatch(
-      setCrosschainFee({
-        value
-      })
-    )
+      // @ts-ignore
+      const signer = web3React.library.getSigner()
+      const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
+      const feeResult = await bridgeContract._fees(targetChain)
+      const fee = feeResult.toString()
+      const value = WithDecimals(fee)
+
+      dispatch(
+        setCrosschainFee({
+          value
+        })
+      )
+    } else {
+
+      dispatch(
+        setCrosschainFee({
+          value: '0'
+        })
+      )
+    }
   }
 
   return {
@@ -540,6 +557,17 @@ export function useCrossChain() {
 
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
+  // useEffect(() => {
+
+  //   csConfig()
+  //     .then(data => {
+  //       dispatch(
+  //         setAllChainsData({
+  //           chainsBridge: data
+  //         }))
+  //     })
+  // }, [])
+
 
   const { currentChain, targetChain, currentToken } = useCrosschainState()
 
@@ -567,6 +595,7 @@ export function useCrossChain() {
       chainID: ''
     }
 
+
     const tokens = GetAvailableTokens(currentChainName)
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
 
@@ -590,6 +619,7 @@ export function useCrossChain() {
         chain: GetCurrentChain(currentChainName)
       })
     )
+
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance() // .catch(console.error)
     UpdateFee().catch(console.error)
@@ -597,7 +627,6 @@ export function useCrossChain() {
 
   useEffect(initAll, [])
   useEffect(initAll, [chainId, library])
-
   useEffect(() => {
     dispatch(setCrosschainRecipient({ address: account || '' }))
     dispatch(setCurrentTxID({ txID: '' }))

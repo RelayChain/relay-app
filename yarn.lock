@@ -3730,10 +3730,10 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
 
-"@zeroexchange/sdk@^3.2.21":
-  version "3.2.21"
-  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.21.tgz#07b0081fbd5edac42fabb697b06cef7cca36e010"
-  integrity sha512-JZPrG7QfO1ZSefEl6FkZR1XadmAKoLNzJM35pNNxLIm3r8ORJ8slNuBY3U+NU6UDV+e4A9b+gLlhFzy+Z0qLng==
+"@zeroexchange/sdk@^3.2.26":
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.26.tgz#bdbb336541aed9c04c10fa77a57f318ee86a9eec"
+  integrity sha512-phk0/ykR30vRMAw7ndslVUBW+n8AwyuppLxVJZragnE793qL5og2feNC6jEXaVaE1SPvbtBIJsv0/7x/kvZ9kg==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"

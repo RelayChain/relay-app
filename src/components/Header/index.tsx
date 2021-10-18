@@ -175,7 +175,10 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MUMBAI]: 'Mumbai',
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.MATIC]: 'Polygon',
-  [ChainId.HECO]: 'HECO'
+  [ChainId.HECO]: 'HECO',
+  [ChainId.MOONRIVER]: 'Moonriver',
+  [ChainId.FANTOM]: 'Fantom',
+  [ChainId.SHIDEN]: 'Shiden'
 }
 
 const NETWORK_SYMBOLS: any = {
@@ -188,7 +191,10 @@ const NETWORK_SYMBOLS: any = {
   SmartChain: 'BNB',
   Moonbeam: 'DEV',
   Polygon: 'MATIC',
-  HECO: 'HT'
+  HECO: 'HT',
+  Moonriver: 'MOVR',
+  Fantom: 'FTM',
+  Shiden: 'SDN'
 }
 
 const popupContent: PopupContent = {
@@ -251,8 +257,7 @@ const NetworkSwitcher = () => {
     </div>
   )
 }
-const Header = () => {
-
+const Header = () => {  
   const { account, chainId } = useActiveWeb3React()
   // eslint-disable-next-line
   const [isSuccessAuth, userEthBalance] = useEagerConnect()

@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ChainbridgeConfig } from 'constants/CrosschainConfig'
 
 export enum ProposalStatus {
   INACTIVE = '0',
@@ -15,6 +16,7 @@ export interface CrosschainToken {
   symbol: string
   decimals: number
   disableTransfer?: boolean
+  resourceId?: string
 }
 
 export interface CrosschainChain {
@@ -75,3 +77,4 @@ export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }
 export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
 export const setPendingTransfer = createAction<{ pendingTransfer: PendingTransfer }>('crosschain/set-pending-transfer')
 export const setCrosschainLastTimeSwitched = createAction<{ }>('crosschain/last-time-switched')
+export const setAllChainsData = createAction<{ chainsBridge: ChainbridgeConfig }>('crosschain/set-all-chains-data')

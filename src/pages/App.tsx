@@ -22,7 +22,6 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import GraphQLProvider from './../graphql'
 import Guides from './Guides'
 import Header from '../components/Header'
-import Home from './Home'
 import Manage from './Pools/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
@@ -32,7 +31,6 @@ import PoolFinder from './PoolFinder'
 import Pools from './Pools'
 import Popups from '../components/Popups'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
-import RelaySale from './Relay/relaySale'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import SideMenu from '../components/SideMenu'
@@ -106,7 +104,7 @@ export default function App() {
             <TopLevelModals />
             <Web3ReactManager>
               <Switch>
-                <Route exact strict path="/home" component={Home} />
+                {/* <Route exact strict path="/home" component={Home} /> */}
                 {/* <Route exact strict path="/swap" component={Swap} /> */}
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
@@ -131,8 +129,8 @@ export default function App() {
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route exact strict path="/vote/:id" component={VotePage} />
-                <Route exact strict path="/transfer" component={Transfer} />
-                <Route exact strict path="/relay-sale" component={RelaySale} />
+                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />
+                {/*<Route exact strict path="/relay-sale" component={RelaySale} />*/}
                 <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
                 <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
                 <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />

@@ -1,7 +1,8 @@
 import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Percent, Token } from '@zeroexchange/sdk'
+ 
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
-  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS
+  MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS, FANTOM_ROUTER_ADDRESS
 } from '../constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 
@@ -11,6 +12,7 @@ import { Contract } from '@ethersproject/contracts'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getAddress } from '@ethersproject/address'
+
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -38,7 +40,10 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1287: 'MOONBASE_ALPHA',
   80001: 'MUMBAI',
   137: 'MATIC',
-  128: 'HECO'
+  128: 'HECO',
+  1285: 'MOONRIVER',
+  250: 'FANTOM',
+  336: 'SHIDEN'
 }
 
 export function getEtherscanLink(
@@ -70,6 +75,9 @@ export function getEtherscanLink(
   }
   if (chainId === ChainId.HECO) {
     prefix = `https://hecoinfo.com`
+  }
+  if (chainId === ChainId.MOONRIVER) {
+    prefix = `https://blockscout.moonriver.moonbeam.network/`
   }
   switch (type) {
     case 'transaction': {
@@ -151,6 +159,10 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
               ? MATIC_ROUTER_ADDRESS
               : chainId === ChainId.HECO
               ? HECO_ROUTER_ADDRESS
+              : chainId === ChainId.MOONRIVER
+                ? MOONRIVER_ROUTER_ADDRESS
+                : chainId === ChainId.FANTOM
+                  ? FANTOM_ROUTER_ADDRESS
               : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,
