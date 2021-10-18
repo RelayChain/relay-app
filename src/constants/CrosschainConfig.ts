@@ -1,5 +1,7 @@
 // import { ChainId, Token } from '@zeroexchange/sdk';
 
+import { getCrossChainData } from "api"
+
 export type TokenConfig = {
   chainId?: string
   address: string
@@ -10,7 +12,8 @@ export type TokenConfig = {
   resourceId: string
   isNativeWrappedToken?: boolean
   assetBase: string
-  disableTransfer?: boolean;
+  disableTransfer?: boolean
+  allowedChainsToTransfer?: number[]
 }
 
 export type BridgeConfig = {
@@ -37,6 +40,15 @@ export type BridgeConfig = {
 export type ChainbridgeConfig = {
   chains: BridgeConfig[]
 }
+
+export const csConfig = (): Promise<ChainbridgeConfig> => { 
+  const crossChainConfigData = {} as ChainbridgeConfig
+  return getCrossChainData<BridgeConfig[]>()
+  .then((configs: BridgeConfig[]) => {
+    crossChainConfigData.chains = configs
+    return  crossChainConfigData
+}) 
+} 
 
 export const crosschainConfig: ChainbridgeConfig = {
   chains: [

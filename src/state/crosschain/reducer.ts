@@ -20,10 +20,12 @@ import {
   setPendingTransfer,
   setTargetChain,
   setTargetTokens,
-  setTransferAmount
+  setTransferAmount,
+  setAllChainsData
 } from './actions'
 
 import { createReducer } from '@reduxjs/toolkit'
+import { ChainbridgeConfig } from 'constants/CrosschainConfig';
 
 export interface CrosschainState {
   readonly currentRecipient: string
@@ -42,6 +44,7 @@ export interface CrosschainState {
   readonly depositConfirmed: boolean
   readonly pendingTransfer: PendingTransfer
   readonly lastTimeSwitched: number
+  readonly allCrosschainData: ChainbridgeConfig
 }
 
 export const initialState: CrosschainState = {
@@ -75,7 +78,8 @@ export const initialState: CrosschainState = {
   },
   depositConfirmed: false,
   pendingTransfer: {},
-  lastTimeSwitched: ~~(Date.now() / 1000)
+  lastTimeSwitched: ~~(Date.now() / 1000),
+  allCrosschainData: {} as ChainbridgeConfig
 }
 
 export default createReducer<CrosschainState>(initialState, builder =>
@@ -194,4 +198,12 @@ export default createReducer<CrosschainState>(initialState, builder =>
         lastTimeSwitched: ~~(Date.now() / 1000) + 5
       }
     })
+    .addCase(setAllChainsData, (state, { payload: { chainsBridge } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        allCrosschainData: chainsBridge
+      }
+    })
+    
 )
