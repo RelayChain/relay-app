@@ -256,6 +256,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           decimals: 18,
           resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
         },
+        {
+          address: '0x3bb86d867A9F3adDF994cdaDb210Fa82F0D4157A',
+          name: 'GHOUL',
+          symbol: 'GHOUL',
+          assetBase: 'GHOUL',
+          decimals: 18,
+          resourceId: '0x00000000000000000000003bb86d867A9F3adDF994cdaDb210Fa82F0D4157A01'
+        },
       ]
     },
     {
@@ -744,6 +752,14 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'MOVR',
           decimals: 18,
           resourceId: '0x000000000000000000000098878B06940aE243284CA214f92Bb71a2b032B8A06'
+        },
+        {
+          address: '0x171cE6141E7a5980222bc6B757ee2F1f95b3264e',
+          name: 'GHOUL',
+          symbol: 'GHOUL',
+          assetBase: 'GHOUL',
+          decimals: 18,
+          resourceId: '0x00000000000000000000003bb86d867A9F3adDF994cdaDb210Fa82F0D4157A01'
         },
       ]
     },
@@ -1348,7 +1364,47 @@ export const crosschainConfig: ChainbridgeConfig = {
           assetBase: 'FTM',
           decimals: 18,
           resourceId: '0x000000000000000000000021be370D5312f44cB42ce377BC9b8a0cEF1A4C8307'
-        }
+        },
+        {
+          address: '0x338003E074DabFec661E1901bdB397aF9Cab6A76',
+          name: 'Relay Token',
+          symbol: 'RELAY',
+          assetBase: 'RELAY',
+          decimals: 18,
+          resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
+        },
+        {
+          address: '0x598b56623517EAf23361F2A9adbE848F5fCDb18F',
+          name: 'USD Coin',
+          symbol: 'USDC.e',
+          assetBase: 'USDC.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000A7D7079b0FEaD91F3e65f86E8915Cb59c1a4C66402'
+        },
+        {
+          address: '0x33433d8536587EA1E2FAb3f3CF94E92dCe3a87eA',
+          name: 'Tether USD',
+          symbol: 'USDT.e',
+          assetBase: 'USDT.e',
+          decimals: 6,
+          resourceId: '0x0000000000000000000000c7198437980c041c805A1EDcbA50c1Ce5db9511802'
+        },
+        {
+          address: '0x6B7Bf186bC6AE2E39F3cc4224FEbEcC6FB044c84',
+          name: 'Dai Stablecoin',
+          symbol: 'DAI.e',
+          assetBase: 'DAI.e',
+          decimals: 18,
+          resourceId: '0x0000000000000000000000d586E7F844cEa2F87f50152665BCbc2C279D8d7002'
+        },
+        {
+          address: '0x4dE0c56b9A9564bd3FB189816B01E21E5D8aC41C',
+          name: 'Wrapped Ether',
+          symbol: 'WETH.e',
+          assetBase: 'WETH.e',
+          decimals: 18,
+          resourceId: '0x000000000000000000000049D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB02'
+        },
       ] 
   },
   {
@@ -1460,6 +1516,14 @@ export const crosschainConfig: ChainbridgeConfig = {
         assetBase: 'BNB',
         decimals: 18,
         resourceId: '0x0000000000000000000000bb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c03'
+      },
+      {
+        address: '0x576bD05d4475632D647367394cb3359Fd8E7A6ca',
+        name: 'Relay Token',
+        symbol: 'RELAY',
+        assetBase: 'RELAY',
+        decimals: 18,
+        resourceId: '0x00000000000000000000005D843Fa9495d23dE997C394296ac7B4D721E841c01'
       },
     ] 
 }
