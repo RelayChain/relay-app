@@ -41,7 +41,7 @@ export default function ChainBridgeItem({ item, children, ...rest }: { item: any
     decimals: item.decimals,
     name: item.name,
     address: item.address,
-    symbol: item.assetBase
+    symbol: item.symbol 
   }
 
   const message = {
