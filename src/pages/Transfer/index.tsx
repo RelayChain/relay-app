@@ -9,7 +9,7 @@ import {
   setTransferAmount
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
-import { GetAvailableTokens, GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
+import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { TYPE, Title } from '../../theme'
 import {
@@ -253,7 +253,8 @@ export default function Transfer() {
               assetBase: newToken?.assetBase || '',
               symbol: newToken?.symbol || '',
               decimals: newToken?.decimals || 18,
-              resourceId: newToken?.resourceId || ''
+              resourceId: newToken?.resourceId || '',
+              allowedChainsToTransfer: newToken?.allowedChainsToTransfer || []
             }
           })
         )
@@ -348,9 +349,8 @@ export default function Transfer() {
 
   useEffect(() => {
     if (targetChain && currentToken) {
-      const listTokens = GetAvailableTokens(targetChain.name)
-      const targetToken = listTokens.find(token => token.resourceId === currentToken.resourceId)
-      setIsTransferToken(!!targetToken)
+      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)            
+      setIsTransferToken(!!hasTargetChainToTransferToken)
     }
   }, [targetChain, currentToken])
 
