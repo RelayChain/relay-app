@@ -443,7 +443,7 @@ export function useCrosschainHooks() {
     const transferAmount = isUsdt ? String(Number.MAX_SAFE_INTEGER) : crosschainState.transferAmount
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
-      .approve(currentChain.erc20HandlerAddress, WithDecimalsHexString(transferAmount, currentToken.decimals), {
+      .approve(currentChain.erc20HandlerAddress, ethers.constants.MaxUint256, {
       })
       .then((resultApproveTx: any) => {
         dispatch(
