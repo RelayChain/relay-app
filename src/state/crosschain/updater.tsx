@@ -10,8 +10,7 @@ export default function Updater(): null {
   // keep dark mode in sync with the system
   useEffect(() => {    
     csConfig()
-      .then(data => {
-      console.log("🚀 ~ file: updater.tsx ~ line 14 ~ useEffect ~ data", data)      
+      .then(data => {    
         dispatch(
           setAllChainsData({
             chainsBridge: data

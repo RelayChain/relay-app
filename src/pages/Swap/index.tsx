@@ -417,6 +417,7 @@ export default function Swap({
               symbol: newToken?.symbol || '',
               decimals: newToken?.decimals || 18,
               resourceId: newToken?.resourceId || '',
+              allowedChainsToTransfer: newToken?.allowedChainsToTransfer || [],
             }
           })
         )

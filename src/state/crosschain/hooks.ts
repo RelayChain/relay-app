@@ -127,7 +127,8 @@ export function GetTokenByAddrAndChainId(address: string, chainId: string): Toke
     address: '',
     decimals: 18,
     resourceId: '',
-    assetBase: ''
+    assetBase: '',
+    allowedChainsToTransfer: []
   }
   const { allCrosschainData } = getCrosschainState()
   const tokens = allCrosschainData?.chains?.find(c => String(c.chainId) === chainId)?.tokens ?? [];
@@ -168,13 +169,13 @@ export function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
           isNativeWrappedToken: token.isNativeWrappedToken,
           assetBase: token.assetBase,
           // @ts-ignore
-          disableTransfer: token.disableTransfer
+          disableTransfer: token.disableTransfer,
+          allowedChainsToTransfer: token.allowedChainsToTransfer
         }
         result.push(t)
       }
     }
   })
-  // }
   return result
 }
 
@@ -557,18 +558,6 @@ export function useCrossChain() {
 
   dispatch = useDispatch()
   web3React = useActiveWeb3React()
-  // useEffect(() => {
-
-  //   csConfig()
-  //     .then(data => {
-  //       dispatch(
-  //         setAllChainsData({
-  //           chainsBridge: data
-  //         }))
-  //     })
-  // }, [])
-
-
   const { currentChain, targetChain, currentToken } = useCrosschainState()
 
   const { UpdateOwnTokenBalance, UpdateFee } = useCrosschainHooks()
