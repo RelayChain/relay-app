@@ -172,7 +172,7 @@ export default function NotStarted({
         <ButtonPrimary
           onClick={() => {
             MakeApprove().catch(console.error)
-            changeTransferState(ChainTransferState.ApprovalPending)
+            // changeTransferState(ChainTransferState.ApprovalPending)
           }}
         >
           Approve Transfer

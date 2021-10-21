@@ -425,7 +425,7 @@ export function useCrosschainHooks() {
     )
     dispatch(
       setCrosschainTransferStatus({
-        status: ChainTransferState.NotStarted
+        status: ChainTransferState.ApprovalPending
       })
     )
 
