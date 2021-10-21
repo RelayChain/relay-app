@@ -74,7 +74,6 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
     name: '',
     chainID: ''
   }
-  //if(allCrosschainData?.chains?.length) {
   const chains = allCrosschainData?.chains
   chains?.map(chain => {
     if (chain.name === currentChainName) {
@@ -82,7 +81,8 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         name: chain.name,
         chainID: String(chain.chainId),
         symbol: chain.nativeTokenSymbol,
-        marketPlace: chain.marketPlace
+        marketPlace: chain.marketPlace,
+        blockExplorer: chain.blockExplorer
       }
       if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
         const exchangeFields = {
@@ -206,6 +206,8 @@ function GetChainNameById(chainID: number): string {
     return 'Fantom'
   } else if (chainID === ChainId.SHIDEN) {
     return 'Shiden'
+  } else if (chainID === ChainId.IOTEX) {
+    return 'Iotex'
   }
   return ''
 }
@@ -440,7 +442,7 @@ export function useCrosschainHooks() {
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
-    const transferAmount = isUsdt ? String(Number.MAX_SAFE_INTEGER) : crosschainState.transferAmount
+    // const transferAmount = isUsdt ? String(Number.MAX_SAFE_INTEGER) : crosschainState.transferAmount
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
       .approve(currentChain.erc20HandlerAddress, ethers.constants.MaxUint256, {
