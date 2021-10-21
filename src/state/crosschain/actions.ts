@@ -33,6 +33,7 @@ export interface CrosschainChain {
   zeroContractAddress?: string
   relayContractAddress?: string
   marketPlace?: string
+  blockExplorer?: string
 }
 
 export enum ChainTransferState {

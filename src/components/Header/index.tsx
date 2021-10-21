@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import ArrowDropdown from './../../assets/svg/dropdown_arrow.svg'
 import BlockchainLogo from '../BlockchainLogo'
 import { CHAIN_LABELS } from '../../constants'
-import { ChainId } from '@zeroexchange/sdk'
+import { NETWORK_LABELS, NETWORK_SYMBOLS } from '@zeroexchange/sdk'
 import ClaimModal from '../claim/ClaimModal'
 import CrossChainModal from 'components/CrossChainModal'
 import PlainPopup from 'components/Popups/PlainPopup'
@@ -162,40 +162,40 @@ const NotConnectedWrap = styled.div`
   `};
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
-  [ChainId.FUJI]: 'Avalanche',
-  [ChainId.AVALANCHE]: 'Avalanche',
-  [ChainId.SMART_CHAIN]: 'SmartChain',
-  [ChainId.SMART_CHAIN_TEST]: 'SmartChainTestnet',
-  [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
-  [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.MATIC]: 'Polygon',
-  [ChainId.HECO]: 'HECO',
-  [ChainId.MOONRIVER]: 'Moonriver',
-  [ChainId.FANTOM]: 'Fantom',
-  [ChainId.SHIDEN]: 'Shiden'
-}
+// const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
+//   [ChainId.RINKEBY]: 'Rinkeby',
+//   [ChainId.ROPSTEN]: 'Ropsten',
+//   [ChainId.GÖRLI]: 'Görli',
+//   [ChainId.KOVAN]: 'Kovan',
+//   [ChainId.FUJI]: 'Avalanche',
+//   [ChainId.AVALANCHE]: 'Avalanche',
+//   [ChainId.SMART_CHAIN]: 'SmartChain',
+//   [ChainId.SMART_CHAIN_TEST]: 'SmartChainTestnet',
+//   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
+//   [ChainId.MUMBAI]: 'Mumbai',
+//   [ChainId.MAINNET]: 'Ethereum',
+//   [ChainId.MATIC]: 'Polygon',
+//   [ChainId.HECO]: 'HECO',
+//   [ChainId.MOONRIVER]: 'Moonriver',
+//   [ChainId.FANTOM]: 'Fantom',
+//   [ChainId.SHIDEN]: 'Shiden'
+// }
 
-const NETWORK_SYMBOLS: any = {
-  Ethereum: 'ETH',
-  Rinkeby: 'ETH',
-  Ropsten: 'ETH',
-  Görli: 'ETH',
-  Kovan: 'ETH',
-  Avalanche: 'AVAX',
-  SmartChain: 'BNB',
-  Moonbeam: 'DEV',
-  Polygon: 'MATIC',
-  HECO: 'HT',
-  Moonriver: 'MOVR',
-  Fantom: 'FTM',
-  Shiden: 'SDN'
-}
+// const NETWORK_SYMBOLS: any = {
+//   Ethereum: 'ETH',
+//   Rinkeby: 'ETH',
+//   Ropsten: 'ETH',
+//   Görli: 'ETH',
+//   Kovan: 'ETH',
+//   Avalanche: 'AVAX',
+//   SmartChain: 'BNB',
+//   Moonbeam: 'DEV',
+//   Polygon: 'MATIC',
+//   HECO: 'HT',
+//   Moonriver: 'MOVR',
+//   Fantom: 'FTM',
+//   Shiden: 'SDN'
+// }
 
 const popupContent: PopupContent = {
   simpleAnnounce: {

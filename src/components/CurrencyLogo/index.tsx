@@ -36,7 +36,7 @@ const logosNames = {
   'GROW': ['GROW'],
   'WISB': ['WISB'],
   // 'INDA': ['INDA'],
-  'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV', 'Polygon'],
+  'MATIC': ['MATIC', 'WMATIC', 'wMATIC', 'eMATIC', 'DEV', 'WDEV', 'wDEV', 'eDEV', 'Polygon', 'POLYGON'],
   'XIOT': ['XIOT'],
   'CHART': ['CHART', 'ChartEx'],
   'z1INCH': ['z1INCH', '1INCH'],
@@ -64,7 +64,8 @@ const logosNames = {
   'CNR': ['CNR', 'Canary'],
   'MOVR': ['MOVR', 'Moonriver', 'MOONRIVER'],
   'FTM': ['FTM', 'Fantom', 'FANTOM'],
-  'SDN': ['SDN', 'Shiden', 'SHIDEN']
+  'SDN': ['SDN', 'Shiden', 'SHIDEN'],
+  'IOTX': ['IOTX', 'IOTEX', 'IoTeX', 'Iotex']
 }
 
 function getLogoByName(tokenName: string) {

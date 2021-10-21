@@ -7,6 +7,7 @@ import PolkadotLogo from '../../assets/images/polkadot-logo.png'
 import PolygonLogo from '../../assets/images/polygon-logo.png'
 import MoonriverLogo from '../../assets/images/crosschain/MOVR.png'
 import ShidenLogo from '../../assets/images/crosschain/SDN.png'
+import IotexLogo from '../../assets/images/crosschain/IOTX.png'
 export const logoByName = {
     FTM: FantomLogo,
     AVAX: AvaxLogo,
@@ -16,5 +17,6 @@ export const logoByName = {
     DOT: PolkadotLogo,
     MATIC: PolygonLogo,
     MOVR: MoonriverLogo,
-    SDN: ShidenLogo
+    SDN: ShidenLogo,
+    IOTX: IotexLogo
 }
