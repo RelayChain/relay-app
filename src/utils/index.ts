@@ -1,5 +1,5 @@
 import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Percent, Token } from '@zeroexchange/sdk'
- 
+
 import {
   AVAX_ROUTER_ADDRESS, ETH_ROUTER_ADDRESS, SMART_CHAIN_ROUTER_ADDRESS,
   MOONBASE_ROUTER_ADDRESS, MUMBAI_ROUTER_ADDRESS, MATIC_ROUTER_ADDRESS, HECO_ROUTER_ADDRESS, MOONRIVER_ROUTER_ADDRESS, FANTOM_ROUTER_ADDRESS
@@ -12,8 +12,10 @@ import { Contract } from '@ethersproject/contracts'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getAddress } from '@ethersproject/address'
+import { getCrosschainState } from 'state/crosschain/hooks'
 
-
+const { currentChain } = getCrosschainState()
+console.log("🚀 ~ file: index.ts ~ line 18 ~ currentChain", currentChain)
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   if (value) {
@@ -26,59 +28,33 @@ export function isAddress(value: any): string | false {
   return false
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.',
-  // TODO: are these needed at all?
-  43113: 'FUJI',
-  43114: 'AVALANCHE',
-  97: 'SMART_CHAIN_TEST',
-  56: 'SMART_CHAIN',
-  1287: 'MOONBASE_ALPHA',
-  80001: 'MUMBAI',
-  137: 'MATIC',
-  128: 'HECO',
-  1285: 'MOONRIVER',
-  250: 'FANTOM',
-  336: 'SHIDEN'
-}
+// const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
+//   1: '',
+//   3: 'ropsten.',
+//   4: 'rinkeby.',
+//   5: 'goerli.',
+//   42: 'kovan.',
+//   // TODO: are these needed at all?
+//   43113: 'FUJI',
+//   43114: 'AVALANCHE',
+//   97: 'SMART_CHAIN_TEST',
+//   56: 'SMART_CHAIN',
+//   1287: 'MOONBASE_ALPHA',
+//   80001: 'MUMBAI',
+//   137: 'MATIC',
+//   128: 'HECO',
+//   1285: 'MOONRIVER',
+//   250: 'FANTOM',
+//   336: 'SHIDEN'
+// }
 
 export function getEtherscanLink(
   chainId: ChainId,
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  let prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
-  if (chainId === ChainId.FUJI) {
-    prefix = `https://cchain.explorer.avax-test.network`
-  }
-  if (chainId === ChainId.AVALANCHE) {
-    prefix = `https://cchain.explorer.avax.network`
-  }
-  if (chainId === ChainId.SMART_CHAIN_TEST) {
-    prefix = `https://testnet.bscscan.com`
-  }
-  if (chainId === ChainId.MUMBAI) {
-    prefix = `https://explorer-mumbai.maticvigil.com`
-  }
-  if (chainId === ChainId.SMART_CHAIN) {
-    prefix = `https://bscscan.com`
-  }
-  if (chainId === ChainId.MOONBASE_ALPHA) {
-    prefix = `https://moonbase.subscan.io`
-  }
-  if (chainId === ChainId.MATIC) {
-    prefix = `https://polygonscan.com`
-  }
-  if (chainId === ChainId.HECO) {
-    prefix = `https://hecoinfo.com`
-  }
-  if (chainId === ChainId.MOONRIVER) {
-    prefix = `https://blockscout.moonriver.moonbeam.network/`
-  }
+
+  let prefix = currentChain?.blockExplorer
   switch (type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
@@ -158,12 +134,12 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
             : chainId === ChainId.MATIC
               ? MATIC_ROUTER_ADDRESS
               : chainId === ChainId.HECO
-              ? HECO_ROUTER_ADDRESS
-              : chainId === ChainId.MOONRIVER
-                ? MOONRIVER_ROUTER_ADDRESS
-                : chainId === ChainId.FANTOM
-                  ? FANTOM_ROUTER_ADDRESS
-              : AVAX_ROUTER_ADDRESS,
+                ? HECO_ROUTER_ADDRESS
+                : chainId === ChainId.MOONRIVER
+                  ? MOONRIVER_ROUTER_ADDRESS
+                  : chainId === ChainId.FANTOM
+                    ? FANTOM_ROUTER_ADDRESS
+                    : AVAX_ROUTER_ADDRESS,
     IUniswapV2Router02ABI,
     library,
     account
@@ -175,8 +151,8 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  return currency && ETHER_CURRENCIES.includes(currency)? true: 
-  Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+  return currency && ETHER_CURRENCIES.includes(currency) ? true :
+    Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 
 export const copyToClipboard = (text: string) => {
