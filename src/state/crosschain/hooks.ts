@@ -436,16 +436,14 @@ export function useCrosschainHooks() {
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
-    const usdtAddress =
-      crosschainState.availableTokens.find(token => token.symbol === 'USDT')?.address ??
-      '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+    const usdtAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
-    // const transferAmount = isUsdt ? String(Number.MAX_SAFE_INTEGER) : crosschainState.transferAmount
+    const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract
-      .approve(currentChain.erc20HandlerAddress, ethers.constants.MaxUint256, {
+      .approve(currentChain.erc20HandlerAddress, transferAmount, {
       })
       .then((resultApproveTx: any) => {
         dispatch(
