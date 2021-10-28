@@ -113,6 +113,11 @@ const SideCardHolder = styled.div`
   margin-right: auto;
   display: flex;
   flex-direction: column;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  `};
 `
 const TransferBodyWrapper = styled.div`
   width: 100%;
@@ -174,6 +179,9 @@ const FlexContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+  `};
 `
 
 const TextBottom = styled.div`
