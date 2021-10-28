@@ -533,12 +533,12 @@ export default function Transfer() {
           </SideCard>
           <SideCard>
             <BubbleBase />
-            <h3>Weekly Txns:</h3>
+            <h3>Total Txns:</h3>
             <span>{numeral(totalTx).format('0,0')}</span>
           </SideCard>
           <SideCard>
             <BubbleBase />
-            <h3>Weekly Fees:</h3>
+            <h3>Total Fees:</h3>
             <span>${numeral(totalFee).format('0,0')}</span>
           </SideCard>
         </SideCardHolder>
