@@ -44,6 +44,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import useStats from 'hooks/useStats'
+import useTvl from 'hooks/useTvl'
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -89,7 +91,9 @@ const Description = styled.p`
   font-size: 13px;
   letter-spacing: 0.1em;
 `
-
+const InfoBlock = styled.div`
+display: flex;
+`
 const TransferBodyWrapper = styled.div`
   width: 100%;
   max-width: 600px;
@@ -190,8 +194,24 @@ export default function Transfer() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+  const [totalTx, setTotalTx] = useState('')
+  const [totalFee, setTotalFee] = useState(0)
+  const [totalTvl, setTotalTvl] = useState(1)
+  const stats = useStats(chainId || 2)
+  const tvl = useTvl()
 
-  // swap state
+  useEffect(() => {
+    const keys = Object.keys(stats)
+    if (keys.length > 0) {
+      setTotalFee(Number(stats['fee_usd'].toFixed(2)))
+      setTotalTx(stats['n_txs'])
+    }
+  }, [stats])
+
+  useEffect(() => {
+    setTotalTvl(Math.round(tvl))
+
+  }, [tvl])
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
 
@@ -349,7 +369,7 @@ export default function Transfer() {
 
   useEffect(() => {
     if (targetChain && currentToken) {
-      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)            
+      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)
       setIsTransferToken(!!hasTargetChainToTransferToken)
     }
   }, [targetChain, currentToken])
@@ -366,6 +386,9 @@ export default function Transfer() {
           tokens={urlLoadedTokens}
           onConfirm={handleConfirmTokenWarning}
         />
+        <InfoBlock>
+          Total transactions: {totalTx} Total fee: ${totalFee}  Total tvl: ${totalTvl}
+        </InfoBlock>
         <CrossChainModal
           isOpen={transferChainModalOpen}
           onDismiss={hideTransferChainModal}
@@ -436,11 +459,11 @@ export default function Transfer() {
                     </SpanAmount>
                   ) : ('')}
                 </TextBottom>
-                {( currentToken &&
-                    !isTransferToken &&
-                    targetChain.chainID !== "") ? (
+                {(currentToken &&
+                  !isTransferToken &&
+                  targetChain.chainID !== "") ? (
                   <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...' } is not available 
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
                   </SpanAmount>
                 ) : ('')}
                 <BottomGroupingTransfer>

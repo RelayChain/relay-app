@@ -34,3 +34,7 @@ export async function getTVLHistory() {
 export async function getCrossChainData<T>() {
   return getTyped<T>('https://relay-api-33e56.ondigitalocean.app/api/crosschain-config')
 }
+
+export async function getTvlData<T>() {
+  return getTyped<T>('https://relay-api-33e56.ondigitalocean.app/tvl/currentTvl')
+}
