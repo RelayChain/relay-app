@@ -43,7 +43,11 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
+import useStats from 'hooks/useStats'
+import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
+
+const numeral = require('numeral')
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -89,14 +93,34 @@ const Description = styled.p`
   font-size: 13px;
   letter-spacing: 0.1em;
 `
+const InfoBlock = styled.div`
+display: flex;
+`
+const SideCard = styled.div`
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #6752F7;
+  }
+`
 
+const SideCardHolder = styled.div`
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+`
 const TransferBodyWrapper = styled.div`
   width: 100%;
   max-width: 600px;
   position: relative;
   padding: 2rem;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 2rem;
   &.offline {
     opacity: .25;
     pointer-events: none;
@@ -137,6 +161,19 @@ const TransferButton = styled(GreyCard)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
   min-width: 0;
   `};
+`
+
+const FlexContainer = styled.div`
+  max-width: 1240px;
+  width: 100%;
+  padding: 0 24px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const TextBottom = styled.div`
@@ -190,8 +227,24 @@ export default function Transfer() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+  const [totalTx, setTotalTx] = useState('')
+  const [totalFee, setTotalFee] = useState(0)
+  const [totalTvl, setTotalTvl] = useState(1)
+  const stats = useStats(chainId || 2)
+  const tvl = useTvl()
 
-  // swap state
+  useEffect(() => {
+    const keys = Object.keys(stats)
+    if (keys.length > 0) {
+      setTotalFee(Number(stats['fee_usd'].toFixed(2)))
+      setTotalTx(stats['n_txs'])
+    }
+  }, [stats])
+
+  useEffect(() => {
+    setTotalTvl(Math.round(tvl))
+
+  }, [tvl])
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
 
@@ -349,7 +402,7 @@ export default function Transfer() {
 
   useEffect(() => {
     if (targetChain && currentToken) {
-      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)            
+      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)
       setIsTransferToken(!!hasTargetChainToTransferToken)
     }
   }, [targetChain, currentToken])
@@ -360,7 +413,7 @@ export default function Transfer() {
   return (
     <>
       <Title>Transfer</Title>
-      <PageContainer>
+      <FlexContainer>
         <TokenWarningModal
           isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
           tokens={urlLoadedTokens}
@@ -436,11 +489,11 @@ export default function Transfer() {
                     </SpanAmount>
                   ) : ('')}
                 </TextBottom>
-                {( currentToken &&
-                    !isTransferToken &&
-                    targetChain.chainID !== "") ? (
+                {(currentToken &&
+                  !isTransferToken &&
+                  targetChain.chainID !== "") ? (
                   <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...' } is not available 
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
                   </SpanAmount>
                 ) : ('')}
                 <BottomGroupingTransfer>
@@ -471,6 +524,25 @@ export default function Transfer() {
             </AutoColumn>
           </div>
         </TransferBodyWrapper>
+
+        <SideCardHolder>
+          <SideCard>
+            <BubbleBase />
+            <h3>Total TVL:</h3>
+            <span>${numeral(totalTvl).format('0,0')}</span>
+          </SideCard>
+          <SideCard>
+            <BubbleBase />
+            <h3>Weekly Txns:</h3>
+            <span>{numeral(totalTx).format('0,0')}</span>
+          </SideCard>
+          <SideCard>
+            <BubbleBase />
+            <h3>Weekly Fees:</h3>
+            <span>${numeral(totalFee).format('0,0')}</span>
+          </SideCard>
+        </SideCardHolder>
+
         {(chainId === undefined || account === undefined) && (
           <CustomLightSpinner
             src={Circle2}
@@ -495,7 +567,7 @@ export default function Transfer() {
         )}
 
         {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
-      </PageContainer>
+      </FlexContainer>
     </>
   )
 }
