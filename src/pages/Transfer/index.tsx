@@ -43,9 +43,11 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useDispatch } from 'react-redux'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
+import { useWalletModalToggle } from '../../state/application/hooks'
+
+const numeral = require('numeral')
 
 const ChainBridgePending = styled.div`
   display: flex;
@@ -94,13 +96,31 @@ const Description = styled.p`
 const InfoBlock = styled.div`
 display: flex;
 `
+const SideCard = styled.div`
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #6752F7;
+  }
+`
+
+const SideCardHolder = styled.div`
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+`
 const TransferBodyWrapper = styled.div`
   width: 100%;
   max-width: 600px;
   position: relative;
   padding: 2rem;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 2rem;
   &.offline {
     opacity: .25;
     pointer-events: none;
@@ -141,6 +161,19 @@ const TransferButton = styled(GreyCard)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
   min-width: 0;
   `};
+`
+
+const FlexContainer = styled.div`
+  max-width: 1240px;
+  width: 100%;
+  padding: 0 24px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const TextBottom = styled.div`
@@ -380,15 +413,12 @@ export default function Transfer() {
   return (
     <>
       <Title>Transfer</Title>
-      <PageContainer>
+      <FlexContainer>
         <TokenWarningModal
           isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
           tokens={urlLoadedTokens}
           onConfirm={handleConfirmTokenWarning}
         />
-        <InfoBlock>
-          Total transactions: {totalTx} Total fee: ${totalFee}  Total tvl: ${totalTvl}
-        </InfoBlock>
         <CrossChainModal
           isOpen={transferChainModalOpen}
           onDismiss={hideTransferChainModal}
@@ -494,6 +524,25 @@ export default function Transfer() {
             </AutoColumn>
           </div>
         </TransferBodyWrapper>
+
+        <SideCardHolder>
+          <SideCard>
+            <BubbleBase />
+            <h3>Total TVL:</h3>
+            <span>${numeral(totalTvl).format('0,0')}</span>
+          </SideCard>
+          <SideCard>
+            <BubbleBase />
+            <h3>Weekly Txns:</h3>
+            <span>{numeral(totalTx).format('0,0')}</span>
+          </SideCard>
+          <SideCard>
+            <BubbleBase />
+            <h3>Weekly Fees:</h3>
+            <span>${numeral(totalFee).format('0,0')}</span>
+          </SideCard>
+        </SideCardHolder>
+
         {(chainId === undefined || account === undefined) && (
           <CustomLightSpinner
             src={Circle2}
@@ -518,7 +567,7 @@ export default function Transfer() {
         )}
 
         {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
-      </PageContainer>
+      </FlexContainer>
     </>
   )
 }
