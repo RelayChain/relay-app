@@ -34,7 +34,6 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { Field } from '../../state/swap/actions'
 import { GreyCard } from '../../components/Card'
-import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { RowBetween } from '../../components/Row'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -93,9 +92,6 @@ const Description = styled.p`
   font-size: 13px;
   letter-spacing: 0.1em;
 `
-const InfoBlock = styled.div`
-display: flex;
-`
 const SideCard = styled.div`
   width: 100%;
   max-width: 360px;
@@ -113,6 +109,11 @@ const SideCardHolder = styled.div`
   margin-right: auto;
   display: flex;
   flex-direction: column;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  `};
 `
 const TransferBodyWrapper = styled.div`
   width: 100%;
@@ -174,6 +175,9 @@ const FlexContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+  `};
 `
 
 const TextBottom = styled.div`
@@ -533,12 +537,12 @@ export default function Transfer() {
           </SideCard>
           <SideCard>
             <BubbleBase />
-            <h3>Weekly Txns:</h3>
+            <h3>Total Txns:</h3>
             <span>{numeral(totalTx).format('0,0')}</span>
           </SideCard>
           <SideCard>
             <BubbleBase />
-            <h3>Weekly Fees:</h3>
+            <h3>Total Fees:</h3>
             <span>${numeral(totalFee).format('0,0')}</span>
           </SideCard>
         </SideCardHolder>
