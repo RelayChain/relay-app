@@ -208,6 +208,8 @@ function GetChainNameById(chainID: number): string {
     return 'Shiden'
   } else if (chainID === ChainId.IOTEX) {
     return 'Iotex'
+  }  else if (chainID === ChainId.HARMONY) {
+    return 'Harmony'
   }
   return ''
 }

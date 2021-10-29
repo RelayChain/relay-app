@@ -65,7 +65,8 @@ const logosNames = {
   'MOVR': ['MOVR', 'Moonriver', 'MOONRIVER'],
   'FTM': ['FTM', 'Fantom', 'FANTOM'],
   'SDN': ['SDN', 'Shiden', 'SHIDEN'],
-  'IOTX': ['IOTX', 'IOTEX', 'IoTeX', 'Iotex']
+  'IOTX': ['IOTX', 'IOTEX', 'IoTeX', 'Iotex'],
+  'ONE': ['ONE', 'HARMONY', 'Harmony']
 }
 
 function getLogoByName(tokenName: string) {

@@ -34,7 +34,6 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { Field } from '../../state/swap/actions'
 import { GreyCard } from '../../components/Card'
-import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { RowBetween } from '../../components/Row'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -92,9 +91,6 @@ const Description = styled.p`
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.1em;
-`
-const InfoBlock = styled.div`
-display: flex;
 `
 const SideCard = styled.div`
   width: 100%;
