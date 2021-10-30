@@ -18,6 +18,16 @@ export function getBalanceContract(chainId: ChainId) {
       return '0xc3f90F28C0d52Da1cFbC8E6D9E231176ab731FD9'
     case ChainId.MOONRIVER:
       return '0x8894410c1e5617013ad0405053dd24ec8eaE9a37'
+    case ChainId.FANTOM:
+      return '0x0db3E7586b455588c19728e948ae1C1e3803F9c0'
+    case ChainId.SHIDEN:
+      // deployed but can't find contract in block explorer
+      // hash: 0x95f5f6237add7563cc53584013df45ed53bbd8275ea42667933b2aff7b1d5b3e
+      return ''
+    case ChainId.IOTEX:
+      return ''
+    // case ChainId.HARMONY:
+    //   return ''
     default:
       // MAINNET ETH
       return '0x08A8fDBddc160A7d5b957256b903dCAb1aE512C5'
