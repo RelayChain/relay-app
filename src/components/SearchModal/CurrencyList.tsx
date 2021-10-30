@@ -1,12 +1,13 @@
-import { ChainId, Currency, CurrencyAmount, Token, ETHER_CURRENCIES, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER_CURRENCIES, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useEffect, useMemo } from 'react'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { FixedSizeList } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 import Loader from '../Loader'
 import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
@@ -18,7 +19,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
-import InfiniteLoader from 'react-window-infinite-loader'
+
+const numeral = require('numeral');
 
 function currencyKey(currency: Currency): string {
   if (currency instanceof Token) {
@@ -53,8 +55,8 @@ const Tag = styled.div`
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
   return (
-    <StyledBalanceText title={balance.toExact()}>
-      {balance.toSignificant(returnBalanceNum(balance, 4), { groupSeparator: ',' }) || 0}
+    <StyledBalanceText title={balance.toString()}>
+      {numeral(balance).format('0,0.00') || 0}
     </StyledBalanceText>
   )
 }
@@ -123,12 +125,13 @@ function CurrencyRow({
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
 
-  const balance = useCurrencyBalance(account ?? undefined, currency, chainId)
+  const findBalance = tokenBalances.find((x: any) => x.address.toLowerCase() === currency.address.toLowerCase())
+  const balance = findBalance ? findBalance.balance : 0
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
   const hasABalance = useMemo(() => {
-    return balance && parseFloat(balance.toSignificant(6)) > 0.0000001 ? true : false
+    return balance > 0
   }, [balance])
 
   // only show add or remove buttons if not on selected list
@@ -191,7 +194,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance && hasABalance ? <Balance balance={balance} /> : account && !balance ? <Loader /> : 0}
+        {balance && hasABalance ? <Balance balance={balance} /> : account && balance === undefined ? <Loader /> : 0}
       </RowFixed>
     </MenuItem>
   )
@@ -222,6 +225,7 @@ export default function CurrencyList({
   unseenCustomToken?: boolean,
   isAscendingFilter?: boolean
 }) {
+
   const { chainId } = useActiveWeb3React()
   const tokenBalances = useTokenBalances()
 
@@ -237,19 +241,8 @@ export default function CurrencyList({
             : chainId === ChainId.HECO
               ? Currency.HECO
               : Currency.AVAX
-  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
-    currencies,
-    showETH,
-    nativeToken
-  ])
-  
-  /* const sortTokensByBalance = useTokenBalancesWithSortBalances(isAscendingFilter)
-  
-    const sortedTokensByAmount = Object.values(Object.assign({}, sortTokensByBalance[0])) ;
-    const sortItemDataByBalance = sortedTokensByAmount.length ? [nativeToken, ...sortedTokensByAmount.map
-      ((token: TokenAmount) => itemData.find(curr => curr.name === token.token.name))]
-      : itemData */
- 
+
+  const itemData = tokenBalances || [];
 
   const Row = useCallback(
     ({ data, index, style }) => {
