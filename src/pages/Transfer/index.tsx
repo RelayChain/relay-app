@@ -34,7 +34,6 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
 import { Field } from '../../state/swap/actions'
 import { GreyCard } from '../../components/Card'
-import PageContainer from './../../components/PageContainer'
 import { ProposalStatus } from '../../state/crosschain/actions'
 import { RowBetween } from '../../components/Row'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -92,9 +91,6 @@ const Description = styled.p`
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.1em;
-`
-const InfoBlock = styled.div`
-display: flex;
 `
 const SideCard = styled.div`
   width: 100%;
@@ -462,8 +458,8 @@ export default function Transfer() {
               filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
             }}
           >
-            <AutoColumn gap={'md'}>
-              <CurrencyInputPanel
+          <AutoColumn gap={'md'}>
+          { targetChain.name !== '' && <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
                 label={'Choose your asset:'}
                 value={formattedAmounts[Field.INPUT]}
@@ -477,6 +473,7 @@ export default function Transfer() {
                 transferPage
                 id="swap-currency-input"
               />
+              }
 
               <BlockchainSelector
                 isCrossChain={isCrossChain}
@@ -497,11 +494,11 @@ export default function Transfer() {
                     </SpanAmount>
                   ) : ('')}
                 </TextBottom>
-                {(currentToken &&
+                {(currentToken.name !== '' &&
                   !isTransferToken &&
                   targetChain.chainID !== "") ? (
                   <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available 
                   </SpanAmount>
                 ) : ('')}
                 <BottomGroupingTransfer>

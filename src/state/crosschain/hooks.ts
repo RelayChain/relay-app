@@ -16,6 +16,7 @@ import {
   setCrosschainSwapDetails,
   setCrosschainTransferStatus,
   setCurrentChain,
+  setCurrentToken,
   setCurrentTokenBalance,
   setCurrentTxID,
   setPendingTransfer,
@@ -31,7 +32,7 @@ import Web3 from 'web3'
 // import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
-import { useEffect } from 'react' 
+import { useEffect } from 'react'
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -151,28 +152,31 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   return result
 }
 
-export function GetAvailableTokens(chainName: string): Array<CrosschainToken> {
+export function GetAvailableTokens(chainName: string, targetChainId?: number): Array<CrosschainToken> {
   const result: Array<CrosschainToken> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
   chains?.map(chain => {
     if (chain.name === chainName) {
       for (const token of chain.tokens) {
-        const t = {
-          chainId: chain.chainId,
-          address: token.address,
-          name: token.name || '',
-          symbol: token.symbol || '',
-          decimals: token.decimals,
-          imageUri: token.imageUri,
-          resourceId: token.resourceId,
-          isNativeWrappedToken: token.isNativeWrappedToken,
-          assetBase: token.assetBase,
-          // @ts-ignore
-          disableTransfer: token.disableTransfer,
-          allowedChainsToTransfer: token.allowedChainsToTransfer
+        if (token.allowedChainsToTransfer?.some(id => id === targetChainId)) {
+          const t = {
+            chainId: chain.chainId,
+            address: token.address,
+            name: token.name || '',
+            symbol: token.symbol || '',
+            decimals: token.decimals,
+            imageUri: token.imageUri,
+            resourceId: token.resourceId,
+            isNativeWrappedToken: token.isNativeWrappedToken,
+            assetBase: token.assetBase,
+            // @ts-ignore
+            disableTransfer: token.disableTransfer,
+            allowedChainsToTransfer: token.allowedChainsToTransfer
+          }
+          result.push(t)
         }
-        result.push(t)
+
       }
     }
   })
@@ -208,6 +212,8 @@ function GetChainNameById(chainID: number): string {
     return 'Shiden'
   } else if (chainID === ChainId.IOTEX) {
     return 'Iotex'
+  } else if (chainID === ChainId.HARMONY) {
+    return 'Harmony'
   }
   return ''
 }
@@ -589,6 +595,20 @@ export function useCrossChain() {
     const targetTokens = GetAvailableTokens(newTargetChain?.name)
 
     dispatch(
+      setCurrentToken({
+        token: {
+          name: '',
+          address: '',
+          assetBase: '',
+          symbol: '',
+          decimals: 18,
+          resourceId: '',
+          allowedChainsToTransfer: [],
+        }
+      })
+    )
+
+    dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
       })
@@ -622,7 +642,7 @@ export function useCrossChain() {
 
     dispatch(
       setAvailableTokens({
-        tokens: GetAvailableTokens(currentChain.name)
+        tokens: GetAvailableTokens(currentChain.name, +targetChain?.chainID)
       })
     )
   }, [targetChain, account, currentChain])

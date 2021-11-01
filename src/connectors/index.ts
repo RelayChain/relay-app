@@ -5,6 +5,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { Web3Provider } from '@ethersproject/providers'
+import { ETHERSCAN_PREFIXES } from '@zeroexchange/sdk'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -26,8 +27,9 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 // add 43114 for AVAX
+const ids = Object.keys(ETHERSCAN_PREFIXES)
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 43113, 43114, 97, 56, 1287, 80001, 137, 128, 1285, 250, 336, 4689]
+  supportedChainIds: ids.map(chain => Number(chain))
 })
 
 // mainnet only

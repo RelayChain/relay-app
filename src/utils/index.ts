@@ -15,7 +15,6 @@ import { getAddress } from '@ethersproject/address'
 import { getCrosschainState } from 'state/crosschain/hooks'
 
 const { currentChain } = getCrosschainState()
-console.log("🚀 ~ file: index.ts ~ line 18 ~ currentChain", currentChain)
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   if (value) {
@@ -27,26 +26,6 @@ export function isAddress(value: any): string | false {
   }
   return false
 }
-
-// const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-//   1: '',
-//   3: 'ropsten.',
-//   4: 'rinkeby.',
-//   5: 'goerli.',
-//   42: 'kovan.',
-//   // TODO: are these needed at all?
-//   43113: 'FUJI',
-//   43114: 'AVALANCHE',
-//   97: 'SMART_CHAIN_TEST',
-//   56: 'SMART_CHAIN',
-//   1287: 'MOONBASE_ALPHA',
-//   80001: 'MUMBAI',
-//   137: 'MATIC',
-//   128: 'HECO',
-//   1285: 'MOONRIVER',
-//   250: 'FANTOM',
-//   336: 'SHIDEN'
-// }
 
 export function getEtherscanLink(
   chainId: ChainId,
