@@ -114,7 +114,7 @@ export default function CurrencyLogo({
               allConfigTokens.push(token)
             })
           })
-          const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address === currency.address))?.name
+          const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
           const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
 
           if (currency instanceof WrappedTokenInfo) {
