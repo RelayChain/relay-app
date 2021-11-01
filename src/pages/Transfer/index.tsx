@@ -458,8 +458,8 @@ export default function Transfer() {
               filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
             }}
           >
-            <AutoColumn gap={'md'}>
-              <CurrencyInputPanel
+          <AutoColumn gap={'md'}>
+          { targetChain.name !== '' && <CurrencyInputPanel
                 blockchain={isCrossChain ? currentChain.name : getChainName()}
                 label={'Choose your asset:'}
                 value={formattedAmounts[Field.INPUT]}
@@ -473,6 +473,7 @@ export default function Transfer() {
                 transferPage
                 id="swap-currency-input"
               />
+              }
 
               <BlockchainSelector
                 isCrossChain={isCrossChain}
@@ -493,11 +494,11 @@ export default function Transfer() {
                     </SpanAmount>
                   ) : ('')}
                 </TextBottom>
-                {(currentToken &&
+                {(currentToken.name !== '' &&
                   !isTransferToken &&
                   targetChain.chainID !== "") ? (
                   <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available 
                   </SpanAmount>
                 ) : ('')}
                 <BottomGroupingTransfer>
