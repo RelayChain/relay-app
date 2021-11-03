@@ -43,6 +43,7 @@ import ZeroGravityInfo from './ZeroGravity/Info';
 import ZeroGravityKyc from './ZeroGravity/Kyc';
 import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
+import { SingleSidedStaking } from './SingleSidedStaking'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -111,6 +112,7 @@ export default function App() {
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/find" component={PoolFinder} />
                 {/* <Route exact strict path="/staking" component={Staking} /> */}
+                <Route exact strict path="/single-sided-staking" component={SingleSidedStaking} />
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
                 <Route exact strict path="/vote" component={Vote} />
