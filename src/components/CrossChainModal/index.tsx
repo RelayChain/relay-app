@@ -45,6 +45,8 @@ const ModalContainer = styled.div`
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+    max-height: 500px;
+    overflow: auto;
     li {
       display: flex;
       flex-direction: row;
@@ -160,7 +162,7 @@ export default function CrossChainModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
       <ModalContainer>
         {!isTransfer && <h5>Change Blockchains:</h5>}
         {isTransfer && <h5>Transfer tokens to:</h5>}
