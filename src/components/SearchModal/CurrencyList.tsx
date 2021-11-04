@@ -242,7 +242,12 @@ export default function CurrencyList({
               ? Currency.HECO
               : Currency.AVAX
 
-  const itemData = tokenBalances || [];
+  // const itemData = tokenBalances || [];
+  const itemData = useMemo(() => (showETH ? [nativeToken, ...currencies] : currencies), [
+    currencies,
+    showETH,
+    nativeToken
+  ])
 
   const Row = useCallback(
     ({ data, index, style }) => {
