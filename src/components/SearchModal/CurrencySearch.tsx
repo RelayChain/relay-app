@@ -1,12 +1,11 @@
+import { Box, Flex, Text } from 'rebass'
 import { Currency, ETHER, Token } from '@zeroexchange/sdk'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
-import styled from 'styled-components'
-import { ArrowRight as Arrow } from './../Arrows'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useToken } from '../../hooks/Tokens'
-
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
-import Toggle from './../Toggle'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
+import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useRemoveUserAddedToken, useUserAddedTokens } from '../../state/user/hooks'
+
+import { ArrowRight as Arrow } from './../Arrows'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from '../Card'
 import { CloseIcon } from '../../theme'
@@ -16,23 +15,24 @@ import CurrencyList from './CurrencyList'
 // import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
 // import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
+import { Info } from 'react-feather'
 import ListLoader from '../ListLoader'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
 import SortButton from './SortButton'
-import { Box, Flex, Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import Toggle from './../Toggle'
+import { checksumedCoingeckoList } from 'constants/coingecko'
 import { filterTokens } from './filtering'
 import { isAddress } from '../../utils'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from '../../state/crosschain/hooks'
+import useDebounce from 'hooks/useDebounce'
+import { useIsMountedRef } from 'state/swap/hooks'
+import { useToken } from '../../hooks/Tokens'
 import { useTokenComparator } from './sorting'
 import { useTranslation } from 'react-i18next'
-import { useUserAddedTokens, useRemoveUserAddedToken } from '../../state/user/hooks'
-import { Info } from 'react-feather'
-import { checksumedCoingeckoList } from 'constants/coingecko'
-import { useIsMountedRef } from 'state/swap/hooks'
-import useDebounce from 'hooks/useDebounce'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -131,9 +131,9 @@ export function CurrencySearch({
               return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
             })
             .concat(userTokens)
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
     }, [isCrossChain, availableTokens, isCoingeckoListOn, checksumedCoingeckoList])
-  
+
     if (isCoingeckoListOn && checksumedCoingeckoList && availableTokens && availableTokensArray) {
       for (let i = availableTokens.length, j = 0; i < availableTokensArray.length - (userTokens.length ?? 0); i++) {
         if (
@@ -147,11 +147,11 @@ export function CurrencySearch({
         j++
       }
     }
-  
+
     let uniqueAvailableTokensArray = availableTokensArray.filter(
       (elem, index) => availableTokensArray.findIndex(obj => obj.address === elem.address) === index
     )
-  
+
 
   // const showETH: boolean = useMemo(() => {
   //   const s = searchQuery.toLowerCase().trim()
@@ -174,7 +174,7 @@ export function CurrencySearch({
     //     : [...uniqueAvailableTokensArray, ...Object.values(allTokens)],
     //   searchQuery
     // )
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [isAddressSearch, searchToken, debouncedQuery, chainId, uniqueAvailableTokensArray])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
@@ -192,7 +192,7 @@ export function CurrencySearch({
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
 
@@ -205,7 +205,7 @@ export function CurrencySearch({
     if (isMountedRef && isCoingeckoListOn) {
       setArrayToShow(filteredSortedTokens.length > 40 ? filteredSortedTokens.slice(0, 40) : filteredSortedTokens)
     }
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [isCoingeckoListOn, debouncedQuery, invertSearchOrder])
 
   const loadMore = (startIndex: any, stopIndex: any) => {
