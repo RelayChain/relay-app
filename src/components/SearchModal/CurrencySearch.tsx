@@ -353,7 +353,6 @@ export function CurrencySearch({
                   />
                 )}
               </AutoSizer>
-              <ListLoader />
             </div>
           </MarginWrap>
         )}
@@ -422,7 +421,6 @@ export function CurrencySearch({
                 />
               )}
             </AutoSizer>
-            <ListLoader />
           </div>
 
           <Separator />

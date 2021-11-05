@@ -1,6 +1,7 @@
-import styled from 'styled-components'
-import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
+
+import { AutoColumn } from '../Column'
+import styled from 'styled-components'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -32,6 +33,7 @@ export const MenuItem = styled(RowBetween)`
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
     background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    filter: brightness(1.1);
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `

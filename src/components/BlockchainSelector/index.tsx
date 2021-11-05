@@ -1,15 +1,15 @@
 import { ChevronDown, Link } from 'react-feather'
-import React from 'react'
 
 import { ArrowDown } from '../Arrows'
 import { ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
+import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
   border-radius: 14px;
-  margin-bottom: 1.5rem;
+  margin-bottom: .5rem;
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;

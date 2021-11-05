@@ -459,22 +459,6 @@ export default function Transfer() {
             }}
           >
           <AutoColumn gap={'md'}>
-          { targetChain.name !== '' && <CurrencyInputPanel
-                blockchain={isCrossChain ? currentChain.name : getChainName()}
-                label={'Choose your asset:'}
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxAmountInput}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                isCrossChain={isCrossChain}
-                transferPage
-                id="swap-currency-input"
-              />
-              }
-
               <BlockchainSelector
                 isCrossChain={isCrossChain}
                 supportedChains={SUPPORTED_CHAINS}
@@ -483,7 +467,24 @@ export default function Transfer() {
                 onShowCrossChainModal={showCrossChainModal}
                 onShowTransferChainModal={showTransferChainModal}
               />
-              <RowBetweenTransfer style={{ marginBottom: '1rem', marginTop: '-1.5rem' }}>
+
+              { targetChain.name !== '' && <CurrencyInputPanel
+                  blockchain={isCrossChain ? currentChain.name : getChainName()}
+                  label={'Choose your asset:'}
+                  value={formattedAmounts[Field.INPUT]}
+                  showMaxButton={!atMaxAmountInput}
+                  currency={currencies[Field.INPUT]}
+                  onUserInput={handleTypeInput}
+                  onMax={handleMaxInput}
+                  onCurrencySelect={handleInputSelect}
+                  otherCurrency={currencies[Field.OUTPUT]}
+                  isCrossChain={isCrossChain}
+                  transferPage
+                  id="swap-currency-input"
+                />
+              }
+
+              <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
                 <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
               </RowBetweenTransfer>
               <RowBetweenTransfer>
@@ -498,7 +499,7 @@ export default function Transfer() {
                   !isTransferToken &&
                   targetChain.chainID !== "") ? (
                   <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available 
+                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
                   </SpanAmount>
                 ) : ('')}
                 <BottomGroupingTransfer>
