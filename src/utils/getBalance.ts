@@ -1,7 +1,6 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
 
 import { ChainId } from '@zeroexchange/sdk'
-import { isAddress } from '../utils';
 
 const myCrypto = require('./eth-scan/index');
 const { getTokensBalance } = myCrypto;
@@ -21,13 +20,11 @@ export function getBalanceContract(chainId: ChainId) {
     case ChainId.FANTOM:
       return '0x0db3E7586b455588c19728e948ae1C1e3803F9c0'
     case ChainId.SHIDEN:
-      // deployed but can't find contract in block explorer
-      // hash: 0x95f5f6237add7563cc53584013df45ed53bbd8275ea42667933b2aff7b1d5b3e
-      return ''
+      return '0xa5666b11eF5E98dF0D4eEb658684C455aE442423'
     case ChainId.IOTEX:
-      return ''
-    // case ChainId.HARMONY:
-    //   return ''
+      return '0x61169C86d4A84a11d9A1D31f80F47f653f19192D'
+    case ChainId.HARMONY:
+      return '0x4AEb5fB68dE1Cb0a357B3C4Ee8067761ab56024F'
     default:
       // MAINNET ETH
       return '0x08A8fDBddc160A7d5b957256b903dCAb1aE512C5'
