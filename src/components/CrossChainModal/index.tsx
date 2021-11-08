@@ -7,6 +7,7 @@ import Modal from '../Modal'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { getCrosschainState } from 'state/crosschain/hooks'
+import { useActiveWeb3React } from 'hooks'
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -112,6 +113,7 @@ export default function CrossChainModal({
 }: CrossChainModalProps) {
   const dispatch = useDispatch<AppDispatch>()
   const [isMetamaskError, setMetamaskError] = useState(false)
+  const { account } = useActiveWeb3React()
   const switchChain = async (chain: CrosschainChain) => {
     let { ethereum } = window
     const {allCrosschainData} = getCrosschainState()
@@ -124,7 +126,9 @@ export default function CrossChainModal({
       }
       if (chainsConfig) {
         const hexChainId = '0x' + Number(chainsConfig.networkId).toString(16)
-        const data = [
+        const data = chain.chainID === '1' ? 
+        [{ chainId: '0x1' }, account]
+        : [
           {
             chainId: hexChainId,
             chainName: chainsConfig.name,
@@ -138,9 +142,10 @@ export default function CrossChainModal({
           }
         ]
         /* eslint-disable */
+        const ethMethod = chain.chainID === '1' ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
         const tx =
-          ethereum && ethereum.request
-            ? ethereum['request']({ method: 'wallet_addEthereumChain', params: data }).catch()
+          ethereum && ethereum.request ?  
+          ethereum['request']({ method: ethMethod, params: data }).catch() 
             : ''
 
         if (tx !== '') {
@@ -171,16 +176,6 @@ export default function CrossChainModal({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </li>
-          {!isTransfer && (activeChain !== 'ethereum' && activeChain !== 'Ethereum') &&
-            !supportedChains.find((x: any) => x.chainID === '1') &&
-            <li className='selectable' onClick={() => {
-              alert('To switch back to Ethereum, please change your RPC inside your wallet.')
-              onDismiss()
-            }}>
-              <BlockchainLogo size="28px" blockchain={'ethereum'} />
-              <span>Ethereum</span>
-            </li>
-          }
           {supportedChains.filter(x => x.name.toLowerCase() !== activeChain?.toLowerCase()).map((chain: CrosschainChain) => (
             <li
               key={chain.chainID}
@@ -188,10 +183,8 @@ export default function CrossChainModal({
                 if (isTransfer) {
                   selectTransferChain(chain)
                   onDismiss()
-                } else if (+chain.chainID === 1) {
-                  alert('To switch back to Ethereum, please change your RPC inside your wallet.')
-                  onDismiss()
-                } else if (isMetamaskError) {
+                } 
+                else if (isMetamaskError) {
                   alert('The wallet is not responding now. Please try to change your RPC inside your wallet.')
                   onDismiss()
                 } else {
