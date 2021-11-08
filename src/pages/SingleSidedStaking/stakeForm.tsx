@@ -2,7 +2,8 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
 import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
-import { useRelayaleContract, useRelayTokenContract, useZeroContract } from '../../hooks/useContract'
+import { useRelayaleContract, useRelayTokenContract } from '../../hooks/useContract'
+import { PopupContent } from 'state/application/actions'
 
 import { ButtonOutlined } from '../../components/Button'
 import { Token } from '@zeroexchange/sdk'
@@ -11,6 +12,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import useWindowDimensions from 'hooks/useWindowDimensions'
+import PlainPopup from 'components/Popups/PlainPopup'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -24,7 +26,7 @@ const InputWrap = styled.div`
 const StakeWrap = styled.div`
         font-family: Poppins;
         position: relative;
-        width: 600px;
+        width: 440px;
         max-width: 100%;
         padding: 28px 34px;
         background: rgba(47, 53, 115, 0.32);
@@ -131,18 +133,14 @@ let web3React: any
 export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     const {
         availableTokens,
-        currentChain
+        currentChain,
+        allCrosschainData
     } = useCrosschainState()
     web3React = useActiveWeb3React()
-    const exchangeContract = useRelayaleContract(currentChain.exchangeContractAddress)
-    const zeroContract = useZeroContract(currentChain.zeroContractAddress)
-    const relayAddress = ({
-        '1': '0x5D843Fa9495d23dE997C394296ac7B4D721E841c',
-        '3': '0xE338D4250A4d959F88Ff8789EaaE8c32700BD175',
-        '5': '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
-        '2': '0x78c42324016cd91D1827924711563fb66E33A83A'
-    })[currentChain.chainID]
-    const relayContract = useRelayTokenContract(relayAddress);
+
+    const currentChainData = allCrosschainData.chains.find(chain => chain.chainId === +currentChain.chainID)
+    const relayAddress = currentChainData?.tokens.find(token => token.symbol === 'RELAY')
+    const relayContract = useRelayTokenContract(relayAddress?.address || '');
     const { account, chainId } = useActiveWeb3React()
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountRelay, setAmountRelay] = useState('0')
@@ -150,38 +148,48 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
     const [ethChain, setEthChain] = useState(false)
+    const [crossPopupOpen, setShowPopupModal] = useState(false)
+    const hidePopupModal = () => setShowPopupModal(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
     let resStake: any = null
+    const [popupContent, setPopupContent] = useState({} as PopupContent)
     const onStake = async () => {
-        try {
-            setIsPending(true)
-            const inputValue = BigNumber.from(utils.parseUnits(amountRelay, 18))
-            if (isApprove) {
-                resStake = await zeroContract?.approve(currentChain.exchangeContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
-                await resStake.wait()
-                setDepositSuccessHash(resStake.hash)
-                if (depositSuccessHash) {
-                    setIsPending(false)
-                }
 
-            } else {
-                resStake = await exchangeContract?.Stake(inputValue.toHexString(), {
-                    gasPrice: 226 * 10 ** 9,
-                    gasLimit: 150000,
-                })
-                await resStake.wait()
-                setDepositSuccessHash(resStake.hash)
-                if (depositSuccessHash) {
-                    setIsPending(false)
-                }
+        setPopupContent({
+            simpleAnnounce: {
+                message: `Staked ${amountRelay} Relay`
             }
+        })
+        showCrossChainModal()
+        // try {
+        //     setIsPending(true)
+        //     const inputValue = BigNumber.from(utils.parseUnits(amountRelay, 18))
+        //     if (isApprove) {
+        //         resStake = await zeroContract?.approve(currentChain.exchangeContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
+        //         await resStake.wait()
+        //         setDepositSuccessHash(resStake.hash)
+        //         if (depositSuccessHash) {
+        //             setIsPending(false)
+        //         }
 
-        } catch (e) {
-            setIsPending(false)
-            console.log(e)
-        } finally {
-            setIsPending(false)
-        }
+        //     } else {
+        //         resStake = await exchangeContract?.Stake(inputValue.toHexString(), {
+        //             gasPrice: 226 * 10 ** 9,
+        //             gasLimit: 150000,
+        //         })
+        //         await resStake.wait()
+        //         setDepositSuccessHash(resStake.hash)
+        //         if (depositSuccessHash) {
+        //             setIsPending(false)
+        //         }
+        //     }
+
+        // } catch (e) {
+        //     setIsPending(false)
+        //     console.log(e)
+        // } finally {
+        //     setIsPending(false)
+        // }
     };
     useEffect(() => {
         if (resStake) {
@@ -190,23 +198,23 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     }, [resStake])
 
     useEffect(() => {
-        const getMaxAmount = async () => {
-            const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress).catch(console.log)
-            if (amountToSpend) {
-                setAllowanceAmount(BigNumber.from(amountToSpend))
-            }
-            const maxUserBalance = await zeroContract?.balanceOf(account).catch(console.log)
-            if (maxUserBalance) {
-                setMaxAmountRelay(ethers.utils.formatUnits(maxUserBalance, 'ether'))
-            }
-        }
-        getMaxAmount()
+        // const getMaxAmount = async () => {
+        //     const amountToSpend = await zeroContract?.allowance(account, currentChain.exchangeContractAddress).catch(console.log)
+        //     if (amountToSpend) {
+        //         setAllowanceAmount(BigNumber.from(amountToSpend))
+        //     }
+        //     const maxUserBalance = await zeroContract?.balanceOf(account).catch(console.log)
+        //     if (maxUserBalance) {
+        //         setMaxAmountRelay(ethers.utils.formatUnits(maxUserBalance, 'ether'))
+        //     }
+        // }
+        // getMaxAmount()
     })
 
     useEffect(() => {
         const getMaxAmountRelay = async () => {
 
-            const maxRelayBalance = await relayContract?.balanceOf(currentChain.exchangeContractAddress).catch(console.log)
+            const maxRelayBalance = await relayContract?.balanceOf(account).catch(console.log)
             if (maxRelayBalance) {
                 const relayBalance = ethers.utils.formatEther(maxRelayBalance);
                 const formatted = Number(relayBalance).toFixed()
@@ -226,13 +234,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
 
     }, [amountRelay, allowanceAmount, maxAmountRelay])
 
-    useEffect(() => {
-        if (currentChain?.rateZeroToRelay) {
-            // const equalRelayAmount = String(+amountRelay * currentChain?.rateRelayToRelay)
-            // setAmountRelay(equalRelayAmount)
-        }
 
-    }, [amountRelay, currentChain])
     const userTokens = useUserAddedTokens()
         ?.filter((x: any) => x.chainId === chainId)
         ?.map((x: any) => {
@@ -276,6 +278,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     }
 
     useEffect(() => {
+        console.log('amountRelay :>> ', amountRelay);
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
         }
@@ -290,6 +293,18 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     const maxBalance = async () => {
         setAmountRelay(maxAmountRelay)
     }
+
+    const showCrossChainModal = () => {
+        const currentTime = ~~(Date.now() / 1000)
+        // if (lastTimeSwitched < currentTime) {
+        //   setShowCrossChainModal(true)
+        // } else {
+        setShowPopupModal(true)
+        setTimeout(() => {
+            hidePopupModal()
+        }, 2000)
+        //}
+    }
     return (
         <>
             {ethChain ? <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -301,7 +316,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                                 {!web3React.account && <p>Please connect to wallet</p>}
                                 {web3React.account && (
                                     <>
-                                        <BalanceLine>{typeAction === 'stake'? '15000 Relay': '342 LP Staked' }</BalanceLine>
+                                        <BalanceLine>{typeAction === 'stake' ? `${maxAmountRelay} Relay` : '342 LP Staked'}</BalanceLine>
                                         <InputWrap> <input type="number" name="amount" id="amount-zero" value={amountRelay} onChange={e => setAmountRelay(e.target.value)} />
                                             <StyledBalanceMax onClick={() => maxBalance()}>MAX</StyledBalanceMax></InputWrap>
 
@@ -334,6 +349,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                 <StakeFlex>
                     <StakeWrap>{"RELAY Stakes work only on Ethereum, Binance, Avalanche, Polygon networks. Please switch any of those chains."}</StakeWrap>
                 </StakeFlex>}
+            <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         </>
     )
 }
