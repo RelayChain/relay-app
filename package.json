@@ -130,7 +130,7 @@
         "@types/react-copy-to-clipboard": "^5.0.0",
         "@types/react-gtm-module": "^2.0.1",
         "@types/react-window-infinite-loader": "^1.0.3",
-        "@zeroexchange/sdk": "^3.2.31",
+        "@zeroexchange/sdk": "^3.2.32",
         "axios": "^0.21.1",
         "highcharts": "^9.0.1",
         "highcharts-react-official": "^3.0.0",
