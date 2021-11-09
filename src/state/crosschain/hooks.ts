@@ -214,6 +214,8 @@ function GetChainNameById(chainID: number): string {
     return 'Iotex'
   } else if (chainID === ChainId.HARMONY) {
     return 'Harmony'
+  } else if (chainID === ChainId.CRONOS) {
+    return 'Cronos'
   }
   return ''
 }
