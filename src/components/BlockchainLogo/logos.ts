@@ -9,6 +9,7 @@ import MoonriverLogo from '../../assets/images/crosschain/MOVR.png'
 import ShidenLogo from '../../assets/images/crosschain/SDN.png'
 import IotexLogo from '../../assets/images/crosschain/IOTX.png'
 import OneLogo from '../../assets/images/crosschain/ONE.png'
+import CroLogo from '../../assets/images/crosschain/CRO.png'
 export const logoByName = {
     FTM: FantomLogo,
     AVAX: AvaxLogo,
@@ -20,5 +21,6 @@ export const logoByName = {
     MOVR: MoonriverLogo,
     SDN: ShidenLogo,
     IOTX: IotexLogo,
-    ONE: OneLogo
+    ONE: OneLogo,
+    CRO: CroLogo
 }
