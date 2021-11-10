@@ -80,6 +80,7 @@ export const getAllTokenBalances = async (
     }
 
     const arr = []
+    // eslint-disable-next-line
     for (const [key, value] of Object.entries(balances)) {
       if (value?.balance && parseFloat(value?.balance) > 0) arr.push(value)
     }
