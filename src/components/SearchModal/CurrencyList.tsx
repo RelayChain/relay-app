@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, ETHER_CURRENCIES, Token, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, ETHER_CURRENCIES, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { CSSProperties, MutableRefObject, useCallback, useEffect, useMemo, useState } from 'react'
@@ -13,10 +13,8 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
 
@@ -125,7 +123,6 @@ function CurrencyRow({
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
 
-  const findBalance = tokenBalances.find((x: any) => x.address.toLowerCase() === currency.address.toLowerCase())
   const [balance, setBalance] = useState(0)
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
@@ -135,6 +132,7 @@ function CurrencyRow({
     if (findBalance) {
       setBalance(findBalance?.balance)
     }
+    // eslint-disable-next-line
   }, [tokenBalances, account]);
 
   // only show add or remove buttons if not on selected list
