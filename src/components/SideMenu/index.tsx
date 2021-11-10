@@ -159,43 +159,7 @@ export default function SideMenu() {
               <Icon icon="earn" active={pathname === '/pools'} />
             </IconLink>
             <span className={pathname === '/pools' ? 'active' : ''}>{t('Pools')}</span>
-          </StyledNavLink>
-          {/*
-            <HeaderExternalLink href={`https://charts.0.exchange`}>
-              <IconLink>
-                <Icon icon="charts" />
-              </IconLink>
-              {t('Charts')}
-            </HeaderExternalLink>
-          */}
-          {/*
-            <StyledNavLink id={`pools-nav-link`} to={'/zero-gravity'} onClick={handleSideMenuOpen}>
-              <IconLink>
-                <Icon icon="trade" active={pathname.includes('zero-gravity')} />
-              </IconLink>
-              <span className={pathname.includes('zero-gravity') ? 'active' : ''}>{t('Zero Gravity')}</span>
-            </StyledNavLink>
-          */}
-          {/* <StyledNavLink id={`staking-nav-link`} to={'/staking'} onClick={hanldeSidemenuOpen}>
-            <IconLink>
-              <Icon icon="market" active={pathname === '/staking'} />
-            </IconLink>
-
-            <span className={pathname === '/staking' ? 'active' : ''}>{t('Staking')}</span>
-          </StyledNavLink> */}
-          {/*<HeaderExternalLink href={`https://buy.0.exchange`} style={{ marginTop: '3rem' }}>
-            <IconLink>
-              <DollarSign size={20} />
-            </IconLink>
-            Buy ZERO
-          </HeaderExternalLink>
-          */}
-          {/*<StyledNavLink id={`pools-nav-link`} to={'/relay-sale'} onClick={handleSideMenuOpen}>
-            <IconLink>
-              <Icon icon="planet" active={pathname.includes('relay-sale')} />
-            </IconLink>
-            <span className={pathname.includes('relay-sale') ? 'active' : ''}>{t('Zero to Relay')}</span>
-          </StyledNavLink>*/}
+          </StyledNavLink>          
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px' }}>
               <Icon icon="more" />
