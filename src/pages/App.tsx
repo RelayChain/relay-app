@@ -36,12 +36,7 @@ import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import SideMenu from '../components/SideMenu'
 import Transfer from './Transfer'
 import URLWarning from '../components/Header/URLWarning'
-import Vote from './Vote'
-import VotePage from './Vote/VotePage'
 import Web3ReactManager from '../components/Web3ReactManager'
-import ZeroGravityInfo from './ZeroGravity/Info';
-import ZeroGravityKyc from './ZeroGravity/Kyc';
-import ZeroGravityList from './ZeroGravity';
 import styled from 'styled-components'
 import { SingleSidedStaking } from './SingleSidedStaking'
 
@@ -105,8 +100,6 @@ export default function App() {
             <TopLevelModals />
             <Web3ReactManager>
               <Switch>
-                {/* <Route exact strict path="/home" component={Home} /> */}
-                {/* <Route exact strict path="/swap" component={Swap} /> */}
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -115,7 +108,6 @@ export default function App() {
                 <Route exact strict path="/single-sided-staking" component={SingleSidedStaking} />
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
-                <Route exact strict path="/vote" component={Vote} />
                 <Route exact strict path="/create" component={RedirectToAddLiquidity} />
                 <Route exact path="/add" component={AddLiquidity} />
                 <Route exact path="/add/:currencyIdA" component={AddLiquidity} />
@@ -129,13 +121,8 @@ export default function App() {
                 <Route exact strict path="/remove" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-                <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
-                <Route exact strict path="/vote/:id" component={VotePage} />
-                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />
-                {/*<Route exact strict path="/relay-sale" component={RelaySale} />*/}
-                <Route exact strict path="/zero-gravity" component={ZeroGravityList} />
-                <Route exact strict path="/zero-gravity/:idoURL" component={ZeroGravityInfo} />
-                <Route exact strict path="/zero-gravity/:idoURL/kyc" component={ZeroGravityKyc} />
+                <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />      
+                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />               
                 <Route component={RedirectPathToTransferOnly} />
               </Switch>
             </Web3ReactManager>

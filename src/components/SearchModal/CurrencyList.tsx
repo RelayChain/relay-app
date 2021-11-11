@@ -1,7 +1,7 @@
-import { ChainId, Currency, CurrencyAmount, ETHER_CURRENCIES, Token, currencyEquals } from '@zeroexchange/sdk'
+import { ChainId, Currency, ETHER_CURRENCIES, Token, currencyEquals } from '@zeroexchange/sdk'
 import { FadedSpan, MenuItem } from './styleds'
 import { LinkStyledButton, TYPE } from '../../theme'
-import React, { CSSProperties, MutableRefObject, useCallback, useEffect, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 
 import Column from '../Column'
@@ -13,10 +13,8 @@ import { MouseoverTooltip } from '../Tooltip'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { returnBalanceNum } from '../../constants'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import { useTokenBalances } from '../../state/user/hooks'
 
@@ -53,7 +51,7 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance }: { balance: CurrencyAmount }) {
+function Balance({ balance }: { balance: any }) {
   return (
     <StyledBalanceText title={balance.toString()}>
       {numeral(balance).format('0,0.00') || 0}
@@ -125,14 +123,17 @@ function CurrencyRow({
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
 
-  const findBalance = tokenBalances.find((x: any) => x.address.toLowerCase() === currency.address.toLowerCase())
-  const balance = findBalance ? findBalance.balance : 0
+  const [balance, setBalance] = useState(0)
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  const hasABalance = useMemo(() => {
-    return balance > 0
-  }, [balance])
+  useEffect(() => {
+    const findBalance = tokenBalances.find((x: any) => x.address.toLowerCase() === currency.address.toLowerCase())
+    if (findBalance) {
+      setBalance(findBalance?.balance)
+    }
+    // eslint-disable-next-line
+  }, [tokenBalances, account]);
 
   // only show add or remove buttons if not on selected list
   const isNative = () => {
@@ -194,7 +195,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance && hasABalance ? <Balance balance={balance} /> : account && balance === undefined ? <Loader /> : 0}
+        {balance ? <Balance balance={balance} /> : account && balance === undefined ? <Loader /> : 0}
       </RowFixed>
     </MenuItem>
   )

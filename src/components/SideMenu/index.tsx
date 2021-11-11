@@ -196,6 +196,7 @@ export default function SideMenu() {
             </IconLink>
             <span className={pathname.includes('single-sided-staking') ? 'active' : ''}>{'Single sided staking'}</span>
           </StyledNavLink>
+          </StyledNavLink>          
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px' }}>
               <Icon icon="more" />

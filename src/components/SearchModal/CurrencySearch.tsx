@@ -12,11 +12,8 @@ import { CloseIcon } from '../../theme'
 import Column from '../Column'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-// import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_MAINNET } from '../../constants/DefaultTokenList'
-// import { DEFAULT_TOKEN_LIST as DEFAULT_TOKEN_LIST_TESTNET } from '../../constants/DefaultTokenListTestnet'
 import { FixedSizeList } from 'react-window'
 import { Info } from 'react-feather'
-import ListLoader from '../ListLoader'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
 import SortButton from './SortButton'
@@ -353,7 +350,6 @@ export function CurrencySearch({
                   />
                 )}
               </AutoSizer>
-              <ListLoader />
             </div>
           </MarginWrap>
         )}
@@ -422,7 +418,6 @@ export function CurrencySearch({
                 />
               )}
             </AutoSizer>
-            <ListLoader />
           </div>
 
           <Separator />
