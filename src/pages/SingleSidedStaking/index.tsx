@@ -113,7 +113,7 @@ export const SingleSidedStaking = () => {
                 <ButtonWrapStake>
                     {parseFloat(earnedLp) > 0 &&
                         <ButtonStake onClick={() => harvest()} className={isPending ? 'disabled' : ''}>
-                            {isPending ? '...Pending' : `Harvest ${earnedLp}`}
+                            {isPending ? '...Pending' : `Harvest ${earnedLp} ${returnStakingConfig(chainId)?.rewardSymbol}`}
                         </ButtonStake>
                     }
                 </ButtonWrapStake>
