@@ -128,7 +128,7 @@ const BalanceLine = styled.div`
     `
 let web3React: any
 
-export const StakeForm = ({ typeAction }: { typeAction: string }) => {
+export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAction: string, updatedHash: string, setUpdatedHash: (hash: string) => void  }) => {
     const {
         currentChain
     } = useCrosschainState()
@@ -173,6 +173,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                         })
                         showCrossChainModal()
                         setDepositSuccessHash(resStake.hash)
+                        setUpdatedHash(resStake.hash)
                         if (depositSuccessHash) {
                             setIsPending(false)
                         }
@@ -202,6 +203,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                     })
                     showCrossChainModal()
                     setDepositSuccessHash(resStake.hash)
+                    setUpdatedHash(resStake.hash)
                     if (depositSuccessHash) {
                         setIsPending(false)
                     }
@@ -223,8 +225,8 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
             })
             showCrossChainModal()
             setDepositSuccessHash(resStake.hash)
+            setUpdatedHash(resStake.hash)
             if (depositSuccessHash) {
-                console.log("🚀 ~ file: stakeForm.tsx ~ line 165 ~ onStake ~ depositSuccessHash", depositSuccessHash)
                 setIsPending(false)
             }
         }
@@ -240,7 +242,6 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         const getMaxAmount = async () => {
             const amountToSpend = await stakedTokenContract?.allowance(account, stakedInfo?.stakingContractAddress).catch(console.log)
             if (amountToSpend) {
-                console.log("🚀 ~ file: stakeForm.tsx ~ line 246 ~ getMaxAmount ~ amountToSpend", amountToSpend)
                 setAllowanceAmount(BigNumber.from(amountToSpend))
             }
             const maxUserBalance = await stakedTokenContract?.balanceOf(account).catch(console.log)
@@ -249,11 +250,10 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
             }
         }
         getMaxAmount()
-    },[currentChain, depositSuccessHash])
+    },[depositSuccessHash, updatedHash])
 
     useEffect(() => {
         const getMaxAmountRelay = async () => {
-
             const maxRelayBalance = await stakedTokenContract?.balanceOf(account).catch(console.log)
             if (maxRelayBalance) {
                 const relayBalance = ethers.utils.formatEther(maxRelayBalance);
@@ -264,7 +264,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         }
         getMaxAmountRelay()
         // eslint-disable-next-line
-    }, [currentChain, depositSuccessHash])
+    }, [depositSuccessHash, updatedHash])
 
     useEffect(() => {
         const getMaxAmountLp = async () => {
@@ -276,7 +276,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
             }
         }
         getMaxAmountLp()
-    }, [currentChain, unstakedAmount, depositSuccessHash])
+    }, [currentChain, unstakedAmount, depositSuccessHash, updatedHash])
 
     useEffect(() => {
         if (+amountRelay > 0 && +maxAmountRelay >= +amountRelay && maxAmountRelay.length >= amountRelay.length) {
@@ -284,38 +284,27 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
             setIsApprove(allowanceAmount.gte(inputValue))
         }
 
-    }, [amountRelay, allowanceAmount, maxAmountRelay])
+    }, [amountRelay, allowanceAmount, maxAmountRelay, updatedHash])
 
     useEffect(() => {
         setUnstakedAmount('0')
         setAmountRelay('0')
 
-    }, [depositSuccessHash])
+    }, [updatedHash])
 
-
-
-    // const { width } = useWindowDimensions()
-
-    // let isColumn = false
-    // if (width < 1350) {
-    //     isColumn = true
-    // }
-    // const onSelectBalance = (isNative: boolean, token?: any) => {
-    //     return ''
-    // }
-
+ 
     useEffect(() => {
         console.log('amountRelay :>> ', amountRelay);
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
         }
-    }, [amountRelay, maxAmountRelay])
+    }, [amountRelay, maxAmountRelay, updatedHash])
 
     useEffect(() => {
         if (+unstakedAmount >= +stakedAmount) {
             setUnstakedAmount(stakedAmount)
         }
-    }, [stakedAmount, unstakedAmount])
+    }, [stakedAmount, unstakedAmount, updatedHash])
 
 
 
@@ -340,7 +329,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         if (typeAction === 'stake') {
             return parseFloat(amountRelay) === 0 || !amountRelay || isPending || maxAmountRelay === '0' ? 'disabled' : ''
         } else {
-            return !unstakedAmount || stakedAmount === '0' ? 'disabled' : ''
+            return !unstakedAmount || stakedAmount === '0' || isPending ? 'disabled' : ''
         }
     }
 
