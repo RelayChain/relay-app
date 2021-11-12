@@ -1,5 +1,5 @@
-import {ethers} from 'ethers'
-import React, { useEffect,useState } from 'react'
+import { ethers } from 'ethers'
+import React, { useEffect, useState } from 'react'
 import { StakingConfig, returnStakingConfig } from './stakingConfig'
 
 import { ButtonOutlined } from '../../components/Button'
@@ -67,6 +67,8 @@ export const SingleSidedStaking = () => {
     const [earnedLp, setEarnedLp] = useState('0')
     const [updatedHash, setUpdatedHash] = useState('')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
+    const [indexUpdate, setIndexUpdate] = useState(0)
+
 
     const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
 
@@ -93,6 +95,7 @@ export const SingleSidedStaking = () => {
         if (!chainId || !stakingContract) {
             return;
         }
+
         const getEarned = async () => {
             const earnedAmount = await stakingContract?.earned(account).catch(console.log)
             if (earnedAmount) {
@@ -101,15 +104,34 @@ export const SingleSidedStaking = () => {
                 setEarnedLp(formatted)
             }
         }
-        getEarned()
-    }, [account, rewardSuccessHash, chainId, stakingContract])
+
+        if (stakingContract && indexUpdate === 5) {
+            getEarned()
+        } else {
+            return;
+        }
+
+    }, [stakingContract, indexUpdate])
+
+    useEffect(() => {
+        let ind = indexUpdate
+        setInterval(() => {
+            if (ind !== 0 && ind % 10 === 0) {
+                ind = 0
+                setIndexUpdate(ind)
+            } else {
+                setIndexUpdate(ind++)
+            }
+        }, 1000)
+    }, [])
+
     return (
         <StakeContainer style={{ marginTop: '4rem', marginBottom: '4rem' }}>
             <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
             {returnStakingConfig(chainId)?.stakingContractAddress && <>
                 <StakeWrap>
-                    <StakeForm typeAction={'stake'}  updatedHash={updatedHash} setUpdatedHash={setUpdatedHash}/>
-                    <StakeForm typeAction={'unstake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash}/>
+                    <StakeForm typeAction={'stake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
+                    <StakeForm typeAction={'unstake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
                 </StakeWrap>
                 <ButtonWrapStake>
                     {parseFloat(earnedLp) > 0 &&

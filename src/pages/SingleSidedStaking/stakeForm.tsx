@@ -7,7 +7,7 @@ import { ButtonOutlined } from '../../components/Button'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { getEtherscanLink } from '../../utils'
-import { returnStakingConfig} from './stakingConfig'
+import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -128,7 +128,7 @@ const BalanceLine = styled.div`
     `
 let web3React: any
 
-export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAction: string, updatedHash: string, setUpdatedHash: (hash: string) => void  }) => {
+export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAction: string, updatedHash: string, setUpdatedHash: (hash: string) => void }) => {
     const {
         currentChain
     } = useCrosschainState()
@@ -153,37 +153,35 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
     const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
 
+    const doStake = async (amount: string) => {
+        try {
+            setIsPending(true)
+            const amountToStake = BigNumber.from(utils.parseUnits(amount, 18))
+            resStake = await stakingContract?.stake(amountToStake.toHexString(), {
+                gasLimit: 150000,
+            })
+            if (resStake) {
+                await resStake.wait()
+                setPopupContent({
+                    simpleAnnounce: {
+                        message: `Staked ${amount} Relay`
+                    }
+                })
+                showCrossChainModal()
+                setDepositSuccessHash(resStake.hash)
+                setUpdatedHash(resStake.hash)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setIsPending(false)
+        }
+    }
     const onStake = async () => {
         setIsPending(true)
         if (isApprove) {
             if (typeAction === 'stake') {
-
-                try {
-                    setIsPending(true)
-                    const amountToStake = BigNumber.from(utils.parseUnits(amountRelay, 18))
-                    resStake = await stakingContract?.stake(amountToStake.toHexString(), {
-                        gasLimit: 150000,
-                    })
-                    if (resStake) {
-                        await resStake.wait()
-                        setPopupContent({
-                            simpleAnnounce: {
-                                message: `Staked ${amountRelay} Relay`
-                            }
-                        })
-                        showCrossChainModal()
-                        setDepositSuccessHash(resStake.hash)
-                        setUpdatedHash(resStake.hash)
-                        if (depositSuccessHash) {
-                            setIsPending(false)
-                        }
-                    }
-                } catch (e) {
-                    setIsPending(false)
-                    console.log(e)
-                } finally {
-                    setIsPending(false)
-                }
+                await doStake(amountRelay)
             }
         }
         if (+unstakedAmount > 0) {
@@ -216,19 +214,30 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             }
         }
         if (!isApprove && +unstakedAmount === 0) {
-            resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
-            await resStake.wait()
-            setPopupContent({
-                simpleAnnounce: {
-                    message: `Approve Relay to staking`
+            try {
+                resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968',
+                    {
+                        gasLimit: 150000,
+                    })
+                await resStake.wait()
+
+
+            } catch (err) {
+                console.log('err :>> ', err);
+            } finally {
+                if (resStake.hash) {
+                    // setPopupContent({
+                    //     simpleAnnounce: {
+                    //         message: `Approve Relay to staking`
+                    //     }
+                    // })
+                    // showCrossChainModal()
+                    setDepositSuccessHash(resStake.hash)
+                    setUpdatedHash(resStake.hash)
+                    await doStake(amountRelay)
                 }
-            })
-            showCrossChainModal()
-            setDepositSuccessHash(resStake.hash)
-            setUpdatedHash(resStake.hash)
-            if (depositSuccessHash) {
-                setIsPending(false)
             }
+
         }
     }
     useEffect(() => {
@@ -250,7 +259,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             }
         }
         getMaxAmount()
-    },[depositSuccessHash, updatedHash])
+    }, [depositSuccessHash, updatedHash])
 
     useEffect(() => {
         const getMaxAmountRelay = async () => {
@@ -292,7 +301,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
     }, [updatedHash])
 
- 
+
     useEffect(() => {
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
