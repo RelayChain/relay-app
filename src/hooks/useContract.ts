@@ -17,6 +17,7 @@ import WDS_DEPOSIT_ABI from '../constants/abis/wds-deposit.json'
 import WISE_SALE_ABI from '../constants/abis/wise-sale.json'
 import RELAY_SALE_ABI from '../constants/abis/relay-sale.json'
 import ZERO_ABI from '../constants/abis/zero.json';
+import STAKING_ABI from '../constants/abis/stakingRewardsStandAlone.json';
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { ERC20_BYTES32_ABI, ERC20_GONDOLA_INTERFACE } from '../constants/abis/erc20'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
@@ -207,4 +208,8 @@ export function useZeroContract(address?: string, withSignerIfPossible?: boolean
 
 export function useRelayTokenContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(address, ZERO_ABI, withSignerIfPossible)
+}
+
+export function useStakingAloneContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, STAKING_ABI, withSignerIfPossible)
 }

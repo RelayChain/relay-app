@@ -1,8 +1,11 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { BigNumber, ethers, utils } from 'ethers'
 import { StakeForm } from './stakeForm';
 import { ButtonOutlined } from '../../components/Button'
+import { useStakingAloneContract } from 'hooks/useContract';
+import { useActiveWeb3React } from 'hooks';
 
 const StakeContainer = styled.div`
         font-family: Poppins;
@@ -57,7 +60,28 @@ const ButtonStake = styled(ButtonOutlined)`
     
 `
 
+
 export const SingleSidedStaking = () => {
+    const { account, chainId } = useActiveWeb3React()
+    const [earnedLp, setEarnedLp] = useState('0')
+    const [rewardSuccessHash, setRewardSuccessHash] = useState('')
+    const stakingContract = useStakingAloneContract('0x924F19A9B808573Ca0F7aedEd3aa968Be5112622' || '')
+    const harvest = async() => {
+        const earnedAmount = await stakingContract?.getReward().catch(console.log)
+        await earnedAmount.wait()
+        setRewardSuccessHash(earnedAmount.hash)
+    }
+    useEffect(() => {
+        const getEarned = async () => {
+            const earnedAmount = await stakingContract?.earned(account).catch(console.log)
+            if (earnedAmount) {
+                const lpBalance = ethers.utils.formatEther(earnedAmount);
+                const formatted = Number((lpBalance)).toFixed(6)
+                setEarnedLp(formatted)
+            }
+        }
+        getEarned()
+    }, [account, rewardSuccessHash])
     return (
         <StakeContainer>
             <StakeTitle>Staking</StakeTitle>
@@ -66,10 +90,11 @@ export const SingleSidedStaking = () => {
                 <StakeForm typeAction={'unstake'} />
             </StakeWrap>
             <ButtonWrapStake>
-                <ButtonStake >
-                    {'Harvest 213 RELAY'}
+                <ButtonStake onClick={() => harvest()}>
+                    {`Harvest ${earnedLp} RELAY`}
                 </ButtonStake>
             </ButtonWrapStake>
+            {rewardSuccessHash}
         </StakeContainer>
     )
 }
