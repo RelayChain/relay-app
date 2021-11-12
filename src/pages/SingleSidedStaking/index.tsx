@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StakingConfig, returnStakingConfig } from './stakingConfig'
+import { TYPE, Title } from '../../theme'
 
 import { ButtonOutlined } from '../../components/Button'
 import { StakeForm } from './stakeForm';
@@ -102,6 +103,8 @@ export const SingleSidedStaking = () => {
         getEarned()
     }, [account, rewardSuccessHash, chainId, stakingContract])
     return (
+        <>
+        <Title>Staking</Title>
         <StakeContainer style={{ marginTop: '4rem', marginBottom: '4rem' }}>
             <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
             {returnStakingConfig(chainId)?.stakingContractAddress && <>
@@ -128,5 +131,5 @@ export const SingleSidedStaking = () => {
             </>
             }
         </StakeContainer>
-    )
+    </>)
 }
