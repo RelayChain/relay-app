@@ -7,11 +7,11 @@ export const StakingConfig: any = {
         rewardsTokenAddress: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
         chainName: 'Avalanche'
     },
-    [ChainId.HECO]: {
-        stakingContractAddress: '0x924F19A9B808573Ca0F7aedEd3aa968Be5112622',
-        stakedTokenAddress: '0x64e501ca5bada4c9b82b8bb3535ec92075d7412f ',
-        rewardsTokenAddress: '0x0d4221c6167eaf7d9d2349451fce1d23a0e746fa '
-    },
+    // [ChainId.HECO]: {
+    //     stakingContractAddress: '0x924F19A9B808573Ca0F7aedEd3aa968Be5112622',
+    //     stakedTokenAddress: '0x64e501ca5bada4c9b82b8bb3535ec92075d7412f ',
+    //     rewardsTokenAddress: '0x0d4221c6167eaf7d9d2349451fce1d23a0e746fa '
+    // },
     [ChainId.MATIC]: {
         stakingContractAddress: '0x7f7a17aA18DDeB9a281776f406F2FF6bD06907F7',
         stakedTokenAddress: '0x904371845Bc56dCbBcf0225ef84a669b2fD6bd0d',
