@@ -33,6 +33,7 @@ import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
+
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -263,134 +264,136 @@ export function useCrosschainHooks() {
   // }
 
   const MakeDeposit = async () => {
-    dispatch(
-      setCrosschainTransferStatus({
-        status: ChainTransferState.TransferPending
-      })
-    )
+    try {
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.TransferPending
+        })
+      )
 
-    const crosschainState = getCrosschainState()
-    console.log(crosschainState.currentChain.chainID);
-    const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    // const currentToken = currentChain.tokens
-    //   .find(token => token.address === crosschainState.currentToken.address)
-    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
-    const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
-    // const currentGasPrice = await useGasPrice()
-    dispatch(
-      setCurrentTxID({
-        txID: ''
-      })
-    )
-    const signer = web3React.library.getSigner()
-    const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
+      const crosschainState = getCrosschainState()
+      console.log(crosschainState.currentChain.chainID);
+      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+      // const currentToken = currentChain.tokens
+      //   .find(token => token.address === crosschainState.currentToken.address)
+      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+      const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
+      // const currentGasPrice = await useGasPrice()
+      dispatch(
+        setCurrentTxID({
+          txID: ''
+        })
+      )
+      const signer = web3React.library.getSigner()
+      const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
 
-    const data =
-      '0x' +
-      utils
-        .hexZeroPad(
-          // TODO Wire up dynamic token decimals
-          WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
-          32
-        )
-        .substr(2) + // Deposit Amount (32 bytes)
-      utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
-      crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
-    const auxData = '0x00';
-    // const gasPriceFromChain =
-    //   crosschainState.currentChain.name === 'Ethereum'
-    //     ? WithDecimalsHexString(currentGasPrice, 0)
-    //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
-
-    const resultDepositTx = await bridgeContract
-      .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
-        // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
-        value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
-      })
-      .catch((err: any) => {
-        console.log(err)
-        BreakCrosschainSwap()
-      })
-
-    if (!resultDepositTx) {
-      return
-    }
-
-    await resultDepositTx.wait()
-
-    dispatch(
-      setCrosschainDepositConfirmed({
-        confirmed: true
-      })
-    )
-
-    const web3CurrentChain = new Web3(currentChain.rpcUrl)
-    const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
-
-    const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
-
-    dispatch(
-      setCurrentTxID({
-        txID: resultDepositTx.hash
-      })
-    )
-    dispatch(
-      setCrosschainTransferStatus({
-        status: ChainTransferState.TransferComplete
-      })
-    )
-
-    const state = getCrosschainState()
-    const pendingTransfer = {
-      currentSymbol: state?.currentToken?.symbol,
-      targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
-      assetBase: state?.currentToken?.assetBase,
-      amount: state?.transferAmount,
-      decimals: state?.currentToken?.decimals,
-      name: state?.targetChain?.name,
-      address: state?.currentToken?.address,
-      status: state?.swapDetails?.status,
-      votes: state?.swapDetails?.voteCount
-    }
-
-    dispatch(
-      setPendingTransfer({
-        pendingTransfer
-      })
-    )
-
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    UpdateOwnTokenBalance().catch(console.error)
-
-    while (true) {
-      try {
-        await delay(5000)
-        const web3TargetChain = new Web3(targetChain.rpcUrl)
-        const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
-        const proposal = await destinationBridge.methods
-          .getProposal(
-            currentChain.chainId,
-            nonce,
-            web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))
+      const data =
+        '0x' +
+        utils
+          .hexZeroPad(
+            // TODO Wire up dynamic token decimals
+            WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
+            32
           )
-          .call()
-          .catch()
-        dispatch(
-          setCrosschainSwapDetails({
-            details: {
-              status: proposal._status,
-              voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
-            }
-          })
-        )
+          .substr(2) + // Deposit Amount (32 bytes)
+        utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
+        crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+      const auxData = '0x00';
+      // const gasPriceFromChain =
+      //   crosschainState.currentChain.name === 'Ethereum'
+      //     ? WithDecimalsHexString(currentGasPrice, 0)
+      //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
 
-        if (proposal && proposal._status === ProposalStatus.EXECUTED) {
-          await delay(5000)
-          BreakCrosschainSwap()
-        }
-      } catch (e) {
-        console.error(e)
+      const resultDepositTx = await bridgeContract
+        .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
+          // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+          value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
+        })
+
+      if (!resultDepositTx) {
+        return
       }
+
+      await resultDepositTx.wait()
+
+      dispatch(
+        setCrosschainDepositConfirmed({
+          confirmed: true
+        })
+      )
+
+      const web3CurrentChain = new Web3(currentChain.rpcUrl)
+      const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
+
+      const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
+
+      dispatch(
+        setCurrentTxID({
+          txID: resultDepositTx.hash
+        })
+      )
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.TransferComplete
+        })
+      )
+
+      const state = getCrosschainState()
+      const pendingTransfer = {
+        currentSymbol: state?.currentToken?.symbol,
+        targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
+        assetBase: state?.currentToken?.assetBase,
+        amount: state?.transferAmount,
+        decimals: state?.currentToken?.decimals,
+        name: state?.targetChain?.name,
+        address: state?.currentToken?.address,
+        status: state?.swapDetails?.status,
+        votes: state?.swapDetails?.voteCount
+      }
+
+      dispatch(
+        setPendingTransfer({
+          pendingTransfer
+        })
+      )
+
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      UpdateOwnTokenBalance().catch(console.error)
+
+      while (true) {
+        try {
+          await delay(5000)
+          const web3TargetChain = new Web3(targetChain.rpcUrl)
+          const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
+          const proposal = await destinationBridge.methods
+            .getProposal(
+              currentChain.chainId,
+              nonce,
+              web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))
+            )
+            .call()
+          dispatch(
+            setCrosschainSwapDetails({
+              details: {
+                status: proposal._status,
+                voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
+              }
+            })
+          )
+
+          if (proposal && proposal._status === ProposalStatus.EXECUTED) {
+            await delay(5000)
+            BreakCrosschainSwap()
+          }
+        } catch (e) {
+          console.log(e)
+          BreakCrosschainSwap()
+          return Promise.reject(e);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(err)
     }
   }
 

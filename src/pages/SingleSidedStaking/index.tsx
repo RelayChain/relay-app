@@ -1,14 +1,13 @@
+import {ethers} from 'ethers'
+import React, { useEffect,useState } from 'react'
+import { StakingConfig, returnStakingConfig } from './stakingConfig'
 
-import React, { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
-import { BigNumber, ethers, utils } from 'ethers'
-import { StakeForm } from './stakeForm';
 import { ButtonOutlined } from '../../components/Button'
-import { useStakingAloneContract } from 'hooks/useContract';
-import { useActiveWeb3React } from 'hooks';
-import { useCrosschainState } from 'state/crosschain/hooks';
-import { StakingConfig } from './stakingConfig';
+import { StakeForm } from './stakeForm';
+import styled from 'styled-components'
+import { useActiveWeb3React } from 'hooks'
 
+import { useStakingAloneContract } from 'hooks/useContract';
 
 const StakeContainer = styled.div`
         font-family: Poppins;
@@ -60,45 +59,39 @@ pointer-events: none;
 `
 const ButtonStake = styled(ButtonOutlined)`
     width: 500px;
-    
 `
 
-const StakeFlex = styled.div`
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 1rem;
-        ${({ theme }) => theme.mediaWidth.upToMedium`
-        flex-direction: column;
-        align-items: center;
-        `};
-    `
-
-
 export const SingleSidedStaking = () => {
-    const {
-        availableTokens,
-        currentChain,
-        allCrosschainData
-    } = useCrosschainState()
-    const [ethChain, setEthChain] = useState(false)
+    const [isPending, setIsPending] = useState(false)
     const { account, chainId } = useActiveWeb3React()
     const [earnedLp, setEarnedLp] = useState('0')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
-    const stakedInfo = StakingConfig[currentChain.chainID]
-    const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress|| '')
-    const harvest = async() => {
-        const earnedAmount = await stakingContract?.getReward().catch(console.log)
-        await earnedAmount.wait()
-        setRewardSuccessHash(earnedAmount.hash)
-    }
-    useEffect(() => {
-        if (['Moonriver', 'Polygon', 'Heco', 'Avalanche'].includes(currentChain.name)) {
-            setEthChain(true)
+
+    const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
+
+    const harvest = async () => {
+        try {
+            const earnedAmount = await stakingContract?.getReward().catch(console.log)
+            setIsPending(true)
+            await earnedAmount?.wait()
+            setRewardSuccessHash(earnedAmount?.hash)
+        } catch (err) {
+            console.log('err :>> ', err);
+        } finally {
+            setIsPending(false)
         }
-    }, [currentChain])
+
+    }
+
+    let supportedStakingChains: any[] = []
+    Object.keys(StakingConfig).forEach((key) => {
+        supportedStakingChains.push(StakingConfig[key])
+    })
+
     useEffect(() => {
+        if (!chainId || !stakingContract) {
+            return;
+        }
         const getEarned = async () => {
             const earnedAmount = await stakingContract?.earned(account).catch(console.log)
             if (earnedAmount) {
@@ -108,23 +101,33 @@ export const SingleSidedStaking = () => {
             }
         }
         getEarned()
-    }, [account, rewardSuccessHash])
+    }, [account, rewardSuccessHash, chainId, stakingContract])
     return (
-      <> { ethChain ? <StakeContainer>
-            <StakeTitle>Staking</StakeTitle>
-            <StakeWrap>
-                <StakeForm typeAction={'stake'} />
-                <StakeForm typeAction={'unstake'} />
-            </StakeWrap>
-            <ButtonWrapStake>
-                <ButtonStake onClick={() => harvest()}>
-                    {`Harvest ${earnedLp} RELAY`}
-                </ButtonStake>
-            </ButtonWrapStake>
-            {rewardSuccessHash}
-        </StakeContainer>: <StakeFlex>
-                <StakeWrap>{"RELAY Stakes work only on Ethereum, Binance, Avalanche, Polygon networks. Please switch any of those chains."}</StakeWrap>
-            </StakeFlex>}
-        </>
+        <StakeContainer style={{ marginTop: '4rem', marginBottom: '4rem' }}>
+            <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
+            {returnStakingConfig(chainId)?.stakingContractAddress && <>
+                <StakeWrap>
+                    <StakeForm typeAction={'stake'} />
+                    <StakeForm typeAction={'unstake'} />
+                </StakeWrap>
+                <ButtonWrapStake>
+                    {parseFloat(earnedLp) > 0 &&
+                        <ButtonStake onClick={() => harvest()} className={isPending ? 'disabled' : ''}>
+                            {isPending ? '...Pending' : `Harvest ${earnedLp}`}
+                        </ButtonStake>
+                    }
+                </ButtonWrapStake>
+            </>
+            }
+            {(!chainId || !returnStakingConfig(chainId)?.stakingContractAddress) && <>
+                <h3 style={{ marginTop: '2rem' }}>Staking Relay is supported on the following chains:</h3>
+                <ul>
+                    {supportedStakingChains.map(s => <li>
+                        {s.chainName}
+                    </li>)}
+                </ul>
+            </>
+            }
+        </StakeContainer>
     )
 }

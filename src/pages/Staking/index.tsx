@@ -1,10 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
+import { StakingCard, StakingControls, StakingHeader } from './../../components/staking'
 
 import PageContainer from './../../components/PageContainer'
+import React from 'react'
 import { Title } from '../../theme'
-
-import { StakingControls, StakingHeader, StakingCard } from './../../components/staking'
+import styled from 'styled-components'
 
 const WrapStakingCard = styled.div`
   margin-top: 20px;
@@ -17,14 +16,12 @@ const WrapStakingCard = styled.div`
 const Staking = () => {
   return (
     <>
-      <Title>Staking</Title>
+      <Title>Stake Relay, Earn Rewards</Title>
       <StakingHeader />
       <PageContainer>
         <StakingControls />
         <WrapStakingCard>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => {
-            return <StakingCard key={item} />
-          })}
+          <StakingCard />
         </WrapStakingCard>
       </PageContainer>
     </>

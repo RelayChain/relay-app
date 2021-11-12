@@ -1,19 +1,15 @@
-
 import { BigNumber, ethers, utils } from 'ethers'
-import React, { useEffect, useMemo, useState } from 'react'
-import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
-import { useRelayaleContract, useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
-import { PopupContent } from 'state/application/actions'
+import React, { useEffect, useState } from 'react'
+import { useCrosschainState } from 'state/crosschain/hooks'
+import { useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
 
 import { ButtonOutlined } from '../../components/Button'
-import { Token } from '@zeroexchange/sdk'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
 import { getEtherscanLink } from '../../utils'
+import { returnStakingConfig} from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useUserAddedTokens } from 'state/user/hooks'
-import useWindowDimensions from 'hooks/useWindowDimensions'
-import PlainPopup from 'components/Popups/PlainPopup'
-import { StakingConfig } from './stakingConfig'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -22,7 +18,8 @@ const StakeFlexRow = styled.div`
         margin-right: auto;
     `
 const InputWrap = styled.div`
-        display: flex
+        display: flex;
+        align-items: center;
     `
 const StakeWrap = styled.div`
         font-family: Poppins;
@@ -36,7 +33,7 @@ const StakeWrap = styled.div`
         border-radius: 44px;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 2rem;
+        margin-top: 1rem;
         ${({ theme }) => theme.mediaWidth.upToMedium`
             margin-top: 20px
             margin-right: auto;
@@ -67,7 +64,7 @@ const StyledBalanceMax = styled.button`
         :focus {
         outline: none;
     }
-    
+
         ${({ theme }) => theme.mediaWidth.upToSmall`
         margin: 15px auto 0;
         `};
@@ -133,36 +130,31 @@ let web3React: any
 
 export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     const {
-        availableTokens,
-        currentChain,
-        allCrosschainData
+        currentChain
     } = useCrosschainState()
     web3React = useActiveWeb3React()
-
-    // const currentChainData = allCrosschainData.chains.find(chain => chain.chainId === +currentChain.chainID)
-    // const relayAddress = currentChainData?.tokens.find(token => token.symbol === 'RELAY')
-
     const { account, chainId } = useActiveWeb3React()
+
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountRelay, setAmountRelay] = useState('0')
     const [unstakedAmount, setUnstakedAmount] = useState('0')
-    
+
     const [maxAmountRelay, setMaxAmountRelay] = useState('0')
     const [stakedAmount, setStakedAmount] = useState('0')
     const [isPending, setIsPending] = useState(false)
-    const [isApprove, setIsApprove] = useState(false)
-    
+    const [isApprove, setIsApprove] = useState(true)
+
     const [crossPopupOpen, setShowPopupModal] = useState(false)
     const hidePopupModal = () => setShowPopupModal(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
     let resStake: any = null
     const [popupContent, setPopupContent] = useState({} as PopupContent)
-    const stakedInfo = StakingConfig[currentChain.chainID]
+    const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
     const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
+
     const onStake = async () => {
         setIsPending(true)
-        const inputValue = BigNumber.from(utils.parseUnits(amountRelay, 18))
         if (isApprove) {
             if (typeAction === 'stake') {
 
@@ -174,51 +166,46 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                     })
                     if (resStake) {
                         await resStake.wait()
+                        setPopupContent({
+                            simpleAnnounce: {
+                                message: `Staked ${amountRelay} Relay`
+                            }
+                        })
+                        showCrossChainModal()
                         setDepositSuccessHash(resStake.hash)
                         if (depositSuccessHash) {
                             setIsPending(false)
-                            setPopupContent({
-                                simpleAnnounce: {
-                                    message: `Staked ${amountRelay} Relay`
-                                }
-                            })
-                            showCrossChainModal()
                         }
                     }
-
-
                 } catch (e) {
                     setIsPending(false)
                     console.log(e)
                 } finally {
                     setIsPending(false)
                 }
-            } 
-            
-           
-        } 
-        if(+unstakedAmount > 0 ){
+            }
+        }
+        if (+unstakedAmount > 0) {
             try {
                 setIsPending(true)
                 const amountToUnstake = BigNumber.from(utils.parseUnits(unstakedAmount, 18))
                 resStake = await stakingContract?.withdraw(amountToUnstake.toHexString(), {
-                    
+
                     gasLimit: 450000,
                 })
                 if (resStake) {
                     await resStake.wait()
+                    setPopupContent({
+                        simpleAnnounce: {
+                            message: `Unstaked ${unstakedAmount} Relay`
+                        }
+                    })
+                    showCrossChainModal()
                     setDepositSuccessHash(resStake.hash)
                     if (depositSuccessHash) {
                         setIsPending(false)
-                        setPopupContent({
-                            simpleAnnounce: {
-                                message: `Unstaked ${unstakedAmount} Relay`
-                            }
-                        })
-                        showCrossChainModal()
                     }
                 }
-
             } catch (e) {
                 setIsPending(false)
                 console.log(e)
@@ -226,9 +213,15 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                 setIsPending(false)
             }
         }
-        if(!isApprove && +unstakedAmount === 0){
-            resStake = await stakedTokenContract?.approve(stakingContract?.address, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
+        if (!isApprove && +unstakedAmount === 0) {
+            resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968')
             await resStake.wait()
+            setPopupContent({
+                simpleAnnounce: {
+                    message: `Approve Relay to staking`
+                }
+            })
+            showCrossChainModal()
             setDepositSuccessHash(resStake.hash)
             if (depositSuccessHash) {
                 console.log("🚀 ~ file: stakeForm.tsx ~ line 165 ~ onStake ~ depositSuccessHash", depositSuccessHash)
@@ -245,8 +238,9 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
 
     useEffect(() => {
         const getMaxAmount = async () => {
-            const amountToSpend = await stakedTokenContract?.allowance(account, currentChain.exchangeContractAddress).catch(console.log)
+            const amountToSpend = await stakedTokenContract?.allowance(account, stakedInfo?.stakingContractAddress).catch(console.log)
             if (amountToSpend) {
+                console.log("🚀 ~ file: stakeForm.tsx ~ line 246 ~ getMaxAmount ~ amountToSpend", amountToSpend)
                 setAllowanceAmount(BigNumber.from(amountToSpend))
             }
             const maxUserBalance = await stakedTokenContract?.balanceOf(account).catch(console.log)
@@ -255,7 +249,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
             }
         }
         getMaxAmount()
-    })
+    },[currentChain, depositSuccessHash])
 
     useEffect(() => {
         const getMaxAmountRelay = async () => {
@@ -287,7 +281,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     useEffect(() => {
         if (+amountRelay > 0 && +maxAmountRelay >= +amountRelay && maxAmountRelay.length >= amountRelay.length) {
             const inputValue = BigNumber.from(utils.parseUnits(amountRelay, 18))
-            setIsApprove(allowanceAmount.lt(inputValue))
+            setIsApprove(allowanceAmount.gte(inputValue))
         }
 
     }, [amountRelay, allowanceAmount, maxAmountRelay])
@@ -296,49 +290,19 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         setUnstakedAmount('0')
         setAmountRelay('0')
 
-    }, [depositSuccessHash]) 
+    }, [depositSuccessHash])
 
-    // const userTokens = useUserAddedTokens()
-    //     ?.filter((x: any) => x.chainId === chainId)
-    //     ?.map((x: any) => {
-    //         return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-    //     })
 
-    // const tokenBalances = useMemo(() => {
-    //     const arr = availableTokens?.filter(token => token?.symbol === 'RELAY')
-    //         .map((x: any) => {
-    //             const address = toCheckSumAddress(x?.address)
-    //             const tokenData = { ...x, address }
-    //             return new Token(
-    //                 tokenData?.chainId,
-    //                 tokenData?.address,
-    //                 tokenData?.decimals,
-    //                 tokenData?.symbol,
-    //                 tokenData?.name
-    //             )
-    //         })
 
-    //     const filteredArray: any = [];
-    //     arr?.forEach((item: any) => {
-    //         const i = filteredArray.findIndex((x: any) => x.address === item.address);
-    //         if (i <= -1) {
-    //             filteredArray.push(item);
-    //         }
-    //     })
+    // const { width } = useWindowDimensions()
 
-    //     return [...new Set(filteredArray)]
-    //     // eslint-disable-next-line
-    // }, [availableTokens, userTokens, currentChain])
-
-    const { width } = useWindowDimensions()
-
-    let isColumn = false
-    if (width < 1350) {
-        isColumn = true
-    }
-    const onSelectBalance = (isNative: boolean, token?: any) => {
-        return ''
-    }
+    // let isColumn = false
+    // if (width < 1350) {
+    //     isColumn = true
+    // }
+    // const onSelectBalance = (isNative: boolean, token?: any) => {
+    //     return ''
+    // }
 
     useEffect(() => {
         console.log('amountRelay :>> ', amountRelay);
@@ -353,9 +317,9 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         }
     }, [stakedAmount, unstakedAmount])
 
-   
 
-  
+
+
     const maxBalance = async () => {
         setAmountRelay(maxAmountRelay)
     }
@@ -365,19 +329,34 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     }
 
     const showCrossChainModal = () => {
-        const currentTime = ~~(Date.now() / 1000)
-        // if (lastTimeSwitched < currentTime) {
-        //   setShowCrossChainModal(true)
-        // } else {
+
         setShowPopupModal(true)
         setTimeout(() => {
             hidePopupModal()
         }, 2000)
-        //}
+    }
+
+    const getButtonDisabledClass = () => {
+        if (typeAction === 'stake') {
+            return parseFloat(amountRelay) === 0 || !amountRelay || isPending || maxAmountRelay === '0' ? 'disabled' : ''
+        } else {
+            return !unstakedAmount || stakedAmount === '0' ? 'disabled' : ''
+        }
+    }
+
+    const getButtonName = () => {
+        if (isPending) {
+            return '... pending'
+        } else if (typeAction === 'stake') {
+            console.log(' isApprove :>> ', isApprove);
+            return !isApprove ? 'Approve' : 'Stake'
+        } else {
+            return 'Unstake'
+        }
     }
     return (
         <>
-             <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
+            <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <StakeFlexRow>
                     <StakeWrap>
                         <BuyWrap>
@@ -391,9 +370,8 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                                             <StyledBalanceMax onClick={typeAction === 'stake' ? () => maxBalance() : () => maxUnstakedBalance()}>MAX </StyledBalanceMax></InputWrap>
 
                                         <ButtonsFlex>
-                                            <ButtonOutlined className={`green ${depositSuccessHash} ${typeAction === 'stake' &&  parseFloat(amountRelay) === 0 || !amountRelay || isPending || maxAmountRelay === '0' ? 'disabled' : ''}
-                                            ${typeAction === 'unstake' &&  !unstakedAmount || stakedAmount === '0' ? 'disabled' : '' }`} onClick={onStake}>
-                                                {isPending ? '... pending' : typeAction === 'stake' ? 'Stake' : 'Unstake'}
+                                            <ButtonOutlined className={`green ${getButtonDisabledClass()}`} onClick={onStake}>
+                                                {getButtonName()}
                                             </ButtonOutlined>
                                         </ButtonsFlex>
                                     </>
@@ -416,8 +394,8 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                 </StakeFlexRow>
 
 
-            </StakeFlex> 
-            
+            </StakeFlex>
+
             <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         </>
     )
