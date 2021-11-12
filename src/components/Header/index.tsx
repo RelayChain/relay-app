@@ -257,7 +257,7 @@ const NetworkSwitcher = () => {
     </div>
   )
 }
-const Header = () => {  
+const Header = () => {
   const { account, chainId } = useActiveWeb3React()
   // eslint-disable-next-line
   const [isSuccessAuth, userEthBalance] = useEagerConnect()
@@ -290,10 +290,10 @@ const Header = () => {
           </HeaderElement>
         </HeaderControls>
       ) : (
-            <NotConnectedWrap>
-              <Web3Status />
-            </NotConnectedWrap>
-          )}
+        <NotConnectedWrap>
+          <Web3Status />
+        </NotConnectedWrap>
+      )}
     </HeaderFrame>
   )
 }

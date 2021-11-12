@@ -369,6 +369,7 @@ export default function Transfer() {
   const hideConfirmTransferModal = () => {
     startNewSwap()
     setConfirmTransferModalOpen(false)
+    handleTypeInput('');
   }
   const showConfirmTransferModal = () => {
     if (currentToken.address) {
@@ -394,14 +395,6 @@ export default function Transfer() {
       return CHAIN_LABELS[chainId] || ''
     }
     return ''
-  }
-
-  const handleChainBridgeButtonClick = () => {
-    if (crosschainTransferStatus === ChainTransferState.TransferComplete) {
-      setShowChainBridgeModal(true)
-    } else {
-      showConfirmTransferModal()
-    }
   }
 
   useEffect(() => {
@@ -450,14 +443,6 @@ export default function Transfer() {
           <BubbleBase />
           <Heading>Cross-Chain Bridge</Heading>
           <Description>Transfer your tokens from one blockchain to another</Description>
-          <div
-            style={{
-              opacity: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '1' : '.5',
-              pointerEvents:
-                !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? 'auto' : 'none',
-              filter: !isCrossChain || crosschainTransferStatus === ChainTransferState.NotStarted ? '' : 'blur(3px)'
-            }}
-          >
           <AutoColumn gap={'md'}>
               <BlockchainSelector
                 isCrossChain={isCrossChain}
@@ -528,7 +513,6 @@ export default function Transfer() {
                 </BottomGroupingTransfer>
               </RowBetweenTransfer>
             </AutoColumn>
-          </div>
         </TransferBodyWrapper>
 
         <SideCardHolder>
@@ -562,14 +546,6 @@ export default function Transfer() {
               top: '45%'
             }}
           />
-        )}
-        {crosschainTransferStatus !== ChainTransferState.NotStarted ? (
-          <ChainBridgePending onClick={handleChainBridgeButtonClick}>
-            <p>{`Cross-chain transfer pending`}</p>
-            <CustomLightSpinner src={Circle} alt="loader" size={'20px'} style={{ marginLeft: '10px' }} />
-          </ChainBridgePending>
-        ) : (
-          ''
         )}
 
         {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}

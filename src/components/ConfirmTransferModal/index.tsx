@@ -1,8 +1,8 @@
+import { ChainTransferState, CrosschainChain } from '../../state/crosschain/actions'
 import React, { useEffect, useState } from 'react'
 
 import ApprovalComplete from './ApprovalComplete'
 import ApprovalPending from './ApprovalPending'
-import { ChainTransferState, CrosschainChain } from '../../state/crosschain/actions'
 import { CloseIcon } from '../../theme/components'
 import { Currency } from '@zeroexchange/sdk'
 import Modal from '../Modal'
@@ -102,7 +102,7 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.ApprovalPending && <ApprovalPending />}
 
         {tokenTransferState === ChainTransferState.ApprovalComplete && (
-          <ApprovalComplete changeTransferState={changeTransferState} />
+          <ApprovalComplete changeTransferState={changeTransferState} onDismiss={onDismiss} />
         )}
 
         {tokenTransferState === ChainTransferState.TransferPending && (

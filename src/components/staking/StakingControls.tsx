@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { HelpCircle as Question } from 'react-feather'
 
-import { ExternalLink } from '../../theme'
-import Toggle from './../../components/TooglePool'
 import { ButtonGray } from './../../components/Button'
+import { ExternalLink } from '../../theme'
+import { HelpCircle as Question } from 'react-feather'
+import Toggle from './../../components/TooglePool'
+import styled from 'styled-components'
 
 const ToggleWrap = styled.div`
   display: flex;
@@ -52,7 +52,7 @@ const StakingControls = () => {
         }}
         isStaked={false}
       />
-      <HelpLink href="https://medium.com/@OfficialZeroDex">
+      <HelpLink href="https://medium.com/@Relay_Chain">
         <ButtonHelp>
           Help
           <QuestionWrapper>
