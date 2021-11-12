@@ -294,7 +294,6 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
  
     useEffect(() => {
-        console.log('amountRelay :>> ', amountRelay);
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
         }
@@ -337,7 +336,6 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         if (isPending) {
             return '... pending'
         } else if (typeAction === 'stake') {
-            console.log(' isApprove :>> ', isApprove);
             return !isApprove ? 'Approve' : 'Stake'
         } else {
             return 'Unstake'
