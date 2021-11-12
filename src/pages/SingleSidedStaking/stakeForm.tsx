@@ -141,9 +141,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
 
     // const currentChainData = allCrosschainData.chains.find(chain => chain.chainId === +currentChain.chainID)
     // const relayAddress = currentChainData?.tokens.find(token => token.symbol === 'RELAY')
-    const stakedInfo = StakingConfig[currentChain.chainID]
-    const stakingContract = useStakingAloneContract(stakedInfo.stakingContractAddress || '')
-    const stakedTokenContract = useRelayTokenContract(stakedInfo.stakedTokenAddress || '');
+
     const { account, chainId } = useActiveWeb3React()
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountRelay, setAmountRelay] = useState('0')
@@ -153,12 +151,15 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     const [stakedAmount, setStakedAmount] = useState('0')
     const [isPending, setIsPending] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
-    const [ethChain, setEthChain] = useState(false)
+    
     const [crossPopupOpen, setShowPopupModal] = useState(false)
     const hidePopupModal = () => setShowPopupModal(false)
     const [depositSuccessHash, setDepositSuccessHash] = useState<null | string>(null);
     let resStake: any = null
     const [popupContent, setPopupContent] = useState({} as PopupContent)
+    const stakedInfo = StakingConfig[currentChain.chainID]
+    const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
+    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
     const onStake = async () => {
         setIsPending(true)
         const inputValue = BigNumber.from(utils.parseUnits(amountRelay, 18))
@@ -352,11 +353,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         }
     }, [stakedAmount, unstakedAmount])
 
-    useEffect(() => {
-        if (['Ethereum', 'Polygon', 'Smart Chain', 'Avalanche'].includes(currentChain.name)) {
-            setEthChain(true)
-        }
-    }, [currentChain])
+   
 
   
     const maxBalance = async () => {
@@ -380,7 +377,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     }
     return (
         <>
-            {ethChain ? <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
+             <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <StakeFlexRow>
                     <StakeWrap>
                         <BuyWrap>
@@ -419,10 +416,8 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                 </StakeFlexRow>
 
 
-            </StakeFlex> :
-                <StakeFlex>
-                    <StakeWrap>{"RELAY Stakes work only on Ethereum, Binance, Avalanche, Polygon networks. Please switch any of those chains."}</StakeWrap>
-                </StakeFlex>}
+            </StakeFlex> 
+            
             <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         </>
     )

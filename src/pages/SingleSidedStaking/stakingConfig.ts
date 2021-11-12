@@ -7,8 +7,8 @@ export const StakingConfig = {
     },
     4: {
         stakingContractAddress: '0x924F19A9B808573Ca0F7aedEd3aa968Be5112622',
-        stakedTokenAddress: '0x64e501ca5bada4c9b82b8bb3535ec92075d7412f ',
-        rewardsTokenAddress: '0x0d4221c6167eaf7d9d2349451fce1d23a0e746fa '
+        stakedTokenAddress: '0x64e501ca5bada4c9b82b8bb3535ec92075d7412f',
+        rewardsTokenAddress: '0x0d4221c6167eaf7d9d2349451fce1d23a0e746fa'
     },
     5: {
         stakingContractAddress: '0x7f7a17aA18DDeB9a281776f406F2FF6bD06907F7',

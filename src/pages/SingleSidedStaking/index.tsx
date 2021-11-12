@@ -6,6 +6,9 @@ import { StakeForm } from './stakeForm';
 import { ButtonOutlined } from '../../components/Button'
 import { useStakingAloneContract } from 'hooks/useContract';
 import { useActiveWeb3React } from 'hooks';
+import { useCrosschainState } from 'state/crosschain/hooks';
+import { StakingConfig } from './stakingConfig';
+
 
 const StakeContainer = styled.div`
         font-family: Poppins;
@@ -60,17 +63,41 @@ const ButtonStake = styled(ButtonOutlined)`
     
 `
 
+const StakeFlex = styled.div`
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 1rem;
+        ${({ theme }) => theme.mediaWidth.upToMedium`
+        flex-direction: column;
+        align-items: center;
+        `};
+    `
+
 
 export const SingleSidedStaking = () => {
+    const {
+        availableTokens,
+        currentChain,
+        allCrosschainData
+    } = useCrosschainState()
+    const [ethChain, setEthChain] = useState(false)
     const { account, chainId } = useActiveWeb3React()
     const [earnedLp, setEarnedLp] = useState('0')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
-    const stakingContract = useStakingAloneContract('0x924F19A9B808573Ca0F7aedEd3aa968Be5112622' || '')
+    const stakedInfo = StakingConfig[currentChain.chainID]
+    const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress|| '')
     const harvest = async() => {
         const earnedAmount = await stakingContract?.getReward().catch(console.log)
         await earnedAmount.wait()
         setRewardSuccessHash(earnedAmount.hash)
     }
+    useEffect(() => {
+        if (['Moonriver', 'Polygon', 'Heco', 'Avalanche'].includes(currentChain.name)) {
+            setEthChain(true)
+        }
+    }, [currentChain])
     useEffect(() => {
         const getEarned = async () => {
             const earnedAmount = await stakingContract?.earned(account).catch(console.log)
@@ -83,7 +110,7 @@ export const SingleSidedStaking = () => {
         getEarned()
     }, [account, rewardSuccessHash])
     return (
-        <StakeContainer>
+      <> { ethChain ? <StakeContainer>
             <StakeTitle>Staking</StakeTitle>
             <StakeWrap>
                 <StakeForm typeAction={'stake'} />
@@ -95,6 +122,9 @@ export const SingleSidedStaking = () => {
                 </ButtonStake>
             </ButtonWrapStake>
             {rewardSuccessHash}
-        </StakeContainer>
+        </StakeContainer>: <StakeFlex>
+                <StakeWrap>{"RELAY Stakes work only on Ethereum, Binance, Avalanche, Polygon networks. Please switch any of those chains."}</StakeWrap>
+            </StakeFlex>}
+        </>
     )
 }
