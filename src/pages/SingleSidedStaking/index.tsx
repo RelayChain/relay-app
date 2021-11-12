@@ -1,12 +1,11 @@
-import {ethers} from 'ethers'
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StakingConfig, returnStakingConfig } from './stakingConfig'
 
 import { ButtonOutlined } from '../../components/Button'
 import { StakeForm } from './stakeForm';
+import {ethers} from 'ethers'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
-
 import { useStakingAloneContract } from 'hooks/useContract';
 
 const StakeContainer = styled.div`
@@ -123,7 +122,7 @@ export const SingleSidedStaking = () => {
             {(!chainId || !returnStakingConfig(chainId)?.stakingContractAddress) && <>
                 <h3 style={{ marginTop: '2rem' }}>Staking Relay is supported on the following chains:</h3>
                 <ul>
-                    {supportedStakingChains.map(s => <li>
+                    {supportedStakingChains.map(s => <li key={s.chainName}>
                         {s.chainName}
                     </li>)}
                 </ul>

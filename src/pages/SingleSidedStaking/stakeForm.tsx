@@ -1,15 +1,15 @@
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useState } from 'react'
-import { useCrosschainState } from 'state/crosschain/hooks'
 import { useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
 
 import { ButtonOutlined } from '../../components/Button'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { getEtherscanLink } from '../../utils'
-import { returnStakingConfig} from './stakingConfig'
+import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -292,7 +292,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
     }, [updatedHash])
 
- 
+
     useEffect(() => {
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
@@ -341,6 +341,20 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             return 'Unstake'
         }
     }
+    const handleOnFocus = (e: any) => {
+      const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
+      if (x === '0' || x === '') {
+        e.target.value = '';
+      }
+    }
+
+    const handleOnBlur = (e: any) => {
+      const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
+      if (x === '0' || x === '') {
+        e.target.value = '0';
+      }
+    }
+
     return (
         <>
             <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -353,9 +367,18 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
                                 {web3React.account && (
                                     <>
                                         <BalanceLine>{typeAction === 'stake' ? `${maxAmountRelay} Relay` : `${stakedAmount} LP Staked`}</BalanceLine>
-                                        <InputWrap> <input type="number" name="amount" id="amount-zero" value={typeAction === 'stake' ? amountRelay : unstakedAmount} onChange={e => typeAction === 'stake' ? setAmountRelay(e.target.value) : setUnstakedAmount(e.target.value)} />
-                                            <StyledBalanceMax onClick={typeAction === 'stake' ? () => maxBalance() : () => maxUnstakedBalance()}>MAX </StyledBalanceMax></InputWrap>
-
+                                        <InputWrap>
+                                          <input
+                                            autoComplete="off"
+                                            type="number"
+                                            name="amount"
+                                            id="amount-relay"
+                                            value={typeAction === 'stake' ? amountRelay : unstakedAmount}
+                                            onFocus={handleOnFocus}
+                                            onBlur={handleOnBlur}
+                                            onChange={e => typeAction === 'stake' ? setAmountRelay(e.target.value) : setUnstakedAmount(e.target.value)} />
+                                          <StyledBalanceMax onClick={typeAction === 'stake' ? () => maxBalance() : () => maxUnstakedBalance()}>MAX </StyledBalanceMax>
+                                        </InputWrap>
                                         <ButtonsFlex>
                                             <ButtonOutlined className={`green ${getButtonDisabledClass()}`} onClick={onStake}>
                                                 {getButtonName()}
