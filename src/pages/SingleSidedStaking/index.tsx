@@ -45,19 +45,18 @@ const StakeTitle = styled.h2`
     text-align: center;
 `
 const ButtonWrapStake = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-* {
-margin-top: 1rem;
-}
-.disabled {
-opacity: .25;
-pointer-events: none;
-}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .disabled {
+    opacity: .25;
+    pointer-events: none;
+  }
 `
 const ButtonStake = styled(ButtonOutlined)`
-    width: 500px;
+  margin-top: 2.5rem;
+  width: auto;
+  margin-bottom: 1rem;
 `
 
 export const SingleSidedStaking = () => {

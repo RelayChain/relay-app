@@ -357,7 +357,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
     return (
         <>
-            <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
+            <StakeFlex style={{ marginTop: '1rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <StakeFlexRow>
                     <StakeWrap>
                         <BuyWrap>
