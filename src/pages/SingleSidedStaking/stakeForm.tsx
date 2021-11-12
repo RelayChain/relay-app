@@ -1,19 +1,18 @@
-
 import { BigNumber, ethers, utils } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
 import { toCheckSumAddress, useCrosschainState } from 'state/crosschain/hooks'
-import { useRelayaleContract, useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
-import { PopupContent } from 'state/application/actions'
+import { useRelayTokenContract, useRelayaleContract, useStakingAloneContract } from '../../hooks/useContract'
 
 import { ButtonOutlined } from '../../components/Button'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
 import { Token } from '@zeroexchange/sdk'
 import { getEtherscanLink } from '../../utils'
+import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import useWindowDimensions from 'hooks/useWindowDimensions'
-import PlainPopup from 'components/Popups/PlainPopup'
-import { StakingConfig } from './stakingConfig'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -22,7 +21,8 @@ const StakeFlexRow = styled.div`
         margin-right: auto;
     `
 const InputWrap = styled.div`
-        display: flex
+        display: flex;
+        align-items: center;
     `
 const StakeWrap = styled.div`
         font-family: Poppins;
@@ -36,7 +36,7 @@ const StakeWrap = styled.div`
         border-radius: 44px;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 2rem;
+        margin-top: 1rem;
         ${({ theme }) => theme.mediaWidth.upToMedium`
             margin-top: 20px
             margin-right: auto;
@@ -67,7 +67,7 @@ const StyledBalanceMax = styled.button`
         :focus {
         outline: none;
     }
-    
+
         ${({ theme }) => theme.mediaWidth.upToSmall`
         margin: 15px auto 0;
         `};
@@ -138,17 +138,16 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         allCrosschainData
     } = useCrosschainState()
     web3React = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
 
-    // const currentChainData = allCrosschainData.chains.find(chain => chain.chainId === +currentChain.chainID)
-    // const relayAddress = currentChainData?.tokens.find(token => token.symbol === 'RELAY')
-    const stakedInfo = StakingConfig[currentChain.chainID]
+    const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo.stakingContractAddress || '')
     const stakedTokenContract = useRelayTokenContract(stakedInfo.stakedTokenAddress || '');
-    const { account, chainId } = useActiveWeb3React()
+
     const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
     const [amountRelay, setAmountRelay] = useState('0')
     const [unstakedAmount, setUnstakedAmount] = useState('0')
-    
+
     const [maxAmountRelay, setMaxAmountRelay] = useState('0')
     const [stakedAmount, setStakedAmount] = useState('0')
     const [isPending, setIsPending] = useState(false)
@@ -192,16 +191,16 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
                 } finally {
                     setIsPending(false)
                 }
-            } 
-            
-           
-        } 
+            }
+
+
+        }
         if(+unstakedAmount > 0 ){
             try {
                 setIsPending(true)
                 const amountToUnstake = BigNumber.from(utils.parseUnits(unstakedAmount, 18))
                 resStake = await stakingContract?.withdraw(amountToUnstake.toHexString(), {
-                    
+
                     gasLimit: 450000,
                 })
                 if (resStake) {
@@ -295,7 +294,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         setUnstakedAmount('0')
         setAmountRelay('0')
 
-    }, [depositSuccessHash]) 
+    }, [depositSuccessHash])
 
     // const userTokens = useUserAddedTokens()
     //     ?.filter((x: any) => x.chainId === chainId)
@@ -358,7 +357,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
         }
     }, [currentChain])
 
-  
+
     const maxBalance = async () => {
         setAmountRelay(maxAmountRelay)
     }
@@ -380,7 +379,7 @@ export const StakeForm = ({ typeAction }: { typeAction: string }) => {
     }
     return (
         <>
-            {ethChain ? <StakeFlex style={{ marginTop: '3rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
+            {ethChain ? <StakeFlex style={{ marginTop: '1rem', maxWidth: '1250px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <StakeFlexRow>
                     <StakeWrap>
                         <BuyWrap>

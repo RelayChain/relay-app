@@ -159,7 +159,7 @@ export default function SideMenu() {
             <IconLink>
               <Icon icon="planet" active={pathname.includes('single-sided-staking')} />
             </IconLink>
-            <span className={pathname.includes('single-sided-staking') ? 'active' : ''}>{'Single sided staking'}</span>
+            <span className={pathname.includes('single-sided-staking') ? 'active' : ''}>{'Staking'}</span>
           </StyledNavLink>
           <MoreLink onClick={() => setIsOpenModal(true)}>
             <IconLink style={{ paddingTop: '4px' }}>

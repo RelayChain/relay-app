@@ -7,6 +7,7 @@ import React from 'react'
 import { RowFixed } from '../Row'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { useAddPopup } from '../../state/application/hooks'
 import { useCrosschainHooks } from '../../state/crosschain/hooks'
 
 const CancelLink = styled.a`
@@ -24,14 +25,25 @@ const CancelLink = styled.a`
   }
 `
 export default function ApprovalComplete({
-  // @ts-ignore
-  changeTransferState
-}) {
+  changeTransferState,
+  onDismiss
+}: any) {
   const { MakeDeposit, BreakCrosschainSwap } = useCrosschainHooks()
+
   const cancelTransfer = () => {
     BreakCrosschainSwap()
-    changeTransferState(ChainTransferState.NotStarted)
+    onDismiss();
   }
+  
+  const handleStartTransfer = async () => {
+    try {
+      await MakeDeposit();
+      changeTransferState(ChainTransferState.TransferPending)
+    } catch (err) {
+      cancelTransfer();
+    }
+  }
+
   return (
     <AutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -40,10 +52,7 @@ export default function ApprovalComplete({
       </RowFixed>
       <RowFixed style={{ width: '100%' }}>
         <ButtonPrimary
-          onClick={() => {
-            MakeDeposit().catch(console.error)
-            changeTransferState(ChainTransferState.TransferPending)
-          }}
+          onClick={() => handleStartTransfer()}
         >
           Start Transfer
         </ButtonPrimary>
