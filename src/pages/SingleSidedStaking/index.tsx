@@ -65,6 +65,7 @@ export const SingleSidedStaking = () => {
     const [isPending, setIsPending] = useState(false)
     const { account, chainId } = useActiveWeb3React()
     const [earnedLp, setEarnedLp] = useState('0')
+    const [updatedHash, setUpdatedHash] = useState('')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
 
     const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
@@ -107,8 +108,8 @@ export const SingleSidedStaking = () => {
             <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
             {returnStakingConfig(chainId)?.stakingContractAddress && <>
                 <StakeWrap>
-                    <StakeForm typeAction={'stake'} />
-                    <StakeForm typeAction={'unstake'} />
+                    <StakeForm typeAction={'stake'}  updatedHash={updatedHash} setUpdatedHash={setUpdatedHash}/>
+                    <StakeForm typeAction={'unstake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash}/>
                 </StakeWrap>
                 <ButtonWrapStake>
                     {parseFloat(earnedLp) > 0 &&
