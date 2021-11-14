@@ -425,15 +425,17 @@ export function useCrosschainHooks() {
   }
 
   const MakeApprove = async () => {
+
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
-    // const currentGasPrice = await useGasPrice()
+
     dispatch(
       setCurrentTxID({
         txID: ''
       })
     )
+
     dispatch(
       setCrosschainTransferStatus({
         status: ChainTransferState.ApprovalPending
@@ -453,13 +455,11 @@ export function useCrosschainHooks() {
     const ABI = isUsdt ? USDTTokenABI : TokenABI
     const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-    tokenContract
-      .approve(currentChain.erc20HandlerAddress, transferAmount, {
-      })
+    tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {})
       .then((resultApproveTx: any) => {
         dispatch(
           setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalPending
+            status: ChainTransferState.ApprovalSubmitted
           })
         )
         dispatch(
@@ -468,42 +468,42 @@ export function useCrosschainHooks() {
           })
         )
 
-        resultApproveTx
-          .wait()
-          .then(() => {
-            const crosschainState = getCrosschainState()
-            const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-            return tokenContract.allowance(crosschainState.currentRecipient, currentChain.erc20HandlerAddress)
-          })
-          .then((approvedAmount: any) => {
-            const crosschainState2 = getCrosschainState()
-            if (crosschainState2.currentTxID === resultApproveTx.hash) {
-              const countTokenForTransfer = BigNumber.from(
-                WithDecimalsHexString(crosschainState2.transferAmount, currentToken.decimals)
-              )
-              if (countTokenForTransfer.gte(approvedAmount)) {
-                dispatch(
-                  setCurrentTxID({
-                    txID: ''
-                  })
-                )
-                dispatch(
-                  setCrosschainTransferStatus({
-                    status: ChainTransferState.ApprovalComplete
-                  })
-                )
-              } else {
-                dispatch(
-                  setCrosschainTransferStatus({
-                    status: ChainTransferState.NotStarted
-                  })
-                )
-              }
-            }
-          })
-          .catch((err: any) => {
-            BreakCrosschainSwap()
-          })
+        // resultApproveTx
+        //   .wait()
+        //   .then(() => {
+        //     const crosschainState = getCrosschainState()
+        //     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        //     return tokenContract.allowance(crosschainState.currentRecipient, currentChain.erc20HandlerAddress)
+        //   })
+        //   .then((approvedAmount: any) => {
+        //     const crosschainState2 = getCrosschainState()
+        //     if (crosschainState2.currentTxID === resultApproveTx.hash) {
+        //       const countTokenForTransfer = BigNumber.from(
+        //         WithDecimalsHexString(crosschainState2.transferAmount, currentToken.decimals)
+        //       )
+        //       if (countTokenForTransfer.gte(approvedAmount)) {
+        //         dispatch(
+        //           setCurrentTxID({
+        //             txID: ''
+        //           })
+        //         )
+        //         dispatch(
+        //           setCrosschainTransferStatus({
+        //             status: ChainTransferState.ApprovalComplete
+        //           })
+        //         )
+        //       } else {
+        //         dispatch(
+        //           setCrosschainTransferStatus({
+        //             status: ChainTransferState.NotStarted
+        //           })
+        //         )
+        //       }
+        //     }
+        //   })
+        //   .catch((err: any) => {
+        //     BreakCrosschainSwap()
+        //   })
       })
       .catch((err: any) => {
         BreakCrosschainSwap()

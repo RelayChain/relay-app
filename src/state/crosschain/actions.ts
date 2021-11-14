@@ -1,5 +1,5 @@
-import { createAction } from '@reduxjs/toolkit'
 import { ChainbridgeConfig } from 'constants/CrosschainConfig'
+import { createAction } from '@reduxjs/toolkit'
 
 export enum ProposalStatus {
   INACTIVE = '0',
@@ -39,6 +39,7 @@ export interface CrosschainChain {
 export enum ChainTransferState {
   NotStarted = 'NOT_STARTED',
   ApprovalPending = 'APPROVE_PENDING',
+  ApprovalSubmitted = 'APPROVE_SUBMITTED',
   ApprovalComplete = 'APPROVE_COMPLETE',
   TransferPending = 'TRANSFER_PENDING',
   TransferComplete = 'TRANSFER_COMPLETE'
