@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { StakingConfig, returnStakingConfig } from './stakingConfig'
 import { TYPE, Title } from '../../theme'
-
+import { calculateGasMargin } from '../../utils'
 import { ButtonOutlined } from '../../components/Button'
-import { StakeForm } from './stakeForm';
-import { ethers } from 'ethers'
+import { StakeForm } from './stakeForm'
+import { BigNumber, ethers } from 'ethers'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
 import { useStakingAloneContract } from 'hooks/useContract';
@@ -76,8 +76,16 @@ export const SingleSidedStaking = () => {
 
         try {
             const gasPriceNow = await currentGasPrice
+            const estimatedGas = await stakingContract?.estimateGas.getReward().catch(() => {
+                // general fallback for tokens who restrict approval amounts
+
+                return stakingContract?.estimateGas.getReward()
+            })
+
+            const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(250000)
             const earnedAmount = await stakingContract?.getReward({
-                gasPrice: gasPriceNow
+                gasPrice: gasPriceNow,
+                gasLimit: calculateGasMargin(gasLimitNow)
             }).catch(console.log)
             setIsPending(true)
             await earnedAmount?.wait()
@@ -101,13 +109,7 @@ export const SingleSidedStaking = () => {
         }
 
         const getEarned = async () => {
-            const gasPriceNow = await currentGasPrice
-            const earnedAmount = await stakingContract?.earned(account,
-                {
-                    gasPrice: gasPriceNow,
-                    gasLimit: 150000,
-                }
-            ).catch(console.log)
+            const earnedAmount = await stakingContract?.earned(account).catch(console.log)
             if (earnedAmount) {
                 const lpBalance = ethers.utils.formatEther(earnedAmount);
                 const formatted = Number((lpBalance)).toFixed(6)
