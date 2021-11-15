@@ -1,21 +1,17 @@
-import { getCrossChainData } from 'api';
-import { csConfig } from 'constants/CrosschainConfig';
-import ethers, { BigNumber } from 'ethers';
+import { getGasPrices } from 'api';
 import { useCrosschainState } from 'state/crosschain/hooks';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 let gasPrices = {};
 
-
 async function startUpdatingGasPrices() {
-  const url = `https://relay-api-33e56.ondigitalocean.app/api/gasPrices`;
   while (true) {
     try {
-      // gasPrices = get url
+      gasPrices = await getGasPrices();
       await sleep(60000);
     } catch (e) {
-      console.log(`Error retrieving gasPrices from ${url}`);
+      console.log(`Error retrieving gasPrices from api: ${e}`);
       await sleep(4000);
     }
   }
