@@ -38,3 +38,7 @@ export async function getCrossChainData<T>() {
 export async function getTvlData<T>() {
   return getTyped<T>('https://relay-api-33e56.ondigitalocean.app/tvl/currentTvl')
 }
+
+export async function getGasPrices() {
+  return getTyped<{[k: number]: string}>('https://relay-api-33e56.ondigitalocean.app/api/gasPrices');
+}

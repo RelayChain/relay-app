@@ -1,15 +1,17 @@
 import { BigNumber, ethers, utils } from 'ethers'
+import { MaxUint256 } from '@ethersproject/constants'
 import React, { useEffect, useState } from 'react'
 import { useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
 
 import { ButtonOutlined } from '../../components/Button'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
-import { getEtherscanLink } from '../../utils'
+import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
+import useGasPrice from 'hooks/useGasPrice'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -151,14 +153,24 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     const [popupContent, setPopupContent] = useState({} as PopupContent)
     const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
-    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
-
+    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '')
+    const currentGasPrice = useGasPrice()
     const doStake = async (amount: string) => {
         try {
+            const gasPriceNow = await currentGasPrice
             setIsPending(true)
             const amountToStake = BigNumber.from(utils.parseUnits(amount, 18))
+
+            const estimatedGas = await stakingContract?.estimateGas.stake(amountToStake.toHexString()).catch(() => {
+                // general fallback for tokens who restrict approval amounts
+
+                return stakingContract?.estimateGas.stake(amountToStake.toHexString())
+            })
+
+            const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(350000)
             resStake = await stakingContract?.stake(amountToStake.toHexString(), {
-                gasLimit: 150000,
+                gasPrice: gasPriceNow,
+                gasLimit: calculateGasMargin(gasLimitNow),
             })
             if (resStake) {
                 await resStake.wait()
@@ -178,6 +190,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         }
     }
     const onStake = async () => {
+        const gasPriceNow = await currentGasPrice
         setIsPending(true)
         if (isApprove) {
             if (typeAction === 'stake') {
@@ -188,8 +201,16 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             try {
                 setIsPending(true)
                 const amountToUnstake = BigNumber.from(utils.parseUnits(unstakedAmount, 18))
+                const estimatedGas = await stakingContract?.estimateGas.withdraw(amountToUnstake.toHexString()).catch(() => {
+                    // general fallback for tokens who restrict approval amounts
+    
+                    return stakingContract?.estimateGas.withdraw(amountToUnstake.toHexString())
+                })
+    
+                const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(250000)
                 resStake = await stakingContract?.withdraw(amountToUnstake.toHexString(), {
-                    gasLimit: 450000,
+                    gasPrice: gasPriceNow,
+                    gasLimit: calculateGasMargin(gasLimitNow),
                 })
                 if (resStake) {
                     await resStake.wait()
@@ -214,9 +235,17 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         }
         if (!isApprove && +unstakedAmount === 0) {
             try {
-                resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968',
+                const estimatedGas = await stakedTokenContract?.estimateGas.approve(stakedInfo?.stakingContractAddress, MaxUint256).catch(() => {
+                    // general fallback for tokens who restrict approval amounts
+    
+                    return stakedTokenContract?.estimateGas.approve(stakedInfo?.stakingContractAddress, MaxUint256)
+                })
+    
+                const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(150000)
+                resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, MaxUint256,
                     {
-                        gasLimit: 150000,
+                        gasPrice: gasPriceNow,
+                        gasLimit: calculateGasMargin(gasLimitNow),
                     })
                 await resStake.wait()
 
@@ -302,7 +331,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
 
     useEffect(() => {
-        if(+amountRelay < 0) {
+        if (+amountRelay < 0) {
             setAmountRelay('0')
         }
         if (+amountRelay >= +maxAmountRelay) {
@@ -311,7 +340,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     }, [amountRelay, maxAmountRelay, updatedHash])
 
     useEffect(() => {
-        if(+unstakedAmount < 0) {
+        if (+unstakedAmount < 0) {
             setUnstakedAmount('0')
         }
         if (+unstakedAmount >= +stakedAmount) {
