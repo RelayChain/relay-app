@@ -10,6 +10,7 @@ import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
+import useGasPrice from 'hooks/useGasPrice'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -151,13 +152,15 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     const [popupContent, setPopupContent] = useState({} as PopupContent)
     const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
-    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
-
+    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '')
+    const currentGasPrice = useGasPrice()
     const doStake = async (amount: string) => {
         try {
+            const gasPriceNow = await currentGasPrice
             setIsPending(true)
             const amountToStake = BigNumber.from(utils.parseUnits(amount, 18))
             resStake = await stakingContract?.stake(amountToStake.toHexString(), {
+                gasPrice: gasPriceNow,
                 gasLimit: 150000,
             })
             if (resStake) {
@@ -178,6 +181,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         }
     }
     const onStake = async () => {
+        const gasPriceNow = await currentGasPrice
         setIsPending(true)
         if (isApprove) {
             if (typeAction === 'stake') {
@@ -189,6 +193,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
                 setIsPending(true)
                 const amountToUnstake = BigNumber.from(utils.parseUnits(unstakedAmount, 18))
                 resStake = await stakingContract?.withdraw(amountToUnstake.toHexString(), {
+                    gasPrice: gasPriceNow,
                     gasLimit: 450000,
                 })
                 if (resStake) {
@@ -216,6 +221,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             try {
                 resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968',
                     {
+                        gasPrice: gasPriceNow,
                         gasLimit: 150000,
                     })
                 await resStake.wait()

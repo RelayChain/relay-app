@@ -4,10 +4,11 @@ import { TYPE, Title } from '../../theme'
 
 import { ButtonOutlined } from '../../components/Button'
 import { StakeForm } from './stakeForm';
-import {ethers} from 'ethers'
+import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
 import { useStakingAloneContract } from 'hooks/useContract';
+import useGasPrice from 'hooks/useGasPrice';
 
 const StakeContainer = styled.div`
         font-family: Poppins;
@@ -67,13 +68,17 @@ export const SingleSidedStaking = () => {
     const [updatedHash, setUpdatedHash] = useState('')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
     const [indexUpdate, setIndexUpdate] = useState(0)
-
+    const currentGasPrice = useGasPrice()
 
     const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
 
     const harvest = async () => {
+
         try {
-            const earnedAmount = await stakingContract?.getReward().catch(console.log)
+            const gasPriceNow = await currentGasPrice
+            const earnedAmount = await stakingContract?.getReward({
+                gasPrice: gasPriceNow
+            }).catch(console.log)
             setIsPending(true)
             await earnedAmount?.wait()
             setRewardSuccessHash(earnedAmount?.hash)
@@ -96,7 +101,13 @@ export const SingleSidedStaking = () => {
         }
 
         const getEarned = async () => {
-            const earnedAmount = await stakingContract?.earned(account).catch(console.log)
+            const gasPriceNow = await currentGasPrice
+            const earnedAmount = await stakingContract?.earned(account,
+                {
+                    gasPrice: gasPriceNow,
+                    gasLimit: 150000,
+                }
+            ).catch(console.log)
             if (earnedAmount) {
                 const lpBalance = ethers.utils.formatEther(earnedAmount);
                 const formatted = Number((lpBalance)).toFixed(6)
@@ -126,32 +137,32 @@ export const SingleSidedStaking = () => {
 
     return (
         <>
-        <Title>Staking</Title>
-        <StakeContainer style={{ marginTop: '4rem', marginBottom: '4rem' }}>
-            <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
-            {returnStakingConfig(chainId)?.stakingContractAddress && <>
-                <StakeWrap>
-                    <StakeForm typeAction={'stake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
-                    <StakeForm typeAction={'unstake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
-                </StakeWrap>
-                <ButtonWrapStake>
-                    {parseFloat(earnedLp) > 0 &&
-                        <ButtonStake onClick={() => harvest()} className={isPending ? 'disabled' : ''}>
-                            {isPending ? '...Pending' : `Harvest ${earnedLp} ${returnStakingConfig(chainId)?.rewardSymbol}`}
-                        </ButtonStake>
-                    }
-                </ButtonWrapStake>
-            </>
-            }
-            {(!chainId || !returnStakingConfig(chainId)?.stakingContractAddress) && <>
-                <h3 style={{ marginTop: '2rem' }}>Staking Relay is supported on the following chains:</h3>
-                <ul>
-                    {supportedStakingChains.map(s => <li key={s.chainName}>
-                        {s.chainName}
-                    </li>)}
-                </ul>
-            </>
-            }
-        </StakeContainer>
-    </>)
+            <Title>Staking</Title>
+            <StakeContainer style={{ marginTop: '4rem', marginBottom: '4rem' }}>
+                <StakeTitle>Stake Relay, Earn Rewards</StakeTitle>
+                {returnStakingConfig(chainId)?.stakingContractAddress && <>
+                    <StakeWrap>
+                        <StakeForm typeAction={'stake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
+                        <StakeForm typeAction={'unstake'} updatedHash={updatedHash} setUpdatedHash={setUpdatedHash} />
+                    </StakeWrap>
+                    <ButtonWrapStake>
+                        {parseFloat(earnedLp) > 0 &&
+                            <ButtonStake onClick={() => harvest()} className={isPending ? 'disabled' : ''}>
+                                {isPending ? '...Pending' : `Harvest ${earnedLp} ${returnStakingConfig(chainId)?.rewardSymbol}`}
+                            </ButtonStake>
+                        }
+                    </ButtonWrapStake>
+                </>
+                }
+                {(!chainId || !returnStakingConfig(chainId)?.stakingContractAddress) && <>
+                    <h3 style={{ marginTop: '2rem' }}>Staking Relay is supported on the following chains:</h3>
+                    <ul>
+                        {supportedStakingChains.map(s => <li key={s.chainName}>
+                            {s.chainName}
+                        </li>)}
+                    </ul>
+                </>
+                }
+            </StakeContainer>
+        </>)
 }
