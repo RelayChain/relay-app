@@ -3,7 +3,7 @@ import { csConfig } from 'constants/CrosschainConfig';
 import ethers, { BigNumber } from 'ethers';
 import { useCrosschainState } from 'state/crosschain/hooks';
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 class GasPricePoller {
   private static instances: any = {};
@@ -29,7 +29,7 @@ class GasPricePoller {
     this.id = id;
   }
 
-  async getGasPrice() {
+  async getGasPrice(): Promise<BigNumber> {
     while (!this.gasPrice) await sleep(1000);
     return this.gasPrice;
   }
