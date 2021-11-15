@@ -1,5 +1,6 @@
 import { ChainTransferState, CrosschainChain } from '../../state/crosschain/actions'
 import React, { useEffect, useState } from 'react'
+import { useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
 
 import ApprovalComplete from './ApprovalComplete'
 import ApprovalPending from './ApprovalPending'
@@ -12,7 +13,6 @@ import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
-import { useCrosschainState } from '../../state/crosschain/hooks'
 
 interface ConfirmTransferProps {
   isOpen: boolean
@@ -55,15 +55,27 @@ export default function ConfirmTransferModal({
   tokenTransferState
 }: ConfirmTransferProps) {
   const { currentToken, transferAmount } = useCrosschainState()
-
+  const { GetAllowance } = useCrosschainHooks()
   const [title, setTitle] = useState('')
+
+  let allowanceInterval: any = null;
+
   useEffect(() => {
+    if (allowanceInterval) {
+      clearInterval(allowanceInterval)
+    }
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
         break
       case ChainTransferState.ApprovalPending:
         setTitle('Approval Pending')
+        break
+      case ChainTransferState.ApprovalSubmitted:
+        setTitle('Approval Submitted')
+        allowanceInterval = setInterval(async () => {
+          GetAllowance()
+        }, 10000);
         break
       case ChainTransferState.ApprovalComplete:
         setTitle('Approved! Now Start Transfer')
@@ -78,12 +90,19 @@ export default function ConfirmTransferModal({
     }
   }, [tokenTransferState])
 
+  const handleOnDismiss = () => {
+    if (allowanceInterval) {
+      clearInterval(allowanceInterval)
+    }
+    onDismiss()
+  }
+
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} onDismiss={handleOnDismiss}>
       <ModalContainer>
         <RowBetween>
           <div />
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon onClick={handleOnDismiss} />
         </RowBetween>
         <h5>{title}</h5>
 
@@ -99,10 +118,12 @@ export default function ConfirmTransferModal({
           />
         )}
 
-        {tokenTransferState === ChainTransferState.ApprovalPending && <ApprovalPending />}
+        {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
+          <ApprovalPending tokenTransferState={tokenTransferState} />
+        }
 
         {tokenTransferState === ChainTransferState.ApprovalComplete && (
-          <ApprovalComplete changeTransferState={changeTransferState} onDismiss={onDismiss} />
+          <ApprovalComplete changeTransferState={changeTransferState} onDismiss={handleOnDismiss} />
         )}
 
         {tokenTransferState === ChainTransferState.TransferPending && (
@@ -113,7 +134,7 @@ export default function ConfirmTransferModal({
           <TransferComplete
             activeChain={activeChain}
             transferTo={transferTo?.name}
-            onDismiss={onDismiss}
+            onDismiss={handleOnDismiss}
             currentToken={currentToken}
             transferAmount={transferAmount}
           />

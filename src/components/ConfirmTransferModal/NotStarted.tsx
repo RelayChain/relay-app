@@ -1,7 +1,7 @@
+import { ArrowDown, ArrowRight } from '../Arrows'
 import { RowBetween, RowFixed } from '../Row'
 
 import { AutoColumn } from '../Column'
-import { ArrowDown, ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
@@ -172,7 +172,6 @@ export default function NotStarted({
         <ButtonPrimary
           onClick={() => {
             MakeApprove().catch(console.error)
-            // changeTransferState(ChainTransferState.ApprovalPending)
           }}
         >
           Approve Transfer

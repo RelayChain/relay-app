@@ -27,6 +27,7 @@ import {
 import store, { AppDispatch, AppState } from '../index'
 import { useDispatch, useSelector } from 'react-redux'
 
+
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
 // import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
@@ -34,6 +35,7 @@ import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
 
+import useGasPrice from 'hooks/useGasPrice'
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
@@ -84,7 +86,8 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         chainID: String(chain.chainId),
         symbol: chain.nativeTokenSymbol,
         marketPlace: chain.marketPlace,
-        blockExplorer: chain.blockExplorer
+        blockExplorer: chain.blockExplorer,
+        rpcUrl: chain.rpcUrl
       }
       if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
         const exchangeFields = {
@@ -397,7 +400,7 @@ export function useCrosschainHooks() {
     }
   }
 
-  const GetAllowance = async () => {
+  const GetAllowance = async () => { 
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
@@ -428,12 +431,13 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
-    // const currentGasPrice = await useGasPrice()
+
     dispatch(
       setCurrentTxID({
         txID: ''
       })
     )
+
     dispatch(
       setCrosschainTransferStatus({
         status: ChainTransferState.ApprovalPending
@@ -451,15 +455,17 @@ export function useCrosschainHooks() {
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
+    const currentGasPrice = await useGasPrice()
+    console.log("🚀 ~ file: hooks.ts ~ line 460 ~ MakeApprove ~ currentGasPrice", currentGasPrice)
     const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-    tokenContract
-      .approve(currentChain.erc20HandlerAddress, transferAmount, {
-      })
+    tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
+      gasPrice: currentGasPrice,
+    })
       .then((resultApproveTx: any) => {
         dispatch(
           setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalPending
+            status: ChainTransferState.ApprovalSubmitted
           })
         )
         dispatch(
@@ -468,42 +474,42 @@ export function useCrosschainHooks() {
           })
         )
 
-        resultApproveTx
-          .wait()
-          .then(() => {
-            const crosschainState = getCrosschainState()
-            const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-            return tokenContract.allowance(crosschainState.currentRecipient, currentChain.erc20HandlerAddress)
-          })
-          .then((approvedAmount: any) => {
-            const crosschainState2 = getCrosschainState()
-            if (crosschainState2.currentTxID === resultApproveTx.hash) {
-              const countTokenForTransfer = BigNumber.from(
-                WithDecimalsHexString(crosschainState2.transferAmount, currentToken.decimals)
-              )
-              if (countTokenForTransfer.gte(approvedAmount)) {
-                dispatch(
-                  setCurrentTxID({
-                    txID: ''
-                  })
-                )
-                dispatch(
-                  setCrosschainTransferStatus({
-                    status: ChainTransferState.ApprovalComplete
-                  })
-                )
-              } else {
-                dispatch(
-                  setCrosschainTransferStatus({
-                    status: ChainTransferState.NotStarted
-                  })
-                )
-              }
-            }
-          })
-          .catch((err: any) => {
-            BreakCrosschainSwap()
-          })
+        // resultApproveTx
+        //   .wait()
+        //   .then(() => {
+        //     const crosschainState = getCrosschainState()
+        //     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        //     return tokenContract.allowance(crosschainState.currentRecipient, currentChain.erc20HandlerAddress)
+        //   })
+        //   .then((approvedAmount: any) => {
+        //     const crosschainState2 = getCrosschainState()
+        //     if (crosschainState2.currentTxID === resultApproveTx.hash) {
+        //       const countTokenForTransfer = BigNumber.from(
+        //         WithDecimalsHexString(crosschainState2.transferAmount, currentToken.decimals)
+        //       )
+        //       if (countTokenForTransfer.gte(approvedAmount)) {
+        //         dispatch(
+        //           setCurrentTxID({
+        //             txID: ''
+        //           })
+        //         )
+        //         dispatch(
+        //           setCrosschainTransferStatus({
+        //             status: ChainTransferState.ApprovalComplete
+        //           })
+        //         )
+        //       } else {
+        //         dispatch(
+        //           setCrosschainTransferStatus({
+        //             status: ChainTransferState.NotStarted
+        //           })
+        //         )
+        //       }
+        //     }
+        //   })
+        //   .catch((err: any) => {
+        //     BreakCrosschainSwap()
+        //   })
       })
       .catch((err: any) => {
         BreakCrosschainSwap()

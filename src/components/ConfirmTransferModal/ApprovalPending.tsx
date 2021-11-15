@@ -1,5 +1,6 @@
 import { AutoColumn, ColumnCenter } from '../Column'
 
+import { ChainTransferState } from '../../state/crosschain/actions'
 import Circle from '../../assets/images/blue-loader.svg'
 import { CustomLightSpinner } from '../../theme/components'
 import React from 'react'
@@ -21,7 +22,7 @@ const TextWaiting = styled.div`
     `}
 `
 
-export default function ApprovalPending () {
+export default function ApprovalPending ({ tokenTransferState }: { tokenTransferState: ChainTransferState }) {
   return (
     <Section>
       <ConfirmedIcon>
@@ -31,9 +32,16 @@ export default function ApprovalPending () {
         <TextWaiting>
           Waiting For Transfer Approval
         </TextWaiting>
-        <Text fontSize={14} color="#565A69" textAlign="center">
-          Approve this transaction in your wallet
-        </Text>
+        { tokenTransferState === ChainTransferState.ApprovalPending &&
+          <Text fontSize={14} color="#565A69" textAlign="center">
+            Approve this transaction in your wallet
+          </Text>
+        }
+        { tokenTransferState === ChainTransferState.ApprovalSubmitted &&
+          <Text fontSize={14} color="#565A69" textAlign="center">
+            Your approval has been submitted, waiting for confirmation.
+          </Text>
+        }
       </AutoColumn>
     </Section>
   )

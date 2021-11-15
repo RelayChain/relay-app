@@ -10,6 +10,7 @@ import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
+import useGasPrice from 'hooks/useGasPrice'
 
 const StakeFlexRow = styled.div`
         flex: 1;
@@ -151,13 +152,15 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     const [popupContent, setPopupContent] = useState({} as PopupContent)
     const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
-    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '');
-
+    const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '')
+    const currentGasPrice = useGasPrice()
     const doStake = async (amount: string) => {
         try {
+            const gasPriceNow = await currentGasPrice
             setIsPending(true)
             const amountToStake = BigNumber.from(utils.parseUnits(amount, 18))
             resStake = await stakingContract?.stake(amountToStake.toHexString(), {
+                gasPrice: gasPriceNow,
                 gasLimit: 150000,
             })
             if (resStake) {
@@ -178,6 +181,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         }
     }
     const onStake = async () => {
+        const gasPriceNow = await currentGasPrice
         setIsPending(true)
         if (isApprove) {
             if (typeAction === 'stake') {
@@ -189,6 +193,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
                 setIsPending(true)
                 const amountToUnstake = BigNumber.from(utils.parseUnits(unstakedAmount, 18))
                 resStake = await stakingContract?.withdraw(amountToUnstake.toHexString(), {
+                    gasPrice: gasPriceNow,
                     gasLimit: 450000,
                 })
                 if (resStake) {
@@ -216,6 +221,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             try {
                 resStake = await stakedTokenContract?.approve(stakedInfo?.stakingContractAddress, '57896044618658097711785492504343953926634992332820282019728792003956564819968',
                     {
+                        gasPrice: gasPriceNow,
                         gasLimit: 150000,
                     })
                 await resStake.wait()
@@ -279,8 +285,8 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
             const stakedBalance = await stakingContract?.balanceOf(account).catch(console.log)
             if (stakedBalance) {
                 const lpBalance = ethers.utils.formatEther(stakedBalance);
-                const formatted = Number(lpBalance).toFixed()
-                setStakedAmount(formatted)
+                //const formatted = Number(lpBalance).toFixed()
+                setStakedAmount(lpBalance)
             }
         }
         getMaxAmountLp()
@@ -302,18 +308,22 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
 
 
     useEffect(() => {
+        if(+amountRelay < 0) {
+            setAmountRelay('0')
+        }
         if (+amountRelay >= +maxAmountRelay) {
             setAmountRelay(maxAmountRelay)
         }
     }, [amountRelay, maxAmountRelay, updatedHash])
 
     useEffect(() => {
+        if(+unstakedAmount < 0) {
+            setUnstakedAmount('0')
+        }
         if (+unstakedAmount >= +stakedAmount) {
             setUnstakedAmount(stakedAmount)
         }
     }, [stakedAmount, unstakedAmount, updatedHash])
-
-
 
 
     const maxBalance = async () => {
@@ -350,17 +360,17 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
         }
     }
     const handleOnFocus = (e: any) => {
-      const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
-      if (x === '0' || x === '') {
-        e.target.value = '';
-      }
+        const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
+        if (x === '0' || x === '') {
+            e.target.value = '';
+        }
     }
 
     const handleOnBlur = (e: any) => {
-      const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
-      if (x === '0' || x === '') {
-        e.target.value = '0';
-      }
+        const x = typeAction === 'stake' ? amountRelay : unstakedAmount;
+        if (x === '0' || x === '') {
+            e.target.value = '0';
+        }
     }
 
     return (
@@ -376,16 +386,16 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
                                     <>
                                         <BalanceLine>{typeAction === 'stake' ? `${maxAmountRelay} Relay` : `${stakedAmount} LP Staked`}</BalanceLine>
                                         <InputWrap>
-                                          <input
-                                            autoComplete="off"
-                                            type="number"
-                                            name="amount"
-                                            id="amount-relay"
-                                            value={typeAction === 'stake' ? amountRelay : unstakedAmount}
-                                            onFocus={handleOnFocus}
-                                            onBlur={handleOnBlur}
-                                            onChange={e => typeAction === 'stake' ? setAmountRelay(e.target.value) : setUnstakedAmount(e.target.value)} />
-                                          <StyledBalanceMax onClick={typeAction === 'stake' ? () => maxBalance() : () => maxUnstakedBalance()}>MAX </StyledBalanceMax>
+                                            <input
+                                                autoComplete="off"
+                                                type="number"
+                                                name="amount"
+                                                id="amount-relay"
+                                                value={typeAction === 'stake' ? amountRelay : unstakedAmount}
+                                                onFocus={handleOnFocus}
+                                                onBlur={handleOnBlur}
+                                                onChange={e => typeAction === 'stake' ? setAmountRelay(e.target.value) : setUnstakedAmount(e.target.value)} />
+                                            <StyledBalanceMax onClick={typeAction === 'stake' ? () => maxBalance() : () => maxUnstakedBalance()}>MAX </StyledBalanceMax>
                                         </InputWrap>
                                         <ButtonsFlex>
                                             <ButtonOutlined className={`green ${getButtonDisabledClass()}`} onClick={onStake}>

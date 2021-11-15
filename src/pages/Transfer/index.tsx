@@ -234,6 +234,7 @@ export default function Transfer() {
   const [totalTx, setTotalTx] = useState('')
   const [totalFee, setTotalFee] = useState(0)
   const [totalTvl, setTotalTvl] = useState(1)
+  const [transferModalLoading, setTransferModalLoading] = useState(false);
   const stats = useStats(chainId || 2)
   const tvl = useTvl()
 
@@ -367,14 +368,26 @@ export default function Transfer() {
 
   const [confirmTransferModalOpen, setConfirmTransferModalOpen] = useState(false)
   const hideConfirmTransferModal = () => {
-    startNewSwap()
+    if (crosschainTransferStatus !== ChainTransferState.ApprovalSubmitted) {
+      startNewSwap()
+      handleTypeInput('');
+    }
     setConfirmTransferModalOpen(false)
-    handleTypeInput('');
   }
-  const showConfirmTransferModal = () => {
+  const showConfirmTransferModal = async () => {
+    if (transferModalLoading) {
+      return;
+    }
     if (currentToken.address) {
-      GetAllowance()
-      setConfirmTransferModalOpen(true)
+      setTransferModalLoading(true);
+      try {
+        await GetAllowance()
+        setTransferModalLoading(false);
+        setConfirmTransferModalOpen(true)
+      } catch (err) {
+        console.log('get allowance error', err);
+        setTransferModalLoading(false);
+      }
     }
   }
 
@@ -498,7 +511,18 @@ export default function Transfer() {
                     currencies[Field.INPUT] ? (
                     <>
                       <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px' }}>
-                        <TYPE.white>Transfer</TYPE.white>
+                        { transferModalLoading === false &&
+                          <TYPE.white>
+                            Transfer
+                          </TYPE.white>
+                        }
+                        { transferModalLoading === true &&
+                          <CustomLightSpinner
+                            src={Circle}
+                            alt="loader"
+                            size={'26px'}
+                          />
+                        }
                       </ButtonPrimary>
                     </>
                   ) : !account ? (
