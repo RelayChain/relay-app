@@ -1,11 +1,25 @@
-import Web3 from 'web3'
-import { crosschainConfig as crosschainConfigTestnet } from '../constants/CrosschainConfigTestnet'
-import { getCrosschainState } from 'state/crosschain/hooks'
+import { getGasPrices } from 'api';
+import { useCrosschainState } from 'state/crosschain/hooks';
 
-const { allCrosschainData } = getCrosschainState()
-const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : allCrosschainData
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-export default async function useGasPrice(): Promise<string> {
-  const web3 = await new Web3(crosschainConfig.chains[0].rpcUrl)
-  return await web3.eth.getGasPrice()
+let gasPrices = {};
+
+async function startUpdatingGasPrices() {
+  while (true) {
+    try {
+      gasPrices = await getGasPrices();
+      await sleep(60000);
+    } catch (e) {
+      console.log(`Error retrieving gasPrices from api: ${e}`);
+      await sleep(4000);
+    }
+  }
+}
+
+startUpdatingGasPrices();
+
+export default async function useGasPrice(): Promise<any> {
+  const { currentChain } = useCrosschainState()
+  return gasPrices[currentChain.chainID];
 }

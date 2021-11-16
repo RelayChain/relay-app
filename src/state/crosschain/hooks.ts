@@ -33,6 +33,7 @@ import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React } from '../../hooks'
 import { useEffect } from 'react'
+import useGasPrice from 'hooks/useGasPrice'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
@@ -87,7 +88,8 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
         chainID: String(chain.chainId),
         symbol: chain.nativeTokenSymbol,
         marketPlace: chain.marketPlace,
-        blockExplorer: chain.blockExplorer
+        blockExplorer: chain.blockExplorer,
+        rpcUrl: chain.rpcUrl
       }
       if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
         const exchangeFields = {
@@ -432,7 +434,6 @@ export function useCrosschainHooks() {
   }
 
   const MakeApprove = async () => {
-
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
@@ -460,9 +461,13 @@ export function useCrosschainHooks() {
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
+    const currentGasPrice = await useGasPrice()
+    console.log("🚀 ~ file: hooks.ts ~ line 460 ~ MakeApprove ~ currentGasPrice", currentGasPrice)
     const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-    tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {})
+    tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
+      gasPrice: currentGasPrice,
+    })
       .then((resultApproveTx: any) => {
         dispatch(
           setCrosschainTransferStatus({
