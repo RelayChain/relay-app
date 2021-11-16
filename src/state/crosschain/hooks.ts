@@ -269,21 +269,18 @@ export function useCrosschainHooks() {
   // }
 
   const MakeDeposit = async () => {
+    const currentGasPrice = await useGasPrice()
     try {
       dispatch(
         setCrosschainTransferStatus({
           status: ChainTransferState.TransferPending
         })
       )
-
-      const crosschainState = getCrosschainState()
-      console.log(crosschainState.currentChain.chainID);
+      
+      const crosschainState = getCrosschainState();
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-      // const currentToken = currentChain.tokens
-      //   .find(token => token.address === crosschainState.currentToken.address)
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
       const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
-      // const currentGasPrice = await useGasPrice()
       dispatch(
         setCurrentTxID({
           txID: ''
@@ -304,14 +301,11 @@ export function useCrosschainHooks() {
         utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
         crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
       const auxData = '0x00';
-      // const gasPriceFromChain =
-      //   crosschainState.currentChain.name === 'Ethereum'
-      //     ? WithDecimalsHexString(currentGasPrice, 0)
-      //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+    
 
       const resultDepositTx = await bridgeContract
         .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
-          // value: WithDecimalsHexString(crosschainState.crosschainFee, 18 /*18 - AVAX/ETH*/),
+          gasPrice: currentGasPrice,
           value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
         })
 
@@ -450,10 +444,7 @@ export function useCrosschainHooks() {
       })
     )
 
-    // const gasPriceFromChain =
-    //   crosschainState.currentChain.name === 'Ethereum'
-    //     ? WithDecimalsHexString(currentGasPrice, 0)
-    //     : WithDecimalsHexString(String(currentChain.defaultGasPrice || 225), 9)
+
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
@@ -462,7 +453,6 @@ export function useCrosschainHooks() {
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
     const currentGasPrice = await useGasPrice()
-    console.log("🚀 ~ file: hooks.ts ~ line 460 ~ MakeApprove ~ currentGasPrice", currentGasPrice)
     const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
@@ -479,43 +469,6 @@ export function useCrosschainHooks() {
             txID: resultApproveTx.hash
           })
         )
-
-        // resultApproveTx
-        //   .wait()
-        //   .then(() => {
-        //     const crosschainState = getCrosschainState()
-        //     const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-        //     return tokenContract.allowance(crosschainState.currentRecipient, currentChain.erc20HandlerAddress)
-        //   })
-        //   .then((approvedAmount: any) => {
-        //     const crosschainState2 = getCrosschainState()
-        //     if (crosschainState2.currentTxID === resultApproveTx.hash) {
-        //       const countTokenForTransfer = BigNumber.from(
-        //         WithDecimalsHexString(crosschainState2.transferAmount, currentToken.decimals)
-        //       )
-        //       if (countTokenForTransfer.gte(approvedAmount)) {
-        //         dispatch(
-        //           setCurrentTxID({
-        //             txID: ''
-        //           })
-        //         )
-        //         dispatch(
-        //           setCrosschainTransferStatus({
-        //             status: ChainTransferState.ApprovalComplete
-        //           })
-        //         )
-        //       } else {
-        //         dispatch(
-        //           setCrosschainTransferStatus({
-        //             status: ChainTransferState.NotStarted
-        //           })
-        //         )
-        //       }
-        //     }
-        //   })
-        //   .catch((err: any) => {
-        //     BreakCrosschainSwap()
-        //   })
       })
       .catch((err: any) => {
         BreakCrosschainSwap()
