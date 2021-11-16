@@ -19,7 +19,6 @@ async function startUpdatingGasPrices() {
 
 startUpdatingGasPrices();
 
-export default async function useGasPrice(): Promise<any> {
-  const { currentChain } = useCrosschainState()
-  return gasPrices[currentChain.chainID];
+export default async function useGasPrice(chainId: number): Promise<any> {
+  return gasPrices[chainId];
 }

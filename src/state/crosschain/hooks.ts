@@ -269,7 +269,9 @@ export function useCrosschainHooks() {
   // }
 
   const MakeDeposit = async () => {
-    const currentGasPrice = await useGasPrice()
+    const crosschainState = getCrosschainState();
+    console.log('crosschainState.currentChain.chainID :>> ', crosschainState.currentChain.chainID);
+    const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     try {
       dispatch(
         setCrosschainTransferStatus({
@@ -277,7 +279,7 @@ export function useCrosschainHooks() {
         })
       )
       
-      const crosschainState = getCrosschainState();
+     
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
       const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
@@ -452,7 +454,7 @@ export function useCrosschainHooks() {
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
     const ABI = isUsdt ? USDTTokenABI : TokenABI
-    const currentGasPrice = await useGasPrice()
+    const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
     tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {

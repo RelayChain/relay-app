@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
 import { useStakingAloneContract } from 'hooks/useContract';
 import useGasPrice from 'hooks/useGasPrice';
+import { useCrosschainState } from 'state/crosschain/hooks'
 
 const StakeContainer = styled.div`
         font-family: Poppins;
@@ -62,13 +63,14 @@ const ButtonStake = styled(ButtonOutlined)`
 `
 
 export const SingleSidedStaking = () => {
+    const { currentChain } = useCrosschainState()
     const [isPending, setIsPending] = useState(false)
     const { account, chainId } = useActiveWeb3React()
     const [earnedLp, setEarnedLp] = useState('0')
     const [updatedHash, setUpdatedHash] = useState('')
     const [rewardSuccessHash, setRewardSuccessHash] = useState('')
     const [indexUpdate, setIndexUpdate] = useState(0)
-    const currentGasPrice = useGasPrice()
+    const currentGasPrice = useGasPrice(+currentChain.chainID)
 
     const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
 

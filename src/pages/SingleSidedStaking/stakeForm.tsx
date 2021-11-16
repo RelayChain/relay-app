@@ -154,7 +154,7 @@ export const StakeForm = ({ typeAction, updatedHash, setUpdatedHash }: { typeAct
     const stakedInfo = returnStakingConfig(chainId)
     const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
     const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '')
-    const currentGasPrice = useGasPrice()
+    const currentGasPrice = useGasPrice(+currentChain.chainID)
     const doStake = async (amount: string) => {
         try {
             const gasPriceNow = await currentGasPrice
