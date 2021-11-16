@@ -110,10 +110,20 @@ export default function NotStarted({
   changeTransferState,
   tokenTransferState
 }: NotStartedProps) {
-  const { MakeApprove } = useCrosschainHooks()
+
+  const { MakeApprove, BreakCrosschainSwap } = useCrosschainHooks()
 
   const formatValue = (value: string) => {
     return parseFloat(parseFloat(value).toFixed(6)).toString()
+  }
+
+  const handleApprove = async () => {
+    try {
+      await MakeApprove();
+    } catch (err) {
+      console.log(err);
+      BreakCrosschainSwap()
+    }
   }
 
   return (
@@ -169,11 +179,7 @@ export default function NotStarted({
       </RowFixed>
       <RowBetween></RowBetween>
       <RowFixed style={{ width: '100%' }}>
-        <ButtonPrimary
-          onClick={() => {
-            MakeApprove().catch(console.error)
-          }}
-        >
+        <ButtonPrimary onClick={handleApprove}>
           Approve Transfer
         </ButtonPrimary>
       </RowFixed>

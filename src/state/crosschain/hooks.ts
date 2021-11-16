@@ -65,6 +65,9 @@ function WithDecimals(value: string | number): string {
 }
 
 function WithDecimalsHexString(value: string, decimals: number): string {
+  if (!value || decimals === undefined) {
+    return ''
+  }
   return BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 }
 
@@ -398,29 +401,33 @@ export function useCrosschainHooks() {
   }
 
   const GetAllowance = async () => {
-    const crosschainState = getCrosschainState()
-    const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+    try {
+      const crosschainState = getCrosschainState()
+      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
 
-    // @ts-ignore
-    const signer = web3React.library.getSigner()
-    const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-    const approvedAmount = await tokenContract.allowance(
-      crosschainState.currentRecipient,
-      currentChain.erc20HandlerAddress
-    ).catch(console.log)
-    const countTokenForTransfer = BigNumber.from(
-      WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
-    )
-
-    if (approvedAmount && countTokenForTransfer.lte(approvedAmount)) {
-      dispatch(
-        setCrosschainTransferStatus({
-          status: ChainTransferState.ApprovalComplete
-        })
+      // @ts-ignore
+      const signer = web3React.library.getSigner()
+      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+      const approvedAmount = await tokenContract.allowance(
+        crosschainState.currentRecipient,
+        currentChain.erc20HandlerAddress
+      ).catch(console.log)
+      const countTokenForTransfer = BigNumber.from(
+        WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )
-    } else {
-      console.log('not approved before')
+
+      if (approvedAmount && countTokenForTransfer.lte(approvedAmount)) {
+        dispatch(
+          setCrosschainTransferStatus({
+            status: ChainTransferState.ApprovalComplete
+          })
+        )
+      } else {
+        console.log('not approved before')
+      }
+    } catch (err) {
+      console.log('GetAllowance error', err);
     }
   }
 
