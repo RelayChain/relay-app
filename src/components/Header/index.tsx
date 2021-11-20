@@ -162,41 +162,9 @@ const NotConnectedWrap = styled.div`
   `};
 `
 
-// const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-//   [ChainId.RINKEBY]: 'Rinkeby',
-//   [ChainId.ROPSTEN]: 'Ropsten',
-//   [ChainId.GÖRLI]: 'Görli',
-//   [ChainId.KOVAN]: 'Kovan',
-//   [ChainId.FUJI]: 'Avalanche',
-//   [ChainId.AVALANCHE]: 'Avalanche',
-//   [ChainId.SMART_CHAIN]: 'SmartChain',
-//   [ChainId.SMART_CHAIN_TEST]: 'SmartChainTestnet',
-//   [ChainId.MOONBASE_ALPHA]: 'Moonbeam',
-//   [ChainId.MUMBAI]: 'Mumbai',
-//   [ChainId.MAINNET]: 'Ethereum',
-//   [ChainId.MATIC]: 'Polygon',
-//   [ChainId.HECO]: 'HECO',
-//   [ChainId.MOONRIVER]: 'Moonriver',
-//   [ChainId.FANTOM]: 'Fantom',
-//   [ChainId.SHIDEN]: 'Shiden'
-// }
-
-// const NETWORK_SYMBOLS: any = {
-//   Ethereum: 'ETH',
-//   Rinkeby: 'ETH',
-//   Ropsten: 'ETH',
-//   Görli: 'ETH',
-//   Kovan: 'ETH',
-//   Avalanche: 'AVAX',
-//   SmartChain: 'BNB',
-//   Moonbeam: 'DEV',
-//   Polygon: 'MATIC',
-//   HECO: 'HT',
-//   Moonriver: 'MOVR',
-//   Fantom: 'FTM',
-//   Shiden: 'SDN'
-// }
-
+const LogoBox = styled.div`
+  heigth: 30px;
+`
 const popupContent: PopupContent = {
   simpleAnnounce: {
     message: 'Please wait 5 seconds to change RPCs again.'
@@ -273,9 +241,10 @@ const Header = () => {
     <HeaderFrame>
       <ClaimModal />
       <HideMedium>
-        <LogoContainer>
-          <SupTitle>Relay</SupTitle>
-        </LogoContainer>
+      <LogoContainer>
+          <LogoBox className="relay-logo"></LogoBox>
+          <LogoBox className="relay-name"></LogoBox>       
+        </LogoContainer> 
       </HideMedium>
       {account ? (
         <HeaderControls>

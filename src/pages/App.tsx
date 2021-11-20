@@ -39,6 +39,8 @@ import URLWarning from '../components/Header/URLWarning'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
 import { SingleSidedStaking } from './SingleSidedStaking'
+import { Home } from './Home'
+import { Footer } from 'components/Footer'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -86,8 +88,8 @@ export default function App() {
       <GraphQLProvider>
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
-          <SideMenu />
-          <div className="snow-bg"></div>
+          {/* <SideMenu /> */}
+          <div className="ellipse-bg"></div>
           <div className="bg-darken"></div>
 
           <BodyWrapper>
@@ -100,6 +102,7 @@ export default function App() {
             <TopLevelModals />
             <Web3ReactManager>
               <Switch>
+              <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -126,6 +129,7 @@ export default function App() {
                 <Route component={RedirectPathToTransferOnly} />
               </Switch>
             </Web3ReactManager>
+            <Footer />
           </BodyWrapper>
         </AppWrapper>
       </GraphQLProvider>
