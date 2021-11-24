@@ -129,7 +129,7 @@ export default function App() {
                 <Route component={RedirectPathToTransferOnly} />
               </Switch>
             </Web3ReactManager>
-            <Footer />
+            {/* <Footer /> */}
           </BodyWrapper>
         </AppWrapper>
       </GraphQLProvider>
