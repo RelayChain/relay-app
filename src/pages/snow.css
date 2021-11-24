@@ -149,3 +149,7 @@
     background: url("../assets/images/Hero-Security.png") no-repeat;
     background-size: cover;
 }
+.active-title {
+    outline: none;
+    border-bottom: 1px solid  #ad00ff;
+}

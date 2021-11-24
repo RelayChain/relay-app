@@ -3,10 +3,11 @@ import styled, { keyframes } from 'styled-components'
 const PartnersWrapper = styled.div`
     display: flex;
     flex-wrap: wrap; 
-    justify-content: space-between;
-
+    justify-content: space-between;   
 `
-const LogoContainer = styled.div`  
+const LogoContainer = styled.div` 
+    height: 120px;
+    margin-right: 60px; 
     img{
         height: 30px;
     } 

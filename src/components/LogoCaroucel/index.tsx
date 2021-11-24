@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import ArrowLeft from '../../assets/images/new-design/arrow-left.svg'
+
 const CarouselWrapper = styled.div`
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    width: 600px;
-    // &:nth-child(1) {
-    //     margin-right: 50px;
-    // }
-
+    width: 80%;
 `
 const LogoContainer = styled.div`   
     display: flex;
@@ -17,8 +13,8 @@ const LogoContainer = styled.div`
     align-items: center
     height: 80px;
     img{
-        width: 24px
-        height: 24px;
+        width: 60px
+        height: 60px;
     }
     p {
         font-family: Montserrat;

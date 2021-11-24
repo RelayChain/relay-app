@@ -1,6 +1,8 @@
 
+import { Academy } from 'components/AcademyWidget'
 import { LogoCarousel } from 'components/LogoCaroucel'
 import { Partners } from 'components/Partners'
+import { Link } from 'react-router-dom';
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { ButtonWhite, ButtonTransparent, ButtonPink } from '../../components/Button'
@@ -93,7 +95,7 @@ export function Home() {
     align-items: center; 
     width: 160px;
     height: 120px;
-    &:hover{
+    :hover{
         background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
         mix-blend-mode: normal;
         border-radius: 30px;
@@ -105,7 +107,6 @@ export function Home() {
         font-size: 50px;
         line-height: 61px;
         text-align: center;
-
         color: #FFFFFF;
     }
     p {
@@ -153,9 +154,16 @@ export function Home() {
 `
     const SenseBlock = styled.div` 
     position: relative;
-    left: 500px;
-    width: 700px;
-    height: 700px;
+    margin-top: 40px;
+    width: 970px;
+    margin: 0 auto;
+    `
+    const SenseBackgroundBlock = styled.img` 
+    position: absolute;
+    width: 656px;
+    height: 655px;
+    top: 80px;
+    left: 155px;
     `
     const SecurityBlock = styled.div` 
     margin: 100px 0; 
@@ -180,34 +188,32 @@ export function Home() {
     const TitleSecBlock = styled(MiddleTitle)`
         margin-bottom: 20px;
         width: 40%;
-        text-align: end;
+        text-align: start;
     `
     const SecurityInfo = styled.div`
         width: 40%;
-        text-align: end;
 `
     const SecuritySpaceman = styled.div`
     position: absolute;
-    right: 100px; 
+    left: 66%; 
     height: 350px;
     width: 300px 
 `
 
     const WorkBlock = styled.div`
     display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
     `
-    const Academy = styled.div` 
+    const AcademyBlock = styled.div` 
     position: relative; 
-    display: grid;
-    justify-content: center;
-    align-content: center;
-    grid-template-columns: 150px 150px 150px;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    grid-template-areas: "logo-ac title-ac title-ac"
-                         "logo-ac logo-1 logo-2"
-
 `
+    const AcContent = styled(Academy)`
+    grid-area: ac-content;
+    `
     const TitleAcademy = styled.div`
     text-align: right;
     font-family: Montserrat;
@@ -218,33 +224,83 @@ export function Home() {
     grid-area: title-ac;
     text-align: center;
     `
-    const LogoAcademy = styled.div`
-    grid-area: logo-ac;
+    const LogoAcademy = styled.img` 
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        left: -100px;
+        top: 20px;
     `
-    const Logo1 = styled.div`
-    grid-area: logo-1;
+    const Logo1 = styled.img` 
+    width: 60px;
+    height: 20px;
+    color: red;
     `
     const Logo2 = styled.div`
     grid-area: logo-2;
     `
 
     const WorkWidget = styled.div`
-    width: 297px;
-    height: 409px;
+    width: 300px;
+    height: 400px;
     background: rgba(70, 70, 70, 0.25);
     mix-blend-mode: normal;
     backdrop-filter: blur(100px);
     border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+        margin-top: 60px;
+        width: 200px;
+        height: 200px; 
+    }
+    div {
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 34px;
+        text-align: center;
+        color: #7F46F0;
+        margin-top: 20px;
+    }
+    p {
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        color: #FFFFFF;
+    }
     `
     const InvestorBlock = styled.div`
-    width: 600px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 960px;
     height: 313px;
     background: linear-gradient(180deg, rgba(0, 91, 175, 0.5) 0%, rgba(0, 209, 255, 0.5) 100%);
     mix-blend-mode: normal;
     backdrop-filter: blur(100px);
     border-radius: 30px;
+    padding: 25px;
+    p {
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        color: #FFFFFF;
+    }
 `
 
+const InvButtonsWrapper = styled(ButtonsWrapper)`
+margin-top: 10px;
+`
     const WrapperPage1 = styled.div` 
     position: relative;
     display: flex;
@@ -288,7 +344,24 @@ export function Home() {
     const TxSpeedTitle = styled(MiddleTitle)`
         text-align: center;
     `
-
+    const AcademyHead = styled.div`
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-bottom: 50px;
+    `
+    const LogoBlock = styled.div`
+    display: flex;
+    `
+    const InvestorTitle = styled.div`
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 55px;
+    text-align: center;
+    color: #FFFFFF;
+    `
     const getWidgets = () => {
         const widgetsData = [
             { speedValueinPercent: 93, description: 'under 20 min' },
@@ -333,13 +406,10 @@ export function Home() {
                     </HomeContainer>
 
                 </FirstWrapper>
-
-
-
                 <SecondPage>
                     <MiddleTitle>Easily Transfer</MiddleTitle>
                     <p>tokens between our supported blockchains</p>
-                    <LogoCarousel countLogosToShow={4} />
+                    <LogoCarousel countLogosToShow={8} />
                 </SecondPage>
                 <TransactionSpeed>
                     <SpacemanBlock className="spaceman-2" />
@@ -361,14 +431,34 @@ export function Home() {
 
 
                 <SenseTitle>How it works</SenseTitle>
-                <SenseBlock className="ellipse">
+                <SenseBlock>
+                    <SenseBackgroundBlock src={require('../../assets/images/Ellipse.png')} />
                     <WorkBlock>
-                        <WorkWidget>WorkWidget1</WorkWidget>
-                        <WorkWidget>WorkWidget2</WorkWidget>
-                        <WorkWidget>WorkWidget3</WorkWidget>
+                        <WorkWidget>
+                            <img src={require('../../assets/images/new-design/wallet.png')} />
+                            <div>Connect wallet</div>
+                            <p>{`Chouse your wallet
+                                  to connect`} </p>
+                        </WorkWidget>
+                        <WorkWidget>
+                            <img src={require('../../assets/images/new-design/wallet.png')} />
+                            <div>Bridge Token</div>
+                            <p>Choose your token and your destination chain</p>
+                        </WorkWidget>
+                        <WorkWidget>
+                            <img src={require('../../assets/images/new-design/wallet.png')} />
+                            <div>Receive Tokens</div>
+                            <p>Receive your tokens on the destination chain</p>
+                        </WorkWidget>
                     </WorkBlock>
                     <InvestorBlock>
-                        InvestorBlock
+                        <InvestorTitle>Investor Group</InvestorTitle>     
+                        <p>We made the RELAY token deflationary with our unique tokenomics model utilizing buy back and burns from the bridge fees, while minimizing sell pressure by suppressing Relay emissions. 
+                        Become an Investor today to earn native gas tokens (like MATIC, AVAX, MOVR, etc) through <b>Staking</b>, or partners’ tokens (QUICK, SOLAR, MOON, etc) when proving liquidity with the RELAY token as a pair through a <b>Pool</b>. </p>
+                        <InvButtonsWrapper>
+                                <ButtonHomeLight as={Link} to={'/pools'}>Pool</ButtonHomeLight>
+                                <ButtonHomeLight as={Link} to={'/single-sided-staking'}>Staking</ButtonHomeLight>
+                            </InvButtonsWrapper>
                     </InvestorBlock>
                 </SenseBlock>
                 <SecurityBlock>
@@ -383,13 +473,14 @@ export function Home() {
                     <SecuritySpaceman className="hero-security" />
 
                 </SecurityBlock>
-                <Academy>
-                    <LogoAcademy>LogoAcademy</LogoAcademy>
-                    <TitleAcademy>Academy</TitleAcademy>
-                    <Logo1>RELAY</Logo1><Logo2>DEFI</Logo2>
-                    <LogoCarousel countLogosToShow={5} />
-                </Academy>
-
+                <AcademyBlock>
+                    <AcademyHead>
+                        <LogoAcademy src={require('../../assets/images/crosschain/RELAY.png')} />
+                        <TitleAcademy>Academy</TitleAcademy>
+                        <LogoBlock><Logo1 src={require('../../assets/images/new-design/relay-academy.png')}></Logo1><Logo2>DEFI</Logo2></LogoBlock>
+                    </AcademyHead>
+                    <AcContent countLogosToShow={5} />
+                </AcademyBlock>
                 <PartnersBlock>
                     <PartnersTitle>Partners</PartnersTitle>
                     <Partners />
