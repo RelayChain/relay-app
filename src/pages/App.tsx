@@ -126,10 +126,10 @@ export default function App() {
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />      
                 <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />               
-                <Route component={RedirectPathToTransferOnly} />
+                <Route component={Home} />
               </Switch>
             </Web3ReactManager>
-            {/* <Footer /> */}
+            <Footer />
           </BodyWrapper>
         </AppWrapper>
       </GraphQLProvider>

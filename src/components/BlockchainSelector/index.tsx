@@ -7,12 +7,7 @@ import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
 import styled from 'styled-components'
 
-const Container = styled.div`
-  border-radius: 14px;
-  margin-bottom: .5rem;
-  margin-top: 0.5rem;
-  display: flex;
-  flex-direction: column;
+const Container = styled.div` 
   overflow: hidden;
   h5 {
     margin-left: 0.3rem;
@@ -37,10 +32,15 @@ const Container = styled.div`
     }
     &.crosschain {
       position: relative;
-      width: 186px;
-      height: 40px;
-      background: rgba(225, 248, 250, 0.12);
-      color: #ffffff;
+      width: 220px;
+      height: 60px;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 22px;
+
+      color: #FFFFFF;
       border-radius: 54px;
       ${({ theme }) => theme.mediaWidth.upToSmall`
       width: 229px;
@@ -116,7 +116,22 @@ const FlexOrder = styled.div`
 display: flex;
 flex-direction: column-reverse;
 align-items: center;
+
 `};
+`
+const TextBlockSelect = styled.span`
+  margin-left: 5px;
+`
+const StyledSelect = styled.div`
+  position: relative;
+  width: 220px;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
+  mix-blend-mode: normal;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 `
 const BlockchainSelector = ({
   blockchain,
@@ -160,13 +175,13 @@ const BlockchainSelector = ({
               style={{ marginBottom: '-3px' }}
             />
             <span>{blockchain}</span>
-            <ChevronDown size="18" style={{ marginBottom: '-3px' }} />
+            <ChevronDown size="24" style={{ marginBottom: '-3px' }} />
           </p>
         </Row>
       )}
       {isCrossChain && (
         <Row borderBottom={false} isCrossChain={isCrossChain}>
-          <CrossChainWrap>
+          {/* <CrossChainWrap>
             <SubTitle>Current Blockchain</SubTitle>
             <FlexOrder>
               <p className="crosschain currentchain">
@@ -182,26 +197,26 @@ const BlockchainSelector = ({
 
           <HideSmall>
             <ArrowRight />
-          </HideSmall>
-          <ShowSmall>
+          </HideSmall> */}
+          {/* <ShowSmall>
             <ArrowDown conditionInput={true} conditionOutput={true} defaultColor="#727BBA" activeColor="white" />
-          </ShowSmall>
-          <CrossChainWrap>
-            <SubTitle>Destination Chain</SubTitle>
+          </ShowSmall> */}
+          {/* <CrossChainWrap> */}
+            {/* <SubTitle>Destination Chain</SubTitle> */}
             <FlexOrder>
-              <p className="crosschain" onClick={openTransferModal}>
+              <StyledSelect onClick={openTransferModal}>
                 {transferTo && transferTo.name.length > 0 &&
                   <BlockchainLogo
-                    size="32px"
+                    size="40px"
                     blockchain={typeof transferTo !== 'string' ? transferTo.name : ''}
                     style={{ marginRight: '0px' }}
                   />
                 }
-                <span>{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</span>
-                <ChevronDown size="24" style={{ marginBottom: '-3px', position: 'absolute', right: 10 }} />
-              </p>
+                <TextBlockSelect>{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</TextBlockSelect>
+                <ChevronDown size="24" style={{  }} />
+              </StyledSelect>
             </FlexOrder>
-          </CrossChainWrap>
+          {/* </CrossChainWrap> */}
         </Row>
       )}
     </Container>

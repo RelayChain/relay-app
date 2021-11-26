@@ -1,9 +1,5 @@
-import { AutoColumn } from '../Column'
 import { ButtonOutlined } from '../Button'
-import React from 'react'
-import { RowFixed } from '../Row'
-import {SuccessIllustation} from '../IllustationIcons'
-import { Text } from 'rebass'
+import React from 'react' 
 import styled from 'styled-components'
 
 const Message = styled.p`
@@ -21,6 +17,54 @@ const Message = styled.p`
     margin-right: 4px;
   }
 `
+const Success = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 42px;
+  text-align: center;
+  color: #FFFFFF;
+`
+const TitlePending = styled(Success)` 
+  height: 470px;
+`
+const LogoBlock = styled.img`
+  position: absolute; 
+  top: 50px;
+  height: 500px;
+`
+const NotifyBlock = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 27px;
+  /* identical to box height */
+  text-align: center;
+  color: #FFFFFF; 
+`
+const StyledButton = styled(ButtonOutlined)` 
+  width: 220px;
+  height: 60px;
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  border-radius: 100px; 
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  text-align: center;
+  color: #FFFFFF;
+`
+const SuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 707px;
+  width: 440px;
+`
 
 export default function TransferComplete({
   onDismiss,
@@ -36,41 +80,12 @@ export default function TransferComplete({
   currentToken?: any
 }) {
   return (
-    <AutoColumn gap="12px" justify={'center'}>
-      <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-     <SuccessIllustation />
-      </RowFixed>
-      <RowFixed style={{ width: '100%', marginTop: '1rem' }}>
-        <Text fontSize={17} textAlign="center" style={{ lineHeight: '20px' }}>
-          <b>
-            {transferAmount} {currentToken?.symbol}{' '}
-          </b>
-          tokens were successfully transferred into the bridge, and are now being sent from {activeChain} to{' '}
-          {transferTo}.
-        </Text>
-      </RowFixed>
-      <RowFixed style={{ width: '100%' }}>
-        <Text fontSize={17} textAlign="center" style={{ lineHeight: '20px' }}>
-          We are busy relaying the transaction across the chains, this process can sometimes take up to 15
-          minutes.
-        </Text>
-      </RowFixed>
-      <RowFixed>
-        <Message>
-          To see your token assets on the correct chain, you must
-          <a
-            href="https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-a-custom-Network-RPC-and-or-Block-Explorer"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            configure the Network RPC
-          </a>
-          of your connected wallet.
-        </Message>
-      </RowFixed>
-      <RowFixed style={{ width: '100%' }}>
-        <ButtonOutlined onClick={onDismiss}>Close</ButtonOutlined>
-      </RowFixed>
-    </AutoColumn>
+    <SuccessContainer>
+      <TitlePending>Transfer Complete!</TitlePending>
+      <LogoBlock src={require('../../assets/images/new-design/success.png')}></LogoBlock>
+      <Success>Success!</Success>
+      <NotifyBlock>Your token transfer has been successful.</NotifyBlock>
+      <StyledButton onClick={onDismiss}>Done</StyledButton>
+    </SuccessContainer>
   )
 }

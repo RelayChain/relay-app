@@ -10,7 +10,10 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background: ${({ transferPage }) => (transferPage ? '#171C47' : 'transparent')};
+  // background: ${({ transferPage }) => (transferPage ? '#171C47' : 'transparent')};
+  width: 240px;
+  height: 60px;
+  background: rgba(70, 70, 70, 0.25);
   padding: 0px 15px;
   border-radius: 48px;
   font-size: ${({ fontSize }) => fontSize ?? '24px'};

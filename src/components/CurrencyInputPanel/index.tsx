@@ -25,8 +25,12 @@ const InputRow = styled.div<{ selected: boolean }>`
   flex-direction: column;
 `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-padding: 0;
-margin-top: 25px;
+  padding: 0;
+  margin-top: 25px;
+  width: 220px;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
+  mix-blend-mode: normal;
 `};
 `
 
@@ -35,22 +39,23 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   height: 2.2rem;
   font-size: 20px;
   font-weight: 500;
-  background: rgba(225, 248, 250, 0.12);
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 54px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
-  margin-left: 20px;
+  margin-left: 50px;
   user-select: none;
   transition: all 0.2s ease-in-out;
   border: none;
   padding: 0 0.5rem;
-  width: 186px;
-  height: 40px;
+  width: 220px;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
+  mix-blend-mode: normal;
+  border-radius: 30px;
   :focus,
   :hover {
-    background: rgba(225, 248, 250, 0.16);
+    background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
   }
   &.centered {
     margin-left: auto;
@@ -87,7 +92,6 @@ const Aligner = styled.span`
   position: relative;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   justify-content: flex-start;
-
 `};
 `
 const SectionLabel = styled.span`
@@ -136,16 +140,11 @@ const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
 const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  background: ${({ transferPage }) => (transferPage ? 'rgba(18, 21, 56, 0.24)' : 'rgba(18, 21, 56, 0.54)')};
-  box-shadow: ${({ transferPage }) =>
-    transferPage ? 'inset 2px 2px 5px rgba(255, 255, 255, 0.12)' : 'inset 2px 2px 5px rgba(255, 255, 255, 0.095)'};
-  backdrop-filter: blur(28px);
-  border-radius: 44px;
-  z-index: 1;
+  z-index: 1;  
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  padding: 1rem 1.5rem;
+  padding: 1rem 0;
   &.grayed-out {
     opacity: .2;
     pointer-events: none;
@@ -180,15 +179,22 @@ gap: 1rem;
 `};
 `
 const StyledBalanceMax = styled.button`
-  height: 35px;
-  border: 2px solid #1ef7e7;
-  background: transparent;
+  width: 72px;
+  height: 43px;
+  position: absolute;
+  left: 170px; 
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
   border-radius: 100px;
-  font-size: 0.875rem;
+  font-family: Montserrat;
+  font-style: normal;
   font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: #FFFFFF;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: #1ef7e7;
+  
   transition: all 0.2s ease-in-out;
   padding-left: 10px;
   padding-right: 10px;
@@ -230,6 +236,7 @@ interface CurrencyInputPanelProps {
   transferPage?: boolean
   grayedOut?: boolean;
   stakingInfo?: StakingInfo
+  isRightInput?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -257,7 +264,8 @@ export default function CurrencyInputPanel({
   crossChainBalance,
   currentTargetToken,
   grayedOut = false,
-  stakingInfo
+  stakingInfo,
+  isRightInput = false
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -282,9 +290,9 @@ export default function CurrencyInputPanel({
 
   return (
     <>
-      <InputPanel id={id} transferPage={transferPage}>
+      <InputPanel id={id} transferPage={transferPage} style={isRightInput ? {marginLeft: '20px'} : {}}>
         <Container hideInput={hideInput} className={grayedOut ? 'grayed-out' : ''}>
-          {!hideInput && (
+          {/* {!hideInput && (
             <LabelRow style={{ marginBottom: '1rem' }}>
               <RowBetweenTransfer>
                 <SectionLabel>{label}</SectionLabel>
@@ -307,7 +315,7 @@ export default function CurrencyInputPanel({
                 )}
               </RowBetweenTransfer>
             </LabelRow>
-          )}
+          )} */}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px', marginTop: '0' } : {}} selected={disableCurrencySelect}>
             {!hideInput && (
               <>
@@ -321,7 +329,7 @@ export default function CurrencyInputPanel({
                   }}
                 />
                 {account && altCurrency && showMaxButton && hasABalance && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
+                  <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
                 )}
               </>
             )}
@@ -340,7 +348,7 @@ export default function CurrencyInputPanel({
                   {pair ? (
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
                   ) : altCurrency ? (
-                    <CurrencyLogo currency={altCurrency} size={'32px'} />
+                    <CurrencyLogo currency={altCurrency} size={'32px'} style={{marginLeft: "10px"}} />
                   ) : null}
                   {pair ? (
                     <StyledTokenName className="pair-name-container">

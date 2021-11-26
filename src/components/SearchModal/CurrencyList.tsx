@@ -51,10 +51,10 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance }: { balance: any }) {
+function Balance({ balance, currencyName }: { balance: any, currencyName?: string}) {
   return (
     <StyledBalanceText title={balance.toString()}>
-      {numeral(balance).format('0,0.00') || 0}
+      {numeral(balance).format('0,0.00') || 0} { currencyName && `  ${currencyName}`}
     </StyledBalanceText>
   )
 }
@@ -148,15 +148,14 @@ function CurrencyRow({
     <MenuItem
       style={{
         ...style,
-        background: '#1f224a',
-        borderBottom: `${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}`
+        borderBottom: `none` //${!isEnd ? '1px solid rgba(255,255,255,.035)' : 'none'}`
       }}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
+      <CurrencyLogo currency={currency} size={'30px'} />
       <Column>
         <Text title={currency?.name} fontWeight={500}>
           {currency?.symbol}
@@ -195,7 +194,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account && balance === undefined ? <Loader /> : 0}
+        {balance ? <Balance balance={balance} currencyName={currency?.name} /> : account && balance === undefined ? <Loader /> : `${0}${currency?.symbol}`}
       </RowFixed>
     </MenuItem>
   )
