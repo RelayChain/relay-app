@@ -308,7 +308,8 @@ export default function Transfer() {
     crosschainFee,
     targetChain,
     crosschainTransferStatus,
-    swapDetails
+    swapDetails,
+    currentBalance
   } = useCrosschainState()
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -600,7 +601,7 @@ export default function Transfer() {
             }
             <FlexBlock>
               <BelowForm>{`Estimated Value - $ ${formattedAmounts[Field.INPUT]}`}</BelowForm>
-              <BelowForm>{`Available Balance ${formattedAmounts[Field.INPUT]} ${currentToken.symbol}`}</BelowForm>
+              <BelowForm>{`Available Balance ${currentBalance} ${currentToken.symbol}`}</BelowForm>
             </FlexBlock>
             {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
                 <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>

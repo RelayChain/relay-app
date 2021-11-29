@@ -13,6 +13,7 @@ import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
+import TransferFiled from './TransferFailed'
 
 interface ConfirmTransferProps {
   isOpen: boolean
@@ -127,9 +128,9 @@ export default function ConfirmTransferModal({
           />
         )}
        
-        {/* {tokenTransferState === ChainTransferState.NotStarted &&
-           <ApprovalPending tokenTransferState={tokenTransferState} />
-        } */}
+        {tokenTransferState === ChainTransferState.TransferFailed &&
+            <TransferFiled  />
+        }
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
           <ApprovalPending tokenTransferState={tokenTransferState} />

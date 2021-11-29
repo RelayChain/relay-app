@@ -146,14 +146,16 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
-  chains?.map(chain => {
-    if (chain.name !== currentChainName) {
-      result.push({
-        name: chain.name,
-        chainID: String(chain.chainId)
-      })
-    }
-  })
+  if(chains) {
+    chains?.map(chain => {
+      if (chain.name !== currentChainName) {
+        result.push({
+          name: chain.name,
+          chainID: String(chain.chainId)
+        })
+      }
+    })
+  }   
 
   return result
 }
@@ -270,7 +272,6 @@ export function useCrosschainHooks() {
 
   const MakeDeposit = async () => {
     const crosschainState = getCrosschainState();
-    console.log('crosschainState.currentChain.chainID :>> ', crosschainState.currentChain.chainID);
     const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     try {
       dispatch(
@@ -394,6 +395,11 @@ export function useCrosschainHooks() {
       }
     } catch (err) {
       console.log(err);
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.TransferFailed
+        })
+      )
       return Promise.reject(err)
     }
   }
