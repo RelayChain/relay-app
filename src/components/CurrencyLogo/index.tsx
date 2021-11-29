@@ -94,7 +94,7 @@ export default function CurrencyLogo({
 }) {
   const {allCrosschainData} = useCrosschainState()
   const getTokenLogoURL = (chain: string, address: string) => {
-    return `https://raw.githubusercontent.com/zeroexchange/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
+    return `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
   }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const logoName = getCurrencyLogoImage(String(currency?.symbol))
