@@ -591,14 +591,6 @@ export default function Transfer() {
             </ChainBlock>
           </Heading>
           <AutoColumn gap={'md'}>
-            {/* <BlockchainSelector
-                isCrossChain={isCrossChain}
-                supportedChains={SUPPORTED_CHAINS}
-                blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
-                transferTo={targetChain}
-                onShowCrossChainModal={showCrossChainModal}
-                onShowTransferChainModal={showTransferChainModal}
-              /> */}
 
             {<CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}

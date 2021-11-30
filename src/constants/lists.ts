@@ -44,5 +44,20 @@ export const tickerTocCoinbaseName = {
   'ETH': 'ethereum',
   'MAI': 'mimatic',
   'MATIC': 'matic-network',
-  'HT': 'huobi-token'
+  'HT': 'huobi-token',
+  'GROW': 'grow-token-2',
+  'CHART': 'chartex',
+  'CNR': 'canary',
+  'FTM': 'fantom',
+  'ONE': 'harmony',
+  'IOTX': 'iotex',
+  'CRO': 'crypto-com-chain',
+  'MOVR': 'moonriver',
+  'SDN': 'shiden',
+  'BNB': 'binancecoin'
+
+
+
+
+
 }

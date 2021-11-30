@@ -33,7 +33,9 @@ const InputRow = styled.div<{ selected: boolean }>`
   mix-blend-mode: normal;
 `};
 `
-
+const StyledNumericalInput = styled(NumericalInput)`
+  box-shadow: 4px 0 2px white,  -4px 0 2px white; 
+`
 const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
   height: 2.2rem;
@@ -292,34 +294,11 @@ export default function CurrencyInputPanel({
     <>
       <InputPanel id={id} transferPage={transferPage} style={isRightInput ? {marginLeft: '20px'} : {}}>
         <Container hideInput={hideInput} className={grayedOut ? 'grayed-out' : ''}>
-          {/* {!hideInput && (
-            <LabelRow style={{ marginBottom: '1rem' }}>
-              <RowBetweenTransfer>
-                <SectionLabel>{label}</SectionLabel>
-                {account && (
-                  <TYPE.body
-                    onClick={hasABalance ? onMax : () => { }}
-                    color={theme.text2}
-                    fontWeight={500}
-                    fontSize={14}
-                    style={{ display: 'inline', cursor: 'pointer' }}
-                  >
-                    {!hideBalance && !!altCurrency && selectedCurrencyBalance && hasABalance
-                      ? (customBalanceText ?? 'Balance: ') +
-                      `${selectedCurrencyBalance
-                        ?.toSignificant(returnBalanceNum(selectedCurrencyBalance, 6), {
-                          groupSeparator: ','
-                        })}`
-                      : ''}
-                  </TYPE.body>
-                )}
-              </RowBetweenTransfer>
-            </LabelRow>
-          )} */}
+           
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px', marginTop: '0' } : {}} selected={disableCurrencySelect}>
             {!hideInput && (
               <>
-                <NumericalInput
+                <StyledNumericalInput
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"

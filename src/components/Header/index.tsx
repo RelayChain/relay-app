@@ -13,11 +13,14 @@ import Web3Status from '../Web3Status'
 import { YellowCard } from '../Card'
 import { useActiveWeb3React, useEagerConnect } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
+import MenuBurger from 'components/MenuBurger'
+import { NavLink, useHistory, useLocation  } from 'react-router-dom'
+import ModalMenu from 'components/ModalMenu'
 
 const HeaderFrame = styled.div`
   display: grid;
   padding: 0px 64px;
-  grid-template-columns: 1fr 0px;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
   width: 100%;
   top: 25px;
@@ -171,6 +174,19 @@ const popupContent: PopupContent = {
   }
 }
 
+const MenuBar = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`
+const StyledNavLink = styled(NavLink)`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  /* identical to box height */
+  color: #FFFFFF;
+`
 const NetworkSwitcher = () => {
 
   const { chainId } = useActiveWeb3React()
@@ -229,6 +245,10 @@ const Header = () => {
   const { account, chainId } = useActiveWeb3React()
   // eslint-disable-next-line
   const [isSuccessAuth, userEthBalance] = useEagerConnect()
+  const [open, setOpen] = useState<boolean>(false)
+  const location = useLocation()
+  const [pathname, setPathname] = useState(location.pathname)
+  const [isOpenModal, setIsOpenModal] = useState(false)
   let label,
     symbol = ''
 
@@ -237,18 +257,34 @@ const Header = () => {
     symbol = NETWORK_SYMBOLS[label || 'Ethereum']
   }
 
+  const toggleOpen = () => {
+    setOpen(!open)
+  }
+
   return (
-    <HeaderFrame>
+    <HeaderFrame>    
       <ClaimModal />
       <HideMedium>
       <LogoContainer>
           <LogoBox className="relay-logo"></LogoBox>
           <LogoBox className="relay-name"></LogoBox>       
         </LogoContainer> 
-      </HideMedium>
+     
+      </HideMedium>     
+      <MenuBar>
+      <StyledNavLink id={`bridge-nav-link`} to={'/cross-chain-bridge-transfer'}  onClick={() => setPathname('/cross-chain-bridge-transfer')}>
+      <span style={pathname === '/cross-chain-bridge-transfer' ? {fontWeight: 700}: {fontWeight: 500} }>Bridge</span>
+      </StyledNavLink> 
+      <StyledNavLink id={`stake-nav-link`} to={'/single-sided-staking'}  onClick={() => setPathname('/single-sided-staking')}>
+      <span style={pathname === '/single-sided-staking' ? {fontWeight: 700}: {fontWeight: 500}}>Staking</span>
+      </StyledNavLink> 
+              <MenuBurger open={open} setOpen={toggleOpen} showLogo={false} />
+            </MenuBar>
       {account ? (
         <HeaderControls>
+          
           <HeaderElement>
+          
             <NetworkSwitcher />
             <AccountElement active={!!account}>
               <BalanceText>
@@ -263,6 +299,7 @@ const Header = () => {
           <Web3Status />
         </NotConnectedWrap>
       )}
+         <ModalMenu isOpen={open} onDismiss={() => setOpen(false)} />
     </HeaderFrame>
   )
 }
