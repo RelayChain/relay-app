@@ -48,6 +48,8 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import BlockchainLogo from 'components/BlockchainLogo'
 import { ButtonPink } from '../../components/Button'
 import { ChartWidget } from 'components/ChartWidget'
+import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
+import { tickerTocCoinbaseName } from 'constants/lists'
 
 const numeral = require('numeral')
 
@@ -344,6 +346,7 @@ export default function Transfer() {
   const [totalTx, setTotalTx] = useState('')
   const [totalFee, setTotalFee] = useState(0)
   const [totalTvl, setTotalTvl] = useState(1)
+  const [priceTokenInUsd, setPriceTokenInUsd] = useState(0)
   const [transferModalLoading, setTransferModalLoading] = useState(false);
   const stats = useStats(chainId || 2)
   const tvl = useTvl()
@@ -370,7 +373,20 @@ export default function Transfer() {
   }
 
   const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
+  const priceInUsd = useCoinGeckoPrice
 
+  useEffect(() => {
+    
+    if(currentToken.assetBase) {
+      priceInUsd(tickerTocCoinbaseName[currentToken.assetBase])
+      .then(data => {
+        const usd = Object.values(data)[0]      
+        setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
+        console.log('priceTokenInUsd :>> ', priceTokenInUsd);
+      })
+    }
+  
+  }, [priceInUsd, currentToken])
   // track the input amount, on change, if crosschain, dispatch
   // eslint-disable-next-line
   const [inputAmountToTrack, setInputAmountToTrack] = useState('')
@@ -600,8 +616,8 @@ export default function Transfer() {
             />
             }
             <FlexBlock>
-              <BelowForm>{`Estimated Value - $ ${formattedAmounts[Field.INPUT]}`}</BelowForm>
-              <BelowForm>{`Available Balance ${currentBalance} ${currentToken.symbol}`}</BelowForm>
+              <BelowForm>{`Estimated Value - $ ${(Number(formattedAmounts[Field.INPUT]) * priceTokenInUsd).toFixed(4)}`}</BelowForm>
+              <BelowForm>{`Available Balance ${Number(currentBalance).toFixed(4)} ${currentToken.symbol}`}</BelowForm>
             </FlexBlock>
             {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
                 <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
@@ -694,82 +710,13 @@ export default function Transfer() {
               }</FlexBlock>
 
             <TextBlockRight> 
-              <BelowForm style={{"textAlign": "end"}}>{`Available Balance ${formattedAmounts[Field.INPUT]} ${currentToken.symbol}`}</BelowForm>
+              <BelowForm style={{"textAlign": "end"}}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${currentToken.symbol}`}</BelowForm>
             </TextBlockRight>
-            {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
-                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
-              </RowBetweenTransfer>
-              <RowBetweenTransfer>
-                <TextBottom>
-                  {isTransferToken && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
-                    <SpanAmount>
-                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name.length > 0 ? targetChain.name : '...'}
-                    </SpanAmount>
-                  ) : ('')}
-                </TextBottom>
-                {(currentToken.name !== '' &&
-                  !isTransferToken &&
-                  targetChain.chainID !== "") ? (
-                  <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
-                  </SpanAmount>
-                ) : ('')}
-                <BottomGroupingTransfer>
-                  {isCrossChain &&
-                    transferAmount.length &&
-                    transferAmount !== '0' &&
-                    currentToken &&
-                    isTransferToken &&
-                    targetChain.chainID !== "" &&
-                    targetChain.name.length > 0 &&
-                    currencies[Field.INPUT] ? (
-                    <>
-                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px' }}>
-                        { transferModalLoading === false &&
-                          <TYPE.white>
-                            Transfer
-                          </TYPE.white>
-                        }
-                        { transferModalLoading === true &&
-                          <CustomLightSpinner
-                            src={Circle}
-                            alt="loader"
-                            size={'26px'}
-                          />
-                        }
-                      </ButtonPrimary>
-                    </>
-                  ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px' }}>Connect Wallet</ButtonLight>
-                  ) : (
-                    <TransferButton>
-                      <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
-                        Transfer
-                      </TYPE.main>
-                    </TransferButton>
-                  )}
-                </BottomGroupingTransfer>
-              </RowBetweenTransfer> */}
+            
           </AutoColumn>
         </TransferBodyWrapper>
 
-        {/* <SideCardHolder>
-          <SideCard>
-            <BubbleBase />
-            <h3>Total TVL:</h3>
-            <span>${numeral(totalTvl).format('0,0')}</span>
-          </SideCard>
-          <SideCard>
-            <BubbleBase />
-            <h3>Total Txns:</h3>
-            <span>{numeral(totalTx).format('0,0')}</span>
-          </SideCard>
-          <SideCard>
-            <BubbleBase />
-            <h3>Total Fees:</h3>
-            <span>${numeral(totalFee).format('0,0')}</span>
-          </SideCard>
-        </SideCardHolder> */}
+       
 
         {(chainId === undefined || account === undefined) && (
           <CustomLightSpinner
@@ -794,15 +741,7 @@ export default function Transfer() {
         <div >Insufficient balance!</div>
         </UnciffientBlock>}
       <BelowForm>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-      <ButtonTranfserLight onClick={showConfirmTransferModal}>Transfer</ButtonTranfserLight>
-      {/* <BottomFlexContainer>
-      <ChartLiquidityWrapper>
-        <ChartContainer title={'Available Liquidiy by Chain'}></ChartContainer>
-      </ChartLiquidityWrapper>
-      <ChartTransferWrapper>
-        <ChartContainer title={'Transactions by Chain'}></ChartContainer>
-      </ChartTransferWrapper>
-      </BottomFlexContainer> */}
+      <ButtonTranfserLight onClick={showConfirmTransferModal}>Transfer</ButtonTranfserLight> 
     </>
   )
 }
