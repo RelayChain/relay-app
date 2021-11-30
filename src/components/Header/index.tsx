@@ -176,7 +176,9 @@ const popupContent: PopupContent = {
 
 const MenuBar = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-end;
+  margin-right: 50px;
+  }
 `
 const StyledNavLink = styled(NavLink)`
   font-family: Poppins;
@@ -184,8 +186,13 @@ const StyledNavLink = styled(NavLink)`
   font-weight: 500;
   font-size: 18px;
   line-height: 27px;
-  /* identical to box height */
   color: #FFFFFF;
+  :first-child {
+    margin-right: 20px; 
+  }
+ 
+`
+const MenuBurgerStyled = styled(MenuBurger)`
 `
 const NetworkSwitcher = () => {
 
@@ -278,7 +285,7 @@ const Header = () => {
       <StyledNavLink id={`stake-nav-link`} to={'/single-sided-staking'}  onClick={() => setPathname('/single-sided-staking')}>
       <span style={pathname === '/single-sided-staking' ? {fontWeight: 700}: {fontWeight: 500}}>Staking</span>
       </StyledNavLink> 
-              <MenuBurger open={open} setOpen={toggleOpen} showLogo={false} />
+              <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} />
             </MenuBar>
       {account ? (
         <HeaderControls>

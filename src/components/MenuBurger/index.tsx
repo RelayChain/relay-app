@@ -27,8 +27,8 @@ const StyledBurger = styled.button<{ open?: boolean }>`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
   background: transparent;
   border: none;
   cursor: pointer;
