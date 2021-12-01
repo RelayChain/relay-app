@@ -242,9 +242,7 @@ const FlexContainer = styled.div`
     flex-direction: column;
   `};
 `
-const BottomFlexContainer = styled(FlexContainer)`
-
-`
+ 
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -545,6 +543,16 @@ export default function Transfer() {
 
   // quick enable or disable of bridge
   const bridgeEnabled = true;
+  const isNotBridgeable = () => {
+    return isCrossChain &&
+    !!transferAmount.length &&
+    transferAmount !== '0' &&
+    !!currentToken &&
+    isTransferToken &&
+    targetChain.chainID !== "" &&
+    targetChain.name.length > 0 &&
+    !!currencies[Field.INPUT] 
+  }
 
   return (
     <>
@@ -733,7 +741,7 @@ export default function Transfer() {
         <div >Insufficient balance!</div>
         </UnciffientBlock>}
       <BelowForm>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-      <ButtonTranfserLight onClick={showConfirmTransferModal}>Transfer</ButtonTranfserLight> 
+      <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>Transfer</ButtonTranfserLight> 
     </>
   )
 }
