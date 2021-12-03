@@ -26,7 +26,9 @@ export function getBalanceContract(chainId: ChainId) {
     case ChainId.HARMONY:
       return '0x4AEb5fB68dE1Cb0a357B3C4Ee8067761ab56024F'
     case ChainId.CRONOS:
-      return '0x404BB1901167F6D4Bb99f19c5914D4345C9A5559'  
+      return '0x404BB1901167F6D4Bb99f19c5914D4345C9A5559' 
+    case ChainId.OKEX:
+      return '0xa0CFaB1600d51F5191cBe4F7cceD89D770858B6C'    
     default:
       // MAINNET ETH
       return '0x08A8fDBddc160A7d5b957256b903dCAb1aE512C5'
