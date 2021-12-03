@@ -1,33 +1,34 @@
-import { CHAIN_LABELS, NetworkContextName } from '../../constants'
-import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import styled, { css } from 'styled-components'
-import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
-
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { AppDispatch } from 'state'
-import { ButtonSecondary } from '../Button'
-import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { NETWORK_LABELS, NETWORK_SYMBOLS } from '@zeroexchange/sdk'
 import CrossChainModal from 'components/CrossChainModal'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import Identicon from '../Identicon'
-import Loader from '../Loader'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import { RowBetween } from '../Row'
-import { TransactionDetails } from '../../state/transactions/reducer'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import WalletModal from '../WalletModal'
-import { shortenAddress } from '../../utils'
-import { useActiveWeb3React } from 'hooks'
+import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
+import { useActiveWeb3React, useEagerConnect } from 'hooks'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { Text } from 'rebass'
+import { AppDispatch } from 'state'
+import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
+import styled, { css } from 'styled-components'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import PortisIcon from '../../assets/images/portisIcon.png'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { CHAIN_LABELS, NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useTranslation } from 'react-i18next'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
+import { TransactionDetails } from '../../state/transactions/reducer'
+import { shortenAddress } from '../../utils'
+import { ButtonSecondary } from '../Button'
+import Identicon from '../Identicon'
+import Loader from '../Loader'
+import { RowBetween } from '../Row'
+import WalletModal from '../WalletModal'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -51,6 +52,19 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
     outline: none;
   }
 `
+
+const BalanceText = styled(Text)`
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 // const Web3StatusError = styled(Web3StatusGeneric)`
 //   background-color: ${({ theme }) => theme.red1};
 //   border: 1px solid ${({ theme }) => theme.red1};
@@ -62,12 +76,12 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
 //   }
 // `
 
-const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
+const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-top: 12px;
   `};
@@ -81,7 +95,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
     faded &&
     css`
       background: rgba(103, 82, 247, 0.18);
-      border: 1px solid #6752F7;
+      border: 1px solid #6752f7;
       box-sizing: border-box;
       backdrop-filter: blur(7px);
       border-radius: 54px;
@@ -100,6 +114,11 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   font-family: Poppins;
   font-style: normal;
   font-weight: 600;
@@ -107,18 +126,15 @@ const Web3StatusConnected = styled.div`
   line-height: 19px;
   letter-spacing: 0.05em;
   color: #a7b1f4;
-  opacity: 0.56;
   font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  :focus {
+    border: 1px solid blue;
+  }
 `
 
-const StatusIconWrap = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 30px;
-`
-
-const Text = styled.p`
+const Paragraph = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,11 +145,11 @@ const Text = styled.p`
   font-weight: 500;
 `
 const HeaderRowBetween = styled(RowBetween)`
-    align-items: center;
+  align-items: center;
 `
 const LoaderWrap = styled.div`
-    display: flex;
-    margin-left: 10px;
+  display: flex;
+  margin-left: 10px;
 `
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
@@ -145,8 +161,6 @@ const SOCK = (
     🧦
   </span>
 )
-
-
 
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
@@ -181,10 +195,8 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
-  useCrossChain();
-  const {
-    availableChains: allChains,
-  } = useCrosschainState()
+  useCrossChain()
+  const { availableChains: allChains } = useCrosschainState()
   const dispatch = useDispatch<AppDispatch>()
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
@@ -214,11 +226,30 @@ function Web3StatusInner() {
 
   const [chainIdError] = useState({} as UnsupportedChainIdError)
   const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
+  const [isSuccessAuth, userEthBalance] = useEagerConnect()
+
+  let label,
+    symbol = ''
+
+  if (chainId) {
+    label = NETWORK_LABELS[chainId]
+    symbol = NETWORK_SYMBOLS[label || 'Ethereum']
+  }
 
   useEffect(() => {
-    chainIdErrorPrev.current = (chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}') ?
-      chainIdErrorPrev.current = chainIdError : chainIdErrorPrev.current
+    chainIdErrorPrev.current =
+      chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}'
+        ? (chainIdErrorPrev.current = chainIdError)
+        : chainIdErrorPrev.current
   }, [chainIdError])
+
+  const onSelectTransferChain = (chain: CrosschainChain) => {
+    dispatch(
+      setTargetChain({
+        chain
+      })
+    )
+  }
 
   // eslint-disable-next-line
   const checkCrossChainId = useCallback(() => {
@@ -249,45 +280,37 @@ function Web3StatusInner() {
 
     // eslint-disable-next-line
   }, [chainIdErrorPrev])
-  const onSelectTransferChain = (chain: CrosschainChain) => {
-    dispatch(
-      setTargetChain({
-        chain
-      })
-    )
-  }
 
   if (account) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
-        {hasPendingTransactions ? (
-          <HeaderRowBetween>
-            <Text>{pending?.length} Pending</Text>
-            <LoaderWrap>
-            <Loader stroke="#6752F7" />
-            </LoaderWrap>
-          </HeaderRowBetween>
-        ) : (
-          <>
-            {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
-          </>
-        )}
-        {!hasPendingTransactions && connector && (
-          <StatusIconWrap>
-            <StatusIcon connector={connector} />
-          </StatusIconWrap>
-        )}
+        <div>
+          <BalanceText>
+            {userEthBalance} {symbol}
+          </BalanceText>
+          {hasPendingTransactions ? (
+            <HeaderRowBetween>
+              <Paragraph>{pending?.length} Pending</Paragraph>
+              <LoaderWrap>
+                <Loader stroke="#6752F7" />
+              </LoaderWrap>
+            </HeaderRowBetween>
+          ) : (
+            <>
+              {hasSocks ? SOCK : null}
+              <Paragraph>{ENSName || shortenAddress(account)}</Paragraph>
+            </>
+          )}
+        </div>
+        {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
       </Web3StatusConnected>
     )
-  }
-  else if (error instanceof UnsupportedChainIdError) {
-    return (<ChainSwitcherContent />)
-  }
-  else {
+  } else if (error instanceof UnsupportedChainIdError) {
+    return <ChainSwitcherContent />
+  } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect Wallet')}</Text>
+        <Paragraph>{t('Connect Wallet')}</Paragraph>
       </Web3StatusConnect>
     )
   }

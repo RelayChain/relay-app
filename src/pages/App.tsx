@@ -68,11 +68,10 @@ const BodyWrapper = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 10;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0px 16px 16px 16px;
-  `};
   z-index: 1;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding-bottom:85px;
+  `};
 `
 
 function TopLevelModals() {
@@ -90,7 +89,6 @@ export default function App() {
         <AppWrapper>
           {/* <SideMenu /> */}
           <div className="ellipse-bg"></div>
-          <div className="bg-darken"></div>
 
           <BodyWrapper>
             <URLWarning />
@@ -102,7 +100,7 @@ export default function App() {
             <TopLevelModals />
             <Web3ReactManager>
               <Switch>
-              <Route exact strict path="/home" component={Home} />
+                <Route exact strict path="/home" component={Home} />
                 <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -124,8 +122,8 @@ export default function App() {
                 <Route exact strict path="/remove" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-                <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />      
-                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />               
+                <Route exact strict path="/manage/:currencyIdA/:currencyIdB" component={Manage} />
+                <Route exact strict path="/cross-chain-bridge-transfer" component={Transfer} />
                 <Route component={Transfer} />
               </Switch>
             </Web3ReactManager>
