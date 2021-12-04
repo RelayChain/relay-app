@@ -10,10 +10,10 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   border-radius: 24px;
   margin-left: 5px;
   margin-right: 5px;
-` 
-export const logoPath = (blockchainName: string) => { 
+`
+export const logoPath = (blockchainName: string) => {
   return logoByName[getCurrencyLogoImage(blockchainName)]
-  }
+}
 
 export default function BlockchainLogo({
   blockchain,
@@ -24,5 +24,5 @@ export default function BlockchainLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-    return <StyledEthereumLogo src={logoPath(blockchain || 'ETH')} alt={blockchain} size={size} style={style} /> 
+  return <StyledEthereumLogo src={logoPath(blockchain || 'ETH')} alt={blockchain} size={size} style={style} />
 }

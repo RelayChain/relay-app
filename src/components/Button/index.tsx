@@ -16,7 +16,7 @@ const Base = styled(RebassButton)<{
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: ${({ borderRadius }) => borderRadius ? borderRadius :  '44px'};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '44px')};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -28,7 +28,7 @@ const Base = styled(RebassButton)<{
   cursor: pointer;
   position: relative;
   z-index: 1;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   &:disabled {
     cursor: auto;
   }
@@ -55,7 +55,8 @@ export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : darken(3, theme.primary1))};
+    background-color: ${({ theme, altDisabledStyle }) =>
+      altDisabledStyle ? theme.primary1 : darken(3, theme.primary1)};
     color: ${({ theme }) => theme.text1};
     cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
@@ -66,10 +67,10 @@ export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
 `
 
 export const ButtonSuccess = styled(Base)<{ isPointer?: boolean }>`
-  background-color: #1EF7E7;
+  background-color: #1ef7e7;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
-  color: rgba(0,0,0,.6);
+  color: rgba(0, 0, 0, 0.6);
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, '#1EF7E7')};
     background-color: ${({ theme }) => darken(0.05, '#1EF7E7')};
@@ -83,7 +84,7 @@ export const ButtonSuccess = styled(Base)<{ isPointer?: boolean }>`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? '#1EF7E7' : '#1EF7E7')};
-    color: rgba(0,0,0,.5);
+    color: rgba(0, 0, 0, 0.5);
     cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
     border: 1px solid transparent;
@@ -222,6 +223,24 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   }
 `
 
+export const ButtonGradient = styled(ButtonPrimary)`
+  color: white;
+  padding: 18px 25px;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 18px;
+  background-color: ${({ theme }) => theme.bg3};
+  background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
+  width: fit-content;
+  position: relative;
+  cursor: pointer;
+  white-space: no-wrap;
+  border: 2px solid #ad00ff;
+  :hover {
+    filter: brightness(1.1);
+  }
+`
+
 export const ButtonOutlined = styled(Base)`
   background: rgba(103, 82, 247, 0.18);
   border: 1px solid #6752f7;
@@ -229,11 +248,11 @@ export const ButtonOutlined = styled(Base)`
   backdrop-filter: blur(4.79167px);
   text-decoration: none !important;
   &.green {
-    background: rgba(30, 247, 231, .18);
-    border: 1px solid #1EF7E7;
+    background: rgba(30, 247, 231, 0.18);
+    border: 1px solid #1ef7e7;
   }
   &.white {
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid white;
   }
   color: ${({ theme }) => theme.text1};

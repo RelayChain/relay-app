@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; transferPage?: boolean}>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; transferPage?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   width: 0;
   position: relative;
@@ -11,7 +11,9 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   border: none;
   flex: 1 1 auto;
   // background: ${({ transferPage }) => (transferPage ? '#171C47' : 'transparent')};
-  width: 240px;
+  min-width:100px;
+  max-width:240px;
+  width:100%;
   height: 60px;
   background: rgba(70, 70, 70, 0.25);
   padding: 0px 15px;

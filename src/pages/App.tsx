@@ -43,14 +43,10 @@ import { Home } from './Home'
 import { Footer } from 'components/Footer'
 
 const AppWrapper = styled.div`
-  display: flex;
   height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: hidden;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: column;
-`};
+  overflow-y: auto;
 `
 
 const HeaderWrapper = styled.div`
@@ -60,18 +56,9 @@ const HeaderWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  padding-top: 0px;
-  align-items: center;
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  z-index: 1;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding-bottom:85px;
-  `};
+  height: auto;
+  min-height: calc(100vh - 124px);
 `
 
 function TopLevelModals() {
@@ -127,8 +114,8 @@ export default function App() {
                 <Route component={Transfer} />
               </Switch>
             </Web3ReactManager>
-            <Footer />
           </BodyWrapper>
+          <Footer />
         </AppWrapper>
       </GraphQLProvider>
     </Suspense>
