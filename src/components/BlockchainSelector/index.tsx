@@ -6,9 +6,9 @@ import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
 import styled from 'styled-components'
+import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 
-const Container = styled.div` 
-  overflow: hidden;
+const Container = styled.div`
   h5 {
     margin-left: 0.3rem;
   }
@@ -40,7 +40,7 @@ const Container = styled.div`
       font-size: 18px;
       line-height: 22px;
 
-      color: #FFFFFF;
+      color: #ffffff;
       border-radius: 54px;
       ${({ theme }) => theme.mediaWidth.upToSmall`
       width: 229px;
@@ -70,6 +70,13 @@ const Row = styled.div<{ borderBottom: boolean; isCrossChain?: boolean }>`
   flex-direction: column;
 `};
 `
+const SmallStyledDropDown = styled(SmallDropDown)`
+  margin: 0 0.25rem 0 0.5rem;
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+`
+
 const CrossChainWrap = styled.div`
   position: relative;
   width: 252px;
@@ -123,15 +130,14 @@ const TextBlockSelect = styled.span`
   margin-left: 5px;
 `
 const StyledSelect = styled.div`
-  position: relative;
+  padding: 7px;
   width: 220px;
   height: 60px;
   background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
-  mix-blend-mode: normal;
   border-radius: 30px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 `
 const BlockchainSelector = ({
   blockchain,
@@ -148,7 +154,6 @@ const BlockchainSelector = ({
   onShowCrossChainModal: () => void
   onShowTransferChainModal: () => void
 }) => {
-
   const openChangeChainInfo = () => {
     onShowCrossChainModal()
   }
@@ -202,20 +207,22 @@ const BlockchainSelector = ({
             <ArrowDown conditionInput={true} conditionOutput={true} defaultColor="#727BBA" activeColor="white" />
           </ShowSmall> */}
           {/* <CrossChainWrap> */}
-            {/* <SubTitle>Destination Chain</SubTitle> */}
-            <FlexOrder>
-              <StyledSelect onClick={openTransferModal}>
-                {transferTo && transferTo.name.length > 0 &&
-                  <BlockchainLogo
-                    size="40px"
-                    blockchain={typeof transferTo !== 'string' ? transferTo.name : ''}
-                    style={{ marginRight: '0px' }}
-                  />
-                }
-                <TextBlockSelect>{transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}</TextBlockSelect>
-                <ChevronDown size="24" style={{  }} />
-              </StyledSelect>
-            </FlexOrder>
+          {/* <SubTitle>Destination Chain</SubTitle> */}
+
+          <StyledSelect onClick={openTransferModal}>
+            {transferTo && transferTo.name.length > 0 && (
+              <BlockchainLogo
+                size="40px"
+                blockchain={typeof transferTo !== 'string' ? transferTo.name : ''}
+                style={{ marginRight: '0px' }}
+              />
+            )}
+            <TextBlockSelect>
+              {transferTo && transferTo.name.length > 0 ? transferTo.name : 'Select a chain'}
+            </TextBlockSelect>
+            <SmallStyledDropDown />
+          </StyledSelect>
+
           {/* </CrossChainWrap> */}
         </Row>
       )}

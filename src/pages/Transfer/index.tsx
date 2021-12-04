@@ -1,55 +1,56 @@
-import { ButtonLight, ButtonPrimary } from '../../components/Button'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
+import BlockchainLogo from 'components/BlockchainLogo'
+import { ChartWidget } from 'components/ChartWidget'
+import PageContainer from 'components/PageContainer'
+import { tickerTocCoinbaseName } from 'constants/lists'
+import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
+import useStats from 'hooks/useStats'
+import useTvl from 'hooks/useTvl'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
+import Circle2 from '../../assets/images/circle.svg'
+import BlockchainSelector from '../../components/BlockchainSelector'
+import BubbleBase from '../../components/BubbleBase'
+import { ButtonPink } from '../../components/Button'
+import { GreyCard } from '../../components/Card'
+import ChainBridgeModal from '../../components/ChainBridgeModal'
+import ConfirmTransferModal from '../../components/ConfirmTransferModal'
+import CrossChainModal from '../../components/CrossChainModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { RowBetween } from '../../components/Row'
+import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import { BottomGrouping } from '../../components/swap/styleds'
+import TokenWarningModal from '../../components/TokenWarningModal'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
+import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import { AppDispatch } from '../../state'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import {
   ChainTransferState,
   CrosschainChain,
+  ProposalStatus,
   setCrosschainTransferStatus,
   setCurrentToken,
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
-import { GetTokenByAddrAndChainId, useCrossChain, useCrosschainHooks, useCrosschainState } from '../../state/crosschain/hooks'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { TYPE, Title } from '../../theme'
+import {
+  GetTokenByAddrAndChainId,
+  useCrossChain,
+  useCrosschainHooks,
+  useCrosschainState
+} from '../../state/crosschain/hooks'
+import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import { AppDispatch } from '../../state'
-import { AutoColumn } from '../../components/Column'
-import BlockchainSelector from '../../components/BlockchainSelector'
-import { BottomGrouping } from '../../components/swap/styleds'
-import BubbleBase from '../../components/BubbleBase'
-import ChainBridgeModal from '../../components/ChainBridgeModal'
-import Circle from '../../assets/images/circle-grey.svg'
-import Circle2 from '../../assets/images/circle.svg'
-import ConfirmTransferModal from '../../components/ConfirmTransferModal'
-import CrossChainModal from '../../components/CrossChainModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
-import { Field } from '../../state/swap/actions'
-import { GreyCard } from '../../components/Card'
-import { ProposalStatus } from '../../state/crosschain/actions'
-import { RowBetween } from '../../components/Row'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import styled from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
-import { useDispatch } from 'react-redux'
-import useStats from 'hooks/useStats'
-import useTvl from 'hooks/useTvl'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import BlockchainLogo from 'components/BlockchainLogo'
-import { ButtonPink } from '../../components/Button'
-import { ChartWidget } from 'components/ChartWidget'
-import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
-import { tickerTocCoinbaseName } from 'constants/lists'
 
 const numeral = require('numeral')
 
@@ -81,15 +82,21 @@ const ChainBridgePending = styled.div`
     font-weight: bold;
   }
 `
-const StyledTitle = styled(Title)`
-font-family: Montserrat;
-font-style: normal;
-font-weight: bold;
-font-size: 60px;
-line-height: 55px;
-color: #7F46F0;
-padding: 0px 150px;
-margin-top: 150px;
+const StyledTitle = styled.h1`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 60px;
+  color: #7f46f0;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin: 20px auto;  
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+`};
 `
 const Heading = styled.div`
   display: flex;
@@ -97,8 +104,6 @@ const Heading = styled.div`
   font-size: 32px;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
   font-size: 24px;
 `};
@@ -108,12 +113,12 @@ const FlexBlock = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
-  `
-const TextBlockRight = styled.div`
-  padding: 0 1rem;
-  margin-right: 50px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+
+`};
 `
+
 const ChainBlock = styled.div`
   display: flex;
   align-items: center;
@@ -125,7 +130,14 @@ const Description = styled.p`
   font-weight: 500;
   font-size: 24px;
   line-height: 29px;
-  color: #FFFFFF;
+  color: #ffffff;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  font-size: 20px;
+`};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  font-size: 18px;
+
+`};
 `
 const SideCard = styled.div`
   width: 100%;
@@ -136,10 +148,9 @@ const SideCard = styled.div`
   span {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #6752F7;
+    color: #6752f7;
   }
 `
-
 
 const SideCardHolder = styled.div`
   margin-right: auto;
@@ -151,27 +162,43 @@ const SideCardHolder = styled.div`
     margin-bottom: 2rem;
   `};
 `
-const TransferBodyWrapper = styled.div` 
-  width: 585px;
-  height: 292px;
-  position: relative;
+const TransferBodyWrapper = styled.div`
+  border-radius: 30px;
+  background: rgb(18, 26, 56);
+  width: 100%;
+  max-width: 585px;
   padding: 2rem;
-  margin-left: auto;
+  position: relative;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  &::after {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    content: '';
+    z-index: -1;
+    border-radius: 30px;
+    background: linear-gradient(4.66deg, rgba(255, 255, 255, 0.2) 3.92%, rgba(255, 255, 255, 0) 96.38%);
+  }
   &.offline {
-    opacity: .25;
+    opacity: 0.25;
     pointer-events: none;
     * {
       pointer-events: none;
     }
   }
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin-bottom: 50px;
-`};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 1.5rem;
+ 
+  `}
 `
 const ChartLiquidityWrapper = styled.div`
   position: relative;
   padding: 2rem;
-  margin-right: 130px;width: 585px;
+  margin-right: 130px;
+  width: 585px;
   height: 292px;
   background: rgba(70, 70, 70, 0.25);
   mix-blend-mode: normal;
@@ -183,7 +210,7 @@ const ChartTransferWrapper = styled.div`
   padding: 2rem;
   margin-left: 50px;
   width: 585px;
-  height: 292px; 
+  height: 292px;
   background: rgba(70, 70, 70, 0.25);
   mix-blend-mode: normal;
   backdrop-filter: blur(100px);
@@ -215,7 +242,8 @@ const BelowForm = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  color: #FFFFFF;
+  color: #ffffff;
+  padding-top: 25px;
 `
 const TransferButton = styled(GreyCard)`
   text-align: center;
@@ -230,19 +258,24 @@ const TransferButton = styled(GreyCard)`
 `
 
 const FlexContainer = styled.div`
-  padding: 0 24px;
   margin: 0 auto;
-  margin-top: 1rem;
-  margin-bottom: 3rem;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: column;
   `};
 `
- 
+
+const CenteredInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`
+
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -252,7 +285,7 @@ const TextBottom = styled.div`
 const FrameBlock = styled.img`
   width: 90px;
   height: 90px;
-  margin 0 60px;
+  margin 10px;
 `
 const ButtonTranfserLight = styled(ButtonPink)`
   width: 220px;
@@ -263,9 +296,9 @@ const ButtonTranfserLight = styled(ButtonPink)`
   font-size: 36px;
   line-height: 44px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-top: 20px;
-  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
 `
 const ChartContainer = styled(ChartWidget)`
@@ -279,8 +312,8 @@ const ChartContainer = styled(ChartWidget)`
 const UnciffientBlock = styled.div`
   position: relative;
   width: 516px;
-  height: 119px; 
-  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  height: 119px;
+  background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
   margin-bottom: 24px;
   font-family: Montserrat;
@@ -289,7 +322,7 @@ const UnciffientBlock = styled.div`
   font-size: 36px;
   line-height: 44px;
   text-align: center;
-  color: #FFFFFF; 
+  color: #ffffff;
   padding-left: 40px;
   padding-top: 35px;
 `
@@ -345,7 +378,7 @@ export default function Transfer() {
   const [totalFee, setTotalFee] = useState(0)
   const [totalTvl, setTotalTvl] = useState(1)
   const [priceTokenInUsd, setPriceTokenInUsd] = useState(0)
-  const [transferModalLoading, setTransferModalLoading] = useState(false);
+  const [transferModalLoading, setTransferModalLoading] = useState(false)
   const stats = useStats(chainId || 2)
   const tvl = useTvl()
 
@@ -359,7 +392,6 @@ export default function Transfer() {
 
   useEffect(() => {
     setTotalTvl(Math.round(tvl))
-
   }, [tvl])
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
@@ -374,16 +406,13 @@ export default function Transfer() {
   const priceInUsd = useCoinGeckoPrice
 
   useEffect(() => {
-    
-    if(currentToken.assetBase) {
-      priceInUsd(tickerTocCoinbaseName[currentToken.assetBase])
-      .then(data => {
-        const usd = Object.values(data)[0]      
+    if (currentToken.assetBase) {
+      priceInUsd(tickerTocCoinbaseName[currentToken.assetBase]).then(data => {
+        const usd = Object.values(data)[0]
         setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
-        console.log('priceTokenInUsd :>> ', priceTokenInUsd);
+        console.log('priceTokenInUsd :>> ', priceTokenInUsd)
       })
     }
-  
   }, [priceInUsd, currentToken])
   // track the input amount, on change, if crosschain, dispatch
   // eslint-disable-next-line
@@ -494,23 +523,23 @@ export default function Transfer() {
   const hideConfirmTransferModal = () => {
     if (crosschainTransferStatus !== ChainTransferState.ApprovalSubmitted) {
       startNewSwap()
-      handleTypeInput('');
+      handleTypeInput('')
     }
     setConfirmTransferModalOpen(false)
   }
   const showConfirmTransferModal = async () => {
     if (transferModalLoading) {
-      return;
+      return
     }
     if (currentToken.address) {
-      setTransferModalLoading(true);
+      setTransferModalLoading(true)
       try {
         await GetAllowance()
-        setTransferModalLoading(false);
+        setTransferModalLoading(false)
         setConfirmTransferModalOpen(true)
       } catch (err) {
-        console.log('get allowance error', err);
-        setTransferModalLoading(false);
+        console.log('get allowance error', err)
+        setTransferModalLoading(false)
       }
     }
   }
@@ -536,26 +565,30 @@ export default function Transfer() {
 
   useEffect(() => {
     if (targetChain && currentToken) {
-      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(chain => chain === +targetChain.chainID)
+      const hasTargetChainToTransferToken = currentToken?.allowedChainsToTransfer?.some(
+        chain => chain === +targetChain.chainID
+      )
       setIsTransferToken(!!hasTargetChainToTransferToken)
     }
   }, [targetChain, currentToken])
 
   // quick enable or disable of bridge
-  const bridgeEnabled = true;
+  const bridgeEnabled = true
   const isNotBridgeable = () => {
-    return isCrossChain &&
-    !!transferAmount.length &&
-    transferAmount !== '0' &&
-    !!currentToken &&
-    isTransferToken &&
-    targetChain.chainID !== "" &&
-    targetChain.name.length > 0 &&
-    !!currencies[Field.INPUT] 
+    return (
+      isCrossChain &&
+      !!transferAmount.length &&
+      transferAmount !== '0' &&
+      !!currentToken &&
+      isTransferToken &&
+      targetChain.chainID !== '' &&
+      targetChain.name.length > 0 &&
+      !!currencies[Field.INPUT]
+    )
   }
 
   return (
-    <>
+    <PageContainer>
       <StyledTitle>Bridges</StyledTitle>
       <FlexContainer>
         <TokenWarningModal
@@ -585,41 +618,45 @@ export default function Transfer() {
 
         <ChainBridgeModal isOpen={showChainBridgeModal} onDismiss={hideChainBridgeModal} />
 
-        {!bridgeEnabled && <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>}
+        {!bridgeEnabled && (
+          <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>
+        )}
         <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
-          <BubbleBase />
-          {/* <Heading>Cross-Chain Bridge</Heading>*/}
-          <Heading> <Description>You'll send</Description>
-            <ChainBlock><BlockchainLogo
-              size="60px"
-              blockchain={CHAIN_LABELS[chainId ?? 1]}
-              style={{ marginLeft: '0px', marginRight: '20px' }}
-            />
+          <Heading>
+            <Description>You'll send</Description>
+            <ChainBlock>
+              <BlockchainLogo
+                size="60px"
+                blockchain={CHAIN_LABELS[chainId ?? 1]}
+                style={{ marginLeft: '0px', marginRight: '1rem' }}
+              />
               <Description>{currentChain.name}</Description>
             </ChainBlock>
           </Heading>
-          <AutoColumn gap={'md'}>
 
-            {<CurrencyInputPanel
-              blockchain={isCrossChain ? currentChain.name : getChainName()}
-              label={''}
-              value={formattedAmounts[Field.INPUT]}
-              showMaxButton={!atMaxAmountInput}
-              currency={currencies[Field.INPUT]}
-              onUserInput={handleTypeInput}
-              onMax={handleMaxInput}
-              onCurrencySelect={handleInputSelect}
-              otherCurrency={currencies[Field.OUTPUT]}
-              isCrossChain={isCrossChain}
-              transferPage
-              id="swap-currency-input"
-            />
-            }
-            <FlexBlock>
-              <BelowForm>{`Estimated Value - $ ${(Number(formattedAmounts[Field.INPUT]) * priceTokenInUsd).toFixed(4)}`}</BelowForm>
-              <BelowForm>{`Available Balance ${Number(currentBalance).toFixed(4)} ${currentToken.symbol}`}</BelowForm>
-            </FlexBlock>
-            {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
+          <CurrencyInputPanel
+            blockchain={isCrossChain ? currentChain.name : getChainName()}
+            label={''}
+            value={formattedAmounts[Field.INPUT]}
+            showMaxButton={!atMaxAmountInput}
+            currency={currencies[Field.INPUT]}
+            onUserInput={handleTypeInput}
+            onMax={handleMaxInput}
+            onCurrencySelect={handleInputSelect}
+            otherCurrency={currencies[Field.OUTPUT]}
+            isCrossChain={isCrossChain}
+            transferPage
+            id="swap-currency-input"
+            style={{ padding: '25px 0' }}
+          />
+
+          <FlexBlock>
+            <BelowForm>{`Estimated Value - $ ${(Number(formattedAmounts[Field.INPUT]) * priceTokenInUsd).toFixed(
+              4
+            )}`}</BelowForm>
+            <BelowForm>{`Available Balance ${Number(currentBalance).toFixed(4)} ${currentToken.symbol}`}</BelowForm>
+          </FlexBlock>
+          {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
                 <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
               </RowBetweenTransfer>
               <RowBetweenTransfer>
@@ -673,16 +710,18 @@ export default function Transfer() {
                   )}
                 </BottomGroupingTransfer>
               </RowBetweenTransfer> */}
-          </AutoColumn>
         </TransferBodyWrapper>
         <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} />
         {/* // second form */}
         <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
           <BubbleBase />
           {/* <Heading>Cross-Chain Bridge*/}
-          <Heading><Description>You'll receive</Description></Heading>
-          <AutoColumn gap={'md'}>
-            <FlexBlock><BlockchainSelector
+          <Heading>
+            <Description>You'll receive</Description>
+          </Heading>
+
+          <FlexBlock style={{ padding: '20px 0' }}>
+            <BlockchainSelector
               isCrossChain={isCrossChain}
               supportedChains={SUPPORTED_CHAINS}
               blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
@@ -691,32 +730,27 @@ export default function Transfer() {
               onShowTransferChainModal={showTransferChainModal}
             />
 
-              {<CurrencyInputPanel
-                blockchain={isCrossChain ? currentChain.name : getChainName()}
-                label={''}
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxAmountInput}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                isCrossChain={isCrossChain}
-                transferPage
-                hideCurrencySelect={true}
-                id="swap-currency-input"
-                isRightInput={true}
-              />
-              }</FlexBlock>
+            <CurrencyInputPanel
+              blockchain={isCrossChain ? currentChain.name : getChainName()}
+              label={''}
+              value={formattedAmounts[Field.INPUT]}
+              showMaxButton={!atMaxAmountInput}
+              currency={currencies[Field.INPUT]}
+              onUserInput={handleTypeInput}
+              onMax={handleMaxInput}
+              onCurrencySelect={handleInputSelect}
+              otherCurrency={currencies[Field.OUTPUT]}
+              isCrossChain={isCrossChain}
+              transferPage
+              hideCurrencySelect={true}
+              id="swap-currency-input"
+            />
+          </FlexBlock>
 
-            <TextBlockRight> 
-              <BelowForm style={{"textAlign": "end"}}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${currentToken.symbol}`}</BelowForm>
-            </TextBlockRight>
-            
-          </AutoColumn>
+          <BelowForm style={{ textAlign: 'end' }}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${
+            currentToken.symbol
+          }`}</BelowForm>
         </TransferBodyWrapper>
-
-       
 
         {(chainId === undefined || account === undefined) && (
           <CustomLightSpinner
@@ -735,13 +769,22 @@ export default function Transfer() {
 
         {!isCrossChain && <AdvancedSwapDetailsDropdown trade={trade} chainId={chainId} />}
       </FlexContainer>
-      {isInsufficient && <UnciffientBlock>
-        <img src={require('../../assets/images/new-design/warning.svg')} style={{position: "absolute", left: "30px",
-    top: "30px"}}/>
-        <div >Insufficient balance!</div>
-        </UnciffientBlock>}
-      <BelowForm>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-      <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>Transfer</ButtonTranfserLight> 
-    </>
+      <CenteredInfo>
+        {' '}
+        {isInsufficient && (
+          <UnciffientBlock>
+            <img
+              src={require('../../assets/images/new-design/warning.svg')}
+              style={{ position: 'absolute', left: '30px', top: '30px' }}
+            />
+            <div>Insufficient balance!</div>
+          </UnciffientBlock>
+        )}
+        <BelowForm>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
+        <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
+          Transfer
+        </ButtonTranfserLight>
+      </CenteredInfo>
+    </PageContainer>
   )
 }
