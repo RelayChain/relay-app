@@ -15,8 +15,10 @@ import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 
 const InputRow = styled.div<{ selected: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  ${({ theme }) => theme.flexRowNoWrap}
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
 `};
@@ -34,7 +36,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   border: none;
   outline: none;
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  margin-left: 50px;
+  margin-left: 10px;
   transition: all 0.2s ease-in-out;
   min-width: 150px;
   max-width: 220px;
