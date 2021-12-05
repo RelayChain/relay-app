@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import ClaimModal from '../claim/ClaimModal'
 import MenuBurger from 'components/MenuBurger'
 import ModalMenu from 'components/ModalMenu'
+import ModalMore from './../ModalMore'
 import Web3Status from '../Web3Status'
 import styled from 'styled-components'
 
@@ -94,7 +95,7 @@ const Header = () => {
         <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} />
       </MenuBar>
       <Web3Status />
-      <ModalMenu isOpen={open} onDismiss={() => setOpen(false)} />
+      <ModalMore isOpen={open} onDismiss={() => setOpen(false)} />
     </HeaderFrame>
   )
 }

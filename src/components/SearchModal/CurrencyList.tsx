@@ -194,7 +194,7 @@ function CurrencyRow({
       </Column>
       <TokenTags currency={currency} />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} currencyName={currency?.name} /> : account && balance === undefined ? <Loader /> : `${0}${currency?.symbol}`}
+        {balance ? <Balance balance={balance} currencyName={currency?.name} /> : account && balance === undefined ? <Loader /> : `${0}`}
       </RowFixed>
     </MenuItem>
   )
