@@ -5,8 +5,8 @@ import { ArrowRight } from '../Arrows'
 import BlockchainLogo from '../BlockchainLogo'
 import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
-import styled from 'styled-components'
 import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
+import styled from 'styled-components'
 
 const Container = styled.div`
   h5 {
@@ -128,6 +128,7 @@ align-items: center;
 `
 const TextBlockSelect = styled.span`
   margin-left: 5px;
+  font-size: 1rem;
 `
 const StyledSelect = styled.div`
   padding: 7px;

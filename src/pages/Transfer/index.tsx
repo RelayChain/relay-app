@@ -1,32 +1,4 @@
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
-import BlockchainLogo from 'components/BlockchainLogo'
-import { ChartWidget } from 'components/ChartWidget'
-import PageContainer from 'components/PageContainer'
-import { tickerTocCoinbaseName } from 'constants/lists'
-import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
-import useStats from 'hooks/useStats'
-import useTvl from 'hooks/useTvl'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
-import Circle2 from '../../assets/images/circle.svg'
-import BlockchainSelector from '../../components/BlockchainSelector'
-import BubbleBase from '../../components/BubbleBase'
-import { ButtonPink } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
-import ChainBridgeModal from '../../components/ChainBridgeModal'
-import ConfirmTransferModal from '../../components/ConfirmTransferModal'
-import CrossChainModal from '../../components/CrossChainModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween } from '../../components/Row'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import { BottomGrouping } from '../../components/swap/styleds'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
-import { AppDispatch } from '../../state'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import {
   ChainTransferState,
   CrosschainChain,
@@ -36,21 +8,51 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
   useCrosschainHooks,
   useCrosschainState
 } from '../../state/crosschain/hooks'
-import { Field } from '../../state/swap/actions'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { RowBetween, RowFixed } from '../../components/Row'
+import styled, { ThemeContext } from 'styled-components'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
+
+import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import { AppDispatch } from '../../state'
+import { ArrowDown } from 'react-feather'
+import BlockchainLogo from 'components/BlockchainLogo'
+import BlockchainSelector from '../../components/BlockchainSelector'
+import { BottomGrouping } from '../../components/swap/styleds'
+import BubbleBase from '../../components/BubbleBase'
+import { ButtonPink } from '../../components/Button'
+import ChainBridgeModal from '../../components/ChainBridgeModal'
+import { ChartWidget } from 'components/ChartWidget'
+import Circle2 from '../../assets/images/circle.svg'
+import ConfirmTransferModal from '../../components/ConfirmTransferModal'
+import CrossChainModal from '../../components/CrossChainModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { CustomLightSpinner } from '../../theme/components'
+import { Field } from '../../state/swap/actions'
+import { GreyCard } from '../../components/Card'
+import PageContainer from 'components/PageContainer'
+import TokenWarningModal from '../../components/TokenWarningModal'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { tickerTocCoinbaseName } from 'constants/lists'
+import { useActiveWeb3React } from '../../hooks'
+import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
+import { useCurrency } from '../../hooks/Tokens'
+import { useDispatch } from 'react-redux'
+import useStats from 'hooks/useStats'
+import useTvl from 'hooks/useTvl'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const numeral = require('numeral')
 
@@ -91,7 +93,7 @@ const StyledTitle = styled.h1`
   margin-top: 50px;
   margin-bottom: 20px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin: 20px auto;  
+  margin: 20px auto;
   display: flex;
   text-align: center;
   justify-content: center;
@@ -167,6 +169,7 @@ const TransferBodyWrapper = styled.div`
   background: rgb(18, 26, 56);
   width: 100%;
   max-width: 585px;
+  min-height: 316px;
   padding: 2rem;
   position: relative;
   border: 2px solid transparent;
@@ -189,9 +192,12 @@ const TransferBodyWrapper = styled.div`
       pointer-events: none;
     }
   }
+  &.highlight {
+    border: 2px solid #B368FC;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   padding: 1.5rem;
- 
+
   `}
 `
 const ChartLiquidityWrapper = styled.div`
@@ -244,6 +250,8 @@ const BelowForm = styled.div`
   line-height: 17px;
   color: #ffffff;
   padding-top: 25px;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
 `
 const TransferButton = styled(GreyCard)`
   text-align: center;
@@ -346,6 +354,7 @@ export default function Transfer() {
   } = useCrosschainState()
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
+  const theme = useContext(ThemeContext)
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -587,6 +596,9 @@ export default function Transfer() {
     )
   }
 
+  console.log("target chan ======== ", targetChain);
+  console.log("currentToken ========== ", currentToken);
+
   return (
     <PageContainer>
       <StyledTitle>Bridges</StyledTitle>
@@ -621,9 +633,9 @@ export default function Transfer() {
         {!bridgeEnabled && (
           <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>
         )}
-        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
+        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}>
           <Heading>
-            <Description>You'll send</Description>
+            <Description>Sending From: </Description>
             <ChainBlock>
               <BlockchainLogo
                 size="60px"
@@ -634,28 +646,22 @@ export default function Transfer() {
             </ChainBlock>
           </Heading>
 
-          <CurrencyInputPanel
-            blockchain={isCrossChain ? currentChain.name : getChainName()}
-            label={''}
-            value={formattedAmounts[Field.INPUT]}
-            showMaxButton={!atMaxAmountInput}
-            currency={currencies[Field.INPUT]}
-            onUserInput={handleTypeInput}
-            onMax={handleMaxInput}
-            onCurrencySelect={handleInputSelect}
-            otherCurrency={currencies[Field.OUTPUT]}
-            isCrossChain={isCrossChain}
-            transferPage
-            id="swap-currency-input"
-            style={{ padding: '25px 0' }}
-          />
+          <RowFixed style={{ margin: '2rem auto 2rem auto'}}>
+            <ArrowDown size="30" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
+          </RowFixed>
 
-          <FlexBlock>
-            <BelowForm>{`Estimated Value - $ ${(Number(formattedAmounts[Field.INPUT]) * priceTokenInUsd).toFixed(
-              4
-            )}`}</BelowForm>
-            <BelowForm>{`Available Balance ${Number(currentBalance).toFixed(4)} ${currentToken.symbol}`}</BelowForm>
-          </FlexBlock>
+          <Heading>
+            <Description>Sending To: </Description>
+            <BlockchainSelector
+              isCrossChain={isCrossChain}
+              supportedChains={SUPPORTED_CHAINS}
+              blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
+              transferTo={targetChain}
+              onShowCrossChainModal={showCrossChainModal}
+              onShowTransferChainModal={showTransferChainModal}
+            />
+          </Heading>
+
           {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
                 <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
               </RowBetweenTransfer>
@@ -713,23 +719,14 @@ export default function Transfer() {
         </TransferBodyWrapper>
         <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} />
         {/* // second form */}
-        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : ''}>
+        <TransferBodyWrapper className={!bridgeEnabled || targetChain?.chainID?.length === 0 ? 'offline' : currentToken?.name?.length === 0 ? 'highlight' : ''}>
           <BubbleBase />
           {/* <Heading>Cross-Chain Bridge*/}
           <Heading>
-            <Description>You'll receive</Description>
+            <Description>Enter token and amount:</Description>
           </Heading>
 
           <FlexBlock style={{ padding: '20px 0' }}>
-            <BlockchainSelector
-              isCrossChain={isCrossChain}
-              supportedChains={SUPPORTED_CHAINS}
-              blockchain={chainId ? CHAIN_LABELS[chainId] : undefined}
-              transferTo={targetChain}
-              onShowCrossChainModal={showCrossChainModal}
-              onShowTransferChainModal={showTransferChainModal}
-            />
-
             <CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
@@ -742,12 +739,12 @@ export default function Transfer() {
               otherCurrency={currencies[Field.OUTPUT]}
               isCrossChain={isCrossChain}
               transferPage
-              hideCurrencySelect={true}
               id="swap-currency-input"
+              style={{ padding: '25px 0' }}
             />
           </FlexBlock>
 
-          <BelowForm style={{ textAlign: 'end' }}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${
+          <BelowForm style={{ textAlign: 'end', marginTop: '0', marginBottom: '0', paddingTop: '0' }}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${
             currentToken.symbol
           }`}</BelowForm>
         </TransferBodyWrapper>
@@ -785,6 +782,8 @@ export default function Transfer() {
           Transfer
         </ButtonTranfserLight>
       </CenteredInfo>
+      <RowFixed style={{ margin: '1rem' }}>
+      </RowFixed>
     </PageContainer>
   )
 }

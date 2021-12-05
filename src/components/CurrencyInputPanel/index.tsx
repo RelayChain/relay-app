@@ -1,18 +1,19 @@
 import { Currency, Pair } from '@zeroexchange/sdk'
-import { darken } from 'polished'
 import React, { useCallback, useContext, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { StakingInfo } from 'state/stake/hooks'
 import styled, { ThemeContext } from 'styled-components'
-import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+
+import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
 import CurrencyLogo from '../CurrencyLogo'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween } from '../Row'
-import BlockchainSearchModal from '../SearchModal/BlockchainSearchModal'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
+import { StakingInfo } from 'state/stake/hooks'
+import { darken } from 'polished'
+import { useActiveWeb3React } from '../../hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useTranslation } from 'react-i18next'
 
 const InputRow = styled.div<{ selected: boolean }>`
   display: flex;
@@ -24,7 +25,7 @@ const InputRow = styled.div<{ selected: boolean }>`
 `};
 `
 const StyledNumericalInput = styled(NumericalInput)`
-  box-shadow: 3px 0 1px #ffffff40, -3px 0 1px #ffffff40;
+  box-shadow: 0 0 0 2px #ffffff40;
 `
 
 const InputWrap = styled.div`
