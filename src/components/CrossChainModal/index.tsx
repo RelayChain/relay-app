@@ -19,7 +19,7 @@ interface CrossChainModalProps {
 }
 
 const ModalContainer = styled.div`
-  padding: 1.5rem;
+  padding: 1rem;
   width: 100%;
   h5 {
     font-weight: bold;
@@ -58,7 +58,7 @@ const ModalContainer = styled.div`
       border-radius: 12px;
       align-items: center;
       &.off {
-        opacity: .35;
+        opacity: 0.35;
         pointer-events: none;
         user-select: none;
         &:after {
@@ -100,6 +100,17 @@ const ModalContainer = styled.div`
       span {
       }
     }
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #cccccc;
+      border-radius: 11px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #d34fa0;
+      border-radius: 11px;
+    }
   }
 `
 
@@ -116,8 +127,8 @@ export default function CrossChainModal({
   const { account } = useActiveWeb3React()
   const switchChain = async (chain: CrosschainChain) => {
     let { ethereum } = window
-    const {allCrosschainData} = getCrosschainState()
-    if (ethereum ) {
+    const { allCrosschainData } = getCrosschainState()
+    if (ethereum) {
       let chainsConfig = null
       for (const item of allCrosschainData.chains) {
         if (item.chainId === +chain.chainID) {
@@ -126,39 +137,33 @@ export default function CrossChainModal({
       }
       if (chainsConfig) {
         const hexChainId = '0x' + Number(chainsConfig.networkId).toString(16)
-        const data = chain.chainID === '1' ? 
-        [{ chainId: '0x1' }, account]
-        : [
-          {
-            chainId: hexChainId,
-            chainName: chainsConfig.name,
-            nativeCurrency: {
-              name: chainsConfig.nativeTokenSymbol,
-              symbol: chainsConfig.nativeTokenSymbol,
-              decimals: 18
-            },
-            rpcUrls: [chainsConfig.rpcUrl],
-            blockExplorerUrls: [chainsConfig.blockExplorer]
-          }
-        ]
+        const data =
+          chain.chainID === '1'
+            ? [{ chainId: '0x1' }, account]
+            : [
+                {
+                  chainId: hexChainId,
+                  chainName: chainsConfig.name,
+                  nativeCurrency: {
+                    name: chainsConfig.nativeTokenSymbol,
+                    symbol: chainsConfig.nativeTokenSymbol,
+                    decimals: 18
+                  },
+                  rpcUrls: [chainsConfig.rpcUrl],
+                  blockExplorerUrls: [chainsConfig.blockExplorer]
+                }
+              ]
         /* eslint-disable */
         const ethMethod = chain.chainID === '1' ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
-        const tx =
-          ethereum && ethereum.request ?  
-          ethereum['request']({ method: ethMethod, params: data }).catch() 
-            : ''
+        const tx = ethereum && ethereum.request ? ethereum['request']({ method: ethMethod, params: data }).catch() : ''
 
         if (tx !== '') {
-          tx
-            .then(t => {
-              dispatch(
-                setCrosschainLastTimeSwitched({})
-              )
-              setTimeout(() => {
-                window.location.reload()
-              }, 100);
-            })
-
+          tx.then(t => {
+            dispatch(setCrosschainLastTimeSwitched({}))
+            setTimeout(() => {
+              window.location.reload()
+            }, 100)
+          })
         } else {
           setMetamaskError(true)
         }
@@ -176,32 +181,33 @@ export default function CrossChainModal({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </li>
-          {supportedChains.filter(x => x.name.toLowerCase() !== activeChain?.toLowerCase()).map((chain: CrosschainChain) => (
-            <li
-              key={chain.chainID}
-              onClick={() => {
-                if (isTransfer) {
-                  selectTransferChain(chain)
-                  onDismiss()
-                } 
-                else if (isMetamaskError) {
-                  alert('The wallet is not responding now. Please try to change your RPC inside your wallet.')
-                  onDismiss()
-                } else {
-                  switchChain(chain)
-                  onDismiss()
-                }
-              }}
-              className={`
+          {supportedChains
+            .filter(x => x.name.toLowerCase() !== activeChain?.toLowerCase())
+            .map((chain: CrosschainChain) => (
+              <li
+                key={chain.chainID}
+                onClick={() => {
+                  if (isTransfer) {
+                    selectTransferChain(chain)
+                    onDismiss()
+                  } else if (isMetamaskError) {
+                    alert('The wallet is not responding now. Please try to change your RPC inside your wallet.')
+                    onDismiss()
+                  } else {
+                    switchChain(chain)
+                    onDismiss()
+                  }
+                }}
+                className={`
               ${activeChain === chain.name && !isTransfer ? 'active' : ''}
               ${(activeChain === chain.name && isTransfer) || chain.name === 'Polkadot' ? 'disabled' : ''}
               ${isTransfer && activeChain !== chain.name ? 'selectable' : ''}
             `}
-            >
-              <BlockchainLogo size="28px" blockchain={chain.name} />
-              <span>{chain.name}</span>
-            </li>
-          ))}
+              >
+                <BlockchainLogo size="28px" blockchain={chain.name} />
+                <span>{chain.name}</span>
+              </li>
+            ))}
         </ul>
       </ModalContainer>
     </Modal>
