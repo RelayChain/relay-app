@@ -1,10 +1,11 @@
+import { NavLink, useLocation } from 'react-router-dom'
+import React, { useState } from 'react'
+
+import ClaimModal from '../claim/ClaimModal'
 import MenuBurger from 'components/MenuBurger'
 import ModalMenu from 'components/ModalMenu'
-import React, { useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import styled from 'styled-components'
-import ClaimModal from '../claim/ClaimModal'
 import Web3Status from '../Web3Status'
+import styled from 'styled-components'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -33,7 +34,7 @@ const MenuBar = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-right: 30px;
+  margin-right: 4rem;
   margin-left: auto;
 `
 const StyledNavLink = styled(NavLink)`
@@ -46,12 +47,12 @@ const StyledNavLink = styled(NavLink)`
   color: #ffffff;
   padding: 0 15px;
 `
-// const MenuBurgerStyled = styled(MenuBurger)`
-//   display: none;
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//     display: block;
-// `};
-// `
+const MenuBurgerStyled = styled(MenuBurger)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+`};
+`
 
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -90,7 +91,7 @@ const Header = () => {
         >
           Staking
         </StyledNavLink>
-        {/* <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} /> */}
+        <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} />
       </MenuBar>
       <Web3Status />
       <ModalMenu isOpen={open} onDismiss={() => setOpen(false)} />
