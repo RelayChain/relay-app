@@ -26,6 +26,13 @@ const InputRow = styled.div<{ selected: boolean }>`
 const StyledNumericalInput = styled(NumericalInput)`
   box-shadow: 3px 0 1px #ffffff40, -3px 0 1px #ffffff40;
 `
+
+const InputWrap = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`
+
 const CurrencySelect = styled.button<{ selected: boolean }>`
   display: flex;
   justify-content: space-between;
@@ -139,22 +146,17 @@ gap: 1rem;
 `};
 `
 const StyledBalanceMax = styled.button`
-  width: 72px;
-  height: 43px;
+  height: 35px;
   position: absolute;
-  left: 170px;
+  border: 2px solid #ad00ff;
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
-  font-family: Montserrat;
-  font-style: normal;
+  font-size: 0.875rem;
   font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center;
-  color: #ffffff;
   cursor: pointer;
-  margin-right: 0.5rem;
-
+  right: 10px;
+  margin-top: 2px;
+  color: #fff;
   transition: all 0.2s ease-in-out;
   padding-left: 10px;
   padding-right: 10px;
@@ -164,10 +166,6 @@ const StyledBalanceMax = styled.button`
   :focus {
     outline: none;
   }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin: 15px auto 0;
-  `};
 `
 
 interface CurrencyInputPanelProps {
@@ -263,7 +261,7 @@ export default function CurrencyInputPanel({
             selected={disableCurrencySelect}
           >
             {!hideInput && (
-              <>
+              <InputWrap>
                 <StyledNumericalInput
                   className="token-amount-input"
                   value={value}
@@ -276,7 +274,7 @@ export default function CurrencyInputPanel({
                 {account && altCurrency && showMaxButton && hasABalance && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
                 )}
-              </>
+              </InputWrap>
             )}
             {!hideCurrencySelect && (
               <CurrencySelect

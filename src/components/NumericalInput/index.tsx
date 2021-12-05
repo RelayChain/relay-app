@@ -43,7 +43,6 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
-  text-align: center;
   font-size: 30px;
   color: #C8CEFF;
   ::placeholder {
