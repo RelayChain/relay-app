@@ -253,6 +253,9 @@ const BelowForm = styled.div`
   padding-top: 25px;
   margin-top: .5rem;
   margin-bottom: .5rem;
+  &.disabled {
+    opacity: .25;
+  }
 `
 const TransferButton = styled(GreyCard)`
   text-align: center;
@@ -295,6 +298,9 @@ const FrameBlock = styled.img`
   width: 90px;
   height: 90px;
   margin 10px;
+  &.disabled {
+    opacity: .25;
+  }
 `
 const ButtonTranfserLight = styled(ButtonPink)`
   width: 220px;
@@ -597,9 +603,6 @@ export default function Transfer() {
     )
   }
 
-  console.log("target chan ======== ", targetChain);
-  console.log("currentToken ========== ", currentToken);
-
   return (
     <PageContainer>
       <StyledTitle>Bridges</StyledTitle>
@@ -634,7 +637,7 @@ export default function Transfer() {
         {!bridgeEnabled && (
           <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>
         )}
-        <TransferBodyWrapper className={!bridgeEnabled ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}>
+        <TransferBodyWrapper className={!bridgeEnabled || !account ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}>
           <Heading>
             <Description>Sending From: </Description>
             <ChainBlock>
@@ -718,7 +721,7 @@ export default function Transfer() {
                 </BottomGroupingTransfer>
               </RowBetweenTransfer> */}
         </TransferBodyWrapper>
-        <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} />
+        <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} className={!account ? 'disabled' : ''} />
         {/* // second form */}
         <TransferBodyWrapper className={!bridgeEnabled || targetChain?.chainID?.length === 0 ? 'offline' : currentToken?.name?.length === 0 ? 'highlight' : ''}>
           <BubbleBase />
@@ -778,7 +781,7 @@ export default function Transfer() {
             <div>Insufficient balance!</div>
           </UnciffientBlock>
         )}
-        <BelowForm>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
+        <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
         </ButtonTranfserLight>
