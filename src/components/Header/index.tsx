@@ -48,6 +48,10 @@ const StyledNavLink = styled(NavLink)`
   color: #ffffff;
   padding: 0 15px;
 `
+const LogoNavLink = styled(NavLink)`
+  display: flex;
+  flex-direction: row;
+`
 const MenuBurgerStyled = styled(MenuBurger)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -69,8 +73,10 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <div className="relay-logo"></div>
-          <div className="relay-name"></div>
+          <LogoNavLink to={'/cross-chain-bridge-transfer'}>
+            <div className="relay-logo" style={{ cursor: 'pointer'}}></div>
+            <div className="relay-name" style={{ cursor: 'pointer'}}></div>
+          </LogoNavLink>
         </LogoContainer>
       </HideMedium>
       <MenuBar>

@@ -114,10 +114,11 @@ const FlexBlock = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-grow: 1;
   justify-content: space-between;
+  width: 100%;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
-
 `};
 `
 
@@ -740,7 +741,7 @@ export default function Transfer() {
               isCrossChain={isCrossChain}
               transferPage
               id="swap-currency-input"
-              style={{ padding: '25px 0' }}
+              style={{ padding: '25px 0', width: '100%' }}
             />
           </FlexBlock>
 

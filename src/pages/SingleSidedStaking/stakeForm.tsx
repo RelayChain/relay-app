@@ -1,16 +1,17 @@
+import { BigNumber, ethers, utils } from 'ethers'
+import { ButtonGradient, ButtonOutlined } from '../../components/Button'
+import React, { useEffect, useState } from 'react'
+import { calculateGasMargin, getEtherscanLink } from '../../utils'
+import { useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
+
 import { MaxUint256 } from '@ethersproject/constants'
 import PlainPopup from 'components/Popups/PlainPopup'
-import { BigNumber, ethers, utils } from 'ethers'
-import useGasPrice from 'hooks/useGasPrice'
-import React, { useEffect, useState } from 'react'
 import { PopupContent } from 'state/application/actions'
-import { useCrosschainState } from 'state/crosschain/hooks'
-import styled from 'styled-components'
-import { ButtonGradient, ButtonOutlined } from '../../components/Button'
-import { useActiveWeb3React } from '../../hooks'
-import { useRelayTokenContract, useStakingAloneContract } from '../../hooks/useContract'
-import { calculateGasMargin, getEtherscanLink } from '../../utils'
 import { returnStakingConfig } from './stakingConfig'
+import styled from 'styled-components'
+import { useActiveWeb3React } from '../../hooks'
+import { useCrosschainState } from 'state/crosschain/hooks'
+import useGasPrice from 'hooks/useGasPrice'
 
 const InputWrap = styled.div`
   display: flex;
@@ -82,7 +83,7 @@ const StakeWrap = styled.div`
 `
 
 const StyledNumericalInput = styled.input`
-  box-shadow: 3px 0 1px #ffffff40, -3px 0 1px #ffffff40;
+  box-shadow: 0 0 0 2px #ffffff40;
   position: relative;
   font-weight: 600;
   outline: none;
