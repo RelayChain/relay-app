@@ -37,3 +37,27 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
 
 // default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = []
+
+export const tickerTocCoinbaseName = {
+  'RELAY': 'relay-token',
+  'AVAX': 'avalanche-2',
+  'ETH': 'ethereum',
+  'MAI': 'mimatic',
+  'MATIC': 'matic-network',
+  'HT': 'huobi-token',
+  'GROW': 'grow-token-2',
+  'CHART': 'chartex',
+  'CNR': 'canary',
+  'FTM': 'fantom',
+  'ONE': 'harmony',
+  'IOTX': 'iotex',
+  'CRO': 'crypto-com-chain',
+  'MOVR': 'moonriver',
+  'SDN': 'shiden',
+  'BNB': 'binancecoin'
+
+
+
+
+
+}

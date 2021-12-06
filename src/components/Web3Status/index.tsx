@@ -1,33 +1,39 @@
-import { CHAIN_LABELS, NetworkContextName } from '../../constants'
-import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import styled, { css } from 'styled-components'
-import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
-
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { AppDispatch } from 'state'
-import { ButtonSecondary } from '../Button'
-import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { NETWORK_LABELS, NETWORK_SYMBOLS } from '@zeroexchange/sdk'
 import CrossChainModal from 'components/CrossChainModal'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import Identicon from '../Identicon'
-import Loader from '../Loader'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import { RowBetween } from '../Row'
-import { TransactionDetails } from '../../state/transactions/reducer'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import WalletModal from '../WalletModal'
-import { shortenAddress } from '../../utils'
-import { useActiveWeb3React } from 'hooks'
+import PlainPopup from 'components/Popups/PlainPopup'
+import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
+import { useActiveWeb3React, useEagerConnect } from 'hooks'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { Text } from 'rebass'
+import { AppDispatch } from 'state'
+import { PopupContent } from 'state/application/actions'
+import { CrosschainChain, setTargetChain } from 'state/crosschain/actions'
+import { useCrossChain, useCrosschainState } from 'state/crosschain/hooks'
+import styled, { css } from 'styled-components'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import PortisIcon from '../../assets/images/portisIcon.png'
+import SmallDropDown from '../../assets/images/small-dropdown-white-select.svg'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { CHAIN_LABELS, NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useTranslation } from 'react-i18next'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
+import { TransactionDetails } from '../../state/transactions/reducer'
+import { shortenAddress } from '../../utils'
+import BlockchainLogo from '../BlockchainLogo'
+import { ButtonGradient, ButtonSecondary } from '../Button'
+import { YellowCard } from '../Card'
+import Identicon from '../Identicon'
+import Loader from '../Loader'
+import { RowBetween } from '../Row'
+import WalletModal from '../WalletModal'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -51,6 +57,19 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
     outline: none;
   }
 `
+
+const BalanceText = styled(Text)`
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 // const Web3StatusError = styled(Web3StatusGeneric)`
 //   background-color: ${({ theme }) => theme.red1};
 //   border: 1px solid ${({ theme }) => theme.red1};
@@ -62,12 +81,12 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
 //   }
 // `
 
-const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
+const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-top: 12px;
   `};
@@ -81,7 +100,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
     faded &&
     css`
       background: rgba(103, 82, 247, 0.18);
-      border: 1px solid #6752F7;
+      border: 1px solid #6752f7;
       box-sizing: border-box;
       backdrop-filter: blur(7px);
       border-radius: 54px;
@@ -100,6 +119,11 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   font-family: Poppins;
   font-style: normal;
   font-weight: 600;
@@ -107,18 +131,15 @@ const Web3StatusConnected = styled.div`
   line-height: 19px;
   letter-spacing: 0.05em;
   color: #a7b1f4;
-  opacity: 0.56;
   font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  :focus {
+    border: 1px solid blue;
+  }
 `
 
-const StatusIconWrap = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 30px;
-`
-
-const Text = styled.p`
+const Paragraph = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,12 +150,108 @@ const Text = styled.p`
   font-weight: 500;
 `
 const HeaderRowBetween = styled(RowBetween)`
-    align-items: center;
+  align-items: center;
 `
 const LoaderWrap = styled.div`
-    display: flex;
-    margin-left: 10px;
+  display: flex;
+  margin-left: 10px;
 `
+
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
+
+const AccountConnectedCard = styled.div`
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgb(18, 26, 56);
+  border-radius: 50px;
+  min-width: 525px;
+  position: relative;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  &::after {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    content: '';
+    z-index: -1;
+    border-radius: 50px;
+    background: linear-gradient(4.66deg, rgba(255, 255, 255, 0.2) 3.92%, rgba(255, 255, 255, 0) 96.38%);
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding:0;
+    background: none;
+    width: 100%;
+    border-radius: 0;
+    min-width: 0;
+    flex-direction: row-reverse;
+    :after{
+      position:relative;
+    }
+  `};
+`
+
+const Layout = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  background: rgb(18, 26, 56);
+
+    padding: 15px 20px;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+  `};
+`
+
+const NetworkCard = styled(YellowCard)`
+  width: 243px;
+  padding: 7px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
+  border-radius: 54px;
+  transition: all 0.2s ease-in-out;
+  font-family: Poppins;
+  font-weight: 300;
+  font-size: 15px;
+  margin-right: 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  margin-right: 0px;
+
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+  `};
+  &:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+  }
+`
+const ArrowDownIcon = styled.img`
+  margin-left: auto;
+  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+`
+const popupContent: PopupContent = {
+  simpleAnnounce: {
+    message: 'Please wait 5 seconds to change RPCs again.'
+  }
+}
+
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -145,8 +262,6 @@ const SOCK = (
     🧦
   </span>
 )
-
-
 
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
@@ -180,11 +295,63 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
   return null
 }
 
+const NetworkSwitcher = () => {
+  const { chainId } = useActiveWeb3React()
+  const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
+
+  const availableChains = useMemo(() => {
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+  }, [allChains, chainId])
+
+  const [crossChainModalOpen, setShowCrossChainModal] = useState(false)
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
+
+  const hidePopupModal = () => setShowPopupModal(false)
+  const hideCrossChainModal = () => setShowCrossChainModal(false)
+
+  const showCrossChainModal = () => {
+    const currentTime = ~~(Date.now() / 1000)
+    if (lastTimeSwitched < currentTime) {
+      setShowCrossChainModal(true)
+    } else {
+      setShowPopupModal(true)
+      setTimeout(() => {
+        hidePopupModal()
+      }, 2000)
+    }
+  }
+
+  return (
+    <div onClick={showCrossChainModal}>
+      {chainId && NETWORK_LABELS[chainId] && (
+        <NetworkCard title={NETWORK_LABELS[chainId]}>
+          <BlockchainLogo
+            size="34px"
+            blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
+            style={{ margin: '0' }}
+          />
+
+          <span style={{ paddingLeft: '5px' }}>{NETWORK_LABELS[chainId]}</span>
+
+          <ArrowDownIcon src={SmallDropDown} alt="SmallDropDown" />
+        </NetworkCard>
+      )}
+      <CrossChainModal
+        isOpen={crossChainModalOpen}
+        isTransfer={false}
+        onDismiss={hideCrossChainModal}
+        supportedChains={availableChains}
+        selectTransferChain={() => {}}
+        activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
+      />
+      <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
+    </div>
+  )
+}
+
 function Web3StatusInner() {
-  useCrossChain();
-  const {
-    availableChains: allChains,
-  } = useCrosschainState()
+  useCrossChain()
+  const { availableChains: allChains } = useCrosschainState()
   const dispatch = useDispatch<AppDispatch>()
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
@@ -214,11 +381,30 @@ function Web3StatusInner() {
 
   const [chainIdError] = useState({} as UnsupportedChainIdError)
   const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
+  const [isSuccessAuth, userEthBalance] = useEagerConnect()
+
+  let label,
+    symbol = ''
+
+  if (chainId) {
+    label = NETWORK_LABELS[chainId]
+    symbol = NETWORK_SYMBOLS[label || 'Ethereum']
+  }
 
   useEffect(() => {
-    chainIdErrorPrev.current = (chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}') ?
-      chainIdErrorPrev.current = chainIdError : chainIdErrorPrev.current
+    chainIdErrorPrev.current =
+      chainIdErrorPrev.current !== chainIdError && chainIdError.toString() !== '{}'
+        ? (chainIdErrorPrev.current = chainIdError)
+        : chainIdErrorPrev.current
   }, [chainIdError])
+
+  const onSelectTransferChain = (chain: CrosschainChain) => {
+    dispatch(
+      setTargetChain({
+        chain
+      })
+    )
+  }
 
   // eslint-disable-next-line
   const checkCrossChainId = useCallback(() => {
@@ -249,46 +435,41 @@ function Web3StatusInner() {
 
     // eslint-disable-next-line
   }, [chainIdErrorPrev])
-  const onSelectTransferChain = (chain: CrosschainChain) => {
-    dispatch(
-      setTargetChain({
-        chain
-      })
-    )
-  }
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
-        {hasPendingTransactions ? (
-          <HeaderRowBetween>
-            <Text>{pending?.length} Pending</Text>
-            <LoaderWrap>
-            <Loader stroke="#6752F7" />
-            </LoaderWrap>
-          </HeaderRowBetween>
-        ) : (
-          <>
-            {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
-          </>
-        )}
-        {!hasPendingTransactions && connector && (
-          <StatusIconWrap>
-            <StatusIcon connector={connector} />
-          </StatusIconWrap>
-        )}
-      </Web3StatusConnected>
+      <AccountConnectedCard>
+        <NetworkSwitcher />
+        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal}>
+          <div>
+            <BalanceText>
+              {userEthBalance} {symbol}
+            </BalanceText>
+            {hasPendingTransactions ? (
+              <HeaderRowBetween>
+                <Paragraph>{pending?.length} Pending</Paragraph>
+                <LoaderWrap>
+                  <Loader stroke="#6752F7" />
+                </LoaderWrap>
+              </HeaderRowBetween>
+            ) : (
+              <>
+                {hasSocks ? SOCK : null}
+                <Paragraph>{ENSName || shortenAddress(account)}</Paragraph>
+              </>
+            )}
+          </div>
+          <HideMedium>{!hasPendingTransactions && connector && <StatusIcon connector={connector} />}</HideMedium>
+        </Web3StatusConnected>
+      </AccountConnectedCard>
     )
-  }
-  else if (error instanceof UnsupportedChainIdError) {
-    return (<ChainSwitcherContent />)
-  }
-  else {
+  } else if (error instanceof UnsupportedChainIdError) {
+    return <ChainSwitcherContent />
+  } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect Wallet')}</Text>
-      </Web3StatusConnect>
+      <ButtonGradient id="connect-wallet" onClick={toggleWalletModal} style={{ maxWidth: '300px', margin: '0 auto' }}>
+        {t('Connect Wallet')}
+      </ButtonGradient>
     )
   }
 }
@@ -314,7 +495,9 @@ export default function Web3Status() {
 
   return (
     <>
-      <Web3StatusInner />
+      <Layout>
+        <Web3StatusInner />
+      </Layout>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

@@ -1,6 +1,13 @@
 import {
-  Book, BookOpen, Info, Twitter, GitHub,
-  Youtube, BarChart, BarChart2, Paperclip
+  BarChart,
+  BarChart2,
+  Book,
+  BookOpen,
+  GitHub,
+  Info,
+  Paperclip,
+  Twitter,
+  Youtube
 } from 'react-feather'
 
 import { ExternalLink } from '../../theme'
@@ -91,7 +98,7 @@ const Cross = styled.div`
     transform: rotate(-45deg);
   }
 `
-const LogoBlock = styled.img` 
+const LogoBlock = styled.img`
   height: 20px;
   width: 20px;
 `
@@ -180,7 +187,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           </IconLink>
           CoinGecko
         </MenuItem>
-        <MenuItem id="link" href="https://github.com/ZeroExchange/">
+        <MenuItem id="link" href="https://github.com/RelayChain/">
           <IconLink>
             <GitHub size={20} />
           </IconLink>

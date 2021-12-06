@@ -146,14 +146,16 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
-  chains?.map(chain => {
-    if (chain.name !== currentChainName) {
-      result.push({
-        name: chain.name,
-        chainID: String(chain.chainId)
-      })
-    }
-  })
+  if(chains) {
+    chains?.map(chain => {
+      if (chain.name !== currentChainName) {
+        result.push({
+          name: chain.name,
+          chainID: String(chain.chainId)
+        })
+      }
+    })
+  }
 
   return result
 }
@@ -272,7 +274,6 @@ export function useCrosschainHooks() {
 
   const MakeDeposit = async () => {
     const crosschainState = getCrosschainState();
-    console.log('crosschainState.currentChain.chainID :>> ', crosschainState.currentChain.chainID);
     const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     try {
       dispatch(
@@ -280,8 +281,8 @@ export function useCrosschainHooks() {
           status: ChainTransferState.TransferPending
         })
       )
-      
-     
+
+
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
       const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
@@ -305,7 +306,7 @@ export function useCrosschainHooks() {
         utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
         crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
       const auxData = '0x00';
-    
+
 
       const resultDepositTx = await bridgeContract
         .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
@@ -396,6 +397,11 @@ export function useCrosschainHooks() {
       }
     } catch (err) {
       console.log(err);
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.TransferFailed
+        })
+      )
       return Promise.reject(err)
     }
   }
@@ -413,6 +419,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
+
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )

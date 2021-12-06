@@ -1,9 +1,9 @@
 import { ArrowDown, ArrowRight } from '../Arrows'
+import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 
 import { AutoColumn } from '../Column'
 import BlockchainLogo from '../BlockchainLogo'
-import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
 import { Currency } from '@zeroexchange/sdk'
 import CurrencyLogo from '../CurrencyLogo'
@@ -101,6 +101,21 @@ const ShowExtraSmall = styled.div`
   display: block;
 `};
 `
+const StyledButton = styled(ButtonOutlined)`
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  border-radius: 100px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  text-align: center;
+  color: #FFFFFF;
+  margin-top: 1rem;
+`
+
 export default function NotStarted({
   activeChain,
   transferTo,
@@ -179,9 +194,9 @@ export default function NotStarted({
       </RowFixed>
       <RowBetween></RowBetween>
       <RowFixed style={{ width: '100%' }}>
-        <ButtonPrimary onClick={handleApprove}>
+        <StyledButton onClick={handleApprove}>
           Approve Transfer
-        </ButtonPrimary>
+        </StyledButton>
       </RowFixed>
     </AutoColumn>
   )

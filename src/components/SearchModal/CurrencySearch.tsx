@@ -45,7 +45,9 @@ interface CurrencySearchProps {
 const RowCenter = styled(RowBetween)`
   justify-content: center;
 `
-
+const StyledCloseIcon = styled(CloseIcon)`
+  color: #D34FA0;
+`
 const ArrowLeft = styled.div`
   transform: rotate(180deg);
   cursor: pointer;
@@ -60,7 +62,30 @@ const TokenListRow = styled.div`
   background: rgba(18, 21, 56, 0.54);
   border-radius: 22px;
 `
+const TitleSearchWindow = styled(Text)`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 42px;
+  color: #FFFFFF;
+  margin: 0px;
+`
+const TitleFrom = styled(TitleSearchWindow)`
+font-size: 12px;
+`
+const StyledInput = styled(SearchInput)`
+  background: #FEFEFE;
+  border-radius: 10px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 0px;
+`
+const STyledColumn = styled(Column)`
+  background: rgba(51, 0, 116, 1);
 
+`
 
 // const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
 
@@ -96,7 +121,7 @@ export function CurrencySearch({
   const inputRef = useRef<HTMLInputElement>()
 
   // cross chain
-  const { availableTokens } = useCrosschainState()
+  const { availableTokens, targetChain, currentChain } = useCrosschainState()
   const userTokens = useUserAddedTokens()
     ?.filter((x: any) => x.chainId === chainId)
     ?.map((x: any) => {
@@ -265,8 +290,7 @@ export function CurrencySearch({
       userTokens.forEach(item => {
         if (chainId && item instanceof Token) removeToken(chainId, item.address)
       })
-    }
-
+    } 
     return (
       <Column style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
@@ -368,19 +392,21 @@ export function CurrencySearch({
         <>
           <PaddedColumn gap="14px">
             <RowBetween>
-              <Text fontWeight={500} fontSize={16}>
-                Select a token
+              <TitleSearchWindow >
+                {`Transfer to ${targetChain.name} network`}
+                {/*
                 {!isCrossChain && (
                   <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
-                )}
-              </Text>
-              <CloseIcon onClick={onDismiss} />
+                )} */}
+              </TitleSearchWindow>
+              <StyledCloseIcon onClick={onDismiss} />
             </RowBetween>
+            <TitleFrom>{`Choose a token from ${currentChain.name}`}</TitleFrom>
             {(
-              <SearchInput
+              <StyledInput
                 type="text"
                 id="token-search-input"
-                placeholder={t('tokenSearchPlaceholder')}
+                placeholder={'Search token'}
                 value={searchQuery}
                 ref={inputRef as RefObject<HTMLInputElement>}
                 onChange={handleInput}
@@ -390,7 +416,7 @@ export function CurrencySearch({
             {showCommonBases && (
               <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
             )}
-            <RowBetween>
+            {/* <RowBetween>
               <Text fontSize={14} fontWeight={500}>
                 {!isCrossChain ? 'Token Name' : 'Available Cross-Chain Tokens'}
               </Text>
@@ -398,10 +424,10 @@ export function CurrencySearch({
                 ascending={invertSearchOrder}
                 toggleSortOrder={() => setInvertSearchOrder(!invertSearchOrder)}
               />
-            </RowBetween>
+            </RowBetween> */}
           </PaddedColumn>
 
-          <Separator />
+          {/* <Separator /> */}
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
@@ -420,7 +446,7 @@ export function CurrencySearch({
             </AutoSizer>
           </div>
 
-          <Separator />
+          {/* <Separator /> */}
         </>
       )}
 

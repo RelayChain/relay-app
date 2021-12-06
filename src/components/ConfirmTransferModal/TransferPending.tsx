@@ -1,10 +1,7 @@
 import { AutoColumn, ColumnCenter } from '../Column'
 import React, { useEffect } from 'react'
 
-import { ChainTransferState } from '../../state/crosschain/actions'
-import Circle from '../../assets/images/blue-loader.svg'
-import { CustomLightSpinner } from '../../theme/components'
-import { Text } from 'rebass'
+import { ChainTransferState } from '../../state/crosschain/actions' 
 import styled from 'styled-components'
 import { useCrosschainState } from '../../state/crosschain/hooks'
 
@@ -14,7 +11,32 @@ const Section = styled(AutoColumn)`
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 10px 0 40px 0;
 `
-
+const TitlePending = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 42px;
+  text-align: center;
+  color: #FFFFFF;
+`
+const LogoBlock = styled.img`
+  margin: 40px auto;
+`
+const NotifyBlock = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 27px;
+  /* identical to box height */
+  text-align: center;
+  color: #FFFFFF;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 10px 0px;
+`
 export default function TransferPending({
   changeTransferState
 }: {
@@ -28,18 +50,11 @@ export default function TransferPending({
   }, [crosschainTransferStatus, changeTransferState])
 
   return (
-    <Section>
-      <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
-      </ConfirmedIcon>
-      <AutoColumn gap="12px" justify={'center'}>
-        <Text fontWeight={500} fontSize={20} textAlign="center">
-          Waiting For Transfer
-        </Text>
-        <Text fontSize={14} color="#565A69" textAlign="center">
-          Confirm this transaction in your wallet
-        </Text>
-      </AutoColumn>
+    <Section style={{ justifyContent: "center" }}>
+      <TitlePending>Transfer Pending!</TitlePending>
+      <LogoBlock src={require('../../assets/images/new-design/spaceship.png')}></LogoBlock>
+      <TitlePending>Loading...</TitlePending>
+      <NotifyBlock>Waiting for confirmation from MetaMask</NotifyBlock>
     </Section>
   )
 }

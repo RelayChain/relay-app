@@ -1,3 +1,4 @@
+import { CGPrice } from 'hooks/useCoinGeckoPrice'
 import { get, getTyped } from './api'
 
 const ZERO_API_URL = process.env.REACT_APP_ZERO_API_URL
@@ -34,8 +35,6 @@ export async function getTVLHistory() {
 export async function getCrossChainData<T>() {
   const pathName = window.location.hostname === 'development-branch.relaychain.com' ?  
   'dev/crosschain-config-dev': 'api/crosschain-config'
-  console.log('window.location.pathname :>> ', window.location.hostname);
-  console.log("🚀 ~ file: index.ts ~ line 36 ~ pathName", pathName)
   return getTyped<T>(`https://relay-api-33e56.ondigitalocean.app/${pathName}`)
 }
 
@@ -45,4 +44,8 @@ export async function getTvlData<T>() {
 
 export async function getGasPrices() {
   return getTyped<{[k: number]: string}>('https://relay-api-33e56.ondigitalocean.app/api/gasPrices');
+}
+
+export async function getCoinGeckoPrice(symbol: string) {
+  return getTyped<CGPrice>(`https://api.coingecko.com/api/v3/simple/price?ids=${symbol}&vs_currencies=USD`);
 }

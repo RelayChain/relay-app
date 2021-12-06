@@ -1,27 +1,24 @@
-import '@reach/dialog/styles.css'
-
 import { DialogContent, DialogOverlay } from '@reach/dialog'
-import { animated, useSpring, useTransition } from 'react-spring'
-import styled, { css } from 'styled-components'
-
+import '@reach/dialog/styles.css'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
+import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
+import styled, { css } from 'styled-components'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
     z-index: 2;
-    background-color: rgba(0,0,0,.5);
-    backdrop-filter: blur(8px);
+    background-color: rgba(70, 70, 70, 0.25);
+    backdrop-filter: blur(100px);
     overflow: hidden;
 
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background-color: ${({ theme }) => theme.modalBG};
+    // background-color: ${({ theme }) => theme.modalBG};
   }
 `
 
@@ -33,28 +30,27 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 )).attrs({
   'aria-label': 'dialog'
 })`
-  overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-
+  overflow-y: ${({ mobile }) => (mobile ? 'auto' : 'hidden')};
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background: rgba(47, 53, 115, 0.62);
-    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
+    background: #330074;
+    padding: 5px 0;
     backdrop-filter: blur(28px);
-    border-radius: 44px;
-    padding: 10px;
+    border-radius: 30px;
     width: 50vw;
-    overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
+    overflow-y: ${({ mobile }) => (mobile ? 'auto' : 'hidden')};
     overflow-x: auto;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
-    max-width: 420px;
+    max-width: 520px;
+
     ${({ maxHeight }) =>
-    maxHeight &&
-    css`
+      maxHeight &&
+      css`
         max-height: ${maxHeight}vh;
       `}
     ${({ minHeight }) =>
-    minHeight &&
-    css`
+      minHeight &&
+      css`
         min-height: ${minHeight}vh;
       `}
     display: flex;
@@ -65,7 +61,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       ${mobile &&
-    css`
+        css`
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
@@ -120,9 +116,9 @@ export default function Modal({
               <StyledDialogContent
                 {...(isMobile
                   ? {
-                    ...bind(),
-                    style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
-                  }
+                      ...bind(),
+                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
+                    }
                   : {})}
                 aria-label="dialog content"
                 minHeight={minHeight}
