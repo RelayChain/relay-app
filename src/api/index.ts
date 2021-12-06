@@ -35,8 +35,6 @@ export async function getTVLHistory() {
 export async function getCrossChainData<T>() {
   const pathName = window.location.hostname === 'development-branch.relaychain.com' ?  
   'dev/crosschain-config-dev': 'api/crosschain-config'
-  console.log('window.location.pathname :>> ', window.location.hostname);
-  console.log("🚀 ~ file: index.ts ~ line 36 ~ pathName", pathName)
   return getTyped<T>(`https://relay-api-33e56.ondigitalocean.app/${pathName}`)
 }
 

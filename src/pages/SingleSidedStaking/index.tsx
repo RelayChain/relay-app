@@ -12,6 +12,9 @@ import { useActiveWeb3React } from 'hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import useGasPrice from 'hooks/useGasPrice'
 import { useStakingAloneContract } from 'hooks/useContract'
+import { RowBetween, RowFixed } from '../../components/Row'
+import { tickerTocCoinbaseName } from 'constants/lists'
+import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
 
 const StakeContainer = styled.div`
   font-family: Poppins;
@@ -29,7 +32,26 @@ const StakeContainer = styled.div`
         width: 100%;
         `};
 `
-
+const SideCardHolder = styled.div`
+  margin-right: 75px; 
+  display: flex;
+  flex-direction: row;
+  background: rgb(18,26,56);
+  border-radius: 24px;
+  padding: 1rem 1.5rem;
+  border: 2px solid #B368FC;
+  color: #B368FC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+    flex-direction: column;
+    width: 100%;
+  `};
+`
 const StakeWrap = styled.div`
   display: flex;
   justify-content: space-around;
@@ -65,7 +87,7 @@ const StyledTitle = styled.h1`
   font-weight: bold;
   font-size: 60px;
   color: #00fff6;
-  margin-right: auto;
+  margin-left: 70px;
   margin-top: 50px;
   margin-bottom: 40px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -76,6 +98,17 @@ const StyledTitle = styled.h1`
   align-items: center;
 `};
 `
+
+const RowBetweenSidecard = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`};
+`
+const StakingTitle = styled.div`
+  display: flex;
+`
 export const SingleSidedStaking = () => {
   const { currentChain } = useCrosschainState()
   const [isPending, setIsPending] = useState(false)
@@ -85,6 +118,10 @@ export const SingleSidedStaking = () => {
   const [rewardSuccessHash, setRewardSuccessHash] = useState('')
   const [indexUpdate, setIndexUpdate] = useState(0)
   const currentGasPrice = useGasPrice(+currentChain.chainID)
+  const [priceTokenInUsd, setPriceTokenInUsd] = useState(0)
+  const [yearlyRewards, setYearlyRewards] = useState(0)
+  const [stakedAmount, setStakedAmount] = useState('0')
+  const [priceRewardToken, setPriceRewardToken] = useState(0)
 
   const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
 
@@ -139,6 +176,16 @@ export const SingleSidedStaking = () => {
       return
     }
   }, [stakingContract, indexUpdate])
+  const countYearlyRewards = async () => {
+    const rewardRate = await stakingContract?.rewardRate().catch(console.log)
+    if (rewardRate) {
+      const lpBalance = ethers.utils.formatEther(rewardRate)
+      console.log("🚀 ~ file: index.tsx ~ line 178 ~ countYearlyRewards ~ lpBalance", lpBalance)
+      const formatted = Number(lpBalance) * 365 * 60 * 60 * 24
+      setYearlyRewards(formatted)
+    }
+  }
+
 
   useEffect(() => {
     let ind = indexUpdate
@@ -152,9 +199,48 @@ export const SingleSidedStaking = () => {
     }, 1000)
   }, [])
 
+  useEffect(() => {
+    const getMaxAmountLp = async () => {
+      const stakedBalance = await stakingContract?.totalSupply().catch(console.log)
+      if (stakedBalance) {
+        const lpBalance = ethers.utils.formatEther(stakedBalance)
+        console.log("  🚀 ~ file: index.tsx ~ line 201 ~ getMaxAmountLp ~ lpBalance", lpBalance)
+        setStakedAmount(lpBalance)
+      }
+    }
+    getMaxAmountLp()
+  }, [account])
+  const priceInUsd = useCoinGeckoPrice
+
+  useEffect(() => {
+    priceInUsd(tickerTocCoinbaseName['RELAY']).then(data => {
+      const usd = Object.values(data)[0]
+      setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
+      console.log('priceTokenInUsd :>> ', priceTokenInUsd)
+    })
+    if (chainId && returnStakingConfig(chainId)) {
+      const rewardSymbol = returnStakingConfig(chainId)?.rewardSymbol
+      priceInUsd(tickerTocCoinbaseName[rewardSymbol]).then(data => {
+        const usd = Object.values(data)[0]
+        setPriceRewardToken(usd?.usd ? +usd?.usd : 0)
+      })
+    }
+
+  }, [chainId])
+
+  const getApy = () => {
+    countYearlyRewards()
+    console.log('stakedAmount * priceTokenInUsd :>> ', stakedAmount, priceTokenInUsd);
+    return (+stakedAmount * priceTokenInUsd > 0) ? ((yearlyRewards * priceTokenInUsd / +stakedAmount * priceRewardToken) * 100).toFixed(2) : 0
+  }
   return (
     <PageContainer>
-      <StyledTitle>Staking</StyledTitle>
+      <RowBetweenSidecard>
+        <StyledTitle>Staking</StyledTitle>
+        <SideCardHolder>
+          {`APY ${getApy()}%`}
+        </SideCardHolder>
+      </RowBetweenSidecard>
       <StakeContainer>
         {returnStakingConfig(chainId)?.stakingContractAddress && (
           <>
