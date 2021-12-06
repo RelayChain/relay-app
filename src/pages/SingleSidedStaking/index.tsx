@@ -1,16 +1,17 @@
+import { BigNumber, ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { StakingConfig, returnStakingConfig } from './stakingConfig'
 import { TYPE, Title } from '../../theme'
-import { calculateGasMargin } from '../../utils'
+
 import { ButtonOutlined } from '../../components/Button'
+import PageContainer from 'components/PageContainer'
 import { StakeForm } from './stakeForm'
-import { BigNumber, ethers } from 'ethers'
+import { calculateGasMargin } from '../../utils'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
-import { useStakingAloneContract } from 'hooks/useContract'
-import useGasPrice from 'hooks/useGasPrice'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import PageContainer from 'components/PageContainer'
+import useGasPrice from 'hooks/useGasPrice'
+import { useStakingAloneContract } from 'hooks/useContract'
 
 const StakeContainer = styled.div`
   font-family: Poppins;
@@ -66,9 +67,9 @@ const StyledTitle = styled.h1`
   color: #00fff6;
   margin-right: auto;
   margin-top: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin: 20px auto;  
+  margin: 20px auto;
   display: flex;
   text-align: center;
   justify-content: center;

@@ -1,7 +1,7 @@
+import { ButtonOutlined, ButtonPrimary } from '../Button'
 import { CheckCircle, ChevronsRight } from 'react-feather'
 
 import { AutoColumn } from '../Column'
-import { ButtonPrimary } from '../Button'
 import { ChainTransferState } from '../../state/crosschain/actions'
 import React from 'react'
 import { RowFixed } from '../Row'
@@ -24,6 +24,21 @@ const CancelLink = styled.a`
     background: rgba(255, 255, 255, 0.1);
   }
 `
+const StyledButton = styled(ButtonOutlined)`
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  border-radius: 100px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  text-align: center;
+  color: #FFFFFF;
+  margin-top: 1rem;
+`
+
 export default function ApprovalComplete({
   changeTransferState,
   onDismiss
@@ -50,11 +65,11 @@ export default function ApprovalComplete({
         <ChevronsRight size={'66'} style={{ margin: '2rem 1rem 2rem 1rem', opacity: '.5' }} />
       </RowFixed>
       <RowFixed style={{ width: '100%' }}>
-        <ButtonPrimary
+        <StyledButton
           onClick={() => handleStartTransfer()}
         >
           Start Transfer
-        </ButtonPrimary>
+        </StyledButton>
       </RowFixed>
       <RowFixed style={{ width: '100%', marginTop: '1rem' }}>
         <Text fontSize={14} textAlign="center">

@@ -73,7 +73,7 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <LogoNavLink to={'/cross-chain-bridge-transfer'}>
+          <LogoNavLink to={'/cross-chain-bridge-transfer'} onClick={() => setPathname('/cross-chain-bridge-transfer')}>
             <div className="relay-logo" style={{ cursor: 'pointer'}}></div>
             <div className="relay-name" style={{ cursor: 'pointer'}}></div>
           </LogoNavLink>

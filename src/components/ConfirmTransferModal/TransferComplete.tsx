@@ -1,5 +1,5 @@
 import { ButtonOutlined } from '../Button'
-import React from 'react' 
+import React from 'react'
 import styled from 'styled-components'
 
 const Message = styled.p`
@@ -25,12 +25,13 @@ const Success = styled.div`
   line-height: 42px;
   text-align: center;
   color: #FFFFFF;
+  margin-top: 1rem;
 `
-const TitlePending = styled(Success)` 
+const TitlePending = styled(Success)`
   height: 470px;
 `
 const LogoBlock = styled.img`
-  position: absolute; 
+  position: absolute;
   top: 50px;
   height: 500px;
 `
@@ -42,13 +43,13 @@ const NotifyBlock = styled.div`
   line-height: 27px;
   /* identical to box height */
   text-align: center;
-  color: #FFFFFF; 
+  color: #FFFFFF;
 `
-const StyledButton = styled(ButtonOutlined)` 
+const StyledButton = styled(ButtonOutlined)`
   width: 220px;
   height: 60px;
   background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
-  border-radius: 100px; 
+  border-radius: 100px;
   font-family: Montserrat;
   font-style: normal;
   font-weight: normal;
@@ -56,6 +57,7 @@ const StyledButton = styled(ButtonOutlined)`
   line-height: 37px;
   text-align: center;
   color: #FFFFFF;
+  margin-top: 2rem;
 `
 const SuccessContainer = styled.div`
   display: flex;

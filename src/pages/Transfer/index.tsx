@@ -91,7 +91,7 @@ const StyledTitle = styled.h1`
   font-size: 60px;
   color: #7f46f0;
   margin-top: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin: 20px auto;
   display: flex;
