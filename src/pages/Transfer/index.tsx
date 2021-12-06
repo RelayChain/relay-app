@@ -107,6 +107,7 @@ const Heading = styled.div`
   justify-content: space-between;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
   font-size: 24px;
 `};
 `
