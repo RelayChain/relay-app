@@ -27,6 +27,13 @@ export const StakingConfig: any = {
         chainName: 'Moonriver',
         rewardSymbol: 'MOVR',
     },
+    [ChainId.CRONOS]: {
+        stakingContractAddress: '0x823cE9cca0b9eE2BC4C2d764d304691d770DbBe9',
+        stakedTokenAddress: '0x9C29650a1B273A031A35F3121914aae882B144A4',
+        rewardsTokenAddress: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',
+        chainName: 'Cronos',
+        rewardSymbol: 'CRO',
+    },
 }
 
 export const returnStakingConfig = (chainId?: ChainId): any => {
