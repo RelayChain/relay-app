@@ -155,7 +155,7 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
         })
       }
     })
-  }   
+  }
 
   return result
 }
@@ -281,8 +281,8 @@ export function useCrosschainHooks() {
           status: ChainTransferState.TransferPending
         })
       )
-      
-     
+
+
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
       const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
@@ -306,7 +306,7 @@ export function useCrosschainHooks() {
         utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
         crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
       const auxData = '0x00';
-    
+
 
       const resultDepositTx = await bridgeContract
         .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
@@ -419,6 +419,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
+
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )

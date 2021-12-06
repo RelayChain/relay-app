@@ -34,11 +34,10 @@ export default function ApprovalComplete({
     BreakCrosschainSwap()
     onDismiss();
   }
-  
+
   const handleStartTransfer = async () => {
     try {
       await MakeDeposit();
-      changeTransferState(ChainTransferState.TransferPending)
     } catch (err) {
       cancelTransfer();
     }
