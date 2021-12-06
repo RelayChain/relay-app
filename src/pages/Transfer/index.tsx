@@ -144,26 +144,40 @@ const Description = styled.p`
 `};
 `
 const SideCard = styled.div`
-  width: 100%;
-  max-width: 360px;
   position: relative;
-  padding: 2rem;
-  margin-bottom: 1rem;
+  padding: 1rem;
   span {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #6752f7;
+    color: #B368FC;
+    &.white {
+      color: #fff;
+      margin-right: 6px;
+    }
   }
+`
+const RowBetweenSidecard = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`};
 `
 
 const SideCardHolder = styled.div`
-  margin-right: auto;
+  margin-left: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  background: rgb(18,26,56);
+  border-radius: 24px;
+  padding: 1rem 1.5rem;
+  border: 2px solid #B368FC;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2rem;
+    flex-direction: column;
+    width: 100%;
   `};
 `
 const TransferBodyWrapper = styled.div`
@@ -606,7 +620,23 @@ export default function Transfer() {
 
   return (
     <PageContainer>
-      <StyledTitle>Bridges</StyledTitle>
+      <RowBetweenSidecard>
+        <StyledTitle>Bridge</StyledTitle>
+        <SideCardHolder>
+          <SideCard>
+            <span className="white">${numeral(totalTvl).format('0,0')}</span>
+            <span> TVL</span>
+          </SideCard>
+          <SideCard>
+            <span className="white">{numeral(totalTx).format('0,0')} </span>
+            <span> Txns</span>
+          </SideCard>
+          <SideCard>
+            <span className="white">${numeral(totalFee).format('0,0')} </span>
+            <span> Fees</span>
+          </SideCard>
+        </SideCardHolder>
+      </RowBetweenSidecard>
       <FlexContainer>
         <TokenWarningModal
           isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
