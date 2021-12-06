@@ -2,8 +2,7 @@ import LogoDark from './../../assets/images/relay-icon.png'
 import React from 'react'
 import styled from 'styled-components'
 
-const Header = styled.div`
-  display: none;
+const Header = styled.div` 
   backdrop-filter: blur(28px);
   align-items: center;
   justify-content: space-between;
@@ -28,8 +27,8 @@ const StyledBurger = styled.button<{ open?: boolean }>`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -56,16 +55,19 @@ const StyledBurger = styled.button<{ open?: boolean }>`
     transform-origin: 1px;
 
     :first-child {
+      margin-top: 10px;
       transform: ${({ open }) =>
         open ? `rotate(45deg) scaleX(${Math.sqrt(2)})` : `rotate(0) scaleX(${Math.sqrt(2)})`};
     }
 
     :nth-child(2) {
+      margin: 1px 0;
       opacity: ${({ open }) => (open ? '0' : '1')};
       transform: ${({ open }) => (open ? 'translateX(20px)' : 'translateX(0)')};
     }
 
     :nth-child(3) {
+      
       transform: ${({ open }) =>
         open ? `rotate(-45deg) scaleX(${Math.sqrt(2)})` : `rotate(0) scaleX(${Math.sqrt(2)})`};
 
@@ -75,14 +77,15 @@ const StyledBurger = styled.button<{ open?: boolean }>`
 export interface MenuBurgerProps {
   open: boolean
   setOpen: () => void
+  showLogo?: boolean
 }
 
-export default function MenuBurger({ open, setOpen }: MenuBurgerProps) {
+export default function MenuBurger({ open, setOpen, showLogo=true }: MenuBurgerProps) {
   return (
     <Header>
-      <Title href="/">
+     {showLogo &&  <Title href="/">
         <img width={'100%'} src={LogoDark} alt="logo" />
-      </Title>
+      </Title>}
       <StyledBurger open={open} onClick={setOpen}>
         <div />
         <div />

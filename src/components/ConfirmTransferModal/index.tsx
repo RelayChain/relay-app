@@ -13,6 +13,7 @@ import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
+import TransferFiled from './TransferFailed'
 
 interface ConfirmTransferProps {
   isOpen: boolean
@@ -26,12 +27,21 @@ interface ConfirmTransferProps {
   tokenTransferState: ChainTransferState
 }
 
+const StyledModal = styled(Modal)`
+  width: 473px;
+  height: 707px;
+  background: rgba(70, 70, 70, 0.25);
+  mix-blend-mode: normal;
+  backdrop-filter: blur(100px);
+  border-radius: 30px;
+`
+
 const ModalContainer = styled.div`
   padding: 1.5rem;
   width: 100%;
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: column; 
   h5 {
     margin: 1rem 0;
     text-align: center;
@@ -100,11 +110,11 @@ export default function ConfirmTransferModal({
   return (
     <Modal isOpen={isOpen} onDismiss={handleOnDismiss}>
       <ModalContainer>
-        <RowBetween>
+        {/* <RowBetween>
           <div />
           <CloseIcon onClick={handleOnDismiss} />
-        </RowBetween>
-        <h5>{title}</h5>
+        </RowBetween> */}
+        {/* <h5>{title}</h5> */}
 
         {tokenTransferState === ChainTransferState.NotStarted && (
           <NotStarted
@@ -117,6 +127,10 @@ export default function ConfirmTransferModal({
             tokenTransferState={tokenTransferState}
           />
         )}
+       
+        {tokenTransferState === ChainTransferState.TransferFailed &&
+            <TransferFiled  />
+        }
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
           <ApprovalPending tokenTransferState={tokenTransferState} />

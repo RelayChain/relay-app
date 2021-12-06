@@ -43,7 +43,8 @@ export enum ChainTransferState {
   ApprovalSubmitted = 'APPROVE_SUBMITTED',
   ApprovalComplete = 'APPROVE_COMPLETE',
   TransferPending = 'TRANSFER_PENDING',
-  TransferComplete = 'TRANSFER_COMPLETE'
+  TransferComplete = 'TRANSFER_COMPLETE',
+  TransferFailed = 'TRANSFER_FAILED'
 }
 
 export interface SwapDetails {

@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react'
 import { Text, TextProps } from 'rebass'
 import styled, {
-  DefaultTheme,
-  ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
-  css
+  css,
+  DefaultTheme,
+  ThemeProvider as StyledComponentsThemeProvider
 } from 'styled-components'
-
-import { Colors } from './styled'
 import { useIsDarkMode } from '../state/user/hooks'
+import { Colors } from './styled'
 
 export * from './components'
 
@@ -83,7 +82,7 @@ export function colors(darkMode: boolean): Colors {
     zeroBlue: '#1CB0F9',
     zeroGreen: '#1EF7E7',
     zeroPink: '#B368FC',
-    zeroPurple: '#6752F7',
+    zeroPurple: '#6752F7'
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -235,15 +234,14 @@ html {
 
 body {
   min-height: 100vh;
-  background: #2C3168;
-  background: linear-gradient(116.27deg, #2C3168 6.4%, #0E1130 100%);
+  background: #000B33;
 }
 `
 
 export const Title = styled.h1`
-width: 100%;
-padding: 0px 64px;
-${({ theme }) => theme.mediaWidth.upToMedium`
+  width: 100%;
+  padding: 0px 64px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
 padding: 0;
 text-align: center;
 font-size: 49px;
