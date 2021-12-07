@@ -122,7 +122,7 @@ export const SingleSidedStaking = () => {
   const [yearlyRewards, setYearlyRewards] = useState(0)
   const [stakedAmount, setStakedAmount] = useState('0')
   const [priceRewardToken, setPriceRewardToken] = useState(0)
-
+  const [apr, setApr] = useState('0')
   const stakingContract = useStakingAloneContract(returnStakingConfig(chainId)?.stakingContractAddress || '')
 
   const harvest = async () => {
@@ -176,16 +176,15 @@ export const SingleSidedStaking = () => {
       return
     }
   }, [stakingContract, indexUpdate])
+
   const countYearlyRewards = async () => {
     const rewardRate = await stakingContract?.rewardRate().catch(console.log)
     if (rewardRate) {
       const lpBalance = ethers.utils.formatEther(rewardRate)
-      console.log("🚀 ~ file: index.tsx ~ line 178 ~ countYearlyRewards ~ lpBalance", lpBalance)
       const formatted = Number(lpBalance) * 365 * 60 * 60 * 24
       setYearlyRewards(formatted)
     }
   }
-
 
   useEffect(() => {
     let ind = indexUpdate
@@ -204,7 +203,6 @@ export const SingleSidedStaking = () => {
       const stakedBalance = await stakingContract?.totalSupply().catch(console.log)
       if (stakedBalance) {
         const lpBalance = ethers.utils.formatEther(stakedBalance)
-        console.log("  🚀 ~ file: index.tsx ~ line 201 ~ getMaxAmountLp ~ lpBalance", lpBalance)
         setStakedAmount(lpBalance)
       }
     }
@@ -216,7 +214,6 @@ export const SingleSidedStaking = () => {
     priceInUsd(tickerTocCoinbaseName['RELAY']).then(data => {
       const usd = Object.values(data)[0]
       setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
-      console.log('priceTokenInUsd :>> ', priceTokenInUsd)
     })
     if (chainId && returnStakingConfig(chainId)) {
       const rewardSymbol = returnStakingConfig(chainId)?.rewardSymbol
@@ -225,20 +222,22 @@ export const SingleSidedStaking = () => {
         setPriceRewardToken(usd?.usd ? +usd?.usd : 0)
       })
     }
-
+    countYearlyRewards()
   }, [chainId])
 
-  const getApy = () => {
-    countYearlyRewards()
-    console.log('stakedAmount * priceTokenInUsd :>> ', stakedAmount, priceTokenInUsd);
-    return (+stakedAmount * priceTokenInUsd > 0) ? ((yearlyRewards * priceTokenInUsd / +stakedAmount * priceRewardToken) * 100).toFixed(2) : 0
-  }
+  useEffect(() => {
+    if (+stakedAmount > 0 && priceTokenInUsd > 0 && yearlyRewards && priceRewardToken) {
+      const totalApr = ((yearlyRewards * priceRewardToken / (+stakedAmount * priceTokenInUsd)) * 100).toFixed(2)
+      setApr(totalApr)
+    }
+
+  }, [priceTokenInUsd, priceRewardToken, stakedAmount, yearlyRewards])
   return (
     <PageContainer>
       <RowBetweenSidecard>
         <StyledTitle>Staking</StyledTitle>
         <SideCardHolder>
-          {`APY ${getApy()}%`}
+          {`APR ${apr}%`}
         </SideCardHolder>
       </RowBetweenSidecard>
       <StakeContainer>
