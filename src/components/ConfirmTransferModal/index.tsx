@@ -73,7 +73,7 @@ export default function ConfirmTransferModal({
   useEffect(() => {
     if (allowanceInterval) {
       clearInterval(allowanceInterval)
-    }
+    }   
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
@@ -106,7 +106,6 @@ export default function ConfirmTransferModal({
     }
     onDismiss()
   }
-
   return (
     <Modal isOpen={isOpen} onDismiss={handleOnDismiss}>
       <ModalContainer>
@@ -116,7 +115,7 @@ export default function ConfirmTransferModal({
         </RowBetween> */}
         {/* <h5>{title}</h5> */}
 
-        {tokenTransferState === ChainTransferState.NotStarted && (
+        {tokenTransferState === ChainTransferState.NotStarted && !!value && (
           <NotStarted
             activeChain={activeChain}
             transferTo={transferTo?.name}
