@@ -1,9 +1,9 @@
 import { ButtonOutlined } from '../Button'
+import Copy from '../AccountDetails/Copy'
 import React from 'react'
 import styled from 'styled-components'
-import Copy from '../AccountDetails/Copy'
 
-const Title = styled.div` 
+const Title = styled.div`
   font-family: Poppins;
   font-style: normal;
   font-weight: 500;
@@ -16,7 +16,7 @@ const Title = styled.div`
 const Success = styled(Title)`
   margin-top: -50px;
 `
-const LogoBlock = styled.div`  
+const LogoBlock = styled.div`
   height: 470px;
   width: 425px;
 `
@@ -25,7 +25,7 @@ const NotifyBlock = styled.div`
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  line-height: 27px; 
+  line-height: 27px;
   text-align: center;
   color: #FFFFFF;
 `
@@ -51,7 +51,7 @@ const SuccessContainer = styled.div`
   position: relative;
 `
 const DestinationAddress = styled(Copy)`
-  margin-top: 16px; 
+  margin-top: 16px;
 `
 
 
@@ -78,7 +78,7 @@ export default function TransferComplete({
       <NotifyBlock>Your token transfer has been successful.</NotifyBlock>
       <StyledButton onClick={onDismiss}>Done</StyledButton>
       {targetTokenAddress && <DestinationAddress toCopy={targetTokenAddress}>
-                          <span style={{ marginLeft: '4px' }}>Copy the token address on the destination chain</span>
+                          <span style={{ marginLeft: '4px', marginTop: '15px' }}>Copy the token address on the destination chain</span>
                         </DestinationAddress>}
     </SuccessContainer>
   )
