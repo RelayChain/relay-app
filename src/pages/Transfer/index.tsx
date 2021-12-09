@@ -712,9 +712,9 @@ export default function Transfer() {
             />
           </FlexBlock>
           {<BelowInfo >
-            <StyledCopy toCopy={targetTokenAddress} >
+            {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
               <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
-            </StyledCopy>
+            </StyledCopy>}
             <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
               {`Available Balance ${Number(currentBalance).toFixed(4)}
                 ${currentToken.symbol}`}</BelowForm>
