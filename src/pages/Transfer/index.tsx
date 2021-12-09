@@ -53,36 +53,21 @@ import { useDispatch } from 'react-redux'
 import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import Copy from '../../components/AccountDetails/Copy'
 
 const numeral = require('numeral')
 
-const ChainBridgePending = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 40px;
-  padding: 0.25rem 1rem 0.25rem 1rem;
-  border-radius: 12px;
-  margin-top: 2rem;
-  color: rgba(255, 255, 255, 0.75);
-  transition: all 0.2s ease-in-out;
-  background: linear-gradient(45deg, #5496ff, #8739e5);
-  position: fixed;
-  top: 68px;
-  right: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    position: relative;
-    top: auto; right: auto;
-  `};
-  &:hover {
-    cursor: pointer;
-    filter: brightness(1.2);
-  }
-  p {
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
+const BelowInfo = styled.div`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;  
+  margin-left: 270px;
+`
+const StyledCopy = styled(Copy)` 
+  grid-area: copy;
 `
 const StyledTitle = styled.h1`
   font-family: Montserrat;
@@ -268,20 +253,10 @@ const BelowForm = styled.div`
   padding-top: 25px;
   margin-top: .5rem;
   margin-bottom: .5rem;
+  grid-area: balance;
   &.disabled {
     opacity: .25;
   }
-`
-const TransferButton = styled(GreyCard)`
-  text-align: center;
-  min-width: 180px;
-  border-radius: 100px;
-  height: 58px;
-  padding-top: 0;
-  padding-bottom: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  min-width: 0;
-  `};
 `
 
 const FlexContainer = styled.div`
@@ -372,7 +347,8 @@ export default function Transfer() {
     targetChain,
     crosschainTransferStatus,
     swapDetails,
-    currentBalance
+    currentBalance,
+    allCrosschainData
   } = useCrosschainState()
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -426,6 +402,17 @@ export default function Transfer() {
   }, [tvl])
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
+  const [targetTokenAddress, setTargetTokenAddress] = useState('')
+
+
+  useEffect(() => {
+    const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetChain?.name)
+    chaindata?.tokens.map(token => {
+      if (token.resourceId === currentToken.resourceId) {
+        setTargetTokenAddress(token.address)
+      }
+    })
+  }, [currentToken, targetChain])
 
   const trade = v2Trade
 
@@ -681,7 +668,7 @@ export default function Transfer() {
             </ChainBlock>
           </Heading>
 
-          <RowFixed style={{ margin: '2rem auto 2rem auto'}}>
+          <RowFixed style={{ margin: '2rem auto 2rem auto' }}>
             <ArrowDown size="30" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
           </RowFixed>
 
@@ -697,60 +684,6 @@ export default function Transfer() {
             />
           </Heading>
 
-          {/* <RowBetweenTransfer style={{ marginBottom: '1rem' }}>
-                <TextBottom style={{ marginLeft: 'auto', marginRight: '10px', opacity: '.65', color: '#a7b1f4' }}>Fee: <SpanAmount>{crosschainFee} {currentChain?.symbol}</SpanAmount></TextBottom>
-              </RowBetweenTransfer>
-              <RowBetweenTransfer>
-                <TextBottom>
-                  {isTransferToken && transferAmount.length && transferAmount !== '0' && currentToken && currencies[Field.INPUT] ? (
-                    <SpanAmount>
-                      You will receive {formattedAmounts[Field.INPUT]} {currentToken.symbol} on {targetChain.name.length > 0 ? targetChain.name : '...'}
-                    </SpanAmount>
-                  ) : ('')}
-                </TextBottom>
-                {(currentToken.name !== '' &&
-                  !isTransferToken &&
-                  targetChain.chainID !== "") ? (
-                  <SpanAmount>
-                    The transfer {formattedAmounts[Field.INPUT]} {currentToken.symbol} to {targetChain.name.length > 0 ? targetChain.name : '...'} is not available
-                  </SpanAmount>
-                ) : ('')}
-                <BottomGroupingTransfer>
-                  {isCrossChain &&
-                    transferAmount.length &&
-                    transferAmount !== '0' &&
-                    currentToken &&
-                    isTransferToken &&
-                    targetChain.chainID !== "" &&
-                    targetChain.name.length > 0 &&
-                    currencies[Field.INPUT] ? (
-                    <>
-                      <ButtonPrimary onClick={showConfirmTransferModal} style={{ minWidth: '180px' }}>
-                        { transferModalLoading === false &&
-                          <TYPE.white>
-                            Transfer
-                          </TYPE.white>
-                        }
-                        { transferModalLoading === true &&
-                          <CustomLightSpinner
-                            src={Circle}
-                            alt="loader"
-                            size={'26px'}
-                          />
-                        }
-                      </ButtonPrimary>
-                    </>
-                  ) : !account ? (
-                    <ButtonLight onClick={toggleWalletModal} style={{ minWidth: '180px' }}>Connect Wallet</ButtonLight>
-                  ) : (
-                    <TransferButton>
-                      <TYPE.main mb="4px" style={{ lineHeight: '58px' }}>
-                        Transfer
-                      </TYPE.main>
-                    </TransferButton>
-                  )}
-                </BottomGroupingTransfer>
-              </RowBetweenTransfer> */}
         </TransferBodyWrapper>
         <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} className={!account ? 'disabled' : ''} />
         {/* // second form */}
@@ -761,7 +694,7 @@ export default function Transfer() {
             <Description>Enter token and amount:</Description>
           </Heading>
 
-          <FlexBlock style={{ padding: '20px 0' }}>
+          <FlexBlock style={{ padding: '14px 0 0 0' }}>
             <CurrencyInputPanel
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
@@ -778,10 +711,15 @@ export default function Transfer() {
               style={{ padding: '25px 0', width: '100%' }}
             />
           </FlexBlock>
+          {<BelowInfo >
+            {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
+              <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
+            </StyledCopy>}
+            <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
+              {`Available Balance ${Number(currentBalance).toFixed(4)}
+                ${currentToken.symbol}`}</BelowForm>
+          </BelowInfo>}
 
-          <BelowForm style={{ textAlign: 'end', marginTop: '0', marginBottom: '0', paddingTop: '0' }}>{`Available Balance ${Number(currentBalance).toFixed(4)}  ${
-            currentToken.symbol
-          }`}</BelowForm>
         </TransferBodyWrapper>
 
         {(chainId === undefined || account === undefined) && (
