@@ -153,3 +153,8 @@
     outline: none;
     border-bottom: 1px solid  #ad00ff;
 }
+
+.hero-success {
+    background: url("../assets/images/new-design/success.png") no-repeat;
+    background-size: cover;
+}

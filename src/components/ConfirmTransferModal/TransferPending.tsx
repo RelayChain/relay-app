@@ -8,9 +8,7 @@ import { useCrosschainState } from '../../state/crosschain/hooks'
 const Section = styled(AutoColumn)`
   padding: 24px;
 `
-const ConfirmedIcon = styled(ColumnCenter)`
-  padding: 10px 0 40px 0;
-`
+
 const TitlePending = styled.div`
   font-family: Poppins;
   font-style: normal;

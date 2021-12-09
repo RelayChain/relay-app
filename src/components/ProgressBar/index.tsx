@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 type ProgressBarProps = {
     completed: number;
     bgcolor: string
 }
-
 
 export function ProgressBar({completed, bgcolor}: ProgressBarProps) {
     const ContainerStyles = styled.div`

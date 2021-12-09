@@ -28,12 +28,7 @@ interface ConfirmTransferProps {
 }
 
 const StyledModal = styled(Modal)`
-  width: 473px;
-  height: 707px;
-  background: rgba(70, 70, 70, 0.25);
-  mix-blend-mode: normal;
-  backdrop-filter: blur(100px);
-  border-radius: 30px;
+  max-width: 473px !important;  
 `
 
 const ModalContainer = styled.div`
@@ -64,11 +59,21 @@ export default function ConfirmTransferModal({
   changeTransferState,
   tokenTransferState
 }: ConfirmTransferProps) {
-  const { currentToken, transferAmount } = useCrosschainState()
+  const { currentToken, transferAmount, allCrosschainData } = useCrosschainState()
   const { GetAllowance } = useCrosschainHooks()
   const [title, setTitle] = useState('')
+  const [targetTokenAddress, setTargetTokenAddress] = useState('')
 
   let allowanceInterval: any = null;
+
+  useEffect(() => {
+   const chaindata =  allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
+   chaindata?.tokens.map(token => {
+     if(token.resourceId === currentToken.resourceId) {
+      setTargetTokenAddress(token.address)
+     }
+   })
+  }, [currentToken, transferTo])
 
   useEffect(() => {
     if (allowanceInterval) {
@@ -107,14 +112,8 @@ export default function ConfirmTransferModal({
     onDismiss()
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={handleOnDismiss}>
+    <StyledModal isOpen={isOpen} onDismiss={handleOnDismiss} maxHeight={707} >
       <ModalContainer>
-        {/* <RowBetween>
-          <div />
-          <CloseIcon onClick={handleOnDismiss} />
-        </RowBetween> */}
-        {/* <h5>{title}</h5> */}
-
         {tokenTransferState === ChainTransferState.NotStarted && !!value && (
           <NotStarted
             activeChain={activeChain}
@@ -150,9 +149,10 @@ export default function ConfirmTransferModal({
             onDismiss={handleOnDismiss}
             currentToken={currentToken}
             transferAmount={transferAmount}
+            targetTokenAddress={targetTokenAddress}
           />
         )}
       </ModalContainer>
-    </Modal>
+    </StyledModal>
   )
 }

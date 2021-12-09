@@ -1,23 +1,9 @@
 import { ButtonOutlined } from '../Button'
 import React from 'react'
 import styled from 'styled-components'
+import Copy from '../AccountDetails/Copy'
 
-const Message = styled.p`
-  font-size: 0.85rem;
-  margin-top: 1rem;
-  line-height: 20px;
-  color: #ced0d9;
-  a {
-    font-weight: bold;
-    color: ${({ theme }) => theme.primary1};
-    cursor: pointer;
-    outline: none;
-    text-decoration: none;
-    margin-left: 4px;
-    margin-right: 4px;
-  }
-`
-const Success = styled.div`
+const Title = styled.div` 
   font-family: Poppins;
   font-style: normal;
   font-weight: 500;
@@ -25,23 +11,21 @@ const Success = styled.div`
   line-height: 42px;
   text-align: center;
   color: #FFFFFF;
-  margin-top: 1rem;
+  margin-top: 10px;
 `
-const TitlePending = styled(Success)`
+const Success = styled(Title)`
+  margin-top: -50px;
+`
+const LogoBlock = styled.div`  
   height: 470px;
-`
-const LogoBlock = styled.img`
-  position: absolute;
-  top: 50px;
-  height: 500px;
+  width: 425px;
 `
 const NotifyBlock = styled.div`
   font-family: Poppins;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  line-height: 27px;
-  /* identical to box height */
+  line-height: 27px; 
   text-align: center;
   color: #FFFFFF;
 `
@@ -57,37 +41,45 @@ const StyledButton = styled(ButtonOutlined)`
   line-height: 37px;
   text-align: center;
   color: #FFFFFF;
-  margin-top: 2rem;
+  margin-top: 20px;
+  margin-bottom: 10px;
 `
 const SuccessContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  height: 707px;
-  width: 440px;
 `
+const DestinationAddress = styled(Copy)`
+  margin-top: 16px; 
+`
+
 
 export default function TransferComplete({
   onDismiss,
   activeChain,
   transferTo,
   transferAmount,
-  currentToken
+  currentToken,
+  targetTokenAddress
 }: {
   onDismiss: () => void
   activeChain?: string
   transferTo?: string
   transferAmount?: string
   currentToken?: any
+  targetTokenAddress?: string
 }) {
   return (
     <SuccessContainer>
-      <TitlePending>Transfer Complete!</TitlePending>
-      <LogoBlock src={require('../../assets/images/new-design/success.png')}></LogoBlock>
+      <Title>Transfer Complete!</Title>
+      <LogoBlock className="hero-success"></LogoBlock>
       <Success>Success!</Success>
       <NotifyBlock>Your token transfer has been successful.</NotifyBlock>
       <StyledButton onClick={onDismiss}>Done</StyledButton>
+      {targetTokenAddress && <DestinationAddress toCopy={targetTokenAddress}>
+                          <span style={{ marginLeft: '4px' }}>Copy the token address on the destination chain</span>
+                        </DestinationAddress>}
     </SuccessContainer>
   )
 }
