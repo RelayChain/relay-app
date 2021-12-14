@@ -227,7 +227,7 @@ function GetChainNameById(chainID: number): string {
   } else if (chainID === ChainId.OKEX) {
     return 'OKEx'
   } else if (chainID === ChainId.MULTIVAC) {
-    return 'OKEx'
+    return 'MultiVAC'
   }
   return ''
 }
