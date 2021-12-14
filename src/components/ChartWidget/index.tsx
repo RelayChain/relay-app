@@ -9,6 +9,8 @@ const Title = styled.div`
     font-size: 24px;
     line-height: 29px;
     color: #FFFFFF;
+    padding-top: 50px;
+    padding-left: 50px;
 `
 const ChartBlock = styled.div`
 
