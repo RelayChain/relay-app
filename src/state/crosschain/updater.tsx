@@ -25,7 +25,7 @@ export default function Updater(): null {
   }, [dispatch])
 
   useEffect(() => {
-    if (!chainId || !allCrosschainData?.chains) return
+    if (!chainId || !allCrosschainData?.chains || !allCrosschainData?.chains.length) return
 
     const crossChainConfig: any = allCrosschainData?.chains.find(x => x.networkId === chainId)
     const list = crossChainConfig?.tokens.map((x: any) => x.address);

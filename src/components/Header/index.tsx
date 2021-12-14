@@ -98,6 +98,14 @@ const Header = () => {
         >
           Staking
         </StyledNavLink>
+        <StyledNavLink
+          id={`stats-nav-link`}
+          to={'/stats'}
+          onClick={() => setPathname('/stats')}
+          style={pathname === '/stats' ? { fontWeight: 700 } : { fontWeight: 400 }}
+        >
+          Stats
+        </StyledNavLink>
         <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} />
       </MenuBar>
       <Web3Status />

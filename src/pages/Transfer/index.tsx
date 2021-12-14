@@ -305,15 +305,7 @@ const ButtonTranfserLight = styled(ButtonPink)`
   margin-top: 20px;
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
-`
-const ChartContainer = styled(ChartWidget)`
-  width: 604px;
-  height: 230px;
-  background: rgba(70, 70, 70, 0.25);
-  mix-blend-mode: normal;
-  backdrop-filter: blur(100px);
-  border-radius: 30px;
-`
+` 
 const UnciffientBlock = styled.div`
   position: relative;
   width: 516px;
