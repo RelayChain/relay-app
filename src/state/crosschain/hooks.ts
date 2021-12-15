@@ -146,7 +146,7 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
-  if(chains) {
+  if (chains) {
     chains?.map(chain => {
       if (chain.name !== currentChainName) {
         result.push({
@@ -226,6 +226,8 @@ function GetChainNameById(chainID: number): string {
     return 'Cronos'
   } else if (chainID === ChainId.OKEX) {
     return 'OKEx'
+  } else if (chainID === ChainId.MULTIVAC) {
+    return 'MultiVAC'
   }
   return ''
 }

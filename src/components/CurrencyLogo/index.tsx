@@ -68,7 +68,8 @@ const logosNames = {
   'IOTX': ['IOTX', 'IOTEX', 'IoTeX', 'Iotex'],
   'ONE': ['ONE', 'HARMONY', 'Harmony'],
   'CRO': ['CRO', 'CRONOS', 'Cronos'],
-  'OKT': ['OKT', 'OKEx', 'OKEX']
+  'OKT': ['OKT', 'OKEx', 'OKEX'],
+  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC']
 }
 
 function getLogoByName(tokenName: string) {
@@ -93,7 +94,7 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  const {allCrosschainData} = useCrosschainState()
+  const { allCrosschainData } = useCrosschainState()
   const getTokenLogoURL = (chain: string, address: string) => {
     return `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
   }
@@ -110,20 +111,20 @@ export default function CurrencyLogo({
         let logoAddress = currency.address
         const allConfigTokens: any = []
         // eslint-disable-next-line
-          allCrosschainData.chains.map(chain => {
-            // eslint-disable-next-line
-            chain.tokens.map(token => {
-              allConfigTokens.push(token)
-            })
+        allCrosschainData.chains.map(chain => {
+          // eslint-disable-next-line
+          chain.tokens.map(token => {
+            allConfigTokens.push(token)
           })
-          const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
-          const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
+        })
+        const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
+        const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
 
-          if (currency instanceof WrappedTokenInfo) {
-            return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
-          }
+        if (currency instanceof WrappedTokenInfo) {
+          return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]
+        }
 
-          return [getTokenLogoURL(chainName, logoAddress)]
+        return [getTokenLogoURL(chainName, logoAddress)]
 
       }
     }
