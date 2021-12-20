@@ -68,7 +68,8 @@ const logosNames = {
   'IOTX': ['IOTX', 'IOTEX', 'IoTeX', 'Iotex'],
   'ONE': ['ONE', 'HARMONY', 'Harmony'],
   'CRO': ['CRO', 'CRONOS', 'Cronos'],
-  'OKT': ['OKT', 'OKEx', 'OKEX']
+  'OKT': ['OKT', 'OKEx', 'OKEX'],
+  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC']
 }
 
 export function getLogoByName(tokenName: string) {

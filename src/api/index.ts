@@ -32,18 +32,20 @@ export async function getTVLHistory() {
   return get(`${ZERO_API_URL}/TVL/GetHistory`)
 }
 
+const RELAY_API_URL = window.location.hostname === 'development-branch.relaychain.com'
+  ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
+  : 'https://relay-api-33e56.ondigitalocean.app';
+
 export async function getCrossChainData<T>() {
-  const pathName = window.location.hostname === 'development-branch.relaychain.com' ?  
-  'dev/crosschain-config-dev': 'api/crosschain-config'
-  return getTyped<T>(`https://relay-api-33e56.ondigitalocean.app/${pathName}`)
+  return getTyped<T>(`${RELAY_API_URL}/api/crosschain-config`)
 }
 
 export async function getTvlData<T>() {
-  return getTyped<T>('https://relay-api-33e56.ondigitalocean.app/tvl/currentTvl')
+  return getTyped<T>(`${RELAY_API_URL}/tvl/currentTvl`)
 }
 
 export async function getGasPrices() {
-  return getTyped<{[k: number]: string}>('https://relay-api-33e56.ondigitalocean.app/api/gasPrices');
+  return getTyped<{[k: number]: string}>(`${RELAY_API_URL}/api/gasPrices`);
 }
 
 export async function getCoinGeckoPrice(symbol: string) {
