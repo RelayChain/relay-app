@@ -9,27 +9,8 @@
     background: url("../assets/images/new-design/background ellipse.png") no-repeat;
     background-size: cover;
 }
-
-.space-bg {
-    pointer-events: none;
-    background: url("../assets/images/new-design/Astronaut 1.png") no-repeat;
-    background-size: cover;
-}
-
-.spaceman { 
-    pointer-events: none;
-    z-index: 0;
-    background: url("../assets/images/new-design/spaceman1.png") no-repeat;
-    background-size: cover;
-}
-
 .box > * {
     flex: 1 1 200px;
-}
-
-.spaceman-2 {
-    background: url("../assets/images/spaceman2.png") no-repeat;
-    background-size: cover;
 }
 
 .relay-logo {
@@ -133,7 +114,7 @@
 }
 
 .video-block {
-    width: 100%; 
+    width: 100%;
     background: url("../assets/images/video-block.png") no-repeat;
     background-size: cover;
 }
@@ -151,10 +132,173 @@
 }
 .active-title {
     outline: none;
-    border-bottom: 1px solid  #ad00ff;
+    border-bottom: 1px solid #ad00ff;
 }
 
 .hero-success {
     background: url("../assets/images/new-design/success.png") no-repeat;
     background-size: cover;
+}
+
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #7e1313;
+}
+
+.highcharts-data-table tr:hover {
+    background: #0967e2;
+}
+
+.highcharts-yaxis .highcharts-axis-line {
+    stroke-width: 2px;
+}
+
+/* Link the series colors to axis colors */
+.highcharts-color-0 {
+}
+
+.highcharts-axis.highcharts-color-0 .highcharts-axis-line {
+    stroke: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+}
+
+.highcharts-axis.highcharts-color-0 text {
+    fill: transparent;
+}
+
+.highcharts-color-1 {
+    fill: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+    stroke: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+}
+
+.highcharts-axis.highcharts-color-1 .highcharts-axis-line {
+    stroke: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+}
+
+.highcharts-axis.highcharts-color-1 text {
+    fill: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+}
+.highcharts-background {
+}
+
+.highcharts-plot-border {
+}
+
+.highcharts-axis-labels .highcharts-xaxis-labels > text {
+    color: white;
+}
+
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: transparent;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f80606;
+}
+
+.highcharts-data-table tr:hover {
+    background: #0969e6;
+}
+.highcharts-axis-line .highcharts-xaxis-line {
+    stroke: #f00c0c;
+}
+.highcharts-minor-grid-line {
+    stroke: #d80b0b;
+}
+.highcharts-plot-background {
+    stroke: transparent;
+}
+.highcharts-grid .highcharts-xaxis-grid {
+    stroke: #f50303;
+    fill: #90ed7d;
+}
+.highcharts-point {
+    stroke-width: 5;
+    stroke-linejoin: "round";
+    stroke: transparent;
+}
+.highcharts-root {
+    fill: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+    stroke: transparent;
+}
+
+.highcharts-pane-group {
+    fill: gradient(180deg, #ff008a 0%, #bd00ff 100%);
+    stroke: transparent;
+}
+#e6cb00 {
+    fill: "green !important";
+    stroke: "green";
+}
+path.highcharts-pane {
+    fill: "transparent !important";
+}
+
+.highcharts-plot-band {
+    fill: #000000;
+    fill-opacity: 0.05;
 }

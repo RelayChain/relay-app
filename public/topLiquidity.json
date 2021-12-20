@@ -1,0 +1,16 @@
+[
+    {
+        "token": "Ethereum ETH",
+        "maxTransferSize": "99.03",
+        "totalLiquidity": "199103",
+        "volume": "408394",
+        "proportion": "42.9"
+    },
+    {
+        "token": "Avalanche AVAX",
+        "maxTransferSize": "97.03",
+        "totalLiquidity": "81103",
+        "volume": "98394",
+        "proportion": "64.9"
+    }
+]

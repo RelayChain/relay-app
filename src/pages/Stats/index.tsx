@@ -1,7 +1,11 @@
 import { ChartWidget } from 'components/ChartWidget'
-import React, { Component } from 'react'
+import useTvl from 'hooks/useTvl'
+import useTotalTx from 'hooks/useTotalTx'
+import React, { Component, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import TopLiquidity from './TopLiquidity'
 import Widget from './Widget'
+import useTotalData from 'hooks/useTotalTx'
 
 
 const StatsTitle = styled.div`
@@ -17,8 +21,10 @@ const StatsTitle = styled.div`
 const WidgetContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 105px;
+    max-width: 1020px;
+    padding-right: 125px;
 
 `
 const ChartContainer = styled.div`
@@ -28,9 +34,8 @@ const ChartContainer = styled.div`
     "chartTxChain chartTx";
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-    height: 300px;
-    margin: 0;
+    grid-gap: 10px; 
+    margin-top: 10px;
     justify-items: center;
     align-items: center;
 `
@@ -47,10 +52,6 @@ width: 100px;
 const FeeWidget = styled.div`
 width: 100px; 
 `
-const TopLiquidity = styled.div`
-text-align: center;
-height: 50px;
-`
 const ChartLiquidity = styled.div`
 grid-area: chartLiq;
 `
@@ -63,36 +64,63 @@ grid-area: chartTxChain;
 const ChartTx = styled.div`
 grid-area: chartTx;
 `
-const StatsContainer = styled.div`
-    width: 90vw;
-    heigth: 90vh;
+const StatsContainer = styled.div` 
+    
+`
+const WrapStats = styled.div`
+    max-width: 1240px;
+    padding: 30px;
 `
 export default function Stats({ }) {
+    const [totalTvl, setTotalTvl] = useState(1)
+    const [totalTx, setTotalTx] = useState(0)
+    const [totalFees, setTotalFees] = useState(0)
+    const [totalVolume, setTotalVolume] = useState(0)
+    const tvl = useTvl()
+    const totTx = useTotalData('total_txn')
+    const totFees = useTotalData('total_fees')
+    const totVolume = useTotalData('total_bridged_value')
 
+    useEffect(() => {
+        setTotalTx(Math.round(totTx))
+    }, [totTx])
 
+    useEffect(() => {
+        setTotalVolume(Math.round(totVolume))
+    }, [totVolume])
 
+    useEffect(() => {
+        setTotalFees(Math.round(totFees))
+    }, [totFees])
+
+    useEffect(() => {
+        setTotalTvl(Math.round(tvl))
+    }, [tvl])
     return (
         <StatsContainer>
             <StatsTitle>Dashboard</StatsTitle>
-            <WidgetContainer>
-                <TvlWidget>
-                    <Widget type={'TVL'} title={'TVL'}></Widget>
-                </TvlWidget>
-                <TxWidget>
-                    <Widget type={'TX'} title={'Total Txns'}></Widget>
-                </TxWidget>
-                <FeeWidget>
-                    <Widget type={'FEES'} title={'Total Fees'}></Widget>
-                </FeeWidget>
-            </WidgetContainer>
+            <WrapStats>
+                <WidgetContainer>
+                    <TvlWidget>
+                        <Widget type={'TVL'} title={'TVL'} value={totalTvl}></Widget>
+                    </TvlWidget>
+                    <TxWidget>
+                        <Widget type={'TX'} title={'Total Txns'} value={totalTx}></Widget>
+                    </TxWidget>
+                    <FeeWidget>
+                        <Widget type={'FEES'} title={'Total Fees'} value={totalFees}></Widget>
+                    </FeeWidget>
+                </WidgetContainer>
 
-            <ChartContainer>
-                <ChartLiquidity><ChartWidget title={'ChartLiquidity'}></ChartWidget></ChartLiquidity>
-                <ChartVolume><ChartWidget title={'ChartVolume'}></ChartWidget></ChartVolume>
-                <ChartTxByChain><ChartWidget title={'ChartTxByChain'}></ChartWidget></ChartTxByChain>
-                <ChartTx><ChartWidget title={'ChartTx'}></ChartWidget></ChartTx>
-            </ChartContainer>
-            <TopLiquidity title={'Top Liquidity'}  > </TopLiquidity>
+                <ChartContainer>
+                    <ChartLiquidity><ChartWidget type={'LIQUIDITY'} title={'ChartLiquidity'}></ChartWidget></ChartLiquidity>
+                    <ChartVolume><ChartWidget type={'VOLUME'} title={'ChartVolume'} value={totalVolume}></ChartWidget></ChartVolume>
+                    <ChartTxByChain><ChartWidget type={'TXCHAIN'} title={'ChartTxByChain'}></ChartWidget></ChartTxByChain>
+                    <ChartTx><ChartWidget type={'TX'} title={'Transactions'} value={6544}></ChartWidget></ChartTx>
+                </ChartContainer>
+                <TopLiquidity title={'Top Liquidity'} />
+            </WrapStats>
+
         </StatsContainer>
     )
 }
