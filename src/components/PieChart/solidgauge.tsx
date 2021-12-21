@@ -62,7 +62,7 @@ const Solidgauge = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
                 {
                     from: 0,
                     to: 100,
-                    color: '#666666' // green
+                    color: '#666666'
                 }
             ]
         },
@@ -72,7 +72,9 @@ const Solidgauge = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
             type: 'solidgauge',
             dataLabels: {
                 enabled: true,
+
                 format: `{point.y:.0f}%`,
+
             },
             data: [{
                 color: '#e6cb00',
@@ -81,7 +83,8 @@ const Solidgauge = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
                 y: 80
             }],
             tooltip: {
-                valueSuffix: ' %'
+                valueSuffix: ' %',
+
             }
         }],
         credits: {

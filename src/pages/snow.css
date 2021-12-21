@@ -274,7 +274,6 @@
 }
 .highcharts-grid .highcharts-xaxis-grid {
     stroke: #f50303;
-    fill: #90ed7d;
 }
 .highcharts-point {
     stroke-width: 5;
@@ -298,7 +297,54 @@ path.highcharts-pane {
     fill: "transparent !important";
 }
 
-.highcharts-plot-band {
-    fill: #000000;
-    fill-opacity: 0.05;
+.highcharts-series.highcharts-series-0.highcharts-solidgauge-series.highcharts-tracker
+    path.highcharts-point.highcharts-color-0 {
+    fill: #bd00ff;
 }
+.highcharts-color-0 {
+    stroke: transparent;
+}
+.highcharts-series.highcharts-series-0.highcharts-pie-series.highcharts-tracker
+    path.highcharts-point.highcharts-color-0 {
+    fill: #666666;
+}
+.highcharts-pane-group .highcharts-pane {
+    fill: transparent;
+    stroke: transparent;
+}
+.highcharts-label-box.highcharts-data-label-box {
+    fill: transparent;
+    stroke: transparent;
+}
+.wave {
+    background: #666666;
+    position: relative;
+}
+
+.wave::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10px;
+    background-size: 20px 40px;
+    background-image: radial-gradient(circle at 10px -15px, transparent 20px, #bd00ff 21px);
+}
+.wave::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 15px;
+    background-size: 30px 40px;
+    background-image: radial-gradient(circle at 10px 26px, #bd00ff 20px, transparent 21px);
+}
+.highcharts-point {
+    stroke-linecap: round;
+}
+/* .highcharts-text-outline text {
+    font-size: 5px;
+    color: tomato;
+} */

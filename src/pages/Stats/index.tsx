@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import TopLiquidity from './TopLiquidity'
 import Widget from './Widget'
 import useTotalData from 'hooks/useTotalTx'
+import useStatInArray from 'hooks/useDailyTx'
 
 
 const StatsTitle = styled.div`
@@ -113,12 +114,12 @@ export default function Stats({ }) {
                 </WidgetContainer>
 
                 <ChartContainer>
-                    <ChartLiquidity><ChartWidget type={'LIQUIDITY'} title={'ChartLiquidity'}></ChartWidget></ChartLiquidity>
+                    {false && <ChartLiquidity><ChartWidget type={'LIQUIDITY'} title={'ChartLiquidity'}></ChartWidget></ChartLiquidity>}
                     <ChartVolume><ChartWidget type={'VOLUME'} title={'ChartVolume'} value={totalVolume}></ChartWidget></ChartVolume>
                     <ChartTxByChain><ChartWidget type={'TXCHAIN'} title={'ChartTxByChain'}></ChartWidget></ChartTxByChain>
                     <ChartTx><ChartWidget type={'TX'} title={'Transactions'} value={6544}></ChartWidget></ChartTx>
                 </ChartContainer>
-                <TopLiquidity title={'Top Liquidity'} />
+                {false && <TopLiquidity title={'Top Liquidity'} />}
             </WrapStats>
 
         </StatsContainer>

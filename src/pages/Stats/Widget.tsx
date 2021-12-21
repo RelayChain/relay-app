@@ -1,6 +1,8 @@
 import PieChart from 'components/PieChart'
 import Solidgauge from 'components/PieChart/solidgauge'
-import React from 'react'
+import WaveChart from 'components/PieChart/WaveChart'
+import useStatInArray from 'hooks/useDailyTx'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 const numeral = require('numeral')
 
@@ -22,6 +24,10 @@ const WidgetContainer = styled.div`
     padding: 25px;
 `
 const ChartBlock = styled(PieChart)`
+    width: 104px;
+    height: 104px;
+`
+const StyledWaveChart = styled(WaveChart)`
     width: 84px;
     height: 84px;
 `
@@ -59,23 +65,47 @@ const TxInfoBlock = styled.div`
     color: #38E4DE;
 `
 function Widget({ type, title, value }: WidgetProps) {
-    const onSelectedValue = (selectedValue?: number, selectedPerc?: number) => {
-
+    const now = new Date()
+    const Yesterday = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() - 1} `
+    const Today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1} `
+    const txIntervalData = useStatInArray(`daily_txns?start_time='${Yesterday} 00:00:00'&end_time='${Today} 00:00:00'`)
+    type SeriesType = {
+        name: string
+        y: number
     }
-    const series = [
-        { name: '', y: 25 },
-        { name: '', y: 75 }
-    ]
+    const [differentValue, setDifferent] = useState(0)
+    const initSeries: SeriesType[] = []
+    const [series, setSeries] = useState(initSeries)
+    useEffect(() => {
+        if (txIntervalData.length === 2) {
+            let sumTx = txIntervalData[0]['Transactions'] + txIntervalData[1]['Transactions']
+            const data = series
+            let txValue = 0
+            txIntervalData.map(item => {
+                txValue = txValue < +item['Transactions'] ? (item['Transactions'] - txValue) : txValue - item['Transactions']
+
+                const newData = {} as SeriesType
+
+                newData.y = Math.round((item['Transactions'] / sumTx) * 100)
+                data.push(newData)
+
+
+            })
+            setDifferent(txValue)
+            setSeries(data)
+        }
+    }, [txIntervalData])
 
     return (
         <WidgetContainer>
+            {type === 'TVL' && <StyledWaveChart valueTop={47} valueBottom={53} />}
             {type === 'FEES' && <StyledSolidgauge lineChartWidth={50} series={series} typeChart={type} />}
-            {type !== 'FEES' && <ChartBlock lineChartWidth={50} series={series} typeChart={type} />}
+            {type === 'TX' && <ChartBlock lineChartWidth={50} series={series} typeChart={type} />}
 
             <WidgetInfo>
                 <WidgetTitle>{title}</WidgetTitle>
                 <WidgetValueBlock>{type === 'TVL' ? '$ ' : ''}{numeral(value).format('0,0.00')}</WidgetValueBlock>
-                {type === 'TX' && <TxInfoBlock>{'4365 txns more than yesterday'}</TxInfoBlock>}
+                {type === 'TX' && <TxInfoBlock>{Math.abs(differentValue)}{`${differentValue > 0 ? ' txns more ' : ' txns less '} than yesterday`}</TxInfoBlock>}
             </WidgetInfo>
         </WidgetContainer>
     )

@@ -131,7 +131,6 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
 
                 seriesData.push(oneItem)
             })
-            console.log('seriesData LIQUIDITY:>> ', seriesData);
             setChartColumnData(seriesData)
 
         }
@@ -161,7 +160,6 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
 
     }, [statData])
     const getInfoForChart = () => {
-        console.log('chartColumnData :>> ', chartColumnData);
         const now = new Date()
 
         const utcTime = `${now.getDate()} ${now.toLocaleString('default', { month: 'short' })}${now.getFullYear()} (UTC)`

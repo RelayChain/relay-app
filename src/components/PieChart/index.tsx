@@ -24,7 +24,8 @@ const PieChart = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
         series: [{
             type: 'pie',
             name: 'Share',
-            data: series
+            data: series,
+
         }],
         tooltip: {
             enabled: false
@@ -41,12 +42,19 @@ const PieChart = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
                 colors: ['#FF008A', '#BD00FF'],
                 dataLabels: {
                     enabled: true,
+                    style: {
+                        fontFamily: "Montserrat",
+                        fontStyle: "normal",
+                        fontWeight: "bold",
+                        fontSize: "10px",
+                        color: "white"
+                    },
                     format: '<br>{point.percentage:.0f}%</br>',
-                    distance: -15,
+                    distance: -20,
                     filter: {
                         property: 'percentage',
                         operator: '>',
-                        value: 8
+                        value: 30
                     }
                 }
             }
