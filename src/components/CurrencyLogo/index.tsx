@@ -28,8 +28,8 @@ const StyledLogoURI = styled.img`
 `
 const logosNames = {
   //name logoName of a file in assets/images/crosschain folder   => names
-  'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX', 'Avalanche'],
-  'ETH': ['ETH', 'pngETH', 'zETH', 'Ethereum'],
+  'AVAX': ['AVAX', 'WAVAX', 'AWAX', 'zAWAX', 'wAVAX', 'AVA', 'zAVAX', 'eAVAX', 'Avalanche', 'Avalanche AVAX'],
+  'ETH': ['ETH', 'pngETH', 'zETH', 'Ethereum', 'Ethereum ETH'],
   'WETH': ['WETH', 'wETH', 'WETH.e'],
   'HT': ['HT', 'HECO', 'WHT', 'HECO'],
   'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB', 'Smart Chain', 'SmartChain'],
@@ -72,7 +72,7 @@ const logosNames = {
   'MTV': ['MTV', 'MULTIVAC', 'MultiVAC']
 }
 
-function getLogoByName(tokenName: string) {
+export function getLogoByName(tokenName: string) {
   return require(`../../assets/images/crosschain/${tokenName}.png`)
 }
 export const getCurrencyLogoImage = (symbol: string | undefined) => {
