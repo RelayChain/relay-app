@@ -97,9 +97,9 @@ const BarChart = ({ categoriesX, onSelectedValue, lineChartWidth, series, barCol
             enabled: false
         },
         xAxis: {
+            gridLineWidth: 0.1,
+            gridLineColor: '#0AA5E8',
             categories: categoriesX,
-            lineColor: 'transparent',
-            minorGridLineColor: 'transparent',
             tickColor: 'transparent',
             labels: {
                 style: {

@@ -125,9 +125,9 @@ const ColumnChart = ({ chartData, typeChart }: ColumnChartProps) => {
             }
         },
         xAxis: {
-            lineColor: 'transparent',
+            gridLineWidth: 0.1,
+            gridLineColor: '#0AA5E8',
             categories: Object.values(chartData.map(item => item.name)),
-            minorGridLineColor: 'red',
             tickColor: 'red',
             labels: {
                 style: {

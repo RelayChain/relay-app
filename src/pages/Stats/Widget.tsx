@@ -78,24 +78,20 @@ function Widget({ type, title, value }: WidgetProps) {
     const [series, setSeries] = useState(initSeries)
     useEffect(() => {
         if (txIntervalData.length === 2) {
+            console.log("🚀 ~ file: Widget.tsx ~ line 81 ~ useEffect ~ txIntervalData", txIntervalData)
             let sumTx = txIntervalData[0]['Transactions'] + txIntervalData[1]['Transactions']
             const data = series
-            let txValue = 0
+            let txValue = txIntervalData[1]['Transactions'] - txIntervalData[0]['Transactions']
             txIntervalData.map(item => {
-                txValue = txValue < +item['Transactions'] ? (item['Transactions'] - txValue) : txValue - item['Transactions']
-
                 const newData = {} as SeriesType
-
                 newData.y = Math.round((item['Transactions'] / sumTx) * 100)
                 data.push(newData)
-
-
             })
             setDifferent(txValue)
             setSeries(data)
         }
     }, [txIntervalData])
-
+    console.log('differentValue :>> ', differentValue);
     return (
         <WidgetContainer>
             {type === 'TVL' && <StyledWaveChart valueTop={47} valueBottom={53} />}
