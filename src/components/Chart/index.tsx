@@ -47,8 +47,8 @@ const BarChart = ({ categoriesX, onSelectedValue, lineChartWidth, series, barCol
         ],
 
         tooltip: {
-            enabled: true, borderRadius: 22, valueDecimals: 2, shared: true,
-            className: 'toolTip', valuePrefix: '$'
+            enabled: true, borderRadius: 22, valueDecimals: typeChart === 'VOLUME' ? 2 : 0, shared: true,
+            className: 'toolTip', valuePrefix: `${typeChart === 'VOLUME' ? '$' : ''}`
         },
         plotOptions: {
             series: {

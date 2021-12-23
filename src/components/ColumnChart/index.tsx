@@ -11,7 +11,8 @@ type DataChart = {
 }
 type ColumnChartProps = {
     chartData: DataChart[],
-    typeChart: string
+    typeChart: string,
+    widthChart: number
 }
 
 const Box = styled.div`
@@ -21,7 +22,7 @@ const Box = styled.div`
   justify-content: center;
 `
 
-const ColumnChart = ({ chartData, typeChart }: ColumnChartProps) => {
+const ColumnChart = ({ chartData, typeChart, widthChart }: ColumnChartProps) => {
 
     const perShapeGradient = {
         x1: 0,
@@ -114,7 +115,7 @@ const ColumnChart = ({ chartData, typeChart }: ColumnChartProps) => {
             styledMode: false,
             backgroundColor: 'transparent',
             height: 250,
-            width: 500,
+            width: widthChart,
             spacingBottom: 0,
             spacingLeft: 5
         },

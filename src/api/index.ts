@@ -33,6 +33,7 @@ export async function getTVLHistory() {
 }
 
 const RELAY_API_URL = window.location.hostname === 'development-branch.relaychain.com'
+  || window.location.hostname === 'localhost'
   ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
   : 'https://relay-api-33e56.ondigitalocean.app';
 
@@ -45,7 +46,7 @@ export async function getTvlData<T>() {
 }
 
 export async function getGasPrices() {
-  return getTyped<{[k: number]: string}>(`${RELAY_API_URL}/api/gasPrices`);
+  return getTyped<{ [k: number]: string }>(`${RELAY_API_URL}/api/gasPrices`);
 }
 
 export async function getCoinGeckoPrice(symbol: string) {

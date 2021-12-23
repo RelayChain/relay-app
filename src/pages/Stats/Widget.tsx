@@ -6,20 +6,27 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 const numeral = require('numeral')
 
+
+type SeriesType = {
+    name: string
+    y: number
+}
 interface WidgetProps {
     type: string
     title: string
     value: any
+    series: SeriesType[],
+    widgetWidth: number
 }
 
-const WidgetContainer = styled.div`
+const WidgetContainer = styled.div<{ widgetWidth: number }>`
     display: flex;
     align-items: center
     background: linear-gradient(4.66deg, rgba(102, 102, 102, 0.2) 3.92%, rgba(255, 255, 255, 0) 96.38%);
     mix-blend-mode: normal;
     backdrop-filter: blur(100px);
     border-radius: 30px;
-    width: 384px;
+    width:  ${({ widgetWidth }) => widgetWidth}px;
     height: 136px;
     padding: 25px;
 `
@@ -64,36 +71,16 @@ const TxInfoBlock = styled.div`
     line-height: 16px;
     color: #38E4DE;
 `
-function Widget({ type, title, value }: WidgetProps) {
+function Widget({ type, title, value, series, widgetWidth }: WidgetProps) {
     const now = new Date()
     const Yesterday = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() - 1} `
     const Today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1} `
     const txIntervalData = useStatInArray(`daily_txns?start_time='${Yesterday} 00:00:00'&end_time='${Today} 00:00:00'`)
-    type SeriesType = {
-        name: string
-        y: number
-    }
+
     const [differentValue, setDifferent] = useState(0)
     const initSeries: SeriesType[] = []
-    const [series, setSeries] = useState(initSeries)
-    useEffect(() => {
-        if (txIntervalData.length === 2) {
-            console.log("🚀 ~ file: Widget.tsx ~ line 81 ~ useEffect ~ txIntervalData", txIntervalData)
-            let sumTx = txIntervalData[0]['Transactions'] + txIntervalData[1]['Transactions']
-            const data = series
-            let txValue = txIntervalData[1]['Transactions'] - txIntervalData[0]['Transactions']
-            txIntervalData.map(item => {
-                const newData = {} as SeriesType
-                newData.y = Math.round((item['Transactions'] / sumTx) * 100)
-                data.push(newData)
-            })
-            setDifferent(txValue)
-            setSeries(data)
-        }
-    }, [txIntervalData])
-    console.log('differentValue :>> ', differentValue);
     return (
-        <WidgetContainer>
+        <WidgetContainer widgetWidth={widgetWidth}>
             {type === 'TVL' && <StyledWaveChart valueTop={47} valueBottom={53} />}
             {type === 'FEES' && <StyledSolidgauge lineChartWidth={50} series={series} typeChart={type} />}
             {type === 'TX' && <ChartBlock lineChartWidth={50} series={series} typeChart={type} />}

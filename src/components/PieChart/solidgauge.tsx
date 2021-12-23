@@ -80,9 +80,10 @@ const Solidgauge = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
                 color: '#e6cb00',
                 radius: '100%',
                 innerRadius: '75%',
-                y: 80
+                y: series[1]?.y
             }],
             tooltip: {
+                valuePrefix: '<p>today fees </p>',
                 valueSuffix: ' %',
 
             }

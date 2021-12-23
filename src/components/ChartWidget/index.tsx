@@ -7,6 +7,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 const numeral = require('numeral')
 
+type ChartWidgetProps = {
+    title: string
+    type: string
+    data?: []
+    value?: number
+    width: number
+}
+
 const Title = styled.div`
     font-family: Montserrat;
     font-style: normal;
@@ -18,15 +26,15 @@ const Title = styled.div`
 const ChartBlock = styled.div`
 
 `
-const WidgetContainer = styled.div`
-width: 585px;
-height: 348px;
-background: linear-gradient(4.66deg, rgba(102, 102, 102, 0.2) 3.92%, rgba(255, 255, 255, 0) 96.38%);
-mix-blend-mode: normal;
-backdrop-filter: blur(100px);
-/* Note: backdrop-filter has minimal browser support */
+const WidgetContainer = styled.div<{ chartWidth: number }>` 
+    width: ${({ chartWidth }) => chartWidth};
+    height: 348px;
+    margin: 10px;
+    background: linear-gradient(4.66deg, rgba(102, 102, 102, 0.2) 3.92%, rgba(255, 255, 255, 0) 96.38%);
+    mix-blend-mode: normal;
+    backdrop-filter: blur(100px); 
 
-border-radius: 30px;
+    border-radius: 30px;
 `
 const Header = styled.div`
     display: flex;
@@ -70,13 +78,8 @@ const ChainButton = styled.button`
     background: #301662;
     border-radius: 50px;
 `
-type ChartWidgetProps = {
-    title: string
-    type: string
-    data?: []
-    value?: number
-}
-export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
+
+export function ChartWidget({ title, data, type, value, width }: ChartWidgetProps) {
     const onSelectedValue = (selectedValue?: number, selectedPerc?: number) => {
 
     }
@@ -104,6 +107,7 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
     const totalLiquidity = useLiquidityData(chains)
 
     const statData = useStatInArray(paths[type])
+
 
     useEffect(() => {
         if (totalTxByChains.length && ['TXCHAIN'].includes(type)) {
@@ -160,6 +164,7 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
 
     }, [statData])
     const getInfoForChart = () => {
+
         const now = new Date()
 
         const utcTime = `${now.getDate()} ${now.toLocaleString('default', { month: 'short' })}${now.getFullYear()} (UTC)`
@@ -169,7 +174,7 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
                     ['VOLUME', 'TX'].includes(type) &&
                     <>
                         <ValueBlock>
-                            {type === 'VOLUME' ? '$ ' : ''}{numeral(value).format('0,0.00')}
+                            {type === 'VOLUME' ? `$ ${numeral(value).format('0,0.00')}` : value}
 
                         </ValueBlock>
                         <TimeBlock > {utcTime}</TimeBlock>
@@ -179,8 +184,12 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
             </>
         )
     }
+    console.log('width :>> ', width);
+    const containerWidth = width * 1.2
+    console.log("🚀 ~ file: index.tsx ~ line 169 ~ getInfoForChart ~ containerWidth", containerWidth)
     return (
-        <WidgetContainer>
+
+        < WidgetContainer chartWidth={containerWidth} >
             <Header>
                 <Title>{title}</Title>
                 <HeaderInfo>
@@ -188,11 +197,13 @@ export function ChartWidget({ title, data, type, value }: ChartWidgetProps) {
                 </HeaderInfo>
             </Header>
 
-            {['VOLUME', 'TX'].includes(type) && <BarChart onSelectedValue={onSelectedValue}
-                categoriesX={chartData?.categoriesX}
-                series={chartData?.series}
-                lineChartWidth={500} barColor={type} typeChart={type} ></BarChart>}
-            {['TXCHAIN', 'LIQUIDITY'].includes(type) && <ColumnChart chartData={chartColumnData} typeChart={type}></ColumnChart>}
-        </WidgetContainer>
+            {
+                ['VOLUME', 'TX'].includes(type) && <BarChart onSelectedValue={onSelectedValue}
+                    categoriesX={chartData?.categoriesX}
+                    series={chartData?.series}
+                    lineChartWidth={width} barColor={type} typeChart={type} ></BarChart>
+            }
+            {['TXCHAIN', 'LIQUIDITY'].includes(type) && <ColumnChart chartData={chartColumnData} typeChart={type} widthChart={width}></ColumnChart>}
+        </WidgetContainer >
     )
 }
