@@ -118,7 +118,7 @@ export default function Stats({ }) {
                 newData.y = Math.round((item['Transactions'] / sumTx) * 100)
                 data.push(newData)
             })
-            // setDifferent(txValue)
+            setDifferent(txValue)
             setSeries(data)
         }
     }, [txIntervalData])
@@ -145,7 +145,7 @@ export default function Stats({ }) {
                     <Widget type={'TVL'} title={'TVL'} value={totalTvl} series={series} widgetWidth={widgetWidth}></Widget>
                 </StyledWidgetBlock>
                 <StyledWidgetBlock>
-                    <Widget type={'TX'} title={'Total Txns'} value={totalTx} series={series} widgetWidth={widgetWidth}></Widget>
+                    <Widget type={'TX'} title={'Total Txns'} value={totalTx} series={series} widgetWidth={widgetWidth} different={differentValue}></Widget>
                 </StyledWidgetBlock>
                 <StyledWidgetBlock>
                     <Widget type={'FEES'} title={'Total Fees'} value={totalFees} series={series} widgetWidth={widgetWidth}></Widget>
@@ -153,7 +153,7 @@ export default function Stats({ }) {
             </WidgetContainer>
 
             <ChartContainer>
-                {false && <ChartLiquidity><ChartWidget type={'LIQUIDITY'} title={'Liquidity'} width={chartWidth}></ChartWidget></ChartLiquidity>}
+                <ChartWidget type={'LIQUIDITY'} title={'Liquidity'} width={chartWidth}></ChartWidget>
                 <ChartWidget type={'VOLUME'} title={'Bridge Volume'} value={totalVolume} width={chartWidth}></ChartWidget>
                 <ChartWidget type={'TXCHAIN'} title={'Tnx By Chain'} width={chartWidth}></ChartWidget>
                 <ChartWidget type={'TX'} title={'Transactions'} value={txTodayValue} width={chartWidth}></ChartWidget>

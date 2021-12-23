@@ -17,6 +17,7 @@ interface WidgetProps {
     value: any
     series: SeriesType[],
     widgetWidth: number
+    different?: number
 }
 
 const WidgetContainer = styled.div<{ widgetWidth: number }>`
@@ -71,14 +72,12 @@ const TxInfoBlock = styled.div`
     line-height: 16px;
     color: #38E4DE;
 `
-function Widget({ type, title, value, series, widgetWidth }: WidgetProps) {
+function Widget({ type, title, value, series, widgetWidth, different }: WidgetProps) {
     const now = new Date()
     const Yesterday = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() - 1} `
     const Today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1} `
     const txIntervalData = useStatInArray(`daily_txns?start_time='${Yesterday} 00:00:00'&end_time='${Today} 00:00:00'`)
 
-    const [differentValue, setDifferent] = useState(0)
-    const initSeries: SeriesType[] = []
     return (
         <WidgetContainer widgetWidth={widgetWidth}>
             {type === 'TVL' && <StyledWaveChart valueTop={47} valueBottom={53} />}
@@ -87,8 +86,8 @@ function Widget({ type, title, value, series, widgetWidth }: WidgetProps) {
 
             <WidgetInfo>
                 <WidgetTitle>{title}</WidgetTitle>
-                <WidgetValueBlock>{type === 'TVL' ? '$ ' : ''}{numeral(value).format('0,0.00')}</WidgetValueBlock>
-                {type === 'TX' && <TxInfoBlock>{Math.abs(differentValue)}{`${differentValue > 0 ? ' txns more ' : ' txns less '} than yesterday`}</TxInfoBlock>}
+                <WidgetValueBlock>{type === 'TVL' ? '$ ' + numeral(value).format('0,0.00') : numeral(value).format('0,0')}</WidgetValueBlock>
+                {type === 'TX' && <TxInfoBlock>{Math.abs(different || 0)}{`${(different || 0) > 0 ? ' txns more ' : ' txns less '} than yesterday`}</TxInfoBlock>}
             </WidgetInfo>
         </WidgetContainer>
     )

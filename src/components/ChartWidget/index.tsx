@@ -94,7 +94,6 @@ export function ChartWidget({ title, data, type, value, width }: ChartWidgetProp
     const [chartData, setChartData] = useState({} as ChartData)
     const initColumnData: ChartColumnData[] = []
     const [chartColumnData, setChartColumnData] = useState(initColumnData)
-    const [isNotLoadTxBychain, setLoadTxByChain] = useState(true)
     const paths = {
         'TX': 'daily_txns',
         'VOLUME': 'daily_bridged_value',
@@ -104,7 +103,7 @@ export function ChartWidget({ title, data, type, value, width }: ChartWidgetProp
     }
     const chains = ['AVAX', 'movr', 'matic', 'eth', 'ht', 'ftm', 'iotx', 'sdn', 'cro', 'bnb', 'one']
     const totalTxByChains = useTotalTxByChain(chains)
-    const totalLiquidity = useLiquidityData(chains)
+    const totalLiquidity = useLiquidityData()
 
     const statData = useStatInArray(paths[type])
 
@@ -125,13 +124,12 @@ export function ChartWidget({ title, data, type, value, width }: ChartWidgetProp
         }
     }, [totalTxByChains])
     useEffect(() => {
-        console.log('type :>> ', type);
         if (totalLiquidity.length && ['LIQUIDITY'].includes(type)) {
             const seriesData: ChartColumnData[] = []
             totalLiquidity.map((item: any, ind: number) => {
                 const oneItem = {} as ChartColumnData
-                oneItem.name = chains[ind].toUpperCase()
-                oneItem.y = item.status === 'fulfilled' ? item.value['Total Txn'] : 0
+                oneItem.name = item.Chain.toUpperCase()
+                oneItem.y = item.Liquidity
 
                 seriesData.push(oneItem)
             })
@@ -140,7 +138,6 @@ export function ChartWidget({ title, data, type, value, width }: ChartWidgetProp
         }
     }, [totalLiquidity])
     useEffect(() => {
-
         if (type === 'TX' && statData?.length) {
             const data = {} as ChartData
             data.series = []
@@ -184,9 +181,7 @@ export function ChartWidget({ title, data, type, value, width }: ChartWidgetProp
             </>
         )
     }
-    console.log('width :>> ', width);
     const containerWidth = width * 1.2
-    console.log("🚀 ~ file: index.tsx ~ line 169 ~ getInfoForChart ~ containerWidth", containerWidth)
     return (
 
         < WidgetContainer chartWidth={containerWidth} >

@@ -23,17 +23,19 @@ const PieChart = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
         },
         series: [{
             type: 'pie',
-            name: 'Share',
+            name: `TX`,
             data: series,
 
+
         }],
-        tooltip: {
-            enabled: false
-        },
+
         accessibility: {
             point: {
                 valueSuffix: '%'
             }
+        },
+        tooltip: {
+            enabled: false,
         },
         plotOptions: {
             pie: {
@@ -72,7 +74,7 @@ const PieChart = ({ lineChartWidth, series, typeChart }: BarChartProps) => {
                 {
                     from: 0,
                     to: 100,
-                    color: '#666666' // green
+                    color: '#666666'
                 }
             ]
         },

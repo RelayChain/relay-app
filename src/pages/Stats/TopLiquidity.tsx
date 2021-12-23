@@ -123,8 +123,6 @@ function TopLiquidity({ title }: TopLiquidityProps) {
                             )
                         })
                     }
-
-
                 </tbody>
             </StyledTable>
         </LiquidityInfo >
