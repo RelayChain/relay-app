@@ -457,7 +457,7 @@ export default function Transfer() {
     [onUserInput]
   )
   useEffect(() => {
-    if (targetChain.chainID && currentToken.resourceId && +transferAmount > 0) {
+    if (targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && currentToken.name === 'release-USDC') { // to do list of names of tokens from API or config
       const bigAmount = ethers.utils.parseUnits(transferAmount, currentToken.decimals)
       const bigAmountToString = bigAmount.toString()
 
