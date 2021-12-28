@@ -757,7 +757,7 @@ export default function Transfer() {
             <div>Insufficient balance!</div>
           </UnciffientBlock>
         )}
-        {!enoughBalanceToTransfer && <BelowForm style={{ color: 'red' }}>{`This transfer will done in 48 hours`}</BelowForm>}
+        {!enoughBalanceToTransfer && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
