@@ -28,7 +28,7 @@ export default function Updater(): null {
     if (!chainId || !allCrosschainData?.chains || !allCrosschainData?.chains.length) return
 
     const crossChainConfig: any = allCrosschainData?.chains.find(x => x.networkId === chainId)
-    const list = crossChainConfig?.tokens.map((x: any) => x.address);
+    const list = crossChainConfig?.tokens;
 
     if (!list) return;
 
