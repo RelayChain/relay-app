@@ -72,12 +72,13 @@ export const getAllTokenBalances = async (
         let balance = null
         if (balances[token]) {
           balance = parseFloat(formatUnits(balances[token]))
+          balances[token] = {
+            balance,
+            chainId,
+            address: token
+          }
         }
-        balances[token] = {
-          balance,
-          chainId,
-          address: token
-        }
+
       } catch (err) {
         console.log('formatUnits Error', err);
       }
