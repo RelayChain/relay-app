@@ -129,7 +129,7 @@ function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   return result
 }
 
-export function GetTokenByAddrAndChainId(address: string, chainId: string): TokenConfig {
+export function GetTokenByAddrAndChainId(address: string, chainId: string, resourceId: string, name: string): TokenConfig {
   let result: TokenConfig = {
     address: '',
     decimals: 18,
@@ -139,7 +139,9 @@ export function GetTokenByAddrAndChainId(address: string, chainId: string): Toke
   }
   const { allCrosschainData } = getCrosschainState()
   const tokens = allCrosschainData?.chains?.find(c => String(c.chainId) === chainId)?.tokens ?? [];
-  return tokens.find(t => t.address.toLowerCase() === address.toLowerCase()) ?? result;
+  const token = tokens.find(t => (t.address.toLowerCase() === address.toLowerCase() &&
+    t.name?.toLowerCase() === name?.toLowerCase())) ?? result;
+  return token
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
@@ -286,7 +288,8 @@ export function useCrosschainHooks() {
 
 
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+        crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
       const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
       dispatch(
         setCurrentTxID({
@@ -412,7 +415,8 @@ export function useCrosschainHooks() {
     try {
       const crosschainState = getCrosschainState()
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+        crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
 
       // @ts-ignore
       const signer = web3React.library.getSigner()
@@ -443,7 +447,8 @@ export function useCrosschainHooks() {
   const MakeApprove = async () => {
     const crosschainState = getCrosschainState()
     const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
 
     dispatch(
       setCurrentTxID({
@@ -490,7 +495,8 @@ export function useCrosschainHooks() {
 
   const UpdateOwnTokenBalance = async () => {
     const crosschainState = getCrosschainState()
-    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
     // @ts-ignore
     const signer = web3React.library.getSigner()
     if (currentToken.address !== '') {

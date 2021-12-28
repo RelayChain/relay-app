@@ -51,7 +51,7 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance, currencyName }: { balance: any, currencyName?: string}) {
+function Balance({ balance, currencyName }: { balance: any, currencyName?: string }) {
   return (
     <StyledBalanceText title={balance.toString()}>
       {numeral(balance).format('0,0.00') || 0}

@@ -305,7 +305,7 @@ const ButtonTranfserLight = styled(ButtonPink)`
   margin-top: 20px;
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
-` 
+`
 const UnciffientBlock = styled.div`
   position: relative;
   width: 516px;
@@ -350,15 +350,16 @@ export default function Transfer() {
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
+    useCurrency(loadedUrlParams?.inputCurrencyId, currentToken.name),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
-
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
+
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
+
     [loadedInputCurrency, loadedOutputCurrency]
   )
   const handleConfirmTokenWarning = useCallback(() => {
@@ -420,7 +421,6 @@ export default function Transfer() {
       priceInUsd(tickerTocCoinbaseName[currentToken.assetBase]).then(data => {
         const usd = Object.values(data)[0]
         setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
-        console.log('priceTokenInUsd :>> ', priceTokenInUsd)
       })
     }
   }, [priceInUsd, currentToken])
@@ -465,7 +465,7 @@ export default function Transfer() {
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID)
+        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID, inputCurrency.resourceId, inputCurrency.name)
         dispatch(
           setCurrentToken({
             token: {
