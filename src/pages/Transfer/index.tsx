@@ -54,6 +54,7 @@ import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
+import { getFundsOnHandler } from 'api'
 
 const numeral = require('numeral')
 
@@ -453,6 +454,11 @@ export default function Transfer() {
     },
     [onUserInput]
   )
+  useEffect(() => {
+    getFundsOnHandler(targetChain.chainID, currentToken.resourceId, transferAmount)
+      .then(res => console.log('res :>> ', res))
+
+  }, [targetChain, currentToken, transferAmount])
 
   const formattedAmounts = {
     [independentField]: typedValue
