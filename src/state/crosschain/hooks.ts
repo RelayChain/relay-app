@@ -148,7 +148,7 @@ function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
   const result: Array<CrosschainChain> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
-  if (chains) {
+  if (chains && chains?.length > 0) {
     chains?.map(chain => {
       if (chain.name !== currentChainName) {
         result.push({
@@ -166,30 +166,32 @@ export function GetAvailableTokens(chainName: string, targetChainId?: number): A
   const result: Array<CrosschainToken> = []
   const { allCrosschainData } = getCrosschainState()
   const chains = allCrosschainData?.chains
-  chains?.map(chain => {
-    if (chain.name === chainName) {
-      for (const token of chain.tokens) {
-        if (token.allowedChainsToTransfer?.some(id => id === targetChainId)) {
-          const t = {
-            chainId: chain.chainId,
-            address: token.address,
-            name: token.name || '',
-            symbol: token.symbol || '',
-            decimals: token.decimals,
-            imageUri: token.imageUri,
-            resourceId: token.resourceId,
-            isNativeWrappedToken: token.isNativeWrappedToken,
-            assetBase: token.assetBase,
-            // @ts-ignore
-            disableTransfer: token.disableTransfer,
-            allowedChainsToTransfer: token.allowedChainsToTransfer
+  if (chains && chains.length > 0) {
+    chains?.map(chain => {
+      if (chain.name === chainName) {
+        for (const token of chain.tokens) {
+          if (token.allowedChainsToTransfer?.some(id => id === targetChainId)) {
+            const t = {
+              chainId: chain.chainId,
+              address: token.address,
+              name: token.name || '',
+              symbol: token.symbol || '',
+              decimals: token.decimals,
+              imageUri: token.imageUri,
+              resourceId: token.resourceId,
+              isNativeWrappedToken: token.isNativeWrappedToken,
+              assetBase: token.assetBase,
+              // @ts-ignore
+              disableTransfer: token.disableTransfer,
+              allowedChainsToTransfer: token.allowedChainsToTransfer
+            }
+            result.push(t)
           }
-          result.push(t)
-        }
 
+        }
       }
-    }
-  })
+    })
+  }
   return result
 }
 
