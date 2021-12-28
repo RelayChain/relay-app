@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
 import {
   ChainTransferState,
@@ -8,7 +9,7 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
+import { CurrencyAmount, ETHERSCAN_PREFIXES, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
@@ -397,6 +398,7 @@ export default function Transfer() {
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
+  const [enoughBalanceToTransfer, setEnoughBalanceToTransfer] = useState(true)
 
 
   useEffect(() => {
@@ -455,8 +457,15 @@ export default function Transfer() {
     [onUserInput]
   )
   useEffect(() => {
-    getFundsOnHandler(targetChain.chainID, currentToken.resourceId, transferAmount)
-      .then(res => console.log('res :>> ', res))
+    if (targetChain.chainID && currentToken.resourceId && +transferAmount > 0) {
+      const bigAmount = ethers.utils.parseUnits(transferAmount, currentToken.decimals)
+      const bigAmountToString = bigAmount.toString()
+
+      getFundsOnHandler(targetChain.chainID, currentToken.resourceId, bigAmountToString)
+        .then(res => {
+          setEnoughBalanceToTransfer(!!res?.result)
+        })
+    }
 
   }, [targetChain, currentToken, transferAmount])
 
@@ -748,6 +757,7 @@ export default function Transfer() {
             <div>Insufficient balance!</div>
           </UnciffientBlock>
         )}
+        {!enoughBalanceToTransfer && <BelowForm style={{ color: 'red' }}>{`This transfer will done in 48 hours`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer

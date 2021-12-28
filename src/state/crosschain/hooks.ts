@@ -81,27 +81,28 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
     chainID: ''
   }
   const chains = allCrosschainData?.chains
-  chains?.map(chain => {
-    if (chain.name === currentChainName) {
-      result = {
-        name: chain.name,
-        chainID: String(chain.chainId),
-        symbol: chain.nativeTokenSymbol,
-        marketPlace: chain.marketPlace,
-        blockExplorer: chain.blockExplorer,
-        rpcUrl: chain.rpcUrl
-      }
-      if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
-        const exchangeFields = {
-          exchangeContractAddress: chain.exchangeContractAddress,
-          rateZeroToRelay: chain.rateZeroToRelay,
-          zeroContractAddress: chain.zeroContractAddress,
+  if (chains && chains.length > 0) {
+    chains?.map(chain => {
+      if (chain.name === currentChainName) {
+        result = {
+          name: chain.name,
+          chainID: String(chain.chainId),
+          symbol: chain.nativeTokenSymbol,
+          marketPlace: chain.marketPlace,
+          blockExplorer: chain.blockExplorer,
+          rpcUrl: chain.rpcUrl
         }
-        result = { ...result, ...exchangeFields }
+        if (chain.exchangeContractAddress && chain.rateZeroToRelay && chain.zeroContractAddress) {
+          const exchangeFields = {
+            exchangeContractAddress: chain.exchangeContractAddress,
+            rateZeroToRelay: chain.rateZeroToRelay,
+            zeroContractAddress: chain.zeroContractAddress,
+          }
+          result = { ...result, ...exchangeFields }
+        }
       }
-    }
-  })
-  //}
+    })
+  }
   return result
 }
 
