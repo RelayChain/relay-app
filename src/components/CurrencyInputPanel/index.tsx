@@ -197,6 +197,7 @@ interface CurrencyInputPanelProps {
   stakingInfo?: StakingInfo
   isRightInput?: boolean
   style?: any
+  blurInput?: (ev: any) => any
 }
 
 export default function CurrencyInputPanel({
@@ -226,7 +227,8 @@ export default function CurrencyInputPanel({
   grayedOut = false,
   stakingInfo,
   isRightInput = false,
-  style = { padding: '10px' }
+  style = { padding: '10px' },
+  blurInput
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -264,6 +266,7 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <InputWrap>
                 <StyledNumericalInput
+                  onBlur={(event) => blurInput ? blurInput(event) : () => null}
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
