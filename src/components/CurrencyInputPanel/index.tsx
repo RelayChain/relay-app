@@ -105,7 +105,7 @@ const SectionLabel = styled.span`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   margin-left: auto;
   width: 24px;
@@ -305,14 +305,14 @@ export default function CurrencyInputPanel({
                     {isCrossChain && label === 'To'
                       ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                       : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                          ? altCurrency.symbol.slice(0, 4) +
-                            '...' +
-                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                          : altCurrency?.symbol) || (
-                          <StyledTokenNameDeafult>
-                            {!disableCurrencySelect ? t('selectToken') : ''}
-                          </StyledTokenNameDeafult>
-                        )}
+                        ? altCurrency.symbol.slice(0, 4) +
+                        '...' +
+                        altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                        : altCurrency?.symbol) || (
+                        <StyledTokenNameDeafult>
+                          {!disableCurrencySelect ? t('selectToken') : ''}
+                        </StyledTokenNameDeafult>
+                      )}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}

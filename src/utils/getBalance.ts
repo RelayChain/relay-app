@@ -1,6 +1,6 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
-
 import { ChainId } from '@zeroexchange/sdk'
+import { TokenConfig } from 'constants/CrosschainConfig';
 
 const myCrypto = require('./eth-scan/index');
 const { getTokensBalance } = myCrypto;
@@ -51,33 +51,36 @@ export const getNativeTokenBalance = async (account: string) => {
 export const getAllTokenBalances = async (
   account?: string | undefined | null,
   chainId?: ChainId,
-  tokens?: any,
+  tokens?: TokenConfig[],
   provider?: any
 ) => {
   try {
-    if (!chainId || !account) {
+    if (!chainId || !account || !tokens) {
       return
     }
     const contractAddress = getBalanceContract(chainId)
 
     let balances: { [key: string]: { balance: any } | any } = {}
     try {
-      balances = await getTokensBalance(provider, account, tokens, { contractAddress })
+      const tokenAddresses = tokens?.map(t => t.address);
+      balances = await getTokensBalance(provider, account, tokenAddresses, { contractAddress })
     } catch (err) {
       console.log('getTokensBalance error', err)
     }
 
     for (let token of tokens) {
+      // console.log(token);
       try {
         let balance = null
-        if (balances[token]) {
-          balance = parseFloat(formatUnits(balances[token]))
+        if (balances[token.address]) {
+          balance = parseFloat(formatUnits(balances[token.address], token.decimals))
+          balances[token.address] = {
+            balance,
+            chainId,
+            address: token.address
+          }
         }
-        balances[token] = {
-          balance,
-          chainId,
-          address: token
-        }
+
       } catch (err) {
         console.log('formatUnits Error', err);
       }

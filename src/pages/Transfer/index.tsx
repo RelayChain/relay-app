@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
 import {
   ChainTransferState,
@@ -8,7 +9,7 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
+import { CurrencyAmount, ETHERSCAN_PREFIXES, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
@@ -54,6 +55,7 @@ import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
+import { getFundsOnHandler } from 'api'
 
 const numeral = require('numeral')
 
@@ -305,7 +307,7 @@ const ButtonTranfserLight = styled(ButtonPink)`
   margin-top: 20px;
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
-` 
+`
 const UnciffientBlock = styled.div`
   position: relative;
   width: 516px;
@@ -350,15 +352,16 @@ export default function Transfer() {
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
+    useCurrency(loadedUrlParams?.inputCurrencyId, currentToken.name),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
-
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
+
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
+
     [loadedInputCurrency, loadedOutputCurrency]
   )
   const handleConfirmTokenWarning = useCallback(() => {
@@ -395,6 +398,7 @@ export default function Transfer() {
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
+  const [enoughBalanceToTransfer, setEnoughBalanceToTransfer] = useState(true)
 
 
   useEffect(() => {
@@ -420,7 +424,6 @@ export default function Transfer() {
       priceInUsd(tickerTocCoinbaseName[currentToken.assetBase]).then(data => {
         const usd = Object.values(data)[0]
         setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
-        console.log('priceTokenInUsd :>> ', priceTokenInUsd)
       })
     }
   }, [priceInUsd, currentToken])
@@ -453,6 +456,18 @@ export default function Transfer() {
     },
     [onUserInput]
   )
+  useEffect(() => {
+    if (targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && currentToken.name === 'USDC') { // TODO: list of names of tokens from API or config
+      const bigAmount = ethers.utils.parseUnits(transferAmount, currentToken.decimals)
+      const bigAmountToString = bigAmount.toString()
+
+      getFundsOnHandler(targetChain.chainID, currentToken.resourceId, bigAmountToString)
+        .then(res => {
+          setEnoughBalanceToTransfer(!!res?.result)
+        })
+    }
+
+  }, [targetChain, currentToken, transferAmount])
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -465,7 +480,7 @@ export default function Transfer() {
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID)
+        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID, inputCurrency.resourceId, inputCurrency.name)
         dispatch(
           setCurrentToken({
             token: {
@@ -742,6 +757,7 @@ export default function Transfer() {
             <div>Insufficient balance!</div>
           </UnciffientBlock>
         )}
+        {!enoughBalanceToTransfer && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
