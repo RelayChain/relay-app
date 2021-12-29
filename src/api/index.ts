@@ -32,17 +32,24 @@ export async function getTVLHistory() {
   return get(`${ZERO_API_URL}/TVL/GetHistory`)
 }
 
-export async function getFundsOnHandler(chainId: string, resourceId: string, amount: string) {
-  const host = 'https://relay-api-33e56.ondigitalocean.app'
-  const url = `${host}/api/enoughFundsOnHandler?resourceId=${resourceId}&chainId=${chainId}&amount=${amount}`
-  return get(url)
-}
+
 
 const RELAY_API_URL
   = window.location.hostname === 'development-branch.relaychain.com' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
     : window.location.hostname === 'localhost' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
       // : window.location.hostname === 'localhost' ? 'http://localhost:8080'
       : 'https://relay-api-33e56.ondigitalocean.app';
+
+
+export async function getFundsOnHandler(chainId: string, resourceId: string, amount: string) {
+  const url = `${RELAY_API_URL}/api/enoughFundsOnHandler?resourceId=${resourceId}&chainId=${chainId}&amount=${amount}`
+  return get(url)
+}
+
+export async function getBalanceOnHandler(chainId: string, resourceId: string) {
+  const url = `${RELAY_API_URL}/api/balanceOnHandler?resourceId=${resourceId}&chainId=${chainId}`
+  return get(url)
+}
 
 export async function getCrossChainData<T>() {
   return getTyped<T>(`${RELAY_API_URL}/api/crosschain-config`)
