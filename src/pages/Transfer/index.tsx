@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
 import {
   ChainTransferState,
@@ -8,7 +9,7 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, Token } from '@zeroexchange/sdk'
+import { CurrencyAmount, ETHERSCAN_PREFIXES, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
@@ -54,6 +55,7 @@ import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
+import { getBalanceOnHandler, getFundsOnHandler } from 'api'
 
 const numeral = require('numeral')
 
@@ -306,14 +308,6 @@ const ButtonTranfserLight = styled(ButtonPink)`
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
 `
-const ChartContainer = styled(ChartWidget)`
-  width: 604px;
-  height: 230px;
-  background: rgba(70, 70, 70, 0.25);
-  mix-blend-mode: normal;
-  backdrop-filter: blur(100px);
-  border-radius: 30px;
-`
 const UnciffientBlock = styled.div`
   position: relative;
   width: 516px;
@@ -358,15 +352,16 @@ export default function Transfer() {
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.inputCurrencyId),
+    useCurrency(loadedUrlParams?.inputCurrencyId, currentToken.name),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
-
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
+
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
+
     [loadedInputCurrency, loadedOutputCurrency]
   )
   const handleConfirmTokenWarning = useCallback(() => {
@@ -403,6 +398,10 @@ export default function Transfer() {
   const { independentField, typedValue } = useSwapState()
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
+  const [isMaxAmount, setIsMaxAmount] = useState(false)
+  const [isTransferToHandler, setIsTransferToHandler] = useState(false)
+  const [balanceOnHandler, setBalanceOnHandler] = useState('0')
+  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC'])
 
 
   useEffect(() => {
@@ -428,7 +427,6 @@ export default function Transfer() {
       priceInUsd(tickerTocCoinbaseName[currentToken.assetBase]).then(data => {
         const usd = Object.values(data)[0]
         setPriceTokenInUsd(usd?.usd ? +usd?.usd : 0)
-        console.log('priceTokenInUsd :>> ', priceTokenInUsd)
       })
     }
   }, [priceInUsd, currentToken])
@@ -461,6 +459,10 @@ export default function Transfer() {
     },
     [onUserInput]
   )
+  useEffect(() => {
+
+
+  }, [targetChain, currentToken, transferAmount])
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -473,7 +475,7 @@ export default function Transfer() {
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID)
+        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID, inputCurrency.resourceId, inputCurrency.name)
         dispatch(
           setCurrentToken({
             token: {
@@ -580,6 +582,22 @@ export default function Transfer() {
     }
     return ''
   }
+
+  const onBlurInput = (event: any) => {
+    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) { // TODO: list of names of tokens from API or config
+      getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
+        .then(res => {
+          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result, currentToken.decimals)
+          const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
+          setBalanceOnHandler(amountHandler)
+          setIsTransferToHandler(!!amountHandler)
+        })
+    }
+  }
+
+  useEffect(() => {
+    setIsMaxAmount(+transferAmount > 0 && +balanceOnHandler > 0 && +transferAmount >= +balanceOnHandler)
+  }, [transferAmount, balanceOnHandler])
 
   useEffect(() => {
     if (targetChain && currentToken) {
@@ -696,6 +714,7 @@ export default function Transfer() {
 
           <FlexBlock style={{ padding: '14px 0 0 0' }}>
             <CurrencyInputPanel
+              blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
@@ -750,6 +769,9 @@ export default function Transfer() {
             <div>Insufficient balance!</div>
           </UnciffientBlock>
         )}
+        {isTransferToHandler && +balanceOnHandler > 0 &&
+          tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
+        {tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer

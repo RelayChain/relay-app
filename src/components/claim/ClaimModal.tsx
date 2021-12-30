@@ -102,7 +102,7 @@ export default function ClaimModal() {
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} UNI
               </TYPE.white>
             </CardSection>
             <Break />
@@ -174,7 +174,7 @@ export default function ClaimModal() {
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} UNI
                 </Text>
               )}
             </AutoColumn>

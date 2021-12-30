@@ -150,6 +150,7 @@ export const UNI: any = {
   [ChainId.HARMONY]: new Token(ChainId.HARMONY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.OKEX]: new Token(ChainId.OKEX, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MULTIVAC]: new Token(ChainId.MULTIVAC, UNI_ADDRESS, 18, 'MTV', 'Uniswap'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -185,6 +186,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.HARMONY]: [WETH[ChainId.HARMONY]],
   [ChainId.CRONOS]: [WETH[ChainId.CRONOS]],
   [ChainId.OKEX]: [WETH[ChainId.OKEX]],
+  [ChainId.MULTIVAC]: [WETH[ChainId.MULTIVAC]],
 }
 
 // used to construct intermediary pairs for trading
@@ -382,10 +384,11 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.IOTEX]: 'Iotex',
   [ChainId.HARMONY]: 'Harmony',
   [ChainId.CRONOS]: 'Cronos',
-  [ChainId.OKEX]: 'OKEx'
+  [ChainId.OKEX]: 'OKEx',
+  [ChainId.MULTIVAC]: 'MultiVAC'
 }
 
-export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO', 'Harmony', 'Cronos']
+export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO', 'Harmony', 'Cronos', 'MultiVAC']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
 

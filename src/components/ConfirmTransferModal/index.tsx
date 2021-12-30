@@ -67,18 +67,20 @@ export default function ConfirmTransferModal({
   let allowanceInterval: any = null;
 
   useEffect(() => {
-   const chaindata =  allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
-   chaindata?.tokens.map(token => {
-     if(token.resourceId === currentToken.resourceId) {
-      setTargetTokenAddress(token.address)
-     }
-   })
+    if (allCrosschainData && allCrosschainData.chains.length) {
+      const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
+      chaindata?.tokens.map(token => {
+        if (token.resourceId === currentToken.resourceId) {
+          setTargetTokenAddress(token.address)
+        }
+      })
+    }
   }, [currentToken, transferTo])
 
   useEffect(() => {
     if (allowanceInterval) {
       clearInterval(allowanceInterval)
-    }   
+    }
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
@@ -125,9 +127,9 @@ export default function ConfirmTransferModal({
             tokenTransferState={tokenTransferState}
           />
         )}
-       
+
         {tokenTransferState === ChainTransferState.TransferFailed &&
-            <TransferFiled  />
+          <TransferFiled />
         }
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&

@@ -407,7 +407,7 @@ export default function Swap({
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID)
+        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID, inputCurrency.resourceId, inputCurrency.name)
         dispatch(
           setCurrentToken({
             token: {

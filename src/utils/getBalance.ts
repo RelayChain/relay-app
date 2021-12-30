@@ -1,6 +1,6 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
-
 import { ChainId } from '@zeroexchange/sdk'
+import { TokenConfig } from 'constants/CrosschainConfig';
 
 const myCrypto = require('./eth-scan/index');
 const { getTokensBalance } = myCrypto;
@@ -26,9 +26,11 @@ export function getBalanceContract(chainId: ChainId) {
     case ChainId.HARMONY:
       return '0x4AEb5fB68dE1Cb0a357B3C4Ee8067761ab56024F'
     case ChainId.CRONOS:
-      return '0x404BB1901167F6D4Bb99f19c5914D4345C9A5559' 
+      return '0x404BB1901167F6D4Bb99f19c5914D4345C9A5559'
     case ChainId.OKEX:
-      return '0xa0CFaB1600d51F5191cBe4F7cceD89D770858B6C'    
+      return '0xa0CFaB1600d51F5191cBe4F7cceD89D770858B6C'
+    case ChainId.MULTIVAC:
+      return '0x613ea203744568f025de7e5b39289af5b2fb7f42'
     default:
       // MAINNET ETH
       return '0x08A8fDBddc160A7d5b957256b903dCAb1aE512C5'
@@ -49,33 +51,36 @@ export const getNativeTokenBalance = async (account: string) => {
 export const getAllTokenBalances = async (
   account?: string | undefined | null,
   chainId?: ChainId,
-  tokens?: any,
+  tokens?: TokenConfig[],
   provider?: any
 ) => {
   try {
-    if (!chainId || !account) {
+    if (!chainId || !account || !tokens) {
       return
     }
     const contractAddress = getBalanceContract(chainId)
 
     let balances: { [key: string]: { balance: any } | any } = {}
     try {
-      balances = await getTokensBalance(provider, account, tokens, { contractAddress })
+      const tokenAddresses = tokens?.map(t => t.address);
+      balances = await getTokensBalance(provider, account, tokenAddresses, { contractAddress })
     } catch (err) {
       console.log('getTokensBalance error', err)
     }
 
     for (let token of tokens) {
+      // console.log(token);
       try {
         let balance = null
-        if (balances[token]) {
-          balance = parseFloat(formatUnits(balances[token]))
+        if (balances[token.address]) {
+          balance = parseFloat(formatUnits(balances[token.address], token.decimals))
+          balances[token.address] = {
+            balance,
+            chainId,
+            address: token.address
+          }
         }
-        balances[token] = {
-          balance,
-          chainId,
-          address: token
-        }
+
       } catch (err) {
         console.log('formatUnits Error', err);
       }

@@ -66,7 +66,8 @@ export const initialState: CrosschainState = {
     address: '',
     assetBase: '',
     symbol: '',
-    decimals: 18
+    decimals: 18,
+    resourceId: ''
   },
   currentBalance: '',
   transferAmount: '',
@@ -191,7 +192,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
       }
     })
     // eslint-disable-next-line
-    .addCase(setCrosschainLastTimeSwitched, (state, {}) => {
+    .addCase(setCrosschainLastTimeSwitched, (state, { }) => {
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
@@ -205,5 +206,5 @@ export default createReducer<CrosschainState>(initialState, builder =>
         allCrosschainData: chainsBridge
       }
     })
-    
+
 )

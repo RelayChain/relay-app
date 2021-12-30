@@ -1,4 +1,4 @@
-import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount,JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
+import { ETHER_CURRENCIES, ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@zeroexchange/sdk'
 import { AppDispatch, AppState } from '../index'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -18,6 +18,7 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
+import { getCrosschainState } from 'state/crosschain/hooks'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -39,7 +40,7 @@ export function useSwapActionHandlers(): {
 
       if (ETHER_CURRENCIES.includes(currency)) {
         selected = String(currency.symbol?.toUpperCase())
-      }      
+      }
       dispatch(
         selectCurrency({
           field,
@@ -105,8 +106,8 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
                 : currency?.symbol === 'MATIC'
                   ? ChainId.MATIC
                   : currency?.symbol === 'HT'
-                  ? ChainId.HECO
-                  : ChainId.AVALANCHE
+                    ? ChainId.HECO
+                    : ChainId.AVALANCHE
         )
     }
   } catch (error) {
@@ -155,8 +156,8 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
   } = useSwapState()
-
-  const inputCurrency = useCurrency(inputCurrencyId)
+  const crossChainState = getCrosschainState()
+  const inputCurrency = useCurrency(inputCurrencyId, crossChainState?.currentToken?.name)
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null

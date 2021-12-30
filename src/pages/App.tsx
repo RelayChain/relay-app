@@ -23,7 +23,6 @@ import { Footer } from 'components/Footer'
 import GraphQLProvider from './../graphql'
 import Guides from './Guides'
 import Header from '../components/Header'
-import { Home } from './Home'
 import Manage from './Pools/Manage'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
@@ -41,6 +40,7 @@ import Transfer from './Transfer'
 import URLWarning from '../components/Header/URLWarning'
 import Web3ReactManager from '../components/Web3ReactManager'
 import styled from 'styled-components'
+import Stats from './Stats'
 
 const AppWrapper = styled.div`
   height: 100vh;
@@ -96,6 +96,7 @@ export default function App() {
                 <Route exact strict path="/single-sided-staking" component={SingleSidedStaking} />
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
+                <Route exact strict path="/stats" component={Stats} />
                 {/* <Route exact strict path="/create" component={RedirectToAddLiquidity} />*/}
                 {/* <Route exact path="/add" component={AddLiquidity} />*/}
                 {/* <Route exact path="/add/:currencyIdA" component={AddLiquidity} />*/}

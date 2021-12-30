@@ -16,7 +16,7 @@ export interface CrosschainToken {
   symbol: string
   decimals: number
   disableTransfer?: boolean
-  resourceId?: string
+  resourceId: string
   allowedChainsToTransfer?: number[]
 }
 
@@ -34,7 +34,7 @@ export interface CrosschainChain {
   relayContractAddress?: string
   marketPlace?: string
   blockExplorer?: string
-  rpcUrl?: string 
+  rpcUrl?: string
 }
 
 export enum ChainTransferState {
@@ -81,5 +81,5 @@ export const setCrosschainTransferStatus = createAction<{ status: ChainTransferS
 export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }>('crosschain/set-deposit-confirmed')
 export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
 export const setPendingTransfer = createAction<{ pendingTransfer: PendingTransfer }>('crosschain/set-pending-transfer')
-export const setCrosschainLastTimeSwitched = createAction<{ }>('crosschain/last-time-switched')
+export const setCrosschainLastTimeSwitched = createAction<{}>('crosschain/last-time-switched')
 export const setAllChainsData = createAction<{ chainsBridge: ChainbridgeConfig }>('crosschain/set-all-chains-data')

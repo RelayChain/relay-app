@@ -1,4 +1,4 @@
-import { Currency,Token, ETHER_NAMES_CURRENCIES, ETHER_CURRENCIES, currencyEquals } from '@zeroexchange/sdk'
+import { Currency, Token, ETHER_NAMES_CURRENCIES, ETHER_CURRENCIES, currencyEquals } from '@zeroexchange/sdk'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
@@ -13,15 +13,15 @@ export function useAllCrossChainTokens() {
   const { availableTokens } = useCrosschainState()
   const { chainId } = useActiveWeb3React()
   const userTokens = useUserAddedTokens()
-  ?.filter((x: any) => x.chainId === chainId)
-  ?.map((x: any) => {
-    return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-  })
+    ?.filter((x: any) => x.chainId === chainId)
+    ?.map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name, x.resourceId)
+    })
   return availableTokens
-        .map((x: any) => {
-          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-        })
-        .concat(userTokens)
+    .map((x: any) => {
+      return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name, x.resourceId)
+    })
+    .concat(userTokens)
 }
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
@@ -39,7 +39,7 @@ export function useAllTokens(): { [address: string]: Token } {
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { }
+          {}
         )
     )
   }, [chainId, userAddedTokens])
@@ -57,24 +57,24 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : bytes32 && BYTES32_REGEX.test(bytes32)
-    ? parseBytes32String(bytes32)
-    : defaultValue
+      ? parseBytes32String(bytes32)
+      : defaultValue
 }
 
 // undefined if invalid or does not exist
 // null if loading
 // otherwise returns the token
-export function useToken(tokenAddress?: string): Token | undefined | null {
+export function useToken(tokenAddress?: string, nameToken?: string): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-
+  const tokenByName = useAllCrossChainTokens().find(token => token.name === nameToken)
   const address = useMemo(() => {
     return isAddress(tokenAddress)
   }, [tokenAddress]);
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const token: Token | undefined = address ? tokens[address] : undefined
+  const token: Token | undefined = tokenByName ? tokenByName : address ? tokens[address] : undefined
 
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(
@@ -97,7 +97,8 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
         address,
         decimals.result[0],
         parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
+        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
+        tokenByName ? tokenByName.resourceId : ''
       )
     }
     return undefined
@@ -112,13 +113,14 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     token,
     tokenName.loading,
     tokenName.result,
-    tokenNameBytes32.result
+    tokenNameBytes32.result,
+    tokenByName
   ])
 }
 
-export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+export function useCurrency(currencyId: string | undefined, tokenName?: string): Currency | null | undefined {
   const isNativeCurrency = ETHER_NAMES_CURRENCIES.includes(String(currencyId?.toUpperCase()))
-  const token = useToken(isNativeCurrency ? undefined : currencyId)
+  const token = useToken(isNativeCurrency ? undefined : currencyId, tokenName)
 
   if (isNativeCurrency) {
     return ETHER_CURRENCIES.find((curr: Currency) => curr.symbol === String(currencyId?.toUpperCase()))
