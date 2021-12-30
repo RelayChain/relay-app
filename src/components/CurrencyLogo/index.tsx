@@ -69,7 +69,8 @@ const logosNames = {
   'ONE': ['ONE', 'HARMONY', 'Harmony'],
   'CRO': ['CRO', 'CRONOS', 'Cronos'],
   'OKT': ['OKT', 'OKEx', 'OKEX'],
-  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC']
+  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC'],
+  'METIS': ['METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis']
 }
 
 export function getLogoByName(tokenName: string) {
