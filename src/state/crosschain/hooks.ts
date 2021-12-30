@@ -233,6 +233,8 @@ function GetChainNameById(chainID: number): string {
     return 'OKEx'
   } else if (chainID === ChainId.MULTIVAC) {
     return 'MultiVAC'
+  } else if (chainID === ChainId.METIS_NETWORK) {
+    return 'Metis Network'
   }
   return ''
 }
