@@ -18,7 +18,10 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   } else {
     const { allCrosschainData } = getCrosschainState()
     const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(t => t.address === token.address))?.name
+    console.log("🚀 ~ file: useColor.ts ~ line 21 ~ getColorFromToken ~ chosenTokenChainName", chosenTokenChainName)
+
     const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : (chosenTokenChainName === 'Metis Network') ? 'metis' : chosenTokenChainName.toLowerCase()
+    console.log("🚀 ~ file: useColor.ts ~ line 24 ~ getColorFromToken ~ chainName", chainName)
     path = `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chainName}-tokens/${token.address}/logo.png`
   }
 
