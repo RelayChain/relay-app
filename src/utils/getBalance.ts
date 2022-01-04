@@ -31,6 +31,8 @@ export function getBalanceContract(chainId: ChainId) {
       return '0xa0CFaB1600d51F5191cBe4F7cceD89D770858B6C'
     case ChainId.MULTIVAC:
       return '0x613ea203744568f025de7e5b39289af5b2fb7f42'
+    case ChainId.METIS_NETWORK:
+      return '0xD35E40776edB5652219CdEc5354fA6c50Fe35e15'
     default:
       // MAINNET ETH
       return '0x08A8fDBddc160A7d5b957256b903dCAb1aE512C5'

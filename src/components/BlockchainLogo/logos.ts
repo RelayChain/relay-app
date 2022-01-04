@@ -12,6 +12,7 @@ import OneLogo from '../../assets/images/crosschain/ONE.png'
 import CroLogo from '../../assets/images/crosschain/CRO.png'
 import OkexLogo from '../../assets/images/crosschain/OKT.png'
 import MTVLogo from '../../assets/images/crosschain/MTV.png'
+import METISLogo from '../../assets/images/crosschain/METIS.png'
 export const logoByName = {
     FTM: FantomLogo,
     AVAX: AvaxLogo,
@@ -26,5 +27,6 @@ export const logoByName = {
     ONE: OneLogo,
     CRO: CroLogo,
     OKT: OkexLogo,
-    MTV: MTVLogo
+    MTV: MTVLogo,
+    METIS: METISLogo
 }

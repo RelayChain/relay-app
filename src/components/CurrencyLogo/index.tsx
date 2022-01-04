@@ -69,7 +69,8 @@ const logosNames = {
   'ONE': ['ONE', 'HARMONY', 'Harmony'],
   'CRO': ['CRO', 'CRONOS', 'Cronos'],
   'OKT': ['OKT', 'OKEx', 'OKEX'],
-  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC']
+  'MTV': ['MTV', 'MULTIVAC', 'MultiVAC'],
+  'METIS': ['METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis']
 }
 
 export function getLogoByName(tokenName: string) {
@@ -118,7 +119,7 @@ export default function CurrencyLogo({
           })
         })
         const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
-        const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : chosenTokenChainName.toLowerCase()
+        const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : (chosenTokenChainName === 'Metis Network') ? 'metis' : chosenTokenChainName.toLowerCase()
 
         if (currency instanceof WrappedTokenInfo) {
           return [...uriLocations, getTokenLogoURL(chainName, logoAddress)]

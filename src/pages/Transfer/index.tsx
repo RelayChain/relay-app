@@ -644,7 +644,7 @@ export default function Transfer() {
       </RowBetweenSidecard>
       <FlexContainer>
         <TokenWarningModal
-          isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+          isOpen={urlLoadedTokens.length > 1 && !dismissTokenWarning}
           tokens={urlLoadedTokens}
           onConfirm={handleConfirmTokenWarning}
         />
