@@ -128,6 +128,7 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+  const [errorMessage, setErrorMessage] = useState('')
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -177,7 +178,8 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true).catch(error => {
+    activate && activate(connector, undefined, true).catch(error => {
+      setErrorMessage(error.toString())
         if (error instanceof UnsupportedChainIdError) {
           activate(connector) // a little janky...can't use setError because the connector isn't set
         } else {
@@ -337,6 +339,7 @@ export default function WalletModal({
               connector={pendingWallet}
               error={pendingError}
               setPendingError={setPendingError}
+              errorMessage={errorMessage}
               tryActivation={tryActivation}
             />
           ) : (
