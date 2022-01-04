@@ -318,9 +318,16 @@ export function useCrosschainHooks() {
       const auxData = '0x00';
 
 
+      // If a chain id is not present here, it will be undefined.
+      // Then the provider will calculate it on it's own.
+      const gasLimit = ({
+        14: 12000000,
+      })[currentChain.chainId];
+
       const resultDepositTx = await bridgeContract
         .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
           gasPrice: currentGasPrice,
+          gasLimit,
           value: WithDecimalsHexString(crosschainState.crosschainFee, 18),
         })
 
