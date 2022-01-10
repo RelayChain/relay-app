@@ -357,6 +357,7 @@ export default function Transfer() {
   ]
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
+  const [handlerHasZeroBalance, setHandlerZeroBalance] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
 
@@ -401,7 +402,7 @@ export default function Transfer() {
   const [isMaxAmount, setIsMaxAmount] = useState(false)
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
-  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC'])
+  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
 
 
   useEffect(() => {
@@ -584,14 +585,19 @@ export default function Transfer() {
   }
 
   const onBlurInput = (event: any) => {
-    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) { // TODO: list of names of tokens from API or config
+    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
-          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result, currentToken.decimals)
+          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result || '0', currentToken.decimals)
           const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
+          if (amountHandler === '0') {
+            setHandlerZeroBalance(true)
+          }
           setBalanceOnHandler(amountHandler)
           setIsTransferToHandler(!!amountHandler)
         })
+    } else {
+      setHandlerZeroBalance(false)
     }
   }
 
@@ -771,9 +777,9 @@ export default function Transfer() {
         )}
         {isTransferToHandler && +balanceOnHandler > 0 &&
           tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
-        {tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
+        {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-        <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
+        <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable() || handlerHasZeroBalance}>
           Transfer
         </ButtonTranfserLight>
       </CenteredInfo>
