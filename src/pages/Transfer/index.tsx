@@ -357,6 +357,7 @@ export default function Transfer() {
   ]
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
+  const [handlerHasZeroBalance, setHandlerZeroBalance] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
 
@@ -401,7 +402,7 @@ export default function Transfer() {
   const [isMaxAmount, setIsMaxAmount] = useState(false)
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
-  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC'])
+  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
 
 
   useEffect(() => {
@@ -459,10 +460,6 @@ export default function Transfer() {
     },
     [onUserInput]
   )
-  useEffect(() => {
-
-
-  }, [targetChain, currentToken, transferAmount])
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -497,10 +494,14 @@ export default function Transfer() {
 
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      handleInputAmountChange(maxAmountInput.toExact())
-      onUserInput(Field.INPUT, maxAmountInput.toExact())
+      let maxAmountToSend = +maxAmountInput?.toExact()
+      if (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) {
+        maxAmountToSend = Math.min(maxAmountToSend, +balanceOnHandler)
+      }
+      handleInputAmountChange(`${maxAmountToSend}`)
+      onUserInput(Field.INPUT, `${maxAmountToSend}`)
     }
-  }, [maxAmountInput, onUserInput, handleInputAmountChange])
+  }, [maxAmountInput, onUserInput, handleInputAmountChange, balanceOnHandler])
 
   // eslint-disable-next-line
   const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
@@ -526,7 +527,6 @@ export default function Transfer() {
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
-    // startNewSwap()
   }
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
@@ -583,17 +583,22 @@ export default function Transfer() {
     return ''
   }
 
-  const onBlurInput = (event: any) => {
-    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) { // TODO: list of names of tokens from API or config
+  useEffect(() => {
+    if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
-          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result, currentToken.decimals)
+          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result || '0', currentToken.decimals)
           const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
+          if (amountHandler === '0') {
+            setHandlerZeroBalance(true)
+          }
           setBalanceOnHandler(amountHandler)
           setIsTransferToHandler(!!amountHandler)
         })
+    } else {
+      setHandlerZeroBalance(false)
     }
-  }
+  }, [currentToken, targetChain])
 
   useEffect(() => {
     setIsMaxAmount(+transferAmount > 0 && +balanceOnHandler > 0 && +transferAmount >= +balanceOnHandler)
@@ -714,7 +719,7 @@ export default function Transfer() {
 
           <FlexBlock style={{ padding: '14px 0 0 0' }}>
             <CurrencyInputPanel
-              blurInput={(event) => onBlurInput(event)}
+              // blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
@@ -771,7 +776,7 @@ export default function Transfer() {
         )}
         {isTransferToHandler && +balanceOnHandler > 0 &&
           tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
-        {tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
+        {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
