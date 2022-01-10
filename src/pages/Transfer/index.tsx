@@ -527,7 +527,6 @@ export default function Transfer() {
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
-    // startNewSwap()
   }
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
