@@ -460,10 +460,6 @@ export default function Transfer() {
     },
     [onUserInput]
   )
-  useEffect(() => {
-
-
-  }, [targetChain, currentToken, transferAmount])
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -498,10 +494,14 @@ export default function Transfer() {
 
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      handleInputAmountChange(maxAmountInput.toExact())
-      onUserInput(Field.INPUT, maxAmountInput.toExact())
+      let maxAmountToSend = +maxAmountInput?.toExact()
+      if (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) {
+        maxAmountToSend = Math.min(maxAmountToSend, +balanceOnHandler)
+      }
+      handleInputAmountChange(`${maxAmountToSend}`)
+      onUserInput(Field.INPUT, `${maxAmountToSend}`)
     }
-  }, [maxAmountInput, onUserInput, handleInputAmountChange])
+  }, [maxAmountInput, onUserInput, handleInputAmountChange, balanceOnHandler])
 
   // eslint-disable-next-line
   const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
@@ -583,8 +583,8 @@ export default function Transfer() {
     return ''
   }
 
-  const onBlurInput = (event: any) => {
-    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) {
+  useEffect(() => {
+    if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
           const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result || '0', currentToken.decimals)
@@ -598,7 +598,7 @@ export default function Transfer() {
     } else {
       setHandlerZeroBalance(false)
     }
-  }
+  }, [currentToken, targetChain])
 
   useEffect(() => {
     setIsMaxAmount(+transferAmount > 0 && +balanceOnHandler > 0 && +transferAmount >= +balanceOnHandler)
@@ -719,7 +719,7 @@ export default function Transfer() {
 
           <FlexBlock style={{ padding: '14px 0 0 0' }}>
             <CurrencyInputPanel
-              blurInput={(event) => onBlurInput(event)}
+              // blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
