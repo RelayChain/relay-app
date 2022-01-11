@@ -10,6 +10,7 @@ import {
   setCrosschainDepositConfirmed,
   setCrosschainLastTimeSwitched,
   setCrosschainFee,
+  setUserBalance,
   setCrosschainRecipient,
   setCrosschainSwapDetails,
   setCrosschainTransferStatus,
@@ -39,6 +40,7 @@ export interface CrosschainState {
   readonly currentBalance: string
   readonly transferAmount: string
   readonly crosschainFee: string
+  readonly userBalance: string
   readonly crosschainTransferStatus: ChainTransferState
   readonly swapDetails: SwapDetails
   readonly depositConfirmed: boolean
@@ -72,6 +74,7 @@ export const initialState: CrosschainState = {
   currentBalance: '',
   transferAmount: '',
   crosschainFee: '',
+  userBalance: '',
   crosschainTransferStatus: ChainTransferState.NotStarted,
   swapDetails: {
     status: ProposalStatus.INACTIVE,
@@ -168,6 +171,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
       return {
         ...currentState,
         crosschainFee: value
+      }
+    })
+    .addCase(setUserBalance, (state, { payload: { balance } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        userBalance: balance
       }
     })
     .addCase(setCrosschainTransferStatus, (state, { payload: { status } }) => {

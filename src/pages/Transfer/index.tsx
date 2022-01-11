@@ -9,7 +9,7 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, ETHERSCAN_PREFIXES, Token } from '@zeroexchange/sdk'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
@@ -56,6 +56,8 @@ import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
 import { getBalanceOnHandler, getFundsOnHandler } from 'api'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
 
 const numeral = require('numeral')
 
@@ -308,7 +310,7 @@ const ButtonTranfserLight = styled(ButtonPink)`
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
 `
-const UnciffientBlock = styled.div`
+const InsufficientBlock = styled.div`
   position: relative;
   width: 516px;
   height: 119px;
@@ -464,6 +466,28 @@ export default function Transfer() {
   const formattedAmounts = {
     [independentField]: typedValue
   }
+
+  const popupContent: PopupContent = {
+    simpleAnnounce: {
+      message: 'Insufficient balance for this transaction.'
+    }
+  }
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
+  const hidePopupModal = () => setShowPopupModal(false)
+
+  const showPopupModal = () => {
+    setShowPopupModal(true)
+    setTimeout(() => {
+      hidePopupModal()
+      startNewSwap()
+    }, 3000)
+  }
+
+  useEffect(() => {
+    if (crosschainTransferStatus === ChainTransferState.Insufficient) {
+      showPopupModal()
+    }
+  }, [ChainTransferState, crosschainTransferStatus])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
@@ -766,14 +790,15 @@ export default function Transfer() {
       <CenteredInfo>
         {' '}
         {isInsufficient && (
-          <UnciffientBlock>
+          <InsufficientBlock>
             <img
               src={require('../../assets/images/new-design/warning.svg')}
               style={{ position: 'absolute', left: '30px', top: '30px' }}
             />
             <div>Insufficient balance!</div>
-          </UnciffientBlock>
+          </InsufficientBlock>
         )}
+        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         {isTransferToHandler && +balanceOnHandler > 0 &&
           tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
         {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}

@@ -1,4 +1,4 @@
-import { CrosschainChain, setCrosschainLastTimeSwitched } from '../../state/crosschain/actions'
+import { CrosschainChain, setCrosschainLastTimeSwitched, setUserBalance } from '../../state/crosschain/actions'
 import React, { useState } from 'react'
 
 import { AppDispatch } from 'state'
@@ -141,18 +141,18 @@ export default function CrossChainModal({
           chain.chainID === '1'
             ? [{ chainId: '0x1' }, account]
             : [
-                {
-                  chainId: hexChainId,
-                  chainName: chainsConfig.name,
-                  nativeCurrency: {
-                    name: chainsConfig.nativeTokenSymbol,
-                    symbol: chainsConfig.nativeTokenSymbol,
-                    decimals: 18
-                  },
-                  rpcUrls: [chainsConfig.rpcUrl],
-                  blockExplorerUrls: [chainsConfig.blockExplorer]
-                }
-              ]
+              {
+                chainId: hexChainId,
+                chainName: chainsConfig.name,
+                nativeCurrency: {
+                  name: chainsConfig.nativeTokenSymbol,
+                  symbol: chainsConfig.nativeTokenSymbol,
+                  decimals: 18
+                },
+                rpcUrls: [chainsConfig.rpcUrl],
+                blockExplorerUrls: [chainsConfig.blockExplorer]
+              }
+            ]
         /* eslint-disable */
         const ethMethod = chain.chainID === '1' ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
         const tx = ethereum && ethereum.request ? ethereum['request']({ method: ethMethod, params: data }).catch() : ''
@@ -160,6 +160,7 @@ export default function CrossChainModal({
         if (tx !== '') {
           tx.then(t => {
             dispatch(setCrosschainLastTimeSwitched({}))
+            dispatch(setUserBalance({ balance: '0' }))
             setTimeout(() => {
               window.location.reload()
             }, 100)
