@@ -275,7 +275,6 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                 />
-
                 {account && altCurrency && showMaxButton && hasABalance && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
                 )}

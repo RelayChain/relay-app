@@ -447,11 +447,19 @@ export default function Transfer() {
     },
     [setInputAmountToTrack, dispatch]
   )
+  useEffect(() => {
+    if (isMaxAmount) {
+      const maxAmountToTransfer = compareAmountWithBalanceHandler(transferAmount)
+      handleInputAmountChange(maxAmountToTransfer)
+      onUserInput(Field.INPUT, maxAmountToTransfer)
+    }
+  }, [isMaxAmount, transferAmount, dispatch])
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      handleInputAmountChange(value)
-      onUserInput(Field.INPUT, value)
+      const comparedValue = compareAmountWithBalanceHandler(value)
+      handleInputAmountChange(comparedValue)
+      onUserInput(Field.INPUT, comparedValue)
     },
     [onUserInput, handleInputAmountChange]
   )
@@ -516,14 +524,18 @@ export default function Transfer() {
     [onCurrencySelection, dispatch, currentChain, currentToken]
   )
 
+  const compareAmountWithBalanceHandler = (amount: string) => {
+    return (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) ?
+      `${Math.min(+amount, +balanceOnHandler)}` :
+      amount
+  }
+
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      let maxAmountToSend = +maxAmountInput?.toExact()
-      if (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) {
-        maxAmountToSend = Math.min(maxAmountToSend, +balanceOnHandler)
-      }
-      handleInputAmountChange(`${maxAmountToSend}`)
-      onUserInput(Field.INPUT, `${maxAmountToSend}`)
+      let maxAmountToSend = maxAmountInput?.toExact()
+      maxAmountToSend = compareAmountWithBalanceHandler(maxAmountToSend)
+      handleInputAmountChange(maxAmountToSend)
+      onUserInput(Field.INPUT, maxAmountToSend)
     }
   }, [maxAmountInput, onUserInput, handleInputAmountChange, balanceOnHandler])
 
