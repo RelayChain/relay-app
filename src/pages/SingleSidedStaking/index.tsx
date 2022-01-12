@@ -112,6 +112,7 @@ const StakingTitle = styled.div`
 export const SingleSidedStaking = () => {
   const { currentChain } = useCrosschainState()
   const [isPending, setIsPending] = useState(false)
+  const [isActivePool, setActivePool] = useState(true)
   const { account, chainId } = useActiveWeb3React()
   const [earnedLp, setEarnedLp] = useState('0')
   const [updatedHash, setUpdatedHash] = useState('')
@@ -170,12 +171,12 @@ export const SingleSidedStaking = () => {
       }
     }
 
-    if (stakingContract && indexUpdate === 3) {
+    if (stakingContract && indexUpdate === 3 && isActivePool) {
       getEarned()
     } else {
       return
     }
-  }, [stakingContract, indexUpdate])
+  }, [stakingContract, indexUpdate, isActivePool])
 
   const countYearlyRewards = async () => {
     const rewardRate = await stakingContract?.rewardRate().catch(console.log)
@@ -188,15 +189,17 @@ export const SingleSidedStaking = () => {
 
   useEffect(() => {
     let ind = indexUpdate
-    setInterval(() => {
-      if (ind !== 0 && ind % 10 === 0) {
-        ind = 0
-        setIndexUpdate(ind)
-      } else {
-        setIndexUpdate(ind++)
-      }
-    }, 1000)
-  }, [])
+    if (isActivePool) {
+      setInterval(() => {
+        if (ind !== 0 && ind % 10 === 0) {
+          ind = 0
+          setIndexUpdate(ind)
+        } else {
+          setIndexUpdate(ind++)
+        }
+      }, 1000)
+    }
+  }, [isActivePool])
 
   useEffect(() => {
     const getMaxAmountLp = async () => {
@@ -208,6 +211,19 @@ export const SingleSidedStaking = () => {
     }
     getMaxAmountLp()
   }, [account])
+
+  useEffect(() => {
+    const checkExpiredTime = async () => {
+      const periodFinish = await stakingContract?.periodFinish().catch(console.log)
+      if (periodFinish) {
+        const finishTimeInMs = (+periodFinish.toString()) * 1000
+        const currentTime = Date.now()
+        setActivePool(finishTimeInMs > currentTime)
+      }
+    }
+    checkExpiredTime()
+  }, [stakingContract])
+
   const priceInUsd = useCoinGeckoPrice
 
   useEffect(() => {
@@ -237,7 +253,7 @@ export const SingleSidedStaking = () => {
       <RowBetweenSidecard>
         <StyledTitle>Staking</StyledTitle>
         <SideCardHolder>
-          {`APR ${apr}%`}
+          {isActivePool ? `APR ${apr}%` : 'This pool is expired'}
         </SideCardHolder>
       </RowBetweenSidecard>
       <StakeContainer>

@@ -2,7 +2,7 @@ import PieChart from 'components/PieChart'
 import Solidgauge from 'components/PieChart/solidgauge'
 import WaveChart from 'components/PieChart/WaveChart'
 import useStatInArray from 'hooks/useDailyTx'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 const numeral = require('numeral')
 
