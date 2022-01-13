@@ -470,9 +470,14 @@ export default function Transfer() {
     },
     [onUserInput]
   )
-
+  const cutAfterCommma = (value: string) => {
+    const splitValue = value.split('.')
+    return splitValue.length < 2 || splitValue[1].length < 6 ?
+      value :
+      `${splitValue[0]}.${splitValue[1].slice(0, 6)}`
+  }
   const formattedAmounts = {
-    [independentField]: typedValue
+    [independentField]: cutAfterCommma(typedValue)
   }
 
   const popupContent: PopupContent = {
@@ -618,7 +623,6 @@ export default function Transfer() {
     }
     return ''
   }
-
   useEffect(() => {
     if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
