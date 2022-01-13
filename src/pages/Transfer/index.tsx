@@ -67,11 +67,9 @@ const BelowInfo = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  color: #ffffff;  
-  margin-left: 270px;
+  color: #ffffff;
 `
 const StyledCopy = styled(Copy)` 
-  grid-area: copy;
 `
 const StyledTitle = styled.h1`
   font-family: Montserrat;
@@ -257,7 +255,6 @@ const BelowForm = styled.div`
   padding-top: 25px;
   margin-top: .5rem;
   margin-bottom: .5rem;
-  grid-area: balance;
   &.disabled {
     opacity: .25;
   }
@@ -281,7 +278,15 @@ const CenteredInfo = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-
+const MessageBlock = styled.div`
+display: flex;
+`
+const HandlerBlock = styled.div`
+ 
+`
+const BalanceBlock = styled.div`
+ 
+`
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -627,8 +632,7 @@ export default function Transfer() {
     if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
-          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result || '0', currentToken.decimals)
-          const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
+          const amountHandler = !!res?.result ? res?.result : '0'
           if (amountHandler === '0') {
             setHandlerZeroBalance(true)
           }
@@ -775,14 +779,22 @@ export default function Transfer() {
               style={{ padding: '25px 0', width: '100%' }}
             />
           </FlexBlock>
-          {<BelowInfo >
-            {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
-              <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
-            </StyledCopy>}
-            <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
-              {`Available Balance ${Number(currentBalance).toFixed(4)}
+          <MessageBlock>
+            <HandlerBlock>
+              {isTransferToHandler && +balanceOnHandler > 0 &&
+                tokenForHandlerTransfer.includes(currentToken.name) &&
+                <BelowForm style={{ color: 'green' }}>{`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}</BelowForm>}
+            </HandlerBlock>
+            <BelowInfo>
+              {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
+                <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
+              </StyledCopy>}
+              <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
+                {`Available Balance ${Number(currentBalance).toFixed(4)}
                 ${currentToken.symbol}`}</BelowForm>
-          </BelowInfo>}
+            </BelowInfo>
+          </MessageBlock>
+
 
         </TransferBodyWrapper>
 
@@ -815,9 +827,8 @@ export default function Transfer() {
           </InsufficientBlock>
         )}
         <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
-        {isTransferToHandler && +balanceOnHandler > 0 &&
-          tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
-        {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
+
+        {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
