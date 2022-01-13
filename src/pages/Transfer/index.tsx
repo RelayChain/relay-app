@@ -627,7 +627,7 @@ export default function Transfer() {
     if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
-          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result || '0', currentToken.decimals)
+          const bigNumAvailableAmount = res?.result;
           const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
           if (amountHandler === '0') {
             setHandlerZeroBalance(true)

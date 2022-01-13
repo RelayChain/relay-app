@@ -1,18 +1,10 @@
-import { useEffect, useState } from 'react';
+import { getCurrentTvl } from 'api';
 
-const useTvl = () => {
-    const [tvlData, setTvlData] = useState(0)
-    useEffect(() => {
-        const url = `https://relay-api-33e56.ondigitalocean.app/api/currentTvl`
-        fetch(url)
-            .then(response => {
-                response.json().then(data => {
-                    setTvlData(data)
-                });
-            })
-            .catch(err => console.log('err :>> ', err))
-    }, [])
-    return tvlData
-}
+let tvlData = 0;
+getCurrentTvl().then(tvl => {
+    tvlData = tvl;
+});
+
+const useTvl = () => tvlData;
 
 export default useTvl;
