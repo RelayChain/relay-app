@@ -40,6 +40,10 @@ const RELAY_API_URL
       // : window.location.hostname === 'localhost' ? 'http://localhost:8080'
       : 'https://relay-api-33e56.ondigitalocean.app';
 
+export async function getCurrentTvl() {
+  const url = `${RELAY_API_URL}/api/currentTvl`
+  return get(url)
+}
 
 export async function getFundsOnHandler(chainId: string, resourceId: string, amount: string) {
   const url = `${RELAY_API_URL}/api/enoughFundsOnHandler?resourceId=${resourceId}&chainId=${chainId}&amount=${amount}`
