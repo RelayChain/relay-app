@@ -282,10 +282,10 @@ const MessageBlock = styled.div`
 display: flex;
 `
 const HandlerBlock = styled.div`
- 
+width: 50%;
 `
-const BalanceBlock = styled.div`
- 
+const HandlerMessageBlock = styled.div`
+
 `
 const TextBottom = styled.div`
   max-width: 260px;
@@ -761,7 +761,7 @@ export default function Transfer() {
             <Description>Enter token and amount:</Description>
           </Heading>
 
-          <FlexBlock style={{ padding: '14px 0 0 0' }}>
+          <FlexBlock style={{}}>
             <CurrencyInputPanel
               // blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -783,7 +783,9 @@ export default function Transfer() {
             <HandlerBlock>
               {isTransferToHandler && +balanceOnHandler > 0 &&
                 tokenForHandlerTransfer.includes(currentToken.name) &&
-                <BelowForm style={{ color: 'green' }}>{`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}</BelowForm>}
+                <HandlerMessageBlock style={{ color: 'green' }}>{`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
+                </HandlerMessageBlock>
+              }
             </HandlerBlock>
             <BelowInfo>
               {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
