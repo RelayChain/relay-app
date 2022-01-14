@@ -313,7 +313,7 @@ export default function CurrencyInputPanel({
                         altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
                         : altCurrency?.symbol) || (
                         <StyledTokenNameDeafult>
-                          {!disableCurrencySelect ? t('selectToken') : ''}
+                          {!disableCurrencySelect ? 'Select a token' : ''}
                         </StyledTokenNameDeafult>
                       )}
                   </StyledTokenName>

@@ -108,18 +108,18 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
     if (currency && currency.symbol === 'ZERO') return []
     if (logoName === '') {
-      if (currency instanceof Token) {
+      if (currency instanceof Token && allCrosschainData && allCrosschainData.chains.length > 0) {
         // find logos on ETH address for non-ETH assets
         let logoAddress = currency.address
         const allConfigTokens: any = []
         // eslint-disable-next-line
-        allCrosschainData.chains.map(chain => {
+        allCrosschainData?.chains?.map(chain => {
           // eslint-disable-next-line
           chain.tokens.map(token => {
             allConfigTokens.push(token)
           })
         })
-        const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
+        const chosenTokenChainName = allCrosschainData?.chains?.find(chain => chain.tokens.find(token => token.address.toLowerCase() === currency.address.toLowerCase()))?.name
         const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : (chosenTokenChainName === 'Metis Network') ? 'metis' : chosenTokenChainName.toLowerCase()
 
         if (currency instanceof WrappedTokenInfo) {
