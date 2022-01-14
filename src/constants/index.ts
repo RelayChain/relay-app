@@ -188,6 +188,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.OKEX]: [WETH[ChainId.OKEX]],
   [ChainId.MULTIVAC]: [WETH[ChainId.MULTIVAC]],
   [ChainId.METIS_NETWORK]: [WETH[ChainId.METIS_NETWORK]],
+  [ChainId.MOONBEAM]: [WETH[ChainId.MOONBEAM]],
 }
 
 // used to construct intermediary pairs for trading
@@ -387,10 +388,12 @@ export const CHAIN_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.CRONOS]: 'Cronos',
   [ChainId.OKEX]: 'OKEx',
   [ChainId.MULTIVAC]: 'MultiVAC',
-  [ChainId.METIS_NETWORK]: 'Metis Network'
+  [ChainId.METIS_NETWORK]: 'Metis Network',
+  [ChainId.MOONBEAM]: 'Moonbeam'
 }
 
-export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic', 'HECO', 'Harmony', 'Cronos', 'MultiVAC', 'Metis Network']
+export const SUPPORTED_CHAINS = ['Ethereum', 'Avalanche', 'Smart Chain', 'Polkadot', 'Matic',
+ 'HECO', 'Harmony', 'Cronos', 'MultiVAC', 'Metis Network', 'Moonbeam']
 
 export const ETH_RPCS = ['Ethereum', 'Rinkeby']
 

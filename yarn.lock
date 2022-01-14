@@ -2456,11 +2456,6 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@metamask/detect-provider@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
-  integrity sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==
-
 "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
@@ -3749,10 +3744,10 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.6.0.tgz#004e8e553b4cd53d538bd38eac7bcbf58a867fe3"
   integrity sha512-uUrgZ8AxS+Lio0fZKAipJjAh415JyrOZowliZAzmnJSsf7piVL5w+G0+gFJ0KSu3QRhvui/7zuvpLz03YjXAhg==
 
-"@zeroexchange/sdk@^3.2.36":
-  version "3.2.36"
-  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.36.tgz#ea36d2c5725f2be39a4275d55e3d7ea25868d621"
-  integrity sha512-DR+/v/kbPMZ79kidp6yMiRWSDMZJUA0aYzBHXfurff/vfwjM5YEldKWdReeaSwj7QlcWldjACu6swqBLMlWBFg==
+"@zeroexchange/sdk@^3.2.37":
+  version "3.2.37"
+  resolved "https://registry.yarnpkg.com/@zeroexchange/sdk/-/sdk-3.2.37.tgz#a6377a65122036627d9bb17cecf442b86b76c188"
+  integrity sha512-ItVAskYpvFj7Pjd5tb7FSSff4XIKAl+LSShfWzMh8YF9w9XY8PteezalJUx7sDb07CnTeOMy5H68lJUqLS4J3g==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"

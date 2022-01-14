@@ -234,6 +234,8 @@ function GetChainNameById(chainID: number): string {
     return 'MultiVAC'
   } else if (chainID === ChainId.METIS_NETWORK) {
     return 'Metis Network'
+  } else if (chainID === ChainId.MOONBEAM) {
+    return 'Moonbeam'
   }
   return ''
 }

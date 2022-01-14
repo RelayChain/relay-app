@@ -3,7 +3,6 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import detectEthereumProvider from '@metamask/detect-provider';
 import styled from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -162,7 +161,7 @@ export default function WalletModal({
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     // eslint-disable-next-line
-    const provider = await detectEthereumProvider();
+    // const provider = await detectEthereumProvider();
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
