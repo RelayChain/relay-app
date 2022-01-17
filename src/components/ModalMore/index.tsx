@@ -147,7 +147,7 @@ export default function ModalMore({ isOpen, onDismiss }: ModalMoreProps) {
           Telegram
         </MenuItem>
 
-        <MenuItem id="link" href="https://discord.gg/TP7XHZwPkw">
+        <MenuItem id="link" href="https://discord.gg/6suspDEh5w">
           <IconLink>
           <LogoBlock src={getLogoByName('discord')} />
           </IconLink>
