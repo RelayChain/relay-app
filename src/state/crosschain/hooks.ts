@@ -355,7 +355,7 @@ export function useCrosschainHooks() {
           })
         )
 
-        const web3CurrentChain = new Web3(currentChain.rpcUrl)
+        const web3CurrentChain = (window?.web3) ? new Web3(window?.web3?.currentProvider) : new Web3(currentChain.rpcUrl)
         const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
         const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
@@ -687,6 +687,6 @@ export function useCrossChain() {
 export function toCheckSumAddress(address: string) {
   const crosschainState = getCrosschainState()
   const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-  const web3CurrentChain = new Web3(currentChain.rpcUrl)
+  const web3CurrentChain = (window?.web3) ? new Web3(window?.web3?.currentProvider) : new Web3(currentChain.rpcUrl)
   return web3CurrentChain.utils.toChecksumAddress(address)
 }
