@@ -44,7 +44,7 @@ export function getBalanceContract(chainId: ChainId) {
 export const getNativeTokenBalance = async (account: string) => {
   try {
     const { ethereum } = window as any
-    const balance = await ethereum.request({ method: 'eth_getBalance', params: [account] })
+    const balance = await ethereum.request({ method: 'eth_getBalance', params: [account, "latest"] })
     return parseFloat(formatEther(balance))
   } catch (err) {
     console.log('getNativeTokenBalance error', err)

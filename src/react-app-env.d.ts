@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare module 'jazzicon' {
-  export default function(diameter: number, seed: number): HTMLElement
+  export default function (diameter: number, seed: number): HTMLElement
 }
 
 declare module 'fortmatic'
@@ -12,9 +12,11 @@ interface Window {
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     request?: (...args: any[]) => Promise<any>
-    enable?:() => Promise<any>
+    enable?: () => Promise<any>
   }
-  web3?: {}
+  web3?: {
+    currentProvider?: any
+  }
 }
 
 declare module 'content-hash' {
