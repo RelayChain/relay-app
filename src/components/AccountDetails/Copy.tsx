@@ -10,7 +10,9 @@ const CopyIcon = styled(LinkStyledButton)`
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
+  flex-direction: row-reverse;
   font-size: 0.825rem;
+  margin-top: 5px;
   :hover,
   :active,
   :focus {
@@ -32,12 +34,12 @@ export default function CopyHelper(props: { toCopy: string; children?: React.Rea
     <CopyIcon onClick={() => setCopied(props.toCopy)}>
       {isCopied ? (
         <TransactionStatusText>
-          <CheckCircle size={'16'} />
+          <CheckCircle size={'10'} />
           <TransactionStatusText>Copied</TransactionStatusText>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
-          <Copy size={'16'} />
+          <Copy size={'10'} />
         </TransactionStatusText>
       )}
       {isCopied ? '' : props.children}

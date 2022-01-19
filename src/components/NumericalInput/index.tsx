@@ -2,23 +2,24 @@ import React from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; transferPage?: boolean }>`
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; transferPage?: boolean }>` 
   width: 0;
-  position: relative;
-  font-weight: 600;
+  position: relative; 
   outline: none;
   border: none;
   flex: 1 1 auto;
-  // background: ${({ transferPage }) => (transferPage ? '#171C47' : 'transparent')};
-  min-width:100px;
-  max-width:240px;
-  width:100%;
-  height: 60px;
-  background: rgba(70, 70, 70, 0.25);
+  background: #000000;
+  border-radius: 42px;
+  width:432px;
+  height: 55px; 
   padding: 0px 15px;
-  border-radius: 48px;
-  font-size: ${({ fontSize }) => fontSize ?? '24px'};
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal; 
+  line-height: 34px;
+
+  color: #FFFFFF;
+  font-size: ${({ fontSize }) => fontSize ?? '28px'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
   overflow: hidden;

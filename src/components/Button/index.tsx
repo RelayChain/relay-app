@@ -6,7 +6,7 @@ import React from 'react'
 import { RowBetween } from '../Row'
 import styled from 'styled-components'
 
-const Base = styled(RebassButton)<{
+const Base = styled(RebassButton) <{
   padding?: string
   width?: string
   borderRadius?: string
@@ -38,7 +38,7 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
+export const ButtonPrimary = styled(Base) <{ isPointer?: boolean }>`
   background-color: ${({ theme }) => theme.primary1};
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
@@ -56,7 +56,7 @@ export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle }) =>
-      altDisabledStyle ? theme.primary1 : darken(3, theme.primary1)};
+    altDisabledStyle ? theme.primary1 : darken(3, theme.primary1)};
     color: ${({ theme }) => theme.text1};
     cursor: ${({ isPointer }) => (isPointer ? 'pointer' : 'auto')};
     box-shadow: none;
@@ -66,7 +66,7 @@ export const ButtonPrimary = styled(Base)<{ isPointer?: boolean }>`
   }
 `
 
-export const ButtonSuccess = styled(Base)<{ isPointer?: boolean }>`
+export const ButtonSuccess = styled(Base) <{ isPointer?: boolean }>`
   background-color: #1ef7e7;
   box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.095);
   backdrop-filter: blur(28px);
@@ -181,8 +181,8 @@ export const ButtonTransparent = styled(Base)`
   }
 `
 
-export const ButtonPink = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+export const ButtonPink = styled(Base)` 
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
   color: white;
 
   &:focus {

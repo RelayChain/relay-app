@@ -81,7 +81,7 @@ const BalanceText = styled(Text)`
 //   }
 // `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
+const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
@@ -210,19 +210,21 @@ const Layout = styled.div`
   `};
 `
 
-const NetworkCard = styled(YellowCard)`
-  width: 243px;
+const NetworkCard = styled(YellowCard) <{ isBridge: boolean }>`
+  width: ${({ isBridge }) => (isBridge ? '170px' : '243px')};
+  height: ${({ isBridge }) => (isBridge ? '35px' : '60px')};
   padding: 7px;
   display: flex;
   align-items: center;
   letter-spacing: 0.05em;
   color: #ffffff;
-  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
-  border-radius: 54px;
+  background:  ${({ isBridge }) => (isBridge ? '#211A4A' : 'linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%)')}; 
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+  border-radius:  ${({ isBridge }) => (isBridge ? '58px' : '54px')};
   transition: all 0.2s ease-in-out;
-  font-family: Poppins;
+  font-family: ${({ isBridge }) => (isBridge ? 'Montserrat' : 'Poppins')};
   font-weight: 300;
-  font-size: 15px;
+  font-size: 17px;
   margin-right: 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   margin-right: 0px;
@@ -240,11 +242,11 @@ const NetworkCard = styled(YellowCard)`
     cursor: pointer;
   }
 `
-const ArrowDownIcon = styled.img`
+const ArrowDownIcon = styled.img<{ isBridge: boolean }>`
   margin-left: auto;
   margin-right: 5px;
-  width: 16px;
-  height: 16px;
+  width: ${({ isBridge }) => (isBridge ? '12px' : '16px')};
+  height: ${({ isBridge }) => (isBridge ? '6px' : '16px')};
 `
 const popupContent: PopupContent = {
   simpleAnnounce: {
@@ -294,8 +296,10 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
   }
   return null
 }
-
-const NetworkSwitcher = () => {
+type NetworkSwitcherProps = {
+  bridge?: boolean
+}
+export const NetworkSwitcher = ({ bridge = false }: NetworkSwitcherProps) => {
   const { chainId } = useActiveWeb3React()
   const { availableChains: allChains, lastTimeSwitched } = useCrosschainState()
 
@@ -324,16 +328,16 @@ const NetworkSwitcher = () => {
   return (
     <div onClick={showCrossChainModal}>
       {chainId && NETWORK_LABELS[chainId] && (
-        <NetworkCard title={NETWORK_LABELS[chainId]}>
+        <NetworkCard title={NETWORK_LABELS[chainId]} isBridge={bridge}>
           <BlockchainLogo
-            size="34px"
+            size={bridge ? '25px' : '34px'}
             blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
             style={{ margin: '0' }}
           />
 
           <span style={{ paddingLeft: '5px' }}>{NETWORK_LABELS[chainId]}</span>
 
-          <ArrowDownIcon src={SmallDropDown} alt="SmallDropDown" />
+          <ArrowDownIcon src={SmallDropDown} alt="SmallDropDown" isBridge={bridge} />
         </NetworkCard>
       )}
       <CrossChainModal
@@ -341,7 +345,7 @@ const NetworkSwitcher = () => {
         isTransfer={false}
         onDismiss={hideCrossChainModal}
         supportedChains={availableChains}
-        selectTransferChain={() => {}}
+        selectTransferChain={() => { }}
         activeChain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
       />
       <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />

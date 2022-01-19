@@ -35,23 +35,23 @@ const InputWrap = styled.div`
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
+  position: absolute;
+  right: 7px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 7px;
-  font-size: 20px;
+  font-size: 10px;
   font-weight: 500;
   border: none;
   outline: none;
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  margin-left: 10px;
-  transition: all 0.2s ease-in-out;
-  min-width: 150px;
-  max-width: 220px;
-  width: 100%;
-  height: 60px;
-  background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
-  border-radius: 30px;
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; 
+  transition: all 0.2s ease-in-out; 
+  width: 106px;
+  height: 40px;
+  background: #3E3376;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 58px;
   &:hover {
     filter: brightness(1.1);
     cursor: pointer;
@@ -63,7 +63,6 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
   margin-top: 15px;
-  margin-left: 0px;
   &.centered {
     margin-top: 0;
     margin-left: auto;
@@ -105,11 +104,10 @@ const SectionLabel = styled.span`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
-  margin-left: auto;
-  width: 24px;
-  height: 24px;
+const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>` 
+  width: 16px;
+  height: 8px;
+  margin-right: 2px;
 `
 
 const InputPanel = styled.div<{ hideInput?: boolean; transferPage?: boolean }>`
@@ -126,15 +124,19 @@ const Container = styled.div<{ hideInput: boolean }>`
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
-  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  ${({ active }) => (active ? '  margin: 0' : '  margin: 0 0.25rem 0 0.25rem;')}
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   font-size: 15px;
   line-height: 100%;
 `};
 `
 const StyledTokenNameDeafult = styled(StyledTokenName)`
-  font-size: 16px;
-  margin: 0 0.25rem 0 0.25rem;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  color: #FFFFFF;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   margin: 0;
   font-size: 12px;
@@ -147,20 +149,22 @@ gap: 1rem;
 `};
 `
 const StyledBalanceMax = styled.button`
-  height: 35px;
+  height: 20px;
+  width: 48px;
   position: absolute;
+  right: 125px;
   border: 2px solid #ad00ff;
-  background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
-  border-radius: 100px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
+  border-radius: 51px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 17px; 
+  text-align: center; 
+  color: #FFFFFF;
   cursor: pointer;
-  right: 10px;
-  margin-top: 2px;
-  color: #fff;
-  transition: all 0.2s ease-in-out;
-  padding-left: 10px;
-  padding-right: 10px;
+  transition: all 0.2s ease-in-out;  
   :hover {
     opacity: 0.9;
   }
@@ -276,7 +280,7 @@ export default function CurrencyInputPanel({
                   }}
                 />
                 {account && altCurrency && showMaxButton && hasABalance && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
+                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
                 )}
               </InputWrap>
             )}
@@ -292,9 +296,9 @@ export default function CurrencyInputPanel({
                 }}
               >
                 {pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={32} margin={true} />
+                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={25} margin={true} />
                 ) : altCurrency ? (
-                  <CurrencyLogo currency={altCurrency} size={'32px'} style={{ marginLeft: '10px' }} />
+                  <CurrencyLogo currency={altCurrency} size={'25px'} style={{ marginLeft: '5px' }} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
