@@ -3,9 +3,11 @@ import { CHAIN_LABELS, SUPPORTED_CHAINS } from '../../constants'
 import {
   ChainTransferState,
   CrosschainChain,
+  CrosschainToken,
   ProposalStatus,
   setCrosschainTransferStatus,
   setCurrentToken,
+  setCurrentTokenImage,
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
@@ -56,9 +58,10 @@ import Copy from '../../components/AccountDetails/Copy'
 import { getBalanceOnHandler, getFundsOnHandler } from 'api'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
-import { getLogoByName } from 'components/CurrencyLogo'
+import { getCurrencyLogoImage, getLogoByName, getTokenLogoURL } from 'components/CurrencyLogo'
 import ChainSwitcherContent from 'components/WalletModal/ChainSwitcherContent'
 import { NetworkSwitcher } from 'components/Web3Status'
+import { TokenConfig } from 'constants/CrosschainConfig'
 
 const numeral = require('numeral')
 
@@ -102,18 +105,6 @@ const Heading = styled.div`
   font-size: 24px;
 `};
 `
-const FlexBlock = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-grow: 1;
-  justify-content: space-between;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  flex-direction: column;
-`};
-`
-
 const ChainBlock = styled.div`
   display: flex;
   align-items: center;
@@ -284,15 +275,6 @@ const CenteredInfo = styled.div`
   align-items: center;
   margin: 0 auto;
 `
-const MessageBlock = styled.div`
-display: flex;
-`
-const HandlerBlock = styled.div`
-width: 50%;
-`
-const HandlerMessageBlock = styled.div`
-
-`
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -372,6 +354,7 @@ const MiddleBlock = styled.div`
   width: 160px;
   height: 16px;
   background: #2E2757;
+  margin: 0 auto;
   position: relative; 
   &::before {
     background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
@@ -397,7 +380,7 @@ const MiddleBlock = styled.div`
   }
 `
 const EmptyRight = styled.div`
-   
+  
 `
 const LogoToken = styled.img`
   width: 10px;
@@ -444,7 +427,8 @@ export default function Bridge() {
     crosschainTransferStatus,
     swapDetails,
     currentBalance,
-    allCrosschainData
+    allCrosschainData,
+    currentTokenImage
   } = useCrosschainState()
 
   const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
@@ -606,7 +590,10 @@ export default function Bridge() {
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
-
+  const getImage = (token: TokenConfig) => {
+    const localImage = getCurrencyLogoImage(token?.name)
+    return localImage ? getLogoByName(localImage) : getTokenLogoURL((currentChain?.name).toLowerCase(), token?.address)
+  }
   const handleInputSelect = useCallback(
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
@@ -623,9 +610,17 @@ export default function Bridge() {
               resourceId: newToken?.resourceId || '',
               allowedChainsToTransfer: newToken?.allowedChainsToTransfer || []
             }
-          })
-        )
+          }))
+
+        if (newToken?.address) {
+          dispatch(
+            setCurrentTokenImage({
+              tokenImage: getImage(newToken)
+            })
+          )
+        }
       }
+
     },
     // eslint-disable-next-line
     [onCurrencySelection, dispatch, currentChain, currentToken]
@@ -695,9 +690,14 @@ export default function Bridge() {
       return
     }
     if (currentToken.address) {
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.Confirm
+        })
+      )
       setTransferModalLoading(true)
       try {
-        await GetAllowance()
+
         setTransferModalLoading(false)
         setConfirmTransferModalOpen(true)
       } catch (err) {
@@ -875,8 +875,10 @@ export default function Bridge() {
 
 
           <ContentBlock>
-            <NameBlock  >{`Balance:`}</NameBlock>
-            <ValueBlock  >  {Number(currentBalance).toFixed(4)} {currentToken.symbol}</ValueBlock>
+            <NameBlock>{`Balance`}</NameBlock>
+            <ValueBlock>  {Number(currentBalance).toFixed(4)}
+              {currentToken?.address && <LogoToken src={currentTokenImage} />}
+              {currentToken.symbol}</ValueBlock>
           </ContentBlock>
 
           <ContentBlock>

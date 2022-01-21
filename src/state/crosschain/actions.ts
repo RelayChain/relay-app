@@ -39,6 +39,7 @@ export interface CrosschainChain {
 
 export enum ChainTransferState {
   NotStarted = 'NOT_STARTED',
+  Confirm = 'CONFIRM',
   Insufficient = 'INSUFFICIENT_BALANCE',
   ApprovalPending = 'APPROVE_PENDING',
   ApprovalSubmitted = 'APPROVE_SUBMITTED',
@@ -73,6 +74,7 @@ export const setTargetTokens = createAction<{ targetTokens: Array<CrosschainToke
 export const setCurrentChain = createAction<{ chain: CrosschainChain }>('crosschain/set-currentChain')
 export const setTargetChain = createAction<{ chain: CrosschainChain }>('crosschain/set-target-Chain')
 export const setCurrentToken = createAction<{ token: CrosschainToken }>('crosschain/set-currentToken')
+export const setCurrentTokenImage = createAction<{ tokenImage: string }>('crosschain/set-currentTokenImage')
 export const setCurrentTokenBalance = createAction<{ balance: string }>('crosschain/set-balance')
 export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')
 export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-fee')

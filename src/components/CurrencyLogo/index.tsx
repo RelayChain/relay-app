@@ -32,7 +32,7 @@ const logosNames = {
   'ETH': ['ETH', 'pngETH', 'zETH', 'Ethereum', 'Ethereum ETH'],
   'WETH': ['WETH', 'wETH', 'WETH.e'],
   'HT': ['HT', 'HECO', 'WHT', 'HECO'],
-  'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB', 'Smart Chain', 'SmartChain'],
+  'BNB': ['BNB', 'WBNB', 'wBNB', 'eBNB', 'Smart Chain', 'SmartChain', 'SMART CHAIN', 'Smart chain',],
   'GROW': ['GROW'],
   'WISB': ['WISB'],
   // 'INDA': ['INDA'],
@@ -87,6 +87,9 @@ export const getCurrencyLogoImage = (symbol: string | undefined) => {
   }
   return logoName
 }
+export const getTokenLogoURL = (chain: string, address: string) => {
+  return `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
+}
 export default function CurrencyLogo({
   currency,
   size = '24px',
@@ -97,9 +100,7 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const { allCrosschainData } = useCrosschainState()
-  const getTokenLogoURL = (chain: string, address: string) => {
-    return `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
-  }
+
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const logoName = getCurrencyLogoImage(String(currency?.symbol))
 

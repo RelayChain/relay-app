@@ -4,6 +4,7 @@ import { Currency } from '@zeroexchange/sdk'
 import { CurrencySearch } from './CurrencySearch'
 import Modal from '../Modal'
 import useLast from '../../hooks/useLast'
+import styled from 'styled-components'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -14,6 +15,14 @@ interface CurrencySearchModalProps {
   showCommonBases?: boolean
   isCrossChain?: boolean
 }
+
+const StyledModal = styled(Modal)`
+  width: 534px;
+  height: 842px; 
+  background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
+  box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 24px;
+`
 
 export default function CurrencySearchModal({
   isOpen,
@@ -46,7 +55,7 @@ export default function CurrencySearchModal({
   }, [])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={84} minHeight={listView ? 40 : 84}>
+    <StyledModal isOpen={isOpen} onDismiss={onDismiss} maxHeight={84} minHeight={listView ? 40 : 84}>
       <CurrencySearch
         isOpen={isOpen}
         onDismiss={onDismiss}
@@ -57,6 +66,6 @@ export default function CurrencySearchModal({
         showCommonBases={showCommonBases}
         isCrossChain={isCrossChain}
       />
-    </Modal>
+    </StyledModal>
   )
 }

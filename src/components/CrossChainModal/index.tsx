@@ -1,5 +1,5 @@
 import { CrosschainChain, setCrosschainLastTimeSwitched, setUserBalance } from '../../state/crosschain/actions'
-import React, { useState } from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useRef, useState } from 'react'
 
 import { AppDispatch } from 'state'
 import BlockchainLogo from '../BlockchainLogo'
@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { getCrosschainState } from 'state/crosschain/hooks'
 import { useActiveWeb3React } from 'hooks'
+import { SearchInput } from 'components/SearchModal/styleds'
 
 interface CrossChainModalProps {
   isOpen: boolean
@@ -18,8 +19,17 @@ interface CrossChainModalProps {
   selectTransferChain: (str: CrosschainChain) => void
 }
 
+const StyledModal = styled(Modal)`
+  width: 508px;
+  background: #2E2757;
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
+`
 const ModalContainer = styled.div`
-  padding: 1rem;
+  
+  margin-top: 50px;
+  margin-left: 30px;
+ 
+  padding: 10px;
   width: 100%;
   h5 {
     font-weight: bold;
@@ -54,9 +64,13 @@ const ModalContainer = styled.div`
       margin-bottom: 0.5rem;
       position: relative;
       padding: 12px;
-      transition: all 0.2s ease-in-out;
-      border-radius: 12px;
+      transition: all 0.2s ease-in-out; 
       align-items: center;
+      width: 306px;
+      height: 46px; 
+      background: #130E2E;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 39px;
       &.off {
         opacity: 0.35;
         pointer-events: none;
@@ -113,6 +127,49 @@ const ModalContainer = styled.div`
     }
   }
 `
+const Cross = styled.div`
+  position: absolute;
+  left: 10px;
+  top: 25px;
+  width: 34px;
+  height: 34px;
+  opacity: 0.8;
+  cursor: pointer;
+  :hover {
+    opacity: 1;
+  }
+  ::before,
+  ::after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 20px;
+    width: 4px;
+    background-color: #a7b1f4;
+  }
+  ::before {
+    transform: rotate(45deg);
+  }
+  ::after {
+    transform: rotate(-45deg);
+  }
+`
+const StyledInput = styled(SearchInput)`
+  width: 418px;
+  height: 51px; 
+  background: #130E2E;
+  border-radius: 50px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 0px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  color: #3E3376;
+`
 
 export default function CrossChainModal({
   isOpen,
@@ -124,6 +181,7 @@ export default function CrossChainModal({
 }: CrossChainModalProps) {
   const dispatch = useDispatch<AppDispatch>()
   const [isMetamaskError, setMetamaskError] = useState(false)
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const { account } = useActiveWeb3React()
   const switchChain = async (chain: CrosschainChain) => {
     let { ethereum } = window
@@ -172,11 +230,50 @@ export default function CrossChainModal({
     }
   }
 
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        //const s = debouncedQuery.toLowerCase().trim()
+        // if (s === 'eth') {
+        //   handleCurrencySelect(ETHER)
+        // } else if (filteredSortedTokens.length > 0) {
+        //   if (
+        //     filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+        //     filteredSortedTokens.length === 1
+        //   ) {
+        //     handleCurrencySelect(filteredSortedTokens[0])
+        //   }
+        // }
+      }
+    },
+    []
+  )
+
+  const handleInput = useCallback(event => {
+    const input = event.target.value
+    console.log("🚀 ~ file: index.tsx ~ line 233 ~ input", input)
+    // const checksummedInput = isAddress(input)
+    setSearchQuery(input)
+    // fixedList.current?.scrollTo(0)
+  }, [])
+
+  const inputRef = useRef<HTMLInputElement>()
+
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
+    <StyledModal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
+      <Cross onClick={onDismiss} />
       <ModalContainer>
         {!isTransfer && <h5>Change Blockchains:</h5>}
-        {isTransfer && <h5>Transfer tokens to:</h5>}
+        {isTransfer && <h5>Select Network</h5>}
+        <StyledInput
+          type="text"
+          id="chain-search-input"
+          placeholder={'Search name'}
+          value={searchQuery}
+          ref={inputRef as RefObject<HTMLInputElement>}
+          onChange={handleInput}
+          onKeyDown={handleEnter}
+        />
         <ul>
           <li className={!isTransfer ? 'active' : 'disabled'}>
             <BlockchainLogo size="28px" blockchain={activeChain} />
@@ -211,6 +308,6 @@ export default function CrossChainModal({
             ))}
         </ul>
       </ModalContainer>
-    </Modal>
+    </StyledModal>
   )
 }

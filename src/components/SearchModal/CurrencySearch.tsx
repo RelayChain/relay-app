@@ -42,6 +42,9 @@ interface CurrencySearchProps {
   isCrossChain?: boolean
 }
 
+const StyledSeparator = styled(Separator)`
+  border-bottom: 1px solid #4B408E;
+`
 const RowCenter = styled(RowBetween)`
   justify-content: center;
 `
@@ -72,20 +75,37 @@ const TitleSearchWindow = styled(Text)`
   margin: 0px;
 `
 const TitleFrom = styled(TitleSearchWindow)`
-font-size: 12px;
+  font-size: 12px;
 `
+
+const TokenContainer = styled.div`
+  padding: 15px;
+`
+
 const StyledInput = styled(SearchInput)`
-  background: #FEFEFE;
-  border-radius: 10px;
+  width: 418px;
+  height: 51px; 
+  background: #130E2E;
+  border-radius: 50px;
   flex: none;
   order: 1;
   flex-grow: 0;
   margin: 0px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  color: #3E3376;
 `
-const STyledColumn = styled(Column)`
-  background: rgba(51, 0, 116, 1);
+// const STyledColumn = styled(Column)`
+//   width: 534px;
+//   height: 842px; 
+//   background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
+//   box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
+//   border-radius: 24px;
 
-`
+// `
 
 // const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
 
@@ -390,23 +410,14 @@ export function CurrencySearch({
     <Column style={{ width: '100%', flex: '1 1' }}>
       {!isManageTokenList && (
         <>
-          <PaddedColumn gap="14px">
-            <RowBetween>
-              <TitleSearchWindow >
-                {`Transfer to ${targetChain.name} network`}
-                {/*
-                {!isCrossChain && (
-                  <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
-                )} */}
-              </TitleSearchWindow>
-              <StyledCloseIcon onClick={onDismiss} />
-            </RowBetween>
-            <TitleFrom>{`Choose a token from ${currentChain.name}`}</TitleFrom>
+          <PaddedColumn gap="5px">
+
+            <TitleFrom>{`Select Asset`}</TitleFrom>
             {(
               <StyledInput
                 type="text"
                 id="token-search-input"
-                placeholder={'Search token'}
+                placeholder={'Search name'}
                 value={searchQuery}
                 ref={inputRef as RefObject<HTMLInputElement>}
                 onChange={handleInput}
@@ -426,10 +437,11 @@ export function CurrencySearch({
               />
             </RowBetween> */}
           </PaddedColumn>
-
-          {/* <Separator /> */}
-          <div style={{ flex: '1' }}>
+          <TokenContainer style={{ flex: '1' }}>
+            <TitleFrom>{`Token Name`}</TitleFrom>
+            <StyledSeparator />
             <AutoSizer disableWidth>
+
               {({ height }) => (
                 <CurrencyList
                   loadMore={loadMore}
@@ -441,10 +453,11 @@ export function CurrencySearch({
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
                   searchQuery={debouncedQuery}
+                  showBalance={false}
                 />
               )}
             </AutoSizer>
-          </div>
+          </TokenContainer>
 
           {/* <Separator /> */}
         </>

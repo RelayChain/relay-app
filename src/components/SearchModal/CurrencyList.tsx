@@ -108,6 +108,7 @@ function CurrencyRow({
   isEnd,
   hasQuery,
   tokenBalances,
+  showBalance
 }: {
   isUserTokens?: boolean
   currency: any
@@ -118,6 +119,7 @@ function CurrencyRow({
   isEnd: boolean
   hasQuery: any
   tokenBalances: any
+  showBalance?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -193,9 +195,9 @@ function CurrencyRow({
         )}
       </Column>
       <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
+      {showBalance && <RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} currencyName={currency?.name} /> : account && balance === undefined ? <Loader /> : `${0}`}
-      </RowFixed>
+      </RowFixed>}
     </MenuItem>
   )
 }
@@ -211,6 +213,7 @@ export default function CurrencyList({
   fixedListRef,
   showETH,
   searchQuery,
+  showBalance,
 }: {
   isUserTokens?: boolean
   loadMore?: any
@@ -224,6 +227,7 @@ export default function CurrencyList({
   searchQuery: string | undefined
   unseenCustomToken?: boolean,
   isAscendingFilter?: boolean
+  showBalance?: boolean
 }) {
 
   const { chainId } = useActiveWeb3React()
@@ -264,6 +268,7 @@ export default function CurrencyList({
           tokenBalances={tokenBalances}
           isEnd={index === data.length - 1}
           hasQuery={searchQuery && searchQuery.length > 0}
+          showBalance={showBalance}
         />
       )
     },

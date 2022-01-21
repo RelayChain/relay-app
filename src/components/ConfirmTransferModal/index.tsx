@@ -14,6 +14,7 @@ import TransferComplete from './TransferComplete'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
 import TransferFiled from './TransferFailed'
+import Confirm from './Confirm'
 
 interface ConfirmTransferProps {
   isOpen: boolean
@@ -27,12 +28,10 @@ interface ConfirmTransferProps {
   tokenTransferState: ChainTransferState
 }
 
-const StyledModal = styled(Modal)`
-  max-width: 473px !important;  
+const StyledModal = styled(Modal)` 
 `
 
-const ModalContainer = styled.div`
-  padding: 1.5rem;
+const ModalContainer = styled.div` 
   width: 100%;
   display: flex;
   justify-content: center;
@@ -59,7 +58,7 @@ export default function ConfirmTransferModal({
   changeTransferState,
   tokenTransferState
 }: ConfirmTransferProps) {
-  const { currentToken, transferAmount, allCrosschainData } = useCrosschainState()
+  const { currentToken, transferAmount, allCrosschainData, currentTokenImage } = useCrosschainState()
   const { GetAllowance } = useCrosschainHooks()
   const [title, setTitle] = useState('')
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
@@ -103,6 +102,9 @@ export default function ConfirmTransferModal({
       case ChainTransferState.TransferComplete:
         setTitle('Transfer Complete')
         break
+      case ChainTransferState.Confirm:
+        setTitle('Confirm')
+        break
       default:
     }
   }, [tokenTransferState])
@@ -131,6 +133,9 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.TransferFailed &&
           <TransferFiled />
         }
+        {tokenTransferState === ChainTransferState.Confirm &&
+          <Confirm changeTransferState={changeTransferState} onDismiss={handleOnDismiss} />
+        }
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
           <ApprovalPending tokenTransferState={tokenTransferState} />
@@ -143,9 +148,10 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.TransferPending && (
           <TransferPending changeTransferState={changeTransferState} />
         )}
-
         {tokenTransferState === ChainTransferState.TransferComplete && (
-          <TransferComplete
+          // {tokenTransferState === ChainTransferState.Confirm && (
+
+          < TransferComplete
             activeChain={activeChain}
             transferTo={transferTo?.name}
             onDismiss={handleOnDismiss}

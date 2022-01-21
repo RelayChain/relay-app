@@ -2,38 +2,121 @@ import { ButtonOutlined } from '../Button'
 import Copy from '../AccountDetails/Copy'
 import React from 'react'
 import styled from 'styled-components'
+import { Separator } from 'components/SearchModal/styleds'
+import {
+  BarChart,
+  BarChart2,
+  Book,
+  BookOpen,
+  GitHub,
+  Info,
+  Paperclip,
+  Twitter,
+} from 'react-feather'
+import { useCrosschainState } from 'state/crosschain/hooks'
+import { getLogoByName } from 'components/CurrencyLogo'
 
 const Title = styled.div`
-  font-family: Poppins;
+  height: 47px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 32px; 
+  text-align: center; 
+  color: #38E4DE;
+`
+const Success = styled(Title)` 
+  font-family: Montserrat;
   font-style: normal;
   font-weight: 500;
-  font-size: 28px;
-  line-height: 42px;
+  font-size: 21px;
+  line-height: 26px;
   text-align: center;
   color: #FFFFFF;
-  margin-top: 10px;
 `
-const Success = styled(Title)`
-  margin-top: -50px;
-`
-const LogoBlock = styled.div`
-  height: 470px;
-  width: 425px;
-`
-const NotifyBlock = styled.div`
-  font-family: Poppins;
+const HashBlock = styled.div`
+  font-family: Montserrat;
   font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 27px;
-  text-align: center;
-  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center; 
+  color: #A782F3;
 `
 const StyledButton = styled(ButtonOutlined)`
-  width: 220px;
-  height: 60px;
+  width: 421px;
+  height: 60px; 
   background: linear-gradient(90deg, #AD00FF 0%, #7000FF 100%);
-  border-radius: 100px;
+  border-radius: 51px;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 61px; 
+  text-align: center; 
+  color: #FFFFFF;
+`
+const SuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 473px;
+  height: 795px; 
+  background: #2E2757;
+  border: 1px solid #7F46F0;
+  box-sizing: border-box;
+  box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 24px;
+`
+const DestinationAddress = styled(Copy)`
+  margin-top: 16px;
+`
+const StyledSeparator = styled(Separator)`
+  border-bottom: 1px solid #4B408E;
+`
+const FooterBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 350px;
+
+`
+const SocialBlock = styled.div`
+  padding: 17px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(360deg, rgba(43, 86, 254, 0.05) 0%, rgba(43, 86, 254, 0.1) 107%);
+  backdrop-filter: blur(100px);
+  border-radius: 17.33px;
+`
+const IconLink = styled.span`
+  display: inline-block;
+  margin-right: 30px;
+  text-decoration: none;
+  cursor: pointer;
+  color: #A782F3;
+`
+const LogoBlock = styled.img`
+  height: 25px;
+  width: 25px;
+`
+const AssetTitle = styled.div`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #FFFFFF;
+`
+const TokenLogo = styled.img`
+  height: 50px;
+  width: 50px;
+  margin: -25px 0;
+`
+const TokenTitle = styled.div`
   font-family: Montserrat;
   font-style: normal;
   font-weight: normal;
@@ -41,19 +124,41 @@ const StyledButton = styled(ButtonOutlined)`
   line-height: 37px;
   text-align: center;
   color: #FFFFFF;
-  margin-top: 20px;
-  margin-bottom: 10px;
 `
-const SuccessContainer = styled.div`
+const MainBlock = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  width: 421px;
+}
+`
+const ChainLogo = styled.img`
+  height: 35px;
+  width: 35px;
+  margin: 10px;
+`
+const LineBlock = styled.div`
+  border: 3px solid #38E4DE; 
+  width: 50px;
+  height: 6px;
+`
+const BridgeBlock = styled.div`
   position: relative;
+  border-radius: 50%;
+  width: 144px;
+  height: 144px;
+  position: relative;
+  border-radius: 50%;
+  border: 6px solid #38E4DE; 
 `
-const DestinationAddress = styled(Copy)`
-  margin-top: 16px;
+const BrandBlock = styled.img`
+  position: absolute; 
+  height: 60px;
+  width: 60px;
+  top: 35px;
+  left: 35px; 
 `
-
 
 export default function TransferComplete({
   onDismiss,
@@ -70,16 +175,55 @@ export default function TransferComplete({
   currentToken?: any
   targetTokenAddress?: string
 }) {
+  const { currentTokenImage, currentChain, targetChain } = useCrosschainState()
+  const openInNewTab = (url: string): void => {
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+  const getImageByName = (tokenName: string) => {
+    return require(`../../assets/images/${tokenName}.svg`)
+  }
   return (
     <SuccessContainer>
-      <Title>Transfer Complete!</Title>
-      <LogoBlock className="hero-success"></LogoBlock>
-      <Success>Success!</Success>
-      <NotifyBlock>Your token transfer has been successful.</NotifyBlock>
-      <StyledButton onClick={onDismiss}>Done</StyledButton>
-      {targetTokenAddress && <DestinationAddress toCopy={targetTokenAddress}>
-                          <span style={{ marginLeft: '4px', marginTop: '15px' }}>Copy the token address on the destination chain</span>
-                        </DestinationAddress>}
+      <Title>Success Transaction</Title>
+      <StyledSeparator />
+      <Success>Operation complete!</Success>
+      <HashBlock>Hash: {targetTokenAddress}</HashBlock>
+      <AssetTitle>
+        Asset/Token
+      </AssetTitle>
+      <TokenLogo src={currentTokenImage} />
+      <TokenTitle>
+        {currentToken?.name}
+      </TokenTitle>
+      <MainBlock>
+        <ChainLogo src={getLogoByName(currentChain?.symbol?.toUpperCase() || 'ETH')} />
+        <LineBlock></LineBlock>
+        <BridgeBlock>
+          <BrandBlock src={require('../../assets/images/relay-icon.png')} />
+        </BridgeBlock>
+        <LineBlock></LineBlock>
+        <ChainLogo src={getLogoByName(targetChain?.name?.toUpperCase() || 'ETH')} />
+      </MainBlock>
+      <StyledButton onClick={onDismiss}>DONE</StyledButton>
+      <StyledSeparator />
+      <FooterBlock>
+        <SocialBlock>
+          <IconLink onClick={() => openInNewTab("https://twitter.com/relay_chain")}>
+            <Twitter size={25} />
+          </IconLink>
+        </SocialBlock>
+        <SocialBlock>
+          <IconLink onClick={() => openInNewTab('https://t.me/relaychaincommunity')}>
+            <LogoBlock src={getImageByName('telegram')} />
+          </IconLink>
+        </SocialBlock>
+        <SocialBlock>
+          <IconLink onClick={() => openInNewTab('https://t.me/relaychaincommunity')}>
+            <Twitter size={25} />
+          </IconLink>
+        </SocialBlock>
+      </FooterBlock>
     </SuccessContainer>
   )
 }

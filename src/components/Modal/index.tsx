@@ -33,7 +33,9 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
   overflow-y: ${({ mobile }) => (mobile ? 'auto' : 'hidden')};
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background: #330074;
+    background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
+    box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 24px;
     padding: 5px 0;
     backdrop-filter: blur(28px);
     border-radius: 30px;
@@ -43,19 +45,19 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')}; 
 
     ${({ maxHeight }) =>
-      maxHeight &&
-      css`
+    maxHeight &&
+    css`
         max-height: ${maxHeight}vh;
       `}
     ${({ maxWidth }) =>
-      maxWidth &&
-      css`
+    maxWidth &&
+    css`
         max-width: ${maxWidth}px;
       `}
 
     ${({ minHeight }) =>
-      minHeight &&
-      css`
+    minHeight &&
+    css`
         min-height: ${minHeight}vh;
       `}
     display: flex;
@@ -66,7 +68,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       ${mobile &&
-        css`
+    css`
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
@@ -123,9 +125,9 @@ export default function Modal({
               <StyledDialogContent
                 {...(isMobile
                   ? {
-                      ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
-                    }
+                    ...bind(),
+                    style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
+                  }
                   : {})}
                 aria-label="dialog content"
                 minHeight={minHeight}

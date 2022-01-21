@@ -13,8 +13,7 @@ import {
 } from 'react-feather'
 
 const Container = styled.div`
-  width: 100%;
-  height: 124px; 
+  width: 100%; 
   backdrop-filter: blur(28px);
   display: flex;
   flex-wrap: wrap;
@@ -35,10 +34,11 @@ const IconLink = styled.span`
   margin-right: 30px;
   text-decoration: none;
   cursor: pointer;
+  color: #A782F3;
 `
 const LogoBlock = styled.img`
-  height: 20px;
-  width: 20px;
+  height: 25px;
+  width: 25px;
 `
 const FooterTitile = styled.div`
   font-family: Montserrat;
@@ -76,15 +76,15 @@ export function Footer() {
         </IconLink>
 
         <IconLink onClick={() => onClickUrl("https://github.com/RelayChain/")}>
-          <GitHub size={20} />
+          <GitHub size={25} />
         </IconLink>
 
         <IconLink onClick={() => onClickUrl("https://www.youtube.com/channel/UC8q_XLKQtI-x5PUa4Rg3RrQ")}>
-          <Youtube size={20} />
+          <Youtube size={25} />
         </IconLink>
 
         <IconLink onClick={() => onClickUrl("https://twitter.com/relay_chain")}>
-          <Twitter size={20} />
+          <Twitter size={25} />
         </IconLink>
 
         <IconLink onClick={() => onClickUrl("https://discord.gg/TP7XHZwPkw")}>

@@ -18,6 +18,7 @@ import {
   setCurrentChain,
   setCurrentToken,
   setCurrentTokenBalance,
+  setCurrentTokenImage,
   setCurrentTxID,
   setPendingTransfer,
   setTargetChain,
@@ -462,6 +463,11 @@ export function useCrosschainHooks() {
           })
         )
       } else {
+        dispatch(
+          setCrosschainTransferStatus({
+            status: ChainTransferState.NotStarted
+          })
+        )
         console.log('not approved before')
       }
     } catch (err) {
@@ -635,7 +641,12 @@ export function useCrossChain() {
         }
       })
     )
-
+    
+    dispatch(
+      setCurrentTokenImage({
+        tokenImage: ''
+      })
+    )
     dispatch(
       setAvailableTokens({
         tokens: tokens.length ? tokens : []
