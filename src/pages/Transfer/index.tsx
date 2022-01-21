@@ -408,6 +408,7 @@ export default function Transfer() {
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
   const [isMaxAmount, setIsMaxAmount] = useState(false)
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
+  const [updateHandlerBalance, setUpdateHandBal] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
   const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
 
@@ -628,7 +629,11 @@ export default function Transfer() {
     }
     return ''
   }
-  useEffect(() => {
+  const onBlurInput = (event: any) => {
+    setUpdateHandBal(true)
+  }
+
+  const fetchHandlerBalance = () => {
     if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
@@ -639,10 +644,23 @@ export default function Transfer() {
           setBalanceOnHandler(amountHandler)
           setIsTransferToHandler(!!amountHandler)
         })
+        .catch(err => console.log('err :>> ', err))
+        .finally(() => {
+          setUpdateHandBal(false)
+        })
     } else {
       setHandlerZeroBalance(false)
     }
+  }
+  useEffect(() => {
+    fetchHandlerBalance()
   }, [currentToken, targetChain])
+
+  useEffect(() => {
+    if (updateHandlerBalance) {
+      fetchHandlerBalance()
+    }
+  }, [updateHandlerBalance])
 
   useEffect(() => {
     setIsMaxAmount(+transferAmount > 0 && +balanceOnHandler > 0 && +transferAmount >= +balanceOnHandler)
@@ -763,7 +781,7 @@ export default function Transfer() {
 
           <FlexBlock style={{}}>
             <CurrencyInputPanel
-              // blurInput={(event) => onBlurInput(event)}
+              blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
