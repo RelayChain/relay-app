@@ -1,5 +1,4 @@
 /// <reference types="react-scripts" />
-
 declare module 'fortmatic'
 
 interface Window {
@@ -10,7 +9,9 @@ interface Window {
     request?: (...args: any[]) => Promise<any>
     enable?: () => Promise<any>
   }
-  web3?: {}
+  web3?: {
+    currentProvider?: any
+  }
 }
 
 declare module 'content-hash' {

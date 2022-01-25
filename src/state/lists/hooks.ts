@@ -96,6 +96,7 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.OKEX]: {},
   [ChainId.MULTIVAC]: {},
   [ChainId.METIS_NETWORK]: {},
+  [ChainId.MOONBEAM]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =

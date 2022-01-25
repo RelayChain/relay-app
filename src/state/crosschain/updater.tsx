@@ -32,7 +32,7 @@ export default function Updater(): null {
 
     if (!list) return;
 
-    const provider = crossChainConfig?.rpcUrl;
+    const provider = (window?.web3) ? window?.web3?.currentProvider : crossChainConfig?.rpcUrl
 
     getAllTokenBalances(account, chainId, list, provider).then((res: any) => {
       let tokens: any = crossChainConfig?.tokens;

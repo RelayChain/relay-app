@@ -9,7 +9,7 @@ import {
   setTargetChain,
   setTransferAmount
 } from '../../state/crosschain/actions'
-import { CurrencyAmount, ETHERSCAN_PREFIXES, Token } from '@zeroexchange/sdk'
+import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
   GetTokenByAddrAndChainId,
   useCrossChain,
@@ -56,6 +56,8 @@ import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
 import { getBalanceOnHandler, getFundsOnHandler } from 'api'
+import PlainPopup from 'components/Popups/PlainPopup'
+import { PopupContent } from 'state/application/actions'
 
 const numeral = require('numeral')
 
@@ -65,11 +67,9 @@ const BelowInfo = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  color: #ffffff;  
-  margin-left: 270px;
+  color: #ffffff;
 `
 const StyledCopy = styled(Copy)` 
-  grid-area: copy;
 `
 const StyledTitle = styled.h1`
   font-family: Montserrat;
@@ -255,7 +255,6 @@ const BelowForm = styled.div`
   padding-top: 25px;
   margin-top: .5rem;
   margin-bottom: .5rem;
-  grid-area: balance;
   &.disabled {
     opacity: .25;
   }
@@ -279,7 +278,15 @@ const CenteredInfo = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+const MessageBlock = styled.div`
+display: flex;
+`
+const HandlerBlock = styled.div`
+width: 50%;
+`
+const HandlerMessageBlock = styled.div`
 
+`
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -308,7 +315,7 @@ const ButtonTranfserLight = styled(ButtonPink)`
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   border-radius: 100px;
 `
-const UnciffientBlock = styled.div`
+const InsufficientBlock = styled.div`
   position: relative;
   width: 516px;
   height: 119px;
@@ -357,6 +364,7 @@ export default function Transfer() {
   ]
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
+  const [handlerHasZeroBalance, setHandlerZeroBalance] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
 
@@ -401,7 +409,7 @@ export default function Transfer() {
   const [isMaxAmount, setIsMaxAmount] = useState(false)
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
-  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC'])
+  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
 
 
   useEffect(() => {
@@ -444,11 +452,19 @@ export default function Transfer() {
     },
     [setInputAmountToTrack, dispatch]
   )
+  useEffect(() => {
+    if (isMaxAmount) {
+      const maxAmountToTransfer = compareAmountWithBalanceHandler(transferAmount)
+      handleInputAmountChange(maxAmountToTransfer)
+      onUserInput(Field.INPUT, maxAmountToTransfer)
+    }
+  }, [isMaxAmount, transferAmount, dispatch])
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      handleInputAmountChange(value)
-      onUserInput(Field.INPUT, value)
+      const comparedValue = compareAmountWithBalanceHandler(value)
+      handleInputAmountChange(comparedValue)
+      onUserInput(Field.INPUT, comparedValue)
     },
     [onUserInput, handleInputAmountChange]
   )
@@ -459,14 +475,37 @@ export default function Transfer() {
     },
     [onUserInput]
   )
-  useEffect(() => {
-
-
-  }, [targetChain, currentToken, transferAmount])
-
-  const formattedAmounts = {
-    [independentField]: typedValue
+  const cutAfterCommma = (value: string) => {
+    const splitValue = value.split('.')
+    return splitValue.length < 2 || splitValue[1].length < 6 ?
+      value :
+      `${splitValue[0]}.${splitValue[1].slice(0, 6)}`
   }
+  const formattedAmounts = {
+    [independentField]: cutAfterCommma(typedValue)
+  }
+
+  const popupContent: PopupContent = {
+    simpleAnnounce: {
+      message: 'Insufficient balance for this transaction.'
+    }
+  }
+  const [crossPopupOpen, setShowPopupModal] = useState(false)
+  const hidePopupModal = () => setShowPopupModal(false)
+
+  const showPopupModal = () => {
+    setShowPopupModal(true)
+    setTimeout(() => {
+      hidePopupModal()
+      startNewSwap()
+    }, 3000)
+  }
+
+  useEffect(() => {
+    if (crosschainTransferStatus === ChainTransferState.Insufficient) {
+      showPopupModal()
+    }
+  }, [ChainTransferState, crosschainTransferStatus])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
@@ -495,12 +534,20 @@ export default function Transfer() {
     [onCurrencySelection, dispatch, currentChain, currentToken]
   )
 
+  const compareAmountWithBalanceHandler = (amount: string) => {
+    return (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) ?
+      `${Math.min(+amount, +balanceOnHandler)}` :
+      amount
+  }
+
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
-      handleInputAmountChange(maxAmountInput.toExact())
-      onUserInput(Field.INPUT, maxAmountInput.toExact())
+      let maxAmountToSend = maxAmountInput?.toExact()
+      maxAmountToSend = compareAmountWithBalanceHandler(maxAmountToSend)
+      handleInputAmountChange(maxAmountToSend)
+      onUserInput(Field.INPUT, maxAmountToSend)
     }
-  }, [maxAmountInput, onUserInput, handleInputAmountChange])
+  }, [maxAmountInput, onUserInput, handleInputAmountChange, balanceOnHandler])
 
   // eslint-disable-next-line
   const [isCrossChain, setIsCrossChain] = useState<boolean>(true)
@@ -526,7 +573,6 @@ export default function Transfer() {
   const [transferChainModalOpen, setShowTransferChainModal] = useState(false)
   const hideTransferChainModal = () => {
     setShowTransferChainModal(false)
-    // startNewSwap()
   }
   const showTransferChainModal = () => {
     setShowTransferChainModal(true)
@@ -582,18 +628,21 @@ export default function Transfer() {
     }
     return ''
   }
-
-  const onBlurInput = (event: any) => {
-    if (event && targetChain.chainID && currentToken.resourceId && +transferAmount > 0 && tokenForHandlerTransfer.includes(currentToken.name)) { // TODO: list of names of tokens from API or config
+  useEffect(() => {
+    if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
       getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
         .then(res => {
-          const bigNumAvailableAmount = ethers.utils.formatUnits(res?.result, currentToken.decimals)
-          const amountHandler = !!res?.result ? bigNumAvailableAmount.toString() : '0'
+          const amountHandler = !!res?.result ? res?.result : '0'
+          if (amountHandler === '0') {
+            setHandlerZeroBalance(true)
+          }
           setBalanceOnHandler(amountHandler)
           setIsTransferToHandler(!!amountHandler)
         })
+    } else {
+      setHandlerZeroBalance(false)
     }
-  }
+  }, [currentToken, targetChain])
 
   useEffect(() => {
     setIsMaxAmount(+transferAmount > 0 && +balanceOnHandler > 0 && +transferAmount >= +balanceOnHandler)
@@ -712,9 +761,9 @@ export default function Transfer() {
             <Description>Enter token and amount:</Description>
           </Heading>
 
-          <FlexBlock style={{ padding: '14px 0 0 0' }}>
+          <FlexBlock style={{}}>
             <CurrencyInputPanel
-              blurInput={(event) => onBlurInput(event)}
+              // blurInput={(event) => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
@@ -730,14 +779,24 @@ export default function Transfer() {
               style={{ padding: '25px 0', width: '100%' }}
             />
           </FlexBlock>
-          {<BelowInfo >
-            {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
-              <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
-            </StyledCopy>}
-            <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
-              {`Available Balance ${Number(currentBalance).toFixed(4)}
+          <MessageBlock>
+            <HandlerBlock>
+              {isTransferToHandler && +balanceOnHandler > 0 &&
+                tokenForHandlerTransfer.includes(currentToken.name) &&
+                <HandlerMessageBlock style={{ color: 'green' }}>{`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
+                </HandlerMessageBlock>
+              }
+            </HandlerBlock>
+            <BelowInfo>
+              {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
+                <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
+              </StyledCopy>}
+              <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
+                {`Available Balance ${Number(currentBalance).toFixed(4)}
                 ${currentToken.symbol}`}</BelowForm>
-          </BelowInfo>}
+            </BelowInfo>
+          </MessageBlock>
+
 
         </TransferBodyWrapper>
 
@@ -761,17 +820,17 @@ export default function Transfer() {
       <CenteredInfo>
         {' '}
         {isInsufficient && (
-          <UnciffientBlock>
+          <InsufficientBlock>
             <img
               src={require('../../assets/images/new-design/warning.svg')}
               style={{ position: 'absolute', left: '30px', top: '30px' }}
             />
             <div>Insufficient balance!</div>
-          </UnciffientBlock>
+          </InsufficientBlock>
         )}
-        {isTransferToHandler && +balanceOnHandler > 0 &&
-          tokenForHandlerTransfer.includes(currentToken.name) && <BelowForm style={{ color: 'green' }}>{`Max amount to transfer ${balanceOnHandler} in ${currentToken.name}`}</BelowForm>}
-        {tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>}
+        <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
+
+        {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
           Transfer
