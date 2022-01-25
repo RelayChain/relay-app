@@ -298,13 +298,6 @@ export function useCrosschainHooks() {
       return Promise.reject()
     } else {
       try {
-        dispatch(
-          setCrosschainTransferStatus({
-            status: ChainTransferState.TransferPending
-          })
-        )
-
-
         const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
         const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
           crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
@@ -347,6 +340,11 @@ export function useCrosschainHooks() {
         if (!resultDepositTx) {
           return
         }
+        dispatch(
+          setCrosschainTransferStatus({
+            status: ChainTransferState.TransferPending
+          })
+        )
 
         await resultDepositTx.wait()
 
@@ -641,7 +639,7 @@ export function useCrossChain() {
         }
       })
     )
-    
+
     dispatch(
       setCurrentTokenImage({
         tokenImage: ''

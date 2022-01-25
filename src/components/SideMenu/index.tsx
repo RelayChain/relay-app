@@ -135,11 +135,11 @@ export default function SideMenu() {
           <img width={'100%'} src={LogoDark} alt="logo" />
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`transfer-nav-link`} to={'/cross-chain-bridge-transfer'} onClick={handleSideMenuOpen}>
+          <StyledNavLink id={`transfer-nav-link`} to={'/bridge'} onClick={handleSideMenuOpen}>
             <IconLink>
-              <Icon icon="bridges" active={pathname === '/cross-chain-bridge-transfer'} />
+              <Icon icon="bridges" active={pathname === '/bridge'} />
             </IconLink>
-            <span className={pathname === '/cross-chain-bridge-transfer' ? 'active' : ''}>{t('Transfer')}</span>
+            <span className={pathname === '/bridge' ? 'active' : ''}>{t('Transfer')}</span>
           </StyledNavLink>
           <HeaderExternalLink href={`${currentChain.marketPlace !== undefined ? currentChain.marketPlace : 'https://app.pangolin.exchange/'}`}>
 

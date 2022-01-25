@@ -14,7 +14,7 @@ import {
   Twitter,
 } from 'react-feather'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import { getLogoByName } from 'components/CurrencyLogo'
+import { getCurrencyLogoImage, getLogoByName } from 'components/CurrencyLogo'
 
 const Title = styled.div`
   height: 47px;
@@ -112,8 +112,8 @@ const AssetTitle = styled.div`
   color: #FFFFFF;
 `
 const TokenLogo = styled.img`
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   margin: -25px 0;
 `
 const TokenTitle = styled.div`
@@ -159,6 +159,20 @@ const BrandBlock = styled.img`
   top: 35px;
   left: 35px; 
 `
+const UnderFooter = styled.div`
+  position: relative;
+  height: 50px;
+  width: 421px;
+  margin-top: 25px;
+
+`
+const UnderFooterImage = styled.img`
+  position: absolute; 
+  height: 50px;
+  width: 50px;
+  left: 185px;
+  bottom: 25px;
+`
 
 export default function TransferComplete({
   onDismiss,
@@ -175,7 +189,7 @@ export default function TransferComplete({
   currentToken?: any
   targetTokenAddress?: string
 }) {
-  const { currentTokenImage, currentChain, targetChain } = useCrosschainState()
+  const { currentTokenImage, currentChain, targetChain, currentTxID } = useCrosschainState()
   const openInNewTab = (url: string): void => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
@@ -183,12 +197,13 @@ export default function TransferComplete({
   const getImageByName = (tokenName: string) => {
     return require(`../../assets/images/${tokenName}.svg`)
   }
+
   return (
     <SuccessContainer>
       <Title>Success Transaction</Title>
       <StyledSeparator />
       <Success>Operation complete!</Success>
-      <HashBlock>Hash: {targetTokenAddress}</HashBlock>
+      <HashBlock>Hash: {currentTxID}</HashBlock>
       <AssetTitle>
         Asset/Token
       </AssetTitle>
@@ -197,16 +212,20 @@ export default function TransferComplete({
         {currentToken?.name}
       </TokenTitle>
       <MainBlock>
-        <ChainLogo src={getLogoByName(currentChain?.symbol?.toUpperCase() || 'ETH')} />
+        <ChainLogo src={getLogoByName(getCurrencyLogoImage(currentChain?.symbol?.toUpperCase()) || 'ETH')} />
         <LineBlock></LineBlock>
         <BridgeBlock>
           <BrandBlock src={require('../../assets/images/relay-icon.png')} />
         </BridgeBlock>
         <LineBlock></LineBlock>
-        <ChainLogo src={getLogoByName(targetChain?.name?.toUpperCase() || 'ETH')} />
+        <ChainLogo src={getLogoByName(getCurrencyLogoImage(targetChain?.name?.toUpperCase()) || 'ETH')} />
       </MainBlock>
       <StyledButton onClick={onDismiss}>DONE</StyledButton>
-      <StyledSeparator />
+      <UnderFooter>
+        <UnderFooterImage src={require('../../assets/svg/share.svg')} />
+        <StyledSeparator />
+      </UnderFooter>
+
       <FooterBlock>
         <SocialBlock>
           <IconLink onClick={() => openInNewTab("https://twitter.com/relay_chain")}>

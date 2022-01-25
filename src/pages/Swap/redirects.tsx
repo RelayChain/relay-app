@@ -15,7 +15,7 @@ export function RedirectPathToHomeOnly({ location }: RouteComponentProps) {
 }
 
 export function RedirectPathToTransferOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/cross-chain-bridge-transfer' }} />
+  return <Redirect to={{ ...location, pathname: '/bridge' }} />
 }
 
 // Redirects to earn but only replace the pathname

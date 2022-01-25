@@ -230,7 +230,7 @@ export default function Confirm({
                         Fee
                     </Label>
                     <AmountBlock>
-                        <LogoToken src={currentTokenImage} /> {currentChain?.symbol?.toUpperCase()} {crosschainFee}
+                        <LogoToken src={getLogoByName(getCurrencyLogoImage(currentChain?.symbol) || 'ETH')} /> {currentChain?.symbol?.toUpperCase()} {crosschainFee}
                     </AmountBlock>
                 </InputBlock>
             </ToBlock>

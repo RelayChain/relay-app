@@ -20,44 +20,44 @@ const StyledProgressBar = styled(ProgressBar)`
 margin-top: 110px;
 `
 
-export default function ApprovalPending ({ tokenTransferState }: { tokenTransferState: ChainTransferState }) {
+export default function ApprovalPending({ tokenTransferState }: { tokenTransferState: ChainTransferState }) {
   const [completed, setCompleted] = useState(0);
 
-function* addProgress() {
-  yield 17;
-  yield 23;
-  yield 36;
-  yield 44;
-  yield 52;
-  yield 61;
-  yield 77;
-  yield 83;
-  yield 95
-  return 100;
-}
+  function* addProgress() {
+    yield 17;
+    yield 23;
+    yield 36;
+    yield 44;
+    yield 52;
+    yield 61;
+    yield 77;
+    yield 83;
+    yield 95
+    return 100;
+  }
 
-const gen = addProgress()
+  const gen = addProgress()
 
- useEffect(() => {
-  const startProgress = setInterval(() => {
-    const value = gen.next().value
-    if(value) {
-      setCompleted(value)
-    } else {
-      clearInterval(startProgress)
-    }
-  }, 2000)
+  useEffect(() => {
+    const startProgress = setInterval(() => {
+      const value = gen.next().value
+      if (value) {
+        setCompleted(value)
+      } else {
+        clearInterval(startProgress)
+      }
+    }, 2000)
 
-}, [])
+  }, [])
   return (
     <Section>
       <WalletLogo src={require('../../assets/images/new-design/wallet.png')} />
-    <StyledProgressBar  bgcolor={"#6a1b9a"} completed={completed} />
-        { tokenTransferState === ChainTransferState.ApprovalSubmitted &&
-          <Text fontSize={14} color="#565A69" textAlign="center" style={{ marginTop: '2rem'}}>
-            Your approval has been submitted, waiting for confirmation.
-          </Text>
-        }
+      <StyledProgressBar bgcolor={"#6a1b9a"} completed={completed} total={100} />
+      {tokenTransferState === ChainTransferState.ApprovalSubmitted &&
+        <Text fontSize={14} color="#565A69" textAlign="center" style={{ marginTop: '2rem' }}>
+          Your approval has been submitted, waiting for confirmation.
+        </Text>
+      }
     </Section>
   )
 }

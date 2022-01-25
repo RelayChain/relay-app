@@ -60,9 +60,8 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
     margin-left: auto;
     margin-right: auto;
   }
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  width: 100%;
-  margin-top: 15px;
+  ${({ theme }) => theme.mediaWidth.upToSmall` 
+  margin-top: 10px;
   &.centered {
     margin-top: 0;
     margin-left: auto;

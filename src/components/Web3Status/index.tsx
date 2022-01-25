@@ -332,7 +332,7 @@ export const NetworkSwitcher = ({ bridge = false }: NetworkSwitcherProps) => {
           <BlockchainLogo
             size={bridge ? '25px' : '34px'}
             blockchain={chainId ? NETWORK_LABELS[chainId] : 'Ethereum'}
-            style={{ margin: '0' }}
+            style={{}}
           />
 
           <span style={{ paddingLeft: '5px' }}>{NETWORK_LABELS[chainId]}</span>

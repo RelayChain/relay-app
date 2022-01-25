@@ -38,7 +38,9 @@ const StyledButton = styled(ButtonOutlined)`
   color: #FFFFFF;
   margin-top: 1rem;
 `
-
+const StyledAutoColumn = styled(AutoColumn)`
+  justify-content: center;
+`
 export default function ApprovalComplete({
   changeTransferState,
   onDismiss
@@ -59,7 +61,7 @@ export default function ApprovalComplete({
   }
 
   return (
-    <AutoColumn gap="12px" justify={'center'}>
+    <StyledAutoColumn gap="12px" justify={'center'}>
       <RowFixed style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <CheckCircle size={'66'} style={{ margin: '2rem 1rem 2rem 1rem', color: '#27AE60' }} />
         <ChevronsRight size={'66'} style={{ margin: '2rem 1rem 2rem 1rem', opacity: '.5' }} />
@@ -79,6 +81,6 @@ export default function ApprovalComplete({
       <RowFixed>
         <CancelLink onClick={cancelTransfer}>Cancel Transfer</CancelLink>
       </RowFixed>
-    </AutoColumn>
+    </StyledAutoColumn>
   )
 }

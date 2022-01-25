@@ -73,19 +73,19 @@ const Header = () => {
       <ClaimModal />
       <HideMedium>
         <LogoContainer>
-          <LogoNavLink to={'/cross-chain-bridge-transfer'} onClick={() => setPathname('/cross-chain-bridge-transfer')}>
-            <div className="relay-logo" style={{ cursor: 'pointer'}}></div>
-            <div className="relay-name" style={{ cursor: 'pointer'}}></div>
+          <LogoNavLink to={'/bridge'} onClick={() => setPathname('/bridge')}>
+            <div className="relay-logo" style={{ cursor: 'pointer' }}></div>
+            <div className="relay-name" style={{ cursor: 'pointer' }}></div>
           </LogoNavLink>
         </LogoContainer>
       </HideMedium>
       <MenuBar>
         <StyledNavLink
           id={`bridge-nav-link`}
-          to={'/cross-chain-bridge-transfer'}
-          onClick={() => setPathname('/cross-chain-bridge-transfer')}
+          to={'/bridge'}
+          onClick={() => setPathname('/bridge')}
           style={
-            pathname === '/cross-chain-bridge-transfer' || pathname === '/' ? { fontWeight: 700 } : { fontWeight: 400 }
+            pathname === '/bridge' || pathname === '/' ? { fontWeight: 700 } : { fontWeight: 400 }
           }
         >
           Bridges

@@ -125,11 +125,11 @@ export default function ModalMenu({ isOpen, onDismiss }: ModalMoreProps) {
 
         <MenuItem
           id={`bridge-nav-link`}
-          to={'/cross-chain-bridge-transfer'}
-          onClick={() => redirectTo('/cross-chain-bridge-transfer')}
+          to={'/bridge'}
+          onClick={() => redirectTo('/bridge')}
         >
           <IconLink>
-            <Icon icon="bridges" active={pathname === '/cross-chain-bridge-transfer'} />
+            <Icon icon="bridges" active={pathname === '/bridge'} />
           </IconLink>
           Bridge
         </MenuItem>

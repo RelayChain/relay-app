@@ -1,7 +1,7 @@
- import React from 'react' 
+import React from 'react'
 import styled from 'styled-components'
 
- 
+
 const Fail = styled.div`
   font-family: Poppins;
   font-style: normal;
@@ -37,11 +37,12 @@ const NotifyBlock = styled.div`
   text-align: center;
   color: #FFFFFF; 
 `
- 
+
 const FailedContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  content-items: center;
   position: relative;
   height: 707px;
   width: 440px;
@@ -53,7 +54,7 @@ export default function TransferFiled() {
       <TitlePending>Transfer Failed!</TitlePending>
       <LogoBlock src={require('../../assets/images/new-design/fail.png')}></LogoBlock>
       <Fail>Oops!</Fail>
-      <NotifyBlock>Something error your tokens failed to transfer.</NotifyBlock> 
+      <NotifyBlock>Something error your tokens failed to transfer.</NotifyBlock>
     </FailedContainer>
   )
 }

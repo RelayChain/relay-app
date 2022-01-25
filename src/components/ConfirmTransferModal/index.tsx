@@ -35,6 +35,7 @@ const ModalContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column; 
   h5 {
     margin: 1rem 0;
@@ -133,11 +134,13 @@ export default function ConfirmTransferModal({
         {tokenTransferState === ChainTransferState.TransferFailed &&
           <TransferFiled />
         }
+
         {tokenTransferState === ChainTransferState.Confirm &&
           <Confirm changeTransferState={changeTransferState} onDismiss={handleOnDismiss} />
         }
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
+
           <ApprovalPending tokenTransferState={tokenTransferState} />
         }
 
@@ -146,11 +149,10 @@ export default function ConfirmTransferModal({
         )}
 
         {tokenTransferState === ChainTransferState.TransferPending && (
-          <TransferPending changeTransferState={changeTransferState} />
+          < TransferPending onDismiss={handleOnDismiss} />
         )}
-        {tokenTransferState === ChainTransferState.TransferComplete && (
-          // {tokenTransferState === ChainTransferState.Confirm && (
 
+        {tokenTransferState === ChainTransferState.TransferComplete && (
           < TransferComplete
             activeChain={activeChain}
             transferTo={transferTo?.name}

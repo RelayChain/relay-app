@@ -2,18 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 
 type ProgressBarProps = {
-    completed: number;
-    bgcolor: string
+  completed: number
+  bgcolor: string
+  total: number
 }
 
-export function ProgressBar({completed, bgcolor}: ProgressBarProps) {
-    const ContainerStyles = styled.div`
+export function ProgressBar({ completed, bgcolor, total }: ProgressBarProps) {
+  const ContainerStyles = styled.div`
     height: 8px;
     width: '100%';
     background-color: "#CCCCCC";
     border-radius: 50;
     margin: 50;
-` 
+`
 
   const FillerStyles = styled.div`
     height: '100%';
@@ -26,24 +27,31 @@ export function ProgressBar({completed, bgcolor}: ProgressBarProps) {
   `
 
   const LabelStyles = styled.div`
-    font-family: Poppins;
+    font-family: Montserrat;
     font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 42px;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;    
     color: #FFFFFF;
     text-align: center;
     margin-top: 30px;
   `
 
 
-    return (
-    <ContainerStyles style={{width: '100%', height: "8px", "borderRadius": "10px", backgroundColor: "#CCCCCC"}}>
-      <FillerStyles style={{width: `${completed}%`, background: "linear-gradient(96.23deg, #D34FA0 -15.95%, #7F46F0 123.53%)",
-        height: "8px", "borderRadius": "10px"}}>
-        
-      </FillerStyles>
-      <LabelStyles  style={{textAlign: "center", marginTop: "30px", fontSize: "28px"}}>{`${completed}%`} </LabelStyles>
-    </ContainerStyles>
+  return (
+    <>
+      <LabelStyles style={{}}>{`${Math.ceil(total * (completed / 100))}/ ${total} Confirm`} </LabelStyles>
+      <ContainerStyles style={{ width: '100%', height: "8px", "borderRadius": "10px", backgroundColor: "#130E2E" }}>
+
+        <FillerStyles style={{
+          width: `${completed}%`, background: bgcolor,
+          height: "8px", "borderRadius": "10px"
+        }}>
+
+        </FillerStyles>
+
+      </ContainerStyles>
+    </>
+
   );
 }
