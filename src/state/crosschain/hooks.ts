@@ -391,12 +391,11 @@ export function useCrosschainHooks() {
 
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         UpdateOwnTokenBalance().catch(console.error)
-
+        const web3TargetChain = new Web3(targetChain.rpcUrl)
+        const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
         while (true) {
           try {
             await delay(5000)
-            const web3TargetChain = new Web3(targetChain.rpcUrl)
-            const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
             const proposal = await destinationBridge.methods
               .getProposal(
                 currentChain.chainId,

@@ -135,9 +135,9 @@ export default function ConfirmTransferModal({
           <TransferFiled />
         }
 
-        {tokenTransferState === ChainTransferState.Confirm &&
+        {/* {tokenTransferState === ChainTransferState.Confirm &&
           <Confirm changeTransferState={changeTransferState} onDismiss={handleOnDismiss} />
-        }
+        } */}
 
         {(tokenTransferState === ChainTransferState.ApprovalPending || tokenTransferState === ChainTransferState.ApprovalSubmitted) &&
 
@@ -148,7 +148,8 @@ export default function ConfirmTransferModal({
           <ApprovalComplete changeTransferState={changeTransferState} onDismiss={handleOnDismiss} />
         )}
 
-        {tokenTransferState === ChainTransferState.TransferPending && (
+        {/* {tokenTransferState === ChainTransferState.TransferPending && ( */}
+        {tokenTransferState === ChainTransferState.Confirm && (
           < TransferPending onDismiss={handleOnDismiss} />
         )}
 

@@ -6,6 +6,7 @@ import { Separator } from 'components/SearchModal/styleds'
 import { useCrosschainState } from 'state/crosschain/hooks'
 import { getCurrencyLogoImage, getLogoByName } from 'components/CurrencyLogo'
 import { ProgressBar } from 'components/ProgressBar'
+import { getTransferState } from 'api'
 
 const Title = styled.div`
   height: 47px;
@@ -191,20 +192,29 @@ export default function TransferPending({
   targetTokenAddress?: string
 }) {
   const { currentTokenImage, currentChain, targetChain, currentTxID } = useCrosschainState()
-  const openInNewTab = (url: string): void => {
-    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-    if (newWindow) newWindow.opener = null
-  }
-  const getImageByName = (tokenName: string) => {
-    return require(`../../assets/images/${tokenName}.svg`)
-  }
-
   const [completedCurrentChain, setCompletedCurrentChain] = useState(0);
   const [completedBridge, setCompletedBridge] = useState(0);
   const [completedTargetChain, setCompletedTargetChain] = useState(0);
   const [startBridgeProgress, setStartBridgeProgress] = useState(false);
   const [startTargetProgress, setStartTargetProgress] = useState(false);
-  const [shortHash, setShortHash] = useState('');
+  const [shortHash, setShortHash] = useState('')
+  const initArray: any[] = []
+  const [transferData, setTransferData] = useState(initArray);
+
+  const openInNewTab = (url: string): void => {
+    url = `${currentChain.blockExplorer}/tx/${url}`
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+
+  // useEffect(() => {
+  //   getTransferState(currentTxID)
+  //     .then((data) => {
+  //       if (data.length > 0) {
+  //         setTransferData(transferData => [...transferData, ...data])
+  //       }
+  //     })
+  // }, [currentTxID])
 
   function* addProgress() {
     yield 17;
@@ -227,6 +237,7 @@ export default function TransferPending({
     const startProgress = setInterval(() => {
       const value = gen.next().value
       if (value) {
+
         setCompletedCurrentChain(value)
       }
       else {
@@ -237,21 +248,34 @@ export default function TransferPending({
   }, [])
 
   useEffect(() => {
+    let startProgress: any = null
     if (startBridgeProgress) {
-      const startProgress = setInterval(() => {
-        const value = genBridge.next().value
-        if (value) {
-          setCompletedBridge(value)
-        }
-        else {
-          setStartBridgeProgress(false)
-          setStartTargetProgress(true)
-          clearInterval(startProgress)
+      startProgress = setInterval(() => {
+        if (transferData.length > 0) {
+          const value = genBridge.next().value
+          if (value) {
+            setCompletedBridge(value)
+          } else {
+            setStartBridgeProgress(false)
+            setStartTargetProgress(true)
+            clearInterval(startProgress)
+          }
+        } else {
+          getTransferState(currentTxID)
+            .then((data) => {
+              if (data.length > 0) {
+                setTransferData(transferData => [...transferData, ...data])
+              }
+            })
         }
       }, 1000)
     }
+    return () => {
+      clearInterval(startProgress)
+    }
 
-  }, [startBridgeProgress])
+  }, [startBridgeProgress, transferData, currentTxID])
+
 
   useEffect(() => {
     if (startTargetProgress) {
@@ -274,14 +298,13 @@ export default function TransferPending({
       setShortHash(`${currentTxID.slice(0, 6)}..${currentTxID.slice(-6)}`)
     }
   }, [currentTxID])
-
   return (
     <SuccessContainer>
       <Title>Transaction Details</Title>
       <StyledSeparator />
       <Success>Transaction is packing on {currentChain?.name}</Success>
       <Patient>Please be patient...</Patient>
-      <HashBlock>Hash: {shortHash}</HashBlock>
+      <HashBlock onClick={() => openInNewTab(currentTxID)}>Hash: {shortHash}</HashBlock>
 
       <MainBlock>
         <ChainLogo src={getLogoByName(getCurrencyLogoImage(currentChain?.symbol?.toUpperCase()) || 'ETH')} />

@@ -70,3 +70,8 @@ export async function getGasPrices() {
 export async function getCoinGeckoPrice(symbol: string) {
   return getTyped<CGPrice>(`https://api.coingecko.com/api/v3/simple/price?ids=${symbol}&vs_currencies=USD`);
 }
+
+export async function getTransferState(hash: string) {
+  const url = `https://crosschain-api.relaychain.com/deposit-status/${hash}`
+  return get(url)
+}
