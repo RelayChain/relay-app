@@ -16,6 +16,7 @@ import { getCurrencyLogoImage, getLogoByName } from 'components/CurrencyLogo'
 const Section = styled(AutoColumn)`
     padding: 24px;
     height: 761px; 
+    width: 473px;
 `
 const ConfirmButton = styled(ButtonOutlined)`
     width: 421px;
