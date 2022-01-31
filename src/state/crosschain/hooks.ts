@@ -495,11 +495,7 @@ export function useCrosschainHooks() {
         })
       )
 
-      dispatch(
-        setCrosschainTransferStatus({
-          status: ChainTransferState.ApprovalPending
-        })
-      )
+
 
 
 
@@ -512,21 +508,26 @@ export function useCrosschainHooks() {
 
       const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
       const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-      tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
+      const approveResult = tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
         gasPrice: currentGasPrice,
       })
-        .then((resultApproveTx: any) => {
-          dispatch(
-            setCrosschainTransferStatus({
-              status: ChainTransferState.ApprovalSubmitted
-            })
-          )
-          dispatch(
-            setCurrentTxID({
-              txID: resultApproveTx.hash
-            })
-          )
+      dispatch(
+        setCrosschainTransferStatus({
+          status: ChainTransferState.ApprovalPending
         })
+      )
+      approveResult.then((resultApproveTx: any) => {
+        dispatch(
+          setCrosschainTransferStatus({
+            status: ChainTransferState.ApprovalSubmitted
+          })
+        )
+        dispatch(
+          setCurrentTxID({
+            txID: resultApproveTx.hash
+          })
+        )
+      })
         .catch((err: any) => {
           BreakCrosschainSwap()
         })

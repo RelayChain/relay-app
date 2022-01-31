@@ -67,7 +67,7 @@ export default function ConfirmTransferModal({
   let allowanceInterval: any = null;
 
   useEffect(() => {
-    if (allCrosschainData && allCrosschainData?.chains.length) {
+    if (allCrosschainData && allCrosschainData?.chains?.length) {
       const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
       chaindata?.tokens.map(token => {
         if (token.resourceId === currentToken.resourceId) {

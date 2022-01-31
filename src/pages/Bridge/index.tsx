@@ -431,7 +431,7 @@ export default function Bridge() {
     currentTokenImage
   } = useCrosschainState()
 
-  const { BreakCrosschainSwap, GetAllowance } = useCrosschainHooks()
+  const { BreakCrosschainSwap } = useCrosschainHooks()
   const theme = useContext(ThemeContext)
 
   const dispatch = useDispatch<AppDispatch>()

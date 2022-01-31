@@ -115,7 +115,9 @@ const StyledButton = styled(ButtonOutlined)`
   color: #FFFFFF;
   margin-top: 1rem;
 `
-
+const StyledAutoColumn = styled(AutoColumn)`
+  padding: 30px;
+`
 export default function NotStarted({
   activeChain,
   transferTo,
@@ -142,7 +144,7 @@ export default function NotStarted({
   }
 
   return (
-    <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+    <StyledAutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
           {currency && (
@@ -198,6 +200,6 @@ export default function NotStarted({
           Approve Transfer
         </StyledButton>
       </RowFixed>
-    </AutoColumn>
+    </StyledAutoColumn>
   )
 }

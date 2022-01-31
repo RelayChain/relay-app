@@ -39,16 +39,18 @@ export default function ApprovalPending({ tokenTransferState }: { tokenTransferS
   const gen = addProgress()
 
   useEffect(() => {
-    const startProgress = setInterval(() => {
-      const value = gen.next().value
-      if (value) {
-        setCompleted(value)
-      } else {
-        clearInterval(startProgress)
-      }
-    }, 2000)
-
+    setTimeout(() => {
+      const startProgress = setInterval(() => {
+        const value = gen.next().value
+        if (value) {
+          setCompleted(value)
+        } else {
+          clearInterval(startProgress)
+        }
+      }, 2000)
+    }, 8000)
   }, [])
+
   return (
     <Section>
       <WalletLogo src={require('../../assets/images/new-design/wallet.png')} />
