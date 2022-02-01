@@ -234,9 +234,11 @@ export default function CrossChainModal({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        if (filteredChains.length > 0) {
+        if (searchQuery !== '') {
           const res = filteredChains.filter(x => (x.name.toLowerCase()).includes(searchQuery.toLowerCase()))
           setFilteredChains(res)
+        } else {
+          setFilteredChains(supportedChains)
         }
       }
     },
