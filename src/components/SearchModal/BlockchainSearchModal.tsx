@@ -43,7 +43,7 @@ export default function BlockchainSearchModal({
   }, [])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80} isChainSwitch={true}>
       <BlockchainSearch
         isOpen={isOpen}
         onDismiss={onDismiss}

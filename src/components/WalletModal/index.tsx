@@ -21,8 +21,8 @@ import PendingView from './PendingView'
 
 const CloseIcon = styled.div`
   position: absolute;
-  right: 1rem;
-  top: 14px;
+  top: 11px;
+  left: 11px;
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -47,7 +47,6 @@ const HeaderRow = styled.div`
 
 const ContentWrapper = styled.div`
   background-color: inherit;
-  padding: 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -56,6 +55,7 @@ const ContentWrapper = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
+  padding: 130px 30px 20px 45px;
   width: 100%;
   h5 {
     margin: 0;
@@ -360,7 +360,7 @@ export default function WalletModal({
   }
 
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} isChainSwitch={true}>
       {getModalContent()}
     </Modal>
   )

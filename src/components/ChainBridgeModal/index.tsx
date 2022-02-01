@@ -44,7 +44,7 @@ export default function ChainBridgeModal({ isOpen, onDismiss }: ChainBridgeProps
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} isChainSwitch={true}>
       <ModalContainer>
         <RowBetween>
           <div />

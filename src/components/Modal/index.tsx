@@ -21,28 +21,38 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
     // background-color: ${({ theme }) => theme.modalBG};
   }
 `
-
+/// 
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, isOpen, ...rest }) => (
+const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, isOpen, isChainSwitch, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
   'aria-label': 'dialog'
 })`
   overflow-y: ${({ mobile }) => (mobile ? 'auto' : 'hidden')};
-  &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
-    background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
+  &[data-reach-dialog-content] {   
+    background:  linear-gradient(180deg, #211A49 0%, #211A49 100%);
     box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
-    border-radius: 24px;
     padding: 5px 0;
-    backdrop-filter: blur(28px);
-    border-radius: 30px;
-    width: 50vw;
+    backdrop-filter: blur(28px); 
     overflow-y: ${({ mobile }) => (mobile ? 'auto' : 'hidden')};
     overflow-x: auto;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')}; 
+    ${({ isChainSwitch }) =>
+    (isChainSwitch) &&
+      css ? `
+      margin-right: 3px;
+      background: #2E2757;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
+      width: 508px;
+      height: 1024px;
+    ` : `
+      border-radius: 30px;
+      margin:  0 0 2rem 0;
+      width: 50vw;
+    
+    `}
 
     ${({ maxHeight }) =>
     maxHeight &&
@@ -84,6 +94,7 @@ interface ModalProps {
   minHeight?: number | false
   maxHeight?: number
   maxWidth?: number
+  isChainSwitch?: boolean
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
 }
@@ -92,8 +103,9 @@ export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
-  maxHeight = 90,
+  maxHeight = 100,
   maxWidth = 473,
+  isChainSwitch = false,
   initialFocusRef,
   children
 }: ModalProps) {
@@ -133,6 +145,7 @@ export default function Modal({
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
+                isChainSwitch={isChainSwitch}
                 mobile={isMobile}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}

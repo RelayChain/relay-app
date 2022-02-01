@@ -98,14 +98,37 @@ const StyledInput = styled(SearchInput)`
   line-height: 15px;
   color: #3E3376;
 `
-// const STyledColumn = styled(Column)`
-//   width: 534px;
-//   height: 842px; 
-//   background: linear-gradient(180deg, #211A49 0%, #211A49 100%);
-//   box-shadow: 11px 10px 20px rgba(0, 0, 0, 0.25);
-//   border-radius: 24px;
+const Cross = styled.div`
+  position: absolute;
+  left: 10px;
+  top: 25px;
+  width: 34px;
+  height: 34px;
+  opacity: 0.8;
+  cursor: pointer;
+  :hover {
+    opacity: 1;
+  }
+  ::before,
+  ::after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 20px;
+    width: 4px;
+    background-color: #a7b1f4;
+  }
+  ::before {
+    transform: rotate(45deg);
+  }
+  ::after {
+    transform: rotate(-45deg);
+  }
+`
 
-// `
+const StyledPaddedColumn = styled(PaddedColumn)`
+  margin-top: 50px;
+`
 
 // const DEFAULT_TOKEN_LIST = process.env.REACT_APP_TESTNET ? DEFAULT_TOKEN_LIST_TESTNET : DEFAULT_TOKEN_LIST_MAINNET
 
@@ -408,9 +431,10 @@ export function CurrencySearch({
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
+      <Cross onClick={onDismiss} />
       {!isManageTokenList && (
         <>
-          <PaddedColumn gap="5px">
+          <StyledPaddedColumn gap="5px">
 
             <TitleFrom>{`Select Asset`}</TitleFrom>
             {(
@@ -436,7 +460,7 @@ export function CurrencySearch({
                 toggleSortOrder={() => setInvertSearchOrder(!invertSearchOrder)}
               />
             </RowBetween> */}
-          </PaddedColumn>
+          </StyledPaddedColumn>
           <TokenContainer style={{ flex: '1' }}>
             <TitleFrom>{`Token Name`}</TitleFrom>
             <StyledSeparator />

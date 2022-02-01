@@ -20,15 +20,14 @@ interface CrossChainModalProps {
 }
 
 const StyledModal = styled(Modal)`
+  position: relative;
   width: 508px;
   background: #2E2757;
   box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
 `
-const ModalContainer = styled.div`
-  
-  margin-top: 50px;
-  margin-left: 30px;
- 
+const ModalContainer = styled.div`  
+  margin-top: 150px;
+  margin-left: 30px; 
   padding: 10px;
   width: 100%;
   h5 {
@@ -56,7 +55,7 @@ const ModalContainer = styled.div`
     width: 100%;
     padding-left: 0;
     padding-right: 0;
-    max-height: 500px;
+    max-height: 60vh;
     overflow: auto;
     li {
       display: flex;
@@ -180,7 +179,9 @@ export default function CrossChainModal({
   selectTransferChain
 }: CrossChainModalProps) {
   const dispatch = useDispatch<AppDispatch>()
+
   const [isMetamaskError, setMetamaskError] = useState(false)
+  const [filteredChains, setFilteredChains] = useState(supportedChains)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const { account } = useActiveWeb3React()
   const switchChain = async (chain: CrosschainChain) => {
@@ -233,34 +234,24 @@ export default function CrossChainModal({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        //const s = debouncedQuery.toLowerCase().trim()
-        // if (s === 'eth') {
-        //   handleCurrencySelect(ETHER)
-        // } else if (filteredSortedTokens.length > 0) {
-        //   if (
-        //     filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-        //     filteredSortedTokens.length === 1
-        //   ) {
-        //     handleCurrencySelect(filteredSortedTokens[0])
-        //   }
-        // }
+        if (filteredChains.length > 0) {
+          const res = filteredChains.filter(x => (x.name.toLowerCase()).includes(searchQuery.toLowerCase()))
+          setFilteredChains(res)
+        }
       }
     },
-    []
+    [searchQuery]
   )
 
   const handleInput = useCallback(event => {
     const input = event.target.value
-    console.log("🚀 ~ file: index.tsx ~ line 233 ~ input", input)
-    // const checksummedInput = isAddress(input)
     setSearchQuery(input)
-    // fixedList.current?.scrollTo(0)
   }, [])
 
   const inputRef = useRef<HTMLInputElement>()
 
   return (
-    <StyledModal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
+    <StyledModal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100} isChainSwitch={true} >
       <Cross onClick={onDismiss} />
       <ModalContainer>
         {!isTransfer && <h5>Change Blockchains:</h5>}
@@ -279,7 +270,7 @@ export default function CrossChainModal({
             <BlockchainLogo size="28px" blockchain={activeChain} />
             <span>{activeChain}</span>
           </li>
-          {supportedChains
+          {filteredChains
             .filter(x => x.name.toLowerCase() !== activeChain?.toLowerCase())
             .map((chain: CrosschainChain) => (
               <li
@@ -308,6 +299,6 @@ export default function CrossChainModal({
             ))}
         </ul>
       </ModalContainer>
-    </StyledModal>
+    </ StyledModal>
   )
 }

@@ -132,7 +132,30 @@ const BridgeBlock = styled.div`
   height: 144px;
   position: relative;
   border-radius: 50%;
-  border: 6px solid rgba(167, 130, 243, 0.1);; 
+  border: 6px solid rgba(167, 130, 243, 0.1); 
+  box-shadow: 60px -60px 0 2px @color, -60px -60px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #E94E3D;
+  &:hover {
+    animation: border 4s ease 1 forwards; 
+  }
+
+  @keyframes border{
+    0% {
+      box-shadow: 60px -60px 0 2px @color, -60px -60px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #E94E3D;
+    }
+    25% {
+      box-shadow: 0 -125px 0 2px @color, -60px -60px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+    }
+    50% {
+      box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+    }
+    75% {
+      box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, 0px 125px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+    }
+    100% {
+      box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, 0px 125px 0 2px @color, 120px 40px 0 2px @color, 0 0 0 2px #fff;
+    } 
+  }
+  
 `
 const BrandBlock = styled.img`
   position: absolute; 
