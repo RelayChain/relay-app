@@ -169,12 +169,12 @@ export const SingleSidedStaking = () => {
       }
     }
 
-    if (stakingContract && indexUpdate === 3 && isActivePool) {
+    if (stakingContract && indexUpdate === 3) {
       getEarned()
     } else {
       return
     }
-  }, [stakingContract, indexUpdate, isActivePool])
+  }, [stakingContract, indexUpdate])
 
   const countYearlyRewards = async () => {
     const rewardRate = await stakingContract?.rewardRate().catch(console.log)
