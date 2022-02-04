@@ -15,6 +15,7 @@ import { useStakingAloneContract } from 'hooks/useContract'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { tickerTocCoinbaseName } from 'constants/lists'
 import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
+import { ChainId } from '@zeroexchange/sdk'
 
 const StakeContainer = styled.div`
   font-family: Poppins;
@@ -135,7 +136,7 @@ export const SingleSidedStaking = () => {
         return stakingContract?.estimateGas.getReward()
       })
 
-      const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(250000)
+      const gasLimitNow = estimatedGas ?? chainId == ChainId.METIS_NETWORK ? BigNumber.from(1200000) : BigNumber.from(250000);
       const earnedAmount = await stakingContract
         ?.getReward({
           gasPrice: gasPriceNow,
@@ -152,10 +153,7 @@ export const SingleSidedStaking = () => {
     }
   }
 
-  let supportedStakingChains: any[] = []
-  Object.keys(StakingConfig).forEach(key => {
-    supportedStakingChains.push(StakingConfig[key])
-  })
+  let supportedStakingChains: any[] = Object.values(StakingConfig)
 
   useEffect(() => {
     if (!chainId || !stakingContract) {
