@@ -349,7 +349,7 @@ export function useCrosschainHooks() {
         // If a chain id is not present here, it will be undefined.
         // Then the provider will calculate it on it's own.
         const gasLimit = ({
-          14: 12000000,
+          14: 1200000,
         })[currentChain.chainId];
 
         const resultDepositTx = await bridgeContract
