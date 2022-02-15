@@ -70,7 +70,7 @@ const logosNames = {
   'CRO': ['CRO', 'CRONOS', 'Cronos'],
   'OKT': ['OKT', 'OKEx', 'OKEX'],
   'MTV': ['MTV', 'MULTIVAC', 'MultiVAC'],
-  'METIS': ['METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis'],
+  'METIS': ['WMETIS', 'METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis'],
   'GLMR': ['GLMR', 'MOONBEAM', 'Moonbeam']
 }
 
