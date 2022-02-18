@@ -14,6 +14,7 @@ import OkexLogo from '../../assets/images/crosschain/OKT.png'
 import MTVLogo from '../../assets/images/crosschain/MTV.png'
 import METISLogo from '../../assets/images/crosschain/METIS.png'
 import MoonBeamLogo from '../../assets/images/crosschain/GLMR.png'
+import ESWLogo from '../../assets/images/crosschain/ESW.svg'
 export const logoByName = {
     FTM: FantomLogo,
     AVAX: AvaxLogo,
@@ -30,5 +31,6 @@ export const logoByName = {
     OKT: OkexLogo,
     MTV: MTVLogo,
     METIS: METISLogo,
-    GLMR: MoonBeamLogo
-}
+    GLMR: MoonBeamLogo,
+    EMISWAP: ESWLogo,
+};

@@ -32,8 +32,9 @@ import Web3 from 'web3'
 // import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { initialState } from './reducer'
 import { useActiveWeb3React, useEagerConnect } from '../../hooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useGasPrice from 'hooks/useGasPrice'
+import { getBalanceOnHandler } from 'api'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
@@ -283,11 +284,14 @@ export function useCrosschainHooks() {
   // }
 
   const MakeDeposit = async () => {
-    const crosschainState = getCrosschainState();
+    const tokenForHandlerTransfer = ['USDC', 'WETH']
+    const crosschainState = getCrosschainState()
+
     const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     const gasPriceDecimal = WithDecimals(currentGasPrice)
     const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, 18)
     const isIsuffient = +(crosschainState.userBalance) <= (+gasPriceDecimal + +(crosschainState.crosschainFee))
+
     if (isIsuffient) {
       dispatch(
         setCrosschainTransferStatus({
@@ -302,6 +306,18 @@ export function useCrosschainHooks() {
             status: ChainTransferState.TransferPending
           })
         )
+        if (crosschainState.targetChain.chainID &&
+          crosschainState.currentToken.resourceId &&
+          tokenForHandlerTransfer.includes(crosschainState.currentToken.name)) {
+          const res = await getBalanceOnHandler(crosschainState.targetChain.chainID, crosschainState.currentToken.resourceId)
+          const amountHandler = !!res?.result ? res?.result : '0'
+          console.log("🚀 ~ file: hooks.ts ~ line 314 ~ tokenForHandlerTransfer.includes ~ amountHandler", amountHandler)
+          dispatch(
+            setTransferAmount({
+              amount: `${Math.min(+(crosschainState.transferAmount), +amountHandler)}`
+            })
+          )
+        }
 
 
         const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
@@ -333,7 +349,7 @@ export function useCrosschainHooks() {
         // If a chain id is not present here, it will be undefined.
         // Then the provider will calculate it on it's own.
         const gasLimit = ({
-          14: 12000000,
+          14: 1200000,
         })[currentChain.chainId];
 
         const resultDepositTx = await bridgeContract

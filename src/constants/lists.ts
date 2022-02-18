@@ -54,10 +54,6 @@ export const tickerTocCoinbaseName = {
   'CRO': 'crypto-com-chain',
   'MOVR': 'moonriver',
   'SDN': 'shiden',
-  'BNB': 'binancecoin'
-
-
-
-
-
+  'BNB': 'binancecoin',
+  'METIS': 'metis-token',
 }
