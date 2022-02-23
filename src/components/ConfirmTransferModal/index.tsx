@@ -88,7 +88,6 @@ export default function ConfirmTransferModal({
       case ChainTransferState.ApprovalSubmitted:
         setTitle('Approval Submitted')
         allowanceInterval = setInterval(async () => {
-          console.log('callll=======>')
           GetAllowance()
         }, 10000);
         break
