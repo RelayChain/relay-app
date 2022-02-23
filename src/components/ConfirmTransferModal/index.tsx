@@ -78,10 +78,6 @@ export default function ConfirmTransferModal({
   }, [currentToken, transferTo])
 
   useEffect(() => {
-    console.log(allowanceInterval)
-    // if (allowanceInterval) {
-      // clearInterval(allowanceInterval)
-    // }
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
