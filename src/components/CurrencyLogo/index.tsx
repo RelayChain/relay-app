@@ -99,7 +99,6 @@ export default function CurrencyLogo({
 }) {
   const { allCrosschainData } = useCrosschainState()
   const getTokenLogoURL = (chain: string, address: string) => {
-    console.log('chain',chain)
     return `https://raw.githubusercontent.com/RelayChain/bridge-tokens/main/${chain}-tokens/${address}/logo.png`
   }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
