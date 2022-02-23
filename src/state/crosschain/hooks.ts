@@ -351,7 +351,7 @@ export function useCrosschainHooks() {
         const gasLimit = ({
           14: 1200000,
         })[currentChain.chainId];
-
+        
         const resultDepositTx = await bridgeContract
           .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
             gasPrice: currentGasPrice,
@@ -441,7 +441,7 @@ export function useCrosschainHooks() {
           }
         }
       } catch (err) {
-        console.log(err);
+        console.log('trans', err)
         dispatch(
           setCrosschainTransferStatus({
             status: ChainTransferState.TransferFailed
@@ -466,7 +466,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
-
+      console.log(crosschainState.transferAmount)
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )
