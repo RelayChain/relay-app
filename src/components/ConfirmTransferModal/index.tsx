@@ -111,7 +111,7 @@ export default function ConfirmTransferModal({
     }
     onDismiss()
   }
-  console.log(tokenTransferState)
+  
   return (
     <StyledModal isOpen={isOpen} onDismiss={handleOnDismiss} maxHeight={707} >
       <ModalContainer>
