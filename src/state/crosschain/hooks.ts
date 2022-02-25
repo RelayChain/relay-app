@@ -372,7 +372,7 @@ export function useCrosschainHooks() {
           })
         )
 
-        const web3CurrentChain = web3React.library ? new Web3(web3React.library.provider) : new Web3("https://polygon-rpc.com")
+        const web3CurrentChain = web3React.library ? new Web3(web3React.library.provider) : new Web3(currentChain.rpcUrl)
         const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
         const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
@@ -465,7 +465,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
-      
+
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )
