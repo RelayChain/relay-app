@@ -81,6 +81,7 @@ const StyledInput = styled(SearchInput)`
   order: 1;
   flex-grow: 0;
   margin: 0px;
+  color: rgb(18,26,56);
 `
 const STyledColumn = styled(Column)`
   background: rgba(51, 0, 116, 1);

@@ -58,11 +58,11 @@ export function getCrosschainState(): AppState['crosschain'] {
   return store.getState().crosschain || initialState
 }
 
-function WithDecimals(value: string | number): string {
+function WithDecimals(value: string | number, decimals:number): string {
   if (typeof value !== 'string') {
     value = String(value)
   }
-  return utils.formatUnits(value, 18)
+  return utils.formatUnits(value, decimals)
 }
 
 function WithDecimalsHexString(value: string, decimals: number): string {
@@ -286,10 +286,11 @@ export function useCrosschainHooks() {
   const MakeDeposit = async () => {
     const tokenForHandlerTransfer = ['USDC', 'WETH']
     const crosschainState = getCrosschainState()
-
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
     const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
-    const gasPriceDecimal = WithDecimals(currentGasPrice)
-    const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, 18)
+    const gasPriceDecimal = WithDecimals(currentGasPrice, currentToken.decimals)
+    const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, currentToken.decimals)
     const isIsuffient = +(crosschainState.userBalance) <= (+gasPriceDecimal + +(crosschainState.crosschainFee))
 
     if (isIsuffient) {
@@ -487,9 +488,12 @@ export function useCrosschainHooks() {
 
   const MakeApprove = async () => {
     const crosschainState = getCrosschainState()
+
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
     const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
     const userBalance = crosschainState.userBalance
-    const gasPriceDecimal = WithDecimals(currentGasPrice)
+    const gasPriceDecimal = WithDecimals(currentGasPrice, currentToken.decimals)
     if (+userBalance < +gasPriceDecimal) {
       dispatch(
         setCrosschainTransferStatus({
@@ -552,15 +556,21 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState()
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
       crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
+      
     // @ts-ignore
     const signer = web3React.library.getSigner()
     if (currentToken.address !== '') {
       const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-
       const balance = (await tokenContract.balanceOf(web3React.account)).toString()
       dispatch(
         setCurrentTokenBalance({
-          balance: WithDecimals(balance)
+          balance: WithDecimals(balance, currentToken.decimals)
+        })
+      )
+    } else {
+      dispatch(
+        setCurrentTokenBalance({
+          balance: '0.0000'
         })
       )
     }
@@ -568,6 +578,8 @@ export function useCrosschainHooks() {
 
   const UpdateFee = async () => {
     const crosschainState = getCrosschainState()
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
     const targetChain = crosschainState.targetChain.chainID;
     if (targetChain) {
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
@@ -577,7 +589,7 @@ export function useCrosschainHooks() {
       const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
       const feeResult = await bridgeContract._fees(targetChain)
       const fee = feeResult.toString()
-      const value = WithDecimals(fee)
+      const value = WithDecimals(fee,currentToken.decimals)
 
       dispatch(
         setCrosschainFee({
@@ -687,6 +699,19 @@ export function useCrossChain() {
     dispatch(
       setAvailableTokens({
         tokens: GetAvailableTokens(currentChain.name, +targetChain?.chainID)
+      })
+    )
+    dispatch(
+      setCurrentToken({
+        token: {
+          name: '',
+          address: '',
+          assetBase: '',
+          symbol: '',
+          decimals: 18,
+          resourceId: '',
+          allowedChainsToTransfer: []
+        }
       })
     )
   }, [targetChain, account, currentChain])
