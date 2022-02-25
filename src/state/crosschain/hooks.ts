@@ -465,7 +465,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
-
+      
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )

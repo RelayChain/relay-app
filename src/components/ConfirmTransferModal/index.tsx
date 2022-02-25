@@ -78,10 +78,6 @@ export default function ConfirmTransferModal({
   }, [currentToken, transferTo])
 
   useEffect(() => {
-    console.log(allowanceInterval)
-    // if (allowanceInterval) {
-      // clearInterval(allowanceInterval)
-    // }
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
@@ -92,7 +88,6 @@ export default function ConfirmTransferModal({
       case ChainTransferState.ApprovalSubmitted:
         setTitle('Approval Submitted')
         allowanceInterval = setInterval(async () => {
-          console.log('callll=======>')
           GetAllowance()
         }, 10000);
         break
@@ -116,7 +111,7 @@ export default function ConfirmTransferModal({
     }
     onDismiss()
   }
-  console.log(tokenTransferState)
+  
   return (
     <StyledModal isOpen={isOpen} onDismiss={handleOnDismiss} maxHeight={707} >
       <ModalContainer>
