@@ -71,7 +71,8 @@ const logosNames = {
   'OKT': ['OKT', 'OKEx', 'OKEX'],
   'MTV': ['MTV', 'MULTIVAC', 'MultiVAC'],
   'METIS': ['WMETIS', 'METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis'],
-  'GLMR': ['GLMR', 'MOONBEAM', 'Moonbeam']
+  'GLMR': ['GLMR', 'MOONBEAM', 'Moonbeam'],
+  'ESW': ['ESW']
 }
 
 export function getLogoByName(tokenName: string) {
@@ -102,7 +103,6 @@ export default function CurrencyLogo({
   }
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const logoName = getCurrencyLogoImage(String(currency?.symbol))
-
 
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []

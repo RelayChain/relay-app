@@ -140,9 +140,18 @@ export function GetTokenByAddrAndChainId(address: string, chainId: string, resou
   }
   const { allCrosschainData } = getCrosschainState()
   const tokens = allCrosschainData?.chains?.find(c => String(c.chainId) === chainId)?.tokens ?? [];
-  const token = tokens.find(t => (t.address.toLowerCase() === address.toLowerCase() &&
-    t.name?.toLowerCase() === name?.toLowerCase())) ?? result;
-  return token
+  const possibleTokens = tokens.filter(t => (t.address.toLowerCase() === address.toLowerCase() &&
+    t.name?.toLowerCase() === name?.toLowerCase()))
+
+  if (!possibleTokens) return result;
+
+  if (possibleTokens.length == 1) return possibleTokens[0];
+
+  if (possibleTokens.length > 1) {
+    return possibleTokens.find(t => t.resourceId.toLowerCase() == resourceId.toLowerCase()) || result;
+  }
+
+  return result
 }
 
 function GetAvailableChains(currentChainName: string): Array<CrosschainChain> {
@@ -352,7 +361,7 @@ export function useCrosschainHooks() {
         const gasLimit = ({
           14: 1200000,
         })[currentChain.chainId];
-
+        
         const resultDepositTx = await bridgeContract
           .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
             gasPrice: currentGasPrice,
@@ -442,7 +451,6 @@ export function useCrosschainHooks() {
           }
         }
       } catch (err) {
-        console.log(err);
         dispatch(
           setCrosschainTransferStatus({
             status: ChainTransferState.TransferFailed
@@ -467,7 +475,6 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
-
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )

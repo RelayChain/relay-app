@@ -1,6 +1,7 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
 import { ChainId } from '@zeroexchange/sdk'
 import { TokenConfig } from 'constants/CrosschainConfig';
+import * as _ from 'lodash';
 
 const myCrypto = require('./eth-scan/index');
 const { getTokensBalance } = myCrypto;
@@ -66,39 +67,33 @@ export const getAllTokenBalances = async (
 
     let balances: { [key: string]: { balance: any } | any } = {}
     try {
-      const tokenAddresses = tokens?.map(t => t.address);
+      const tokenAddresses = _.uniq(tokens?.map(t => t.address));
       balances = await getTokensBalance(provider, account, tokenAddresses, { contractAddress })
     } catch (err) {
       console.log('getTokensBalance error', err)
     }
 
+    const arr = [];
     for (let token of tokens) {
-      // console.log(token);
       try {
-        let balance = null
-        if (balances[token.address]) {
-          balance = parseFloat(formatUnits(balances[token.address], token.decimals))
-          balances[token.address] = {
-            balance,
-            chainId,
-            address: token.address
-          }
-        }
+        if (!balances[token.address]) continue;
+        
+        const balance = parseFloat(formatUnits(balances[token.address], token.decimals))
+        if (isNaN(balance) || balance == 0) continue;
 
+        arr.push({
+          balance,
+          chainId,
+          address: token.address
+        });
       } catch (err) {
         console.log('formatUnits Error', err);
       }
     }
 
-    const arr = []
-    // eslint-disable-next-line
-    for (const [key, value] of Object.entries(balances)) {
-      if (value?.balance && parseFloat(value?.balance) > 0) arr.push(value)
-    }
-
-    return Promise.resolve(arr)
+    return arr;
   } catch (err) {
     console.log('getAllTokenBalances error', err)
-    return Promise.reject(err)
+    throw err;
   }
 }

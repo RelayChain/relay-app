@@ -141,7 +141,10 @@ export function CurrencySearch({
         .filter(a => a.name !== 'BUSD')
         .filter(y => !y.disableTransfer)
         .map((x: any) => {
-          return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+          const token = new Token(x.chainId, x.address, x.decimals, x.symbol, x.name);
+          // hack, token doesn't have this property normally
+          Object.defineProperty(token, 'resourceId', { value: x.resourceId });
+          return token;
         }).concat(userTokens)
       : isCoingeckoListOn && isEthChain
         ? [...availableTokens, ...checksumedCoingeckoList]
