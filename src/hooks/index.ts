@@ -8,6 +8,7 @@ import { injected } from '../connectors'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
+import { setUserBalance } from 'state/crosschain/actions'
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore<Web3Provider>()
@@ -15,7 +16,8 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
   return context.active ? context : contextNetwork
 }
 
-export function useEagerConnect() {
+interface IEagerConnectType extends Array<boolean | string> { 0: boolean; 1: string; }
+export function useEagerConnect(): IEagerConnectType {
   const { library, account, chainId, active, activate } = useWeb3ReactCore()
   const dispatch = useDispatch<AppDispatch>()
 
@@ -30,6 +32,7 @@ export function useEagerConnect() {
             const ethBalance = await onSignIn({ account, chainId })
             if (ethBalance) {
               setCurrencyAmount(ethBalance)
+              dispatch(setUserBalance({ balance: ethBalance }))
             }
           })
           .catch(() => {
@@ -102,10 +105,10 @@ export function useInactiveListener(suppress = false) {
 }
 
 
-const onSignIn = async ({ account, chainId }: any) => {  
+const onSignIn = async ({ account, chainId }: any) => {
   const { ethereum } = window as any
   if (!account || !chainId || !ethereum) return
-  const balance = await ethereum.request({ method: 'eth_getBalance', params: [account] })
+  const balance = await ethereum.request({ method: 'eth_getBalance', params: [account, "latest"] })
   return CurrencyAmount.ether(JSBI.BigInt(balance.toString()), chainId).toSignificant(6)
 
 }

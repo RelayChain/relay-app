@@ -15,6 +15,7 @@ import { useStakingAloneContract } from 'hooks/useContract'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { tickerTocCoinbaseName } from 'constants/lists'
 import { useCoinGeckoPrice } from 'hooks/useCoinGeckoPrice'
+import { ChainId } from '@zeroexchange/sdk'
 
 const StakeContainer = styled.div`
   font-family: Poppins;
@@ -112,6 +113,7 @@ const StakingTitle = styled.div`
 export const SingleSidedStaking = () => {
   const { currentChain } = useCrosschainState()
   const [isPending, setIsPending] = useState(false)
+  const [isActivePool, setActivePool] = useState(true)
   const { account, chainId } = useActiveWeb3React()
   const [earnedLp, setEarnedLp] = useState('0')
   const [updatedHash, setUpdatedHash] = useState('')
@@ -134,7 +136,7 @@ export const SingleSidedStaking = () => {
         return stakingContract?.estimateGas.getReward()
       })
 
-      const gasLimitNow = estimatedGas ? estimatedGas : BigNumber.from(250000)
+      const gasLimitNow = estimatedGas ?? chainId == ChainId.METIS_NETWORK ? BigNumber.from(1200000) : BigNumber.from(250000);
       const earnedAmount = await stakingContract
         ?.getReward({
           gasPrice: gasPriceNow,
@@ -151,10 +153,7 @@ export const SingleSidedStaking = () => {
     }
   }
 
-  let supportedStakingChains: any[] = []
-  Object.keys(StakingConfig).forEach(key => {
-    supportedStakingChains.push(StakingConfig[key])
-  })
+  let supportedStakingChains: any[] = Object.values(StakingConfig)
 
   useEffect(() => {
     if (!chainId || !stakingContract) {
@@ -188,15 +187,17 @@ export const SingleSidedStaking = () => {
 
   useEffect(() => {
     let ind = indexUpdate
-    setInterval(() => {
-      if (ind !== 0 && ind % 10 === 0) {
-        ind = 0
-        setIndexUpdate(ind)
-      } else {
-        setIndexUpdate(ind++)
-      }
-    }, 1000)
-  }, [])
+    if (isActivePool) {
+      setInterval(() => {
+        if (ind !== 0 && ind % 10 === 0) {
+          ind = 0
+          setIndexUpdate(ind)
+        } else {
+          setIndexUpdate(ind++)
+        }
+      }, 1000)
+    }
+  }, [isActivePool])
 
   useEffect(() => {
     const getMaxAmountLp = async () => {
@@ -208,6 +209,19 @@ export const SingleSidedStaking = () => {
     }
     getMaxAmountLp()
   }, [account])
+
+  useEffect(() => {
+    const checkExpiredTime = async () => {
+      const periodFinish = await stakingContract?.periodFinish().catch(console.log)
+      if (periodFinish) {
+        const finishTimeInMs = (+periodFinish.toString()) * 1000
+        const currentTime = Date.now()
+        setActivePool(finishTimeInMs > currentTime)
+      }
+    }
+    checkExpiredTime()
+  }, [stakingContract])
+
   const priceInUsd = useCoinGeckoPrice
 
   useEffect(() => {
@@ -237,7 +251,7 @@ export const SingleSidedStaking = () => {
       <RowBetweenSidecard>
         <StyledTitle>Staking</StyledTitle>
         <SideCardHolder>
-          {`APR ${apr}%`}
+          {isActivePool ? `APR ${apr}%` : 'This pool is expired'}
         </SideCardHolder>
       </RowBetweenSidecard>
       <StakeContainer>

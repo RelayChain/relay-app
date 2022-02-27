@@ -10,6 +10,7 @@ import {
   setCrosschainDepositConfirmed,
   setCrosschainLastTimeSwitched,
   setCrosschainFee,
+  setUserBalance,
   setCrosschainRecipient,
   setCrosschainSwapDetails,
   setCrosschainTransferStatus,
@@ -39,6 +40,7 @@ export interface CrosschainState {
   readonly currentBalance: string
   readonly transferAmount: string
   readonly crosschainFee: string
+  readonly userBalance: string
   readonly crosschainTransferStatus: ChainTransferState
   readonly swapDetails: SwapDetails
   readonly depositConfirmed: boolean
@@ -66,11 +68,13 @@ export const initialState: CrosschainState = {
     address: '',
     assetBase: '',
     symbol: '',
-    decimals: 18
+    decimals: 18,
+    resourceId: ''
   },
   currentBalance: '',
   transferAmount: '',
   crosschainFee: '',
+  userBalance: '',
   crosschainTransferStatus: ChainTransferState.NotStarted,
   swapDetails: {
     status: ProposalStatus.INACTIVE,
@@ -169,6 +173,13 @@ export default createReducer<CrosschainState>(initialState, builder =>
         crosschainFee: value
       }
     })
+    .addCase(setUserBalance, (state, { payload: { balance } }) => {
+      const currentState = { ...initialState, ...state };
+      return {
+        ...currentState,
+        userBalance: balance
+      }
+    })
     .addCase(setCrosschainTransferStatus, (state, { payload: { status } }) => {
       const currentState = { ...initialState, ...state };
       return {
@@ -191,7 +202,7 @@ export default createReducer<CrosschainState>(initialState, builder =>
       }
     })
     // eslint-disable-next-line
-    .addCase(setCrosschainLastTimeSwitched, (state, {}) => {
+    .addCase(setCrosschainLastTimeSwitched, (state, { }) => {
       const currentState = { ...initialState, ...state };
       return {
         ...currentState,
@@ -205,5 +216,5 @@ export default createReducer<CrosschainState>(initialState, builder =>
         allCrosschainData: chainsBridge
       }
     })
-    
+
 )

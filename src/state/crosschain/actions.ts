@@ -16,7 +16,7 @@ export interface CrosschainToken {
   symbol: string
   decimals: number
   disableTransfer?: boolean
-  resourceId?: string
+  resourceId: string
   allowedChainsToTransfer?: number[]
 }
 
@@ -34,11 +34,12 @@ export interface CrosschainChain {
   relayContractAddress?: string
   marketPlace?: string
   blockExplorer?: string
-  rpcUrl?: string 
+  rpcUrl?: string
 }
 
 export enum ChainTransferState {
   NotStarted = 'NOT_STARTED',
+  Insufficient = 'INSUFFICIENT_BALANCE',
   ApprovalPending = 'APPROVE_PENDING',
   ApprovalSubmitted = 'APPROVE_SUBMITTED',
   ApprovalComplete = 'APPROVE_COMPLETE',
@@ -75,11 +76,12 @@ export const setCurrentToken = createAction<{ token: CrosschainToken }>('crossch
 export const setCurrentTokenBalance = createAction<{ balance: string }>('crosschain/set-balance')
 export const setTransferAmount = createAction<{ amount: string }>('crosschain/set-transfer-amount')
 export const setCrosschainFee = createAction<{ value: string }>('crosschain/set-fee')
+export const setUserBalance = createAction<{ balance: string }>('crosschain/set-user-balance')
 export const setCrosschainTransferStatus = createAction<{ status: ChainTransferState }>(
   'crosschain/set-transfer-status'
 )
 export const setCrosschainDepositConfirmed = createAction<{ confirmed: boolean }>('crosschain/set-deposit-confirmed')
 export const setCrosschainSwapDetails = createAction<{ details: SwapDetails }>('crosschain/set-swap-details')
 export const setPendingTransfer = createAction<{ pendingTransfer: PendingTransfer }>('crosschain/set-pending-transfer')
-export const setCrosschainLastTimeSwitched = createAction<{ }>('crosschain/last-time-switched')
+export const setCrosschainLastTimeSwitched = createAction<{}>('crosschain/last-time-switched')
 export const setAllChainsData = createAction<{ chainsBridge: ChainbridgeConfig }>('crosschain/set-all-chains-data')

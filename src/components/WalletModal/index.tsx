@@ -128,6 +128,7 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+  const [errorMessage, setErrorMessage] = useState('')
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -160,6 +161,7 @@ export default function WalletModal({
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     // eslint-disable-next-line
+    // const provider = await detectEthereumProvider();
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -167,6 +169,7 @@ export default function WalletModal({
       }
       return true
     })
+    // if (provider) {
     // log selected wallet
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
@@ -177,13 +180,15 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true).catch(error => {
+      activate && activate(connector, undefined, true).catch(error => {
+        setErrorMessage(error.toString())
         if (error instanceof UnsupportedChainIdError) {
           activate(connector) // a little janky...can't use setError because the connector isn't set
         } else {
           setPendingError(true)
         }
       })
+    //}
   }
 
   // close wallet modal if fortmatic modal is active
@@ -337,6 +342,7 @@ export default function WalletModal({
               connector={pendingWallet}
               error={pendingError}
               setPendingError={setPendingError}
+              errorMessage={errorMessage}
               tryActivation={tryActivation}
             />
           ) : (

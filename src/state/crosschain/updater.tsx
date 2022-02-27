@@ -28,11 +28,11 @@ export default function Updater(): null {
     if (!chainId || !allCrosschainData?.chains || !allCrosschainData?.chains.length) return
 
     const crossChainConfig: any = allCrosschainData?.chains.find(x => x.networkId === chainId)
-    const list = crossChainConfig?.tokens.map((x: any) => x.address);
+    const list = crossChainConfig?.tokens;
 
     if (!list) return;
 
-    const provider = crossChainConfig?.rpcUrl;
+    const provider = (window?.web3) ? window?.web3?.currentProvider : crossChainConfig?.rpcUrl
 
     getAllTokenBalances(account, chainId, list, provider).then((res: any) => {
       let tokens: any = crossChainConfig?.tokens;

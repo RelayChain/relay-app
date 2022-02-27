@@ -105,7 +105,7 @@ const SectionLabel = styled.span`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   margin-left: auto;
   width: 24px;
@@ -197,6 +197,7 @@ interface CurrencyInputPanelProps {
   stakingInfo?: StakingInfo
   isRightInput?: boolean
   style?: any
+  blurInput?: (ev: any) => any
 }
 
 export default function CurrencyInputPanel({
@@ -226,7 +227,8 @@ export default function CurrencyInputPanel({
   grayedOut = false,
   stakingInfo,
   isRightInput = false,
-  style = { padding: '10px' }
+  style = { padding: '10px' },
+  blurInput
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -264,6 +266,7 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <InputWrap>
                 <StyledNumericalInput
+                  onBlur={(event) => blurInput ? blurInput(event) : () => null}
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
@@ -305,14 +308,14 @@ export default function CurrencyInputPanel({
                     {isCrossChain && label === 'To'
                       ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                       : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                          ? altCurrency.symbol.slice(0, 4) +
-                            '...' +
-                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                          : altCurrency?.symbol) || (
-                          <StyledTokenNameDeafult>
-                            {!disableCurrencySelect ? t('selectToken') : ''}
-                          </StyledTokenNameDeafult>
-                        )}
+                        ? altCurrency.symbol.slice(0, 4) +
+                        '...' +
+                        altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                        : altCurrency?.symbol) || (
+                        <StyledTokenNameDeafult>
+                          {!disableCurrencySelect ? 'Select a token' : ''}
+                        </StyledTokenNameDeafult>
+                      )}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}

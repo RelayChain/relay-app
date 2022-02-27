@@ -34,6 +34,13 @@ export const StakingConfig: any = {
         chainName: 'Cronos',
         rewardSymbol: 'CRO',
     },
+    [ChainId.METIS_NETWORK]: {
+        stakingContractAddress: '0xEa83FCEe5875c8f09B0a9B999CBbB1CeD26A462B',
+        stakedTokenAddress: '0xfe282Af5f9eB59C30A3f78789EEfFA704188bdD4',
+        rewardsTokenAddress: '0x75cb093E4D61d2A2e65D8e0BBb01DE8d89b53481',
+        chainName: 'Metis',
+        rewardSymbol: 'METIS',
+    },
 }
 
 export const returnStakingConfig = (chainId?: ChainId): any => {

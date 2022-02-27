@@ -134,45 +134,48 @@ export function CurrencySearch({
   //   })
   //   .concat(userTokens)
 
-    let availableTokensArray = useMemo(() => {
-      return isCrossChain
-        ? availableTokens
-            .filter(a => a.name !== 'BUSD')
-            .filter(y => !y.disableTransfer)
-            .map((x: any) => {
-              return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-            }).concat(userTokens)
-        : isCoingeckoListOn && isEthChain
+  let availableTokensArray = useMemo(() => {
+    return isCrossChain
+      ? availableTokens
+        .filter(a => a.name !== 'BUSD')
+        .filter(y => !y.disableTransfer)
+        .map((x: any) => {
+          const token = new Token(x.chainId, x.address, x.decimals, x.symbol, x.name);
+          // hack, token doesn't have this property normally
+          Object.defineProperty(token, 'resourceId', { value: x.resourceId });
+          return token;
+        }).concat(userTokens)
+      : isCoingeckoListOn && isEthChain
         ? [...availableTokens, ...checksumedCoingeckoList]
-            .map((x: any) => {
-              return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-            })
-            .concat(userTokens)
+          .map((x: any) => {
+            return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+          })
+          .concat(userTokens)
         : availableTokens
-            .map((x: any) => {
-              return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
-            })
-            .concat(userTokens)
-            // eslint-disable-next-line
-    }, [isCrossChain, availableTokens, isCoingeckoListOn, checksumedCoingeckoList])
+          .map((x: any) => {
+            return new Token(x.chainId, x.address, x.decimals, x.symbol, x.name)
+          })
+          .concat(userTokens)
+    // eslint-disable-next-line
+  }, [isCrossChain, availableTokens, isCoingeckoListOn, checksumedCoingeckoList])
 
-    if (isCoingeckoListOn && checksumedCoingeckoList && availableTokens && availableTokensArray) {
-      for (let i = availableTokens.length, j = 0; i < availableTokensArray.length - (userTokens.length ?? 0); i++) {
-        if (
-          availableTokensArray[i] &&
-          !availableTokensArray[i].hasOwnProperty('logoURI') &&
-          checksumedCoingeckoList[j] &&
-          checksumedCoingeckoList[j].hasOwnProperty('logoURI')
-        ) {
-          availableTokensArray[i]['logoURI'] = checksumedCoingeckoList[j]['logoURI']
-        }
-        j++
+  if (isCoingeckoListOn && checksumedCoingeckoList && availableTokens && availableTokensArray) {
+    for (let i = availableTokens.length, j = 0; i < availableTokensArray.length - (userTokens.length ?? 0); i++) {
+      if (
+        availableTokensArray[i] &&
+        !availableTokensArray[i].hasOwnProperty('logoURI') &&
+        checksumedCoingeckoList[j] &&
+        checksumedCoingeckoList[j].hasOwnProperty('logoURI')
+      ) {
+        availableTokensArray[i]['logoURI'] = checksumedCoingeckoList[j]['logoURI']
       }
+      j++
     }
+  }
 
-    let uniqueAvailableTokensArray = availableTokensArray.filter(
-      (elem, index) => availableTokensArray.findIndex(obj => obj.address === elem.address) === index
-    )
+  let uniqueAvailableTokensArray = availableTokensArray.filter(
+    (elem, index) => availableTokensArray.findIndex(obj => obj.name === elem.name) === index
+  )
 
 
   // const showETH: boolean = useMemo(() => {
