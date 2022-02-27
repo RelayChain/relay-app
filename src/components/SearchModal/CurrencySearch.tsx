@@ -290,7 +290,7 @@ export function CurrencySearch({
       userTokens.forEach(item => {
         if (chainId && item instanceof Token) removeToken(chainId, item.address)
       })
-    } 
+    }
     return (
       <Column style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>

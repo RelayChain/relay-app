@@ -72,8 +72,6 @@ function WithDecimalsHexString(value: string, decimals: number): string {
   return BigNumber.from(utils.parseUnits(value, decimals)).toHexString()
 }
 
-
-
 function GetCurrentChain(currentChainName: string): CrosschainChain {
   const { allCrosschainData } = getCrosschainState()
   let result: CrosschainChain = {
