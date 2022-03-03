@@ -33,7 +33,7 @@ import Web3 from 'web3'
 import { initialState } from './reducer'
 import { useActiveWeb3React, useEagerConnect } from '../../hooks'
 import { useEffect, useState } from 'react'
-import useGasPrice from 'hooks/useGasPrice'
+import getGasPrice from 'hooks/getGasPrice'
 import { getBalanceOnHandler } from 'api'
 
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
@@ -294,7 +294,7 @@ export function useCrosschainHooks() {
     const tokenForHandlerTransfer = ['USDC', 'WETH']
     const crosschainState = getCrosschainState()
 
-    const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
+    const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
     const gasPriceDecimal = WithDecimals(currentGasPrice)
     const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, 18)
     const isIsuffient = +(crosschainState.userBalance) <= (+gasPriceDecimal + +(crosschainState.crosschainFee))
@@ -347,8 +347,8 @@ export function useCrosschainHooks() {
               WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
               32
             )
-            .substr(2) + // Deposit Amount (32 bytes)
-          utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).substr(2) + // len(recipientAddress) (32 bytes)
+            .slice(2) + // Deposit Amount (32 bytes)
+          utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).slice(2) + // len(recipientAddress) (32 bytes)
           crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
         const auxData = '0x00';
 
@@ -493,66 +493,62 @@ export function useCrosschainHooks() {
   }
 
   const MakeApprove = async () => {
-    const crosschainState = getCrosschainState()
-    const currentGasPrice = await useGasPrice(+crosschainState.currentChain.chainID)
-    const userBalance = crosschainState.userBalance
-    const gasPriceDecimal = WithDecimals(currentGasPrice)
-    if (+userBalance < +gasPriceDecimal) {
-      dispatch(
-        setCrosschainTransferStatus({
-          status: ChainTransferState.Insufficient
-        })
-      )
-      return Promise.reject('Insufficient balance')
-    } else {
-      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
-        crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
+    const crosschainState = getCrosschainState();
+    const currentChainId = +crosschainState.currentChain.chainID;
+    if (isNaN(currentChainId)) return Promise.reject(`MakeApprove: couldn't figure current chain id ${currentChainId}`);
+    
+    const currentGasPriceStringWei = getGasPrice(+crosschainState.currentChain.chainID);
+    if (currentGasPriceStringWei == undefined) return Promise.reject(`MakeApprove: gas price for chain ${+crosschainState.currentChain.chainID} is ${currentGasPriceStringWei}`);
 
-      dispatch(
-        setCurrentTxID({
-          txID: ''
-        })
-      )
+    const chainConfig = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+    const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+      crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
 
-      dispatch(
-        setCrosschainTransferStatus({
-          status: ChainTransferState.ApprovalPending
-        })
-      )
+    if (currentToken == undefined) return Promise.reject(`MakeApprove: no current token`);
 
+    // @ts-ignore
+    const signer = web3React.library.getSigner()
+    const usdtAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+    // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
+    const isUsdt = currentToken.address === usdtAddress
+    const ABI = isUsdt ? USDTTokenABI : TokenABI
 
-
-      // @ts-ignore
-      const signer = web3React.library.getSigner()
-      const usdtAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
-      // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
-      const isUsdt = currentToken.address === usdtAddress
-      const ABI = isUsdt ? USDTTokenABI : TokenABI
-
-      const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
-      const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-      tokenContract.approve(currentChain.erc20HandlerAddress, transferAmount, {
-        gasPrice: currentGasPrice,
-      })
-        .then((resultApproveTx: any) => {
-          dispatch(
-            setCrosschainTransferStatus({
-              status: ChainTransferState.ApprovalSubmitted
-            })
-          )
-          dispatch(
-            setCurrentTxID({
-              txID: resultApproveTx.hash
-            })
-          )
-        })
-        .catch((err: any) => {
-          BreakCrosschainSwap()
-        })
-      return Promise.resolve('Success Approve')
+    const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
+    const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
+    const approveParams = [chainConfig.erc20HandlerAddress, transferAmount];
+    
+    let estimatedGasLimit;
+    try {
+      estimatedGasLimit = await tokenContract.estimateGas.approve(...approveParams);
+    } catch (e) {
+      return Promise.reject(`MakeApprove: couldn't predict gas limit for approve. ${e}`);
     }
 
+    const feeForApprove = estimatedGasLimit.mul(currentGasPriceStringWei);
+    const userGasTokenBalanceString = crosschainState.userBalance;
+    try {
+      const userGasTokenBalanceBN = ethers.utils.parseEther(userGasTokenBalanceString);
+      if (userGasTokenBalanceBN.lt(feeForApprove)) {
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.Insufficient }));
+        return Promise.reject(`MakeApprove: insufficient gas token balance: ${userGasTokenBalanceBN} < ${feeForApprove}`);
+      }
+    } catch (e) {
+      return Promise.reject(`MakeApprove: couldn't parse userGasTokenBalanceString ${userGasTokenBalanceString}`);
+    }
+
+    // about to send the approve
+    dispatch( setCurrentTxID({ txID: '' }))
+    dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalPending }))
+
+    try {
+      const tx = tokenContract.approve(...approveParams, { gasPrice: currentGasPriceStringWei, gasLimit: estimatedGasLimit });
+      dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalSubmitted }));
+      dispatch( setCurrentTxID({ txID: tx.hash }))
+      return Promise.resolve('MakeApprove: success');
+    } catch (e) {
+      BreakCrosschainSwap();
+      return Promise.reject(`MakeApprove: sending tx failed, ${e}`);
+    }
   }
 
   const UpdateOwnTokenBalance = async () => {
