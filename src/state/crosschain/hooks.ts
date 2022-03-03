@@ -58,12 +58,14 @@ export function getCrosschainState(): AppState['crosschain'] {
   return store.getState().crosschain || initialState
 }
 
-function WithDecimals(value: string | number, decimals:number): string {
+
+export function WithDecimals(value: string | number, decimals?: number): string {
   if (typeof value !== 'string') {
     value = String(value)
   }
-  return utils.formatUnits(value, decimals)
+  return utils.formatUnits(value, decimals ?? 18)
 }
+
 
 function WithDecimalsHexString(value: string, decimals: number): string {
   if (!value || decimals === undefined) {
@@ -361,7 +363,7 @@ export function useCrosschainHooks() {
         const gasLimit = ({
           14: 1200000,
         })[currentChain.chainId];
-        
+       
         const resultDepositTx = await bridgeContract
           .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
             gasPrice: currentGasPrice,
@@ -381,7 +383,7 @@ export function useCrosschainHooks() {
           })
         )
 
-        const web3CurrentChain = (window?.web3) ? new Web3(window?.web3?.currentProvider) : new Web3(currentChain.rpcUrl)
+        const web3CurrentChain = web3React.library ? new Web3(web3React.library.provider) : new Web3(currentChain.rpcUrl)
         const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
 
         const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
@@ -445,7 +447,6 @@ export function useCrosschainHooks() {
               BreakCrosschainSwap()
             }
           } catch (e) {
-            console.log(e)
             BreakCrosschainSwap()
             return Promise.reject(e);
           }
@@ -475,6 +476,7 @@ export function useCrosschainHooks() {
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
       ).catch(console.log)
+
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )
@@ -569,6 +571,7 @@ export function useCrosschainHooks() {
     if (currentToken.address !== '') {
       const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
       const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+
       dispatch(
         setCurrentTokenBalance({
           balance: WithDecimals(balance, currentToken.decimals)
