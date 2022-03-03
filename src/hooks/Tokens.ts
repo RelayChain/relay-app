@@ -57,8 +57,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : bytes32 && BYTES32_REGEX.test(bytes32)
-      ? parseBytes32String(bytes32)
-      : defaultValue
+    ? parseBytes32String(bytes32)
+    : defaultValue
 }
 
 // undefined if invalid or does not exist
@@ -70,12 +70,11 @@ export function useToken(tokenAddress?: string, nameToken?: string): Token | und
   const tokenByName = useAllCrossChainTokens().find(token => token.name === nameToken)
   const address = useMemo(() => {
     return isAddress(tokenAddress)
-  }, [tokenAddress]);
+  }, [tokenAddress])
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
   const token: Token | undefined = tokenByName ? tokenByName : address ? tokens[address] : undefined
-
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(
     token ? undefined : tokenContractBytes32,
@@ -121,11 +120,13 @@ export function useToken(tokenAddress?: string, nameToken?: string): Token | und
 export function useCurrency(currencyId: string | undefined, tokenName?: string): Currency | null | undefined {
   const isNativeCurrency = ETHER_NAMES_CURRENCIES.includes(String(currencyId?.toUpperCase()))
   const token = useToken(isNativeCurrency ? undefined : currencyId, tokenName)
-
-  if (isNativeCurrency) {
-    return ETHER_CURRENCIES.find((curr: Currency) => curr.symbol === String(currencyId?.toUpperCase()))
-  }
-  else {
-    return token
+  if (tokenName) {
+    if (isNativeCurrency) {
+      return ETHER_CURRENCIES.find((curr: Currency) => curr.symbol === String(currencyId?.toUpperCase()))
+    } else {
+      return token
+    }
+  } else {
+    return undefined
   }
 }

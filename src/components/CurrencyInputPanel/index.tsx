@@ -198,6 +198,7 @@ interface CurrencyInputPanelProps {
   isRightInput?: boolean
   style?: any
   blurInput?: (ev: any) => any
+  currentBalance?: any
 }
 
 export default function CurrencyInputPanel({
@@ -228,7 +229,8 @@ export default function CurrencyInputPanel({
   stakingInfo,
   isRightInput = false,
   style = { padding: '10px' },
-  blurInput
+  blurInput,
+  currentBalance
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -243,8 +245,9 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const hasABalance = !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
-
+  const hasABalance = currentBalance && parseFloat(currentBalance) > 0
+  // !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
+  
   // hack to fix AWAX
   let altCurrency = currency
   if (altCurrency?.symbol.includes('AWAX')) {

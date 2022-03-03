@@ -64,7 +64,7 @@ export default function ConfirmTransferModal({
   const [title, setTitle] = useState('')
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
 
-  let allowanceInterval: any = null;
+  let allowanceInterval: any
 
   useEffect(() => {
     if (allCrosschainData && allCrosschainData?.chains.length) {
@@ -78,9 +78,6 @@ export default function ConfirmTransferModal({
   }, [currentToken, transferTo])
 
   useEffect(() => {
-    if (allowanceInterval) {
-      clearInterval(allowanceInterval)
-    }
     switch (tokenTransferState) {
       case ChainTransferState.NotStarted:
         setTitle('Approve Your Transfer')
@@ -105,6 +102,7 @@ export default function ConfirmTransferModal({
         break
       default:
     }
+    return () => clearInterval(allowanceInterval)
   }, [tokenTransferState])
 
   const handleOnDismiss = () => {
@@ -113,6 +111,7 @@ export default function ConfirmTransferModal({
     }
     onDismiss()
   }
+  
   return (
     <StyledModal isOpen={isOpen} onDismiss={handleOnDismiss} maxHeight={707} >
       <ModalContainer>
