@@ -1,5 +1,4 @@
 import { getGasPrices } from 'api';
-import { useCrosschainState } from 'state/crosschain/hooks';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -19,6 +18,6 @@ async function startUpdatingGasPrices() {
 
 startUpdatingGasPrices();
 
-export default async function useGasPrice(chainId: number): Promise<any> {
+export default function getGasPrice(chainId: number): string {
   return gasPrices[chainId];
 }
