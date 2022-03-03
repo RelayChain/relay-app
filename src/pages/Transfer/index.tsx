@@ -795,6 +795,7 @@ export default function Transfer() {
               transferPage
               id="swap-currency-input"
               style={{ padding: '25px 0', width: '100%' }}
+              currentBalance={currentBalance}
             />
           </FlexBlock>
           <MessageBlock>
