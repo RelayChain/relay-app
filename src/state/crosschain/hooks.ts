@@ -496,9 +496,9 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState();
     const currentChainId = +crosschainState.currentChain.chainID;
     if (isNaN(currentChainId)) return Promise.reject(`MakeApprove: couldn't figure current chain id ${currentChainId}`);
-
-    const currentGasPriceStringWei = getGasPrice(+crosschainState.currentChain.chainID);
-    if (currentGasPriceStringWei == undefined) return Promise.reject(`MakeApprove: gas price for chain ${+crosschainState.currentChain.chainID} is ${currentGasPriceStringWei}`);
+    
+    const currentGasPriceStringWei = getGasPrice(currentChainId);
+    if (currentGasPriceStringWei == undefined) return Promise.reject(`MakeApprove: gas price for chain ${currentChainId} is ${currentGasPriceStringWei}`);
 
     const chainConfig = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
     const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
@@ -536,12 +536,10 @@ export function useCrosschainHooks() {
       return Promise.reject(`MakeApprove: couldn't parse userGasTokenBalanceString ${userGasTokenBalanceString}`);
     }
 
-    // about to send the approve
-    dispatch( setCurrentTxID({ txID: '' }))
-    dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalPending }))
-
     try {
-      const tx = tokenContract.approve(...approveParams, { gasPrice: currentGasPriceStringWei, gasLimit: estimatedGasLimit });
+      dispatch( setCurrentTxID({ txID: '' }))
+      dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalPending }))
+      const tx = await tokenContract.approve(...approveParams, { gasPrice: currentGasPriceStringWei, gasLimit: estimatedGasLimit });
       dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalSubmitted }));
       dispatch( setCurrentTxID({ txID: tx.hash }))
       return Promise.resolve('MakeApprove: success');
