@@ -10,7 +10,7 @@ import { calculateGasMargin } from '../../utils'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import useGasPrice from 'hooks/useGasPrice'
+import getGasPrice from 'hooks/getGasPrice'
 import { useStakingAloneContract } from 'hooks/useContract'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { tickerTocCoinbaseName } from 'constants/lists'
@@ -119,7 +119,7 @@ export const SingleSidedStaking = () => {
   const [updatedHash, setUpdatedHash] = useState('')
   const [rewardSuccessHash, setRewardSuccessHash] = useState('')
   const [indexUpdate, setIndexUpdate] = useState(0)
-  const currentGasPrice = useGasPrice(+currentChain.chainID)
+  const currentGasPrice = getGasPrice(+currentChain.chainID)
   const [priceTokenInUsd, setPriceTokenInUsd] = useState(0)
   const [yearlyRewards, setYearlyRewards] = useState(0)
   const [stakedAmount, setStakedAmount] = useState('0')
