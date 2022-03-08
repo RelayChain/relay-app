@@ -8,7 +8,9 @@ const PageWrapper = styled.div`
   padding: 0 24px;
   margin: 0 auto;
   margin-top: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
+  // overflow: scroll;
+  overflow: hidden;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin-top: 0.5rem;
 `};

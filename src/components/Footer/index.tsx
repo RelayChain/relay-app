@@ -1,16 +1,19 @@
+import { MobileResponsiveProps } from 'components/Interfaces/interface'
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
-const Container = styled.div`
+const Container = styled.div<MobileResponsiveProps>`
   width: 100%;
   height: 124px;
   background: rgba(70, 70, 70, 0.25);
   backdrop-filter: blur(28px);
-  display: flex;
+  display: ${props => (props.widget ? 'none' : 'flex')};
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) =>
+    theme.mediaWidth.upToMedium`
     padding: 15px 25px;
     margin-bottom:86px;
   `};
@@ -27,6 +30,7 @@ export function Footer() {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
   }
+  const location = useLocation()
 
   const onClickUrl = (url: string) => openInNewTab(url)
 
@@ -46,9 +50,8 @@ export function Footer() {
         </ItemFooter>
       )
     })
-
   return (
-    <Container>
+    <Container widget={location.search}>
       <BrandLogo src={require('../../assets/images/crosschain/RELAY.png')}></BrandLogo>
       {fillFooter()}
     </Container>
