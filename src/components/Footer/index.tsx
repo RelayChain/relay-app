@@ -51,7 +51,7 @@ export function Footer() {
       )
     })
   return (
-    <Container widget={location.search}>
+    <Container widget={location.search === '?widget' ? 'true' : ''}>
       <BrandLogo src={require('../../assets/images/crosschain/RELAY.png')}></BrandLogo>
       {fillFooter()}
     </Container>

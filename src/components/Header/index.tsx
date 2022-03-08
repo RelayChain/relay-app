@@ -85,7 +85,7 @@ const Header = () => {
         </LogoNavLink>
       </LogoContainer>
       {/* </HideMedium> */}
-      <MenuBar widget={location.search}>
+      <MenuBar widget={location.search === '?widget' ? 'true' : ''}>
         <StyledNavLink
           id={`bridge-nav-link`}
           to={'/cross-chain-bridge-transfer'}
