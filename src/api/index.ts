@@ -36,8 +36,8 @@ export async function getTVLHistory() {
 
 const RELAY_API_URL
   = window.location.hostname === 'development-branch.relaychain.com' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
-    // : window.location.hostname === 'localhost' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
-      : window.location.hostname === 'localhost' ? 'http://localhost:8080'
+    : window.location.hostname === 'localhost' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
+      // : window.location.hostname === 'localhost' ? 'http://localhost:8080'
       : 'https://relay-api-33e56.ondigitalocean.app';
 
 export async function getCurrentTvl() {

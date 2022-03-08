@@ -58,6 +58,8 @@ import Copy from '../../components/AccountDetails/Copy'
 import { getBalanceOnHandler, getFundsOnHandler } from 'api'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
+import { MobileResponsiveProps } from 'components/Interfaces/interface'
+import { useLocation } from 'react-router-dom'
 
 const numeral = require('numeral')
 
@@ -71,7 +73,7 @@ const BelowInfo = styled.div`
 `
 const StyledCopy = styled(Copy)` 
 `
-const StyledTitle = styled.h1`
+const StyledTitle = styled.h1<MobileResponsiveProps>`
   font-family: Montserrat;
   font-style: normal;
   font-weight: bold;
@@ -79,6 +81,7 @@ const StyledTitle = styled.h1`
   color: #7f46f0;
   margin-top: 50px;
   margin-bottom: 40px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
   margin: 20px auto;
   display: flex;
@@ -151,9 +154,9 @@ const RowBetweenSidecard = styled(RowBetween)`
 `};
 `
 
-const SideCardHolder = styled.div`
+const SideCardHolder = styled.div<MobileResponsiveProps>`
   margin-left: auto;
-  display: flex;
+  display: ${(props) => (props.widget ? "none" : "flex")};
   flex-direction: row;
   background: rgb(18,26,56);
   border-radius: 24px;
@@ -166,6 +169,7 @@ const SideCardHolder = styled.div`
     flex-direction: column;
     width: 100%;
   `};
+
 `
 const TransferBodyWrapper = styled.div`
   border-radius: 30px;
@@ -260,13 +264,14 @@ const BelowForm = styled.div`
   }
 `
 
-const FlexContainer = styled.div`
+const FlexContainer = styled.div<MobileResponsiveProps>`
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: ${(props) => props.widget ? "column" : 'row'};
   justify-content: space-between;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) =>
+    theme.mediaWidth.upToMedium`
     flex-direction: column;
   `};
 `
@@ -391,7 +396,7 @@ export default function Transfer() {
   const [transferModalLoading, setTransferModalLoading] = useState(false)
   const stats = useStats(chainId || 2)
   const tvl = useTvl()
-
+  const location = useLocation()
   useEffect(() => {
     const keys = Object.keys(stats)
     if (keys.length > 0) {
@@ -694,7 +699,7 @@ export default function Transfer() {
     <PageContainer>
       <RowBetweenSidecard>
         <StyledTitle>Bridge</StyledTitle>
-        <SideCardHolder>
+        <SideCardHolder widget={location.search === '?widget' ? 'true' : ''}>
           <SideCard>
             <span className="white">${numeral(totalTvl).format('0,0')}</span>
             <span> TVL</span>
@@ -709,7 +714,7 @@ export default function Transfer() {
           </SideCard>
         </SideCardHolder>
       </RowBetweenSidecard>
-      <FlexContainer>
+      <FlexContainer widget={location.search === '?widget' ? 'true' : ''}>
         <TokenWarningModal
           isOpen={urlLoadedTokens.length > 1 && !dismissTokenWarning}
           tokens={urlLoadedTokens}

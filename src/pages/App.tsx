@@ -47,6 +47,10 @@ const AppWrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  border: none;
 `
 
 const HeaderWrapper = styled.div`

@@ -245,8 +245,7 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const hasABalance = currentBalance && parseFloat(currentBalance) > 0
-  // !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
+  const hasABalance = currentBalance ?  parseFloat(currentBalance) > 0 : !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
   
   // hack to fix AWAX
   let altCurrency = currency
