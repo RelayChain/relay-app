@@ -11,9 +11,9 @@ import NotStarted from './NotStarted'
 import { RowBetween } from '../Row'
 import { Trade } from '@zeroexchange/sdk'
 import TransferComplete from './TransferComplete'
+import TransferFiled from './TransferFailed'
 import TransferPending from './TransferPending'
 import styled from 'styled-components'
-import TransferFiled from './TransferFailed'
 
 interface ConfirmTransferProps {
   isOpen: boolean
@@ -28,7 +28,7 @@ interface ConfirmTransferProps {
 }
 
 const StyledModal = styled(Modal)`
-  max-width: 473px !important;  
+  max-width: 473px !important;
 `
 
 const ModalContainer = styled.div`
@@ -36,7 +36,7 @@ const ModalContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  flex-direction: column; 
+  flex-direction: column;
   h5 {
     margin: 1rem 0;
     text-align: center;
@@ -67,7 +67,7 @@ export default function ConfirmTransferModal({
   let allowanceInterval: any
 
   useEffect(() => {
-    if (allCrosschainData && allCrosschainData?.chains.length) {
+    if (allCrosschainData && allCrosschainData?.chains?.length) {
       const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
       chaindata?.tokens.map(token => {
         if (token.resourceId === currentToken.resourceId) {
@@ -111,7 +111,7 @@ export default function ConfirmTransferModal({
     }
     onDismiss()
   }
-  
+
   return (
     <StyledModal isOpen={isOpen} onDismiss={handleOnDismiss} maxHeight={707} >
       <ModalContainer>

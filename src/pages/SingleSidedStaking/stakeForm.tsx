@@ -11,7 +11,7 @@ import { returnStakingConfig } from './stakingConfig'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useCrosschainState } from 'state/crosschain/hooks'
-import useGasPrice from 'hooks/useGasPrice'
+import getGasPrice from 'hooks/getGasPrice'
 
 const InputWrap = styled.div`
   display: flex;
@@ -182,7 +182,7 @@ export const StakeForm = ({
   const stakedInfo = returnStakingConfig(chainId)
   const stakingContract = useStakingAloneContract(stakedInfo?.stakingContractAddress || '')
   const stakedTokenContract = useRelayTokenContract(stakedInfo?.stakedTokenAddress || '')
-  const currentGasPrice = useGasPrice(+currentChain.chainID)
+  const currentGasPrice = getGasPrice(+currentChain.chainID)
   const doStake = async (amount: string) => {
     try {
       const gasPriceNow = await currentGasPrice
