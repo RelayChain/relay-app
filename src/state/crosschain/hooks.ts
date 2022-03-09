@@ -496,7 +496,7 @@ export function useCrosschainHooks() {
     const crosschainState = getCrosschainState();
     const currentChainId = +crosschainState.currentChain.chainID;
     if (isNaN(currentChainId)) return Promise.reject(`MakeApprove: couldn't figure current chain id ${currentChainId}`);
-    
+
     const currentGasPriceStringWei = getGasPrice(currentChainId);
     if (currentGasPriceStringWei == undefined) return Promise.reject(`MakeApprove: gas price for chain ${currentChainId} is ${currentGasPriceStringWei}`);
 
@@ -588,6 +588,7 @@ export function useCrosschainHooks() {
       const feeResult = await bridgeContract._fees(targetChain)
       const fee = feeResult.toString()
       const value = WithDecimals(fee)
+
       dispatch(
         setCrosschainFee({
           value
