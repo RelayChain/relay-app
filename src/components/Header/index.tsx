@@ -72,7 +72,7 @@ const Header = () => {
   return (
     <HeaderFrame>
       <ClaimModal />
-      {/* <HideMedium> */}
+      <HideMedium>
       <LogoContainer>
         <LogoNavLink
           to={location.search ? location.pathname + location.search : '/cross-chain-bridge-transfer'}
@@ -84,7 +84,7 @@ const Header = () => {
           <div className="relay-name" style={{ cursor: 'pointer' }}></div>
         </LogoNavLink>
       </LogoContainer>
-      {/* </HideMedium> */}
+      </HideMedium>
       <MenuBar widget={location.search === '?widget' ? 'true' : ''}>
         <StyledNavLink
           id={`bridge-nav-link`}
