@@ -1,5 +1,6 @@
-import { CGPrice } from 'hooks/useCoinGeckoPrice'
 import { get, getTyped } from './api'
+
+import { CGPrice } from 'hooks/useCoinGeckoPrice'
 
 const ZERO_API_URL = process.env.REACT_APP_ZERO_API_URL
 const ZERO_API_KEY = process.env.REACT_APP_ZERO_API_KEY
@@ -39,6 +40,11 @@ const RELAY_API_URL
     : window.location.hostname === 'localhost' ? 'https://relay-dev-api-zcgj3.ondigitalocean.app'
       // : window.location.hostname === 'localhost' ? 'http://localhost:8080'
       : 'https://relay-api-33e56.ondigitalocean.app';
+
+export async function getCurrentStats() {
+  const url = `${RELAY_API_URL}/api/stats`
+  return get(url)
+}
 
 export async function getCurrentTvl() {
   const url = `${RELAY_API_URL}/api/currentTvl`
