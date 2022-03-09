@@ -587,7 +587,7 @@ export function useCrosschainHooks() {
       const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
       const feeResult = await bridgeContract._fees(targetChain)
       const fee = feeResult.toString()
-      const value = WithDecimals(fee,currentToken.decimals)
+      const value = WithDecimals(fee)
 
       dispatch(
         setCrosschainFee({
