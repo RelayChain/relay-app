@@ -690,7 +690,7 @@ export default function Transfer() {
   useEffect(() => {
     console.log(isLiquidityChecker)
    if(parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler) && !isLiquidityChecker){
-    addToast('not enough liquidity in bridge', { appearance: 'warning' })
+    addToast('not enough liquidity in bridge', { appearance: 'info' })
    }
   },[inputAmountToTrack])
   useEffect(() => {
