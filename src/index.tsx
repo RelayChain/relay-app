@@ -19,24 +19,24 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import getLibrary from './utils/getLibrary'
 import store from './state'
+import { ToastProvider } from 'react-toast-notifications'
 
 const tagManagerArgs = {
-    gtmId: 'GTM-5WLVS3B'
+  gtmId: 'GTM-5WLVS3B'
 }
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 TagManager.initialize(tagManagerArgs)
-
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
 
 console.debug = function() {
-  if(!process.env.REACT_APP_TESTNET) return;
-  const argumentsTyped: any = arguments;
-  console.log.apply(this, argumentsTyped);
-};
+  if (!process.env.REACT_APP_TESTNET) return
+  const argumentsTyped: any = arguments
+  console.log.apply(this, argumentsTyped)
+}
 
 function Updaters() {
   return (
@@ -57,15 +57,17 @@ ReactDOM.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Blocklist>
+        <ToastProvider autoDismiss={true}>
           <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <ThemedGlobalStyle />
-              <HashRouter>
-                <App />
-              </HashRouter>
-            </ThemeProvider>
+              <Updaters />
+              <ThemeProvider>
+                <ThemedGlobalStyle />
+                <HashRouter>
+                  <App />
+                </HashRouter>
+              </ThemeProvider>
           </Provider>
+          </ToastProvider>
         </Blocklist>
       </Web3ProviderNetwork>
     </Web3ReactProvider>

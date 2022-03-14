@@ -106,7 +106,7 @@ function GetCurrentChain(currentChainName: string): CrosschainChain {
   return result
 }
 
-function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
+export function GetChainbridgeConfigByID(chainID: number | string): BridgeConfig {
   if (typeof chainID === 'string') {
     chainID = Number(chainID)
   }
