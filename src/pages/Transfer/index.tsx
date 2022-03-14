@@ -652,11 +652,9 @@ export default function Transfer() {
           if (amountHandler === '0') {
             setHandlerZeroBalance(true)
           }
-          console.log(res.result)
           if(res.error !== 'Token is burnable'){
             setIsMintToken(false)
           }else{
-            console.log('calllllll')
             setIsMintToken(true)
           }
           setBalanceOnHandler(amountHandler)
@@ -876,7 +874,6 @@ export default function Transfer() {
 
         {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
         <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-        {console.log(isMintToken)}
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable() || (isMintToken ? false:parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))}>
           Transfer
         </ButtonTranfserLight>
