@@ -61,6 +61,11 @@ export async function getBalanceOnHandler(chainId: string, resourceId: string) {
   return get(url)
 }
 
+export async function liquidityChecker(chainId: string, resourceId: string) {
+  const url = `${RELAY_API_URL}/api/isTokenBurnable?resourceId=${resourceId}&chainId=${chainId}`
+  return get(url)
+}
+
 export async function getCrossChainData<T>() {
   return getTyped<T>(`${RELAY_API_URL}/api/crosschain-config`)
 }
