@@ -905,7 +905,8 @@ export default function Transfer() {
           onClick={showConfirmTransferModal}
           disabled={
             !isNotBridgeable() ||
-            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))
+            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler)) ||
+            isLiquidityChecker
           }
         >
           Transfer
