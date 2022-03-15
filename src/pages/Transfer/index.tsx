@@ -873,7 +873,11 @@ export default function Transfer() {
         <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
 
         {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
-        <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
+        <BelowForm className={!account ? 'disabled' : ''}>
+          {`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}
+          <br />
+          <br />+ 0.02% of total tokens transferred
+        </BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable() || (isMintToken ? false:parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))}>
           Transfer
         </ButtonTranfserLight>
