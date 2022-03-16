@@ -876,7 +876,7 @@ export default function Transfer() {
         <BelowForm className={!account ? 'disabled' : ''}>
           {`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}
           <br />
-          <br />+ 0.02% of total tokens transferred
+          <br />+ 0.05% of total tokens transferred
         </BelowForm>
         <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable() || (isMintToken ? false:parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))}>
           Transfer
