@@ -658,6 +658,10 @@ export default function Transfer() {
     if (targetChain.chainID && currentToken.resourceId) {
       liquidityChecker(targetChain.chainID, currentToken.resourceId)
         .then(async res => {
+          if (res.error) {
+            throw new Error(`Error fetching handler balance: ${res.error}`);
+          }
+
           const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
           //@ts-ignore
           const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
@@ -665,22 +669,23 @@ export default function Transfer() {
           const targetToken = chaindata?.tokens.filter(token => token.resourceId === currentToken.resourceId)
           if (targetToken) {
             const tokenContract = new ethers.Contract(targetToken && targetToken[0]?.address, TokenABI, provider)
-            const amountHandler = (await tokenContract.balanceOf(targetConfig.erc20HandlerAddress)).toString()
+            const addrContainingTokens 
+              = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
+              ? targetConfig.bridgeAddress
+              : targetConfig.erc20HandlerAddress;
+
+            const amountHandler = await tokenContract.balanceOf(addrContainingTokens).then(String);
             if (amountHandler === '0') {
               setHandlerZeroBalance(true)
             }
-            if (!res.shouldBurn) {
-              setIsMintToken(false)
-            } else {
-              setIsMintToken(true)
-            }
+            setIsMintToken(Boolean(res.shouldBurn));
             const amount = WithDecimals(amountHandler, targetToken && targetToken[0]?.decimals)
             setBalanceOnHandler(amount)
             setIsTransferToHandler(!!amount)
             setIsLiquidityChecker(false)
           }
         })
-        .catch(err => console.log('err :>> ', err))
+        .catch(err => console.log('fetchHandlerBalance err', err))
         .finally(() => {
           setUpdateHandBal(false)
         })

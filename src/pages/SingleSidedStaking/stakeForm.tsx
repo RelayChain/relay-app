@@ -278,7 +278,7 @@ export const StakeForm = ({
         })
         await resStake.wait()
       } catch (err) {
-        console.log('err :>> ', err)
+        console.log('Approve for staking err', err)
       } finally {
         if (resStake.hash) {
           setPopupContent({

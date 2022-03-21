@@ -31,7 +31,7 @@ import { useEffect, useState } from 'react'
 
 import { ChainId } from '@zeroexchange/sdk'
 import Web3 from 'web3'
-import { getBalanceOnHandler } from 'api'
+import { getBalanceOnHandler, liquidityChecker } from 'api'
 import getGasPrice from 'hooks/getGasPrice'
 // import { crosschainConfig as crosschainConfigTestnet } from '../../constants/CrosschainConfigTestnet'
 import { initialState } from './reducer'
@@ -41,6 +41,15 @@ const BridgeABI = require('../../constants/abis/Bridge.json').abi
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
+
+const erc20Interface = new ethers.utils.Interface(TokenABI);
+
+function getChainIdAs8Bytes(chainId: number) {
+  const hexxed = ethers.utils.hexlify(chainId);
+  const padded = ethers.utils.hexZeroPad(hexxed, 8)
+  return padded.slice(2);
+}
+
 
 // const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
 
@@ -288,174 +297,114 @@ export function useCrosschainHooks() {
     )
   }
 
-  // const getNonce = async (): Promise<number> => {
-  //   return await web3React.library.getSigner().getTransactionCount()
-  // }
-
   const MakeDeposit = async () => {
-    const tokenForHandlerTransfer = ['USDC', 'WETH']
     const crosschainState = getCrosschainState()
 
-    const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
-    const gasPriceDecimal = WithDecimals(currentGasPrice)
-    const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, 18)
-    const isIsuffient = +(crosschainState.userBalance) <= (+gasPriceDecimal + +(crosschainState.crosschainFee))
+    try {
+      const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
+      const gasPriceDecimal = WithDecimals(currentGasPrice)
+      const crossChainFee = WithDecimalsHexString(crosschainState.crosschainFee, 18)
+      const isInsuffient = +crosschainState.userBalance <= +gasPriceDecimal * 200000 + +crosschainState.crosschainFee
 
-    if (isIsuffient) {
-      dispatch(
-        setCrosschainTransferStatus({
-          status: ChainTransferState.Insufficient
-        })
-      )
-      return Promise.reject()
-    } else {
-      try {
-        dispatch(
-          setCrosschainTransferStatus({
-            status: ChainTransferState.TransferPending
-          })
-        )
-        if (crosschainState.targetChain.chainID &&
-          crosschainState.currentToken.resourceId &&
-          tokenForHandlerTransfer.includes(crosschainState.currentToken.name)) {
-          const res = await getBalanceOnHandler(crosschainState.targetChain.chainID, crosschainState.currentToken.resourceId)
-          const amountHandler = !!res?.result ? res?.result : '0'
-          console.log("🚀 ~ file: hooks.ts ~ line 314 ~ tokenForHandlerTransfer.includes ~ amountHandler", amountHandler)
-          dispatch(
-            setTransferAmount({
-              amount: `${Math.min(+(crosschainState.transferAmount), +amountHandler)}`
-            })
-          )
-        }
+      if (isInsuffient) {
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.Insufficient }))
+        return Promise.reject()
+      }
 
+      dispatch( setCrosschainTransferStatus({ status: ChainTransferState.TransferPending }));
 
-        const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-        const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
-          crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
-        const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
-        dispatch(
-          setCurrentTxID({
-            txID: ''
-          })
-        )
-        const signer = web3React.library.getSigner()
+      const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+      const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
+        crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
+      const targetChain = GetChainbridgeConfigByID(crosschainState.targetChain.chainID)
+
+      dispatch( setCurrentTxID({ txID: '' }));
+
+      const signer = web3React.library.getSigner()
+
+      if (currentChain.type == 'Ethereum') {
         const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
-
-        const data =
-          '0x' +
-          utils
-            .hexZeroPad(
-              // TODO Wire up dynamic token decimals
-              WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals),
-              32
-            )
-            .slice(2) + // Deposit Amount (32 bytes)
-          utils.hexZeroPad(utils.hexlify((crosschainState.currentRecipient.length - 2) / 2), 32).slice(2) + // len(recipientAddress) (32 bytes)
-          crosschainState.currentRecipient.substr(2) // recipientAddress (?? bytes)
+  
+        const data = '0x'
+          + utils.hexZeroPad(WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals), 32).slice(2) // Deposit Amount (32 bytes)
+          + utils.hexZeroPad(utils.hexlify(20), 32).slice(2) // len(recipientAddress) (32 bytes)
+          + crosschainState.currentRecipient.slice(2) // recipientAddress (20 bytes)
         const auxData = '0x00';
-
-
+  
         // If a chain id is not present here, it will be undefined.
         // Then the provider will calculate it on it's own.
         const gasLimit = ({
           14: 1200000,
         })[currentChain.chainId];
-
+  
         const resultDepositTx = await bridgeContract
           .deposit(targetChain.chainId, currentToken.resourceId, data, auxData, {
             gasPrice: currentGasPrice,
             gasLimit,
             value: crossChainFee,
           })
-
-        if (!resultDepositTx) {
-          return
-        }
-
+  
         await resultDepositTx.wait()
+  
+        dispatch( setCrosschainDepositConfirmed({ confirmed: true }))
+        dispatch( setCurrentTxID({ txID: resultDepositTx.hash }))
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.TransferComplete }))
+  
+        UpdateOwnTokenBalance().catch(e => console.error(`UpdateOwnTokenBalance err`, e));
+  
+        return Promise.resolve();
+      } else if (currentChain.type == 'EthTransfers') {
+        const fromTokenAddr = ethers.utils.getAddress(currentToken.address);
+        const amountWei = ethers.utils.parseUnits(crosschainState.transferAmount, currentToken.decimals);        
 
-        dispatch(
-          setCrosschainDepositConfirmed({
-            confirmed: true
-          })
-        )
+        const auxData = [
+          currentToken.resourceId.slice(2),             // 32 bytes
+          '14',                            // recipient length
+          crosschainState.currentRecipient.slice(2),              // recipient
+          getChainIdAs8Bytes(targetChain.chainId),
+        ].join('');
+        
+        let tx;
+        if (fromTokenAddr == ethers.constants.AddressZero) {
+          tx = await signer.sendTransaction({
+            to: currentChain.bridgeAddress,
+            value: amountWei,
+            data: '0x' + auxData,
+          });
+        } else {
+          const isBurnableResult = await liquidityChecker(String(currentChain.chainId), currentToken.resourceId);
+          if (isBurnableResult.error) throw new Error(isBurnableResult.error);
+          if (typeof isBurnableResult.shouldBurn !== 'boolean') throw new Error(`isBurnableResult.shouldBurn is compromised, ${isBurnableResult.shouldBurn}`);
 
-        const web3CurrentChain = web3React.library ? new Web3(web3React.library.provider) : new Web3(currentChain.rpcUrl)
-        const receipt = await web3CurrentChain.eth.getTransactionReceipt(resultDepositTx.hash)
-
-        const nonce = receipt.logs[receipt.logs.length - 1].topics[3]
-
-        dispatch(
-          setCurrentTxID({
-            txID: resultDepositTx.hash
-          })
-        )
-        dispatch(
-          setCrosschainTransferStatus({
-            status: ChainTransferState.TransferComplete
-          })
-        )
-
-        const state = getCrosschainState()
-        const pendingTransfer = {
-          currentSymbol: state?.currentToken?.symbol,
-          targetSymbol: state?.targetTokens?.find(x => x.assetBase === state?.currentToken?.assetBase)?.symbol,
-          assetBase: state?.currentToken?.assetBase,
-          amount: state?.transferAmount,
-          decimals: state?.currentToken?.decimals,
-          name: state?.targetChain?.name,
-          address: state?.currentToken?.address,
-          status: state?.swapDetails?.status,
-          votes: state?.swapDetails?.voteCount
-        }
-
-        dispatch(
-          setPendingTransfer({
-            pendingTransfer
-          })
-        )
-
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        UpdateOwnTokenBalance().catch(console.error)
-
-        while (true) {
-          try {
-            await delay(5000)
-            const web3TargetChain = new Web3(targetChain.rpcUrl)
-            const destinationBridge = new web3TargetChain.eth.Contract(BridgeABI, targetChain.bridgeAddress)
-            const proposal = await destinationBridge.methods
-              .getProposal(
-                currentChain.chainId,
-                nonce,
-                web3TargetChain.utils.keccak256(targetChain.erc20HandlerAddress + data.slice(2))
-              )
-              .call()
-            dispatch(
-              setCrosschainSwapDetails({
-                details: {
-                  status: proposal._status,
-                  voteCount: !!proposal?._yesVotes ? proposal._yesVotes.length : 0
-                }
-              })
-            )
-
-            if (proposal && proposal._status === ProposalStatus.EXECUTED) {
-              await delay(5000)
-              BreakCrosschainSwap()
-            }
-          } catch (e) {
-            BreakCrosschainSwap()
-            return Promise.reject(e);
+          if (isBurnableResult.shouldBurn) {
+            const funcFragment = erc20Interface.functions['burn(uint256)'];
+            const txPayload = erc20Interface.encodeFunctionData(funcFragment, [amountWei]);
+            tx = await signer.sendTransaction({
+                to: fromTokenAddr,
+                data: txPayload + auxData,
+            });
+          } else {
+            const funcFragment = erc20Interface.functions['transfer(address,uint256)'];
+            const txPayload = erc20Interface.encodeFunctionData(funcFragment, [currentChain.bridgeAddress, amountWei]);
+            tx = await signer.sendTransaction({
+                to: fromTokenAddr,
+                data: txPayload + auxData,
+            });
           }
         }
-      } catch (err) {
-        dispatch(
-          setCrosschainTransferStatus({
-            status: ChainTransferState.TransferFailed
-          })
-        )
-        return Promise.reject(err)
-      }
+
+        await tx.wait();
+  
+        dispatch( setCrosschainDepositConfirmed({ confirmed: true }));
+        dispatch( setCurrentTxID({ txID: tx.hash }));
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.TransferComplete }));
+
+        return Promise.resolve();
+      } else throw new Error(`Unknown type of fromChain for deposit, dunno whatta do`);
+    } catch (err) {
+      console.log(`MakeDeposit err`, err);
+      dispatch( setCrosschainTransferStatus({ status: ChainTransferState.TransferFailed }))
+      return Promise.reject(err)
     }
   }
 
@@ -463,6 +412,12 @@ export function useCrosschainHooks() {
     try {
       const crosschainState = getCrosschainState()
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
+      if (currentChain.type == 'EthTransfers') {
+        console.log(`This is a EthTransfers chain, no need to approve`)
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalComplete }));
+        return;
+      }
+
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
         crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
 
@@ -472,18 +427,14 @@ export function useCrosschainHooks() {
       const approvedAmount = await tokenContract.allowance(
         crosschainState.currentRecipient,
         currentChain.erc20HandlerAddress
-      ).catch(console.log)
+      );
 
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
       )
 
       if (approvedAmount && countTokenForTransfer.lte(approvedAmount)) {
-        dispatch(
-          setCrosschainTransferStatus({
-            status: ChainTransferState.ApprovalComplete
-          })
-        )
+        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalComplete }))
       } else {
         console.log('not approved before')
       }
@@ -556,9 +507,15 @@ export function useCrosschainHooks() {
 
     // @ts-ignore
     const signer = web3React.library.getSigner()
+    let balance;
     if (currentToken.address !== '') {
-      const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-      const balance = (await tokenContract.balanceOf(web3React.account)).toString()
+      if (currentToken.address == ethers.constants.AddressZero) {
+        balance = await signer.getBalance().then(String);
+      } else {
+        const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
+        balance = await tokenContract.balanceOf(web3React.account).then(String);
+      }
+
 
       dispatch(
         setCurrentTokenBalance({
@@ -582,6 +539,11 @@ export function useCrosschainHooks() {
     if (targetChain) {
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
 
+      if (currentChain.type == 'EthTransfers') {
+        dispatch( setCrosschainFee({ value: '0' }));
+        return;
+      }
+
       // @ts-ignore
       const signer = web3React.library.getSigner()
       const bridgeContract = new ethers.Contract(currentChain.bridgeAddress, BridgeABI, signer)
@@ -589,18 +551,9 @@ export function useCrosschainHooks() {
       const fee = feeResult.toString()
       const value = WithDecimals(fee)
 
-      dispatch(
-        setCrosschainFee({
-          value
-        })
-      )
+      dispatch( setCrosschainFee({ value }));
     } else {
-
-      dispatch(
-        setCrosschainFee({
-          value: '0'
-        })
-      )
+      dispatch( setCrosschainFee({ value: '0' }))
     }
   }
 
@@ -685,7 +638,7 @@ export function useCrossChain() {
 
     dispatch(setTransferAmount({ amount: '' }))
     UpdateOwnTokenBalance() // .catch(console.error)
-    UpdateFee().catch(console.error)
+    UpdateFee().catch(e => console.error(`UpdateFee err`, e));
   }
 
   useEffect(initAll, [])

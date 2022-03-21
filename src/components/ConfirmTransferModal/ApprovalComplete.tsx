@@ -54,6 +54,7 @@ export default function ApprovalComplete({
     try {
       await MakeDeposit();
     } catch (err) {
+      console.error(`Error making deposit`, err);
       cancelTransfer();
     }
   }
