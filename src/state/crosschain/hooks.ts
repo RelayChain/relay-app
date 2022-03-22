@@ -67,7 +67,7 @@ export function WithDecimals(value: string | number, decimals?: number): string 
 }
 
 
-function WithDecimalsHexString(value: string, decimals: number): string {
+export function WithDecimalsHexString(value: string, decimals: number): string {
   if (!value || decimals === undefined) {
     return ''
   }
