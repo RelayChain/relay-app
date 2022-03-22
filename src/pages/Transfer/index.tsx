@@ -11,11 +11,13 @@ import {
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
+  getCrosschainState,
   GetTokenByAddrAndChainId,
   useCrossChain,
   useCrosschainHooks,
   useCrosschainState,
-  WithDecimals
+  WithDecimals,
+  WithDecimalsHexString
 } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -63,6 +65,7 @@ import { MobileResponsiveProps } from 'components/Interfaces/interface'
 import { useLocation } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { GetChainbridgeConfigByID } from '../../state/crosschain/hooks'
+import getGasPrice from 'hooks/getGasPrice'
 
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
@@ -388,7 +391,7 @@ export default function Transfer() {
   const { addToast } = useToasts()
 
   const availableChains = useMemo(() => {
-    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum') && i.name !== 'Moonbeam')
   }, [allChains, chainId])
 
   // toggle wallet when disconnected
@@ -422,6 +425,8 @@ export default function Transfer() {
   const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
   const [isMintToken, setIsMintToken] = useState(true)
   const [isLiquidityChecker, setIsLiquidityChecker] = useState(true)
+
+  const crosschainState = getCrosschainState()
 
   useEffect(() => {
     const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetChain?.name)
@@ -549,9 +554,7 @@ export default function Transfer() {
   )
 
   const compareAmountWithBalanceHandler = (amount: string) => {
-    return tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0
-      ? `${Math.min(+amount, +balanceOnHandler)}`
-      : amount
+    return +balanceOnHandler > 0 ? `${Math.min(+amount, +balanceOnHandler)}` : amount
   }
 
   const handleMaxInput = useCallback(() => {
@@ -691,8 +694,29 @@ export default function Transfer() {
       !isMintToken
     ) {
       addToast('not enough liquidity in bridge', { appearance: 'info' })
-    }
+    } else if (isInsufficient) {
+      addToast('not enough gas', { appearance: 'info' })
+    } else if (Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT])) {
+      addToast('not enough funds', { appearance: 'info' })
+    } 
   }, [inputAmountToTrack])
+
+  
+  useEffect(() => {
+    const checkSufficientAmount = async () => {
+      console.log(crosschainState.currentChain)
+      if (crosschainState.currentChain) {
+        const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
+        if (currentGasPrice) {
+          const gasPriceDecimal = WithDecimals(currentGasPrice)
+          console.log('current', +crosschainState.userBalance, +gasPriceDecimal + +crosschainState.crosschainFee)
+          const isIsuffientAmt = +crosschainState.userBalance <= +gasPriceDecimal + +crosschainState.crosschainFee
+          setIsInsufficient(isIsuffientAmt)
+        }
+      }
+    }
+    checkSufficientAmount()
+  }, [crosschainState, inputAmountToTrack])
 
   useEffect(() => {
     fetchHandlerBalance()
@@ -900,7 +924,7 @@ export default function Transfer() {
       </FlexContainer>
       <CenteredInfo>
         {' '}
-        {isInsufficient && (
+        {/* {isInsufficient && (
           <InsufficientBlock>
             <img
               src={require('../../assets/images/new-design/warning.svg')}
@@ -908,7 +932,7 @@ export default function Transfer() {
             />
             <div>Insufficient balance!</div>
           </InsufficientBlock>
-        )}
+        )} */}
         <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
         <BelowForm className={!account ? 'disabled' : ''}>
@@ -920,7 +944,10 @@ export default function Transfer() {
           onClick={showConfirmTransferModal}
           disabled={
             !isNotBridgeable() ||
-            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))
+            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler)) ||
+            Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT]) ||
+            isInsufficient ||
+            isLiquidityChecker
           }
         >
           Transfer
