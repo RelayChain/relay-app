@@ -643,7 +643,7 @@ export default function Transfer() {
     return ''
   }
   const onBlurInput = (event: any) => {
-    setUpdateHandBal(true)
+    // setUpdateHandBal(true)
   }
 
   const fetchHandlerBalance = () => {
