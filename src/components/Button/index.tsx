@@ -5,6 +5,7 @@ import { ChevronDown } from 'react-feather'
 import React from 'react'
 import { RowBetween } from '../Row'
 import styled from 'styled-components'
+import { MobileResponsiveProps } from 'components/Interfaces/interface'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -223,12 +224,12 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   }
 `
 
-export const ButtonGradient = styled(ButtonPrimary)`
+export const ButtonGradient = styled(ButtonPrimary)<MobileResponsiveProps>`
   color: white;
-  padding: 18px 25px;
+  padding: ${(props) => props.widget ? "10px 20px" : "18px 25px"};
   font-family: Montserrat;
   font-weight: 500;
-  font-size: 18px;
+  font-size: ${(props) => props.widget ? "16px" : "18px"};
   background-color: ${({ theme }) => theme.bg3};
   background: linear-gradient(90deg, #ad00ff 0%, #7000ff 100%);
   width: fit-content;

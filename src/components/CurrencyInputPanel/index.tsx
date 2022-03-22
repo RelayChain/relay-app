@@ -14,6 +14,7 @@ import { darken } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 
 const InputRow = styled.div<{ selected: boolean }>`
   display: flex;
@@ -34,7 +35,7 @@ const InputWrap = styled.div`
   align-items: center;
 `
 
-const CurrencySelect = styled.button<{ selected: boolean }>`
+const CurrencySelect = styled.button<{ selected: boolean; widget?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +50,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   min-width: 150px;
   max-width: 220px;
   width: 100%;
-  height: 60px;
+  height: ${({ widget }) => (widget ? '40px' : '60px')};
   background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
   border-radius: 30px;
   &:hover {
@@ -105,7 +106,7 @@ const SectionLabel = styled.span`
 `};
 `
 
-const SmallStyledDropDown = styled(SmallDropDown) <{ selected: boolean }>`
+const SmallStyledDropDown = styled(SmallDropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   margin-left: auto;
   width: 24px;
@@ -133,11 +134,11 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `};
 `
 const StyledTokenNameDeafult = styled(StyledTokenName)`
-  font-size: 16px;
+  font-size: 32px;
   margin: 0 0.25rem 0 0.25rem;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   margin: 0;
-  font-size: 12px;
+  // font-size: 12px;
 `};
 `
 const RowBetweenTransfer = styled(RowBetween)`
@@ -240,15 +241,17 @@ export default function CurrencyInputPanel({
   const { account, chainId } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, chainId)
   const theme = useContext(ThemeContext)
-
+  const location = useLocation()
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
 
-  const hasABalance = currentBalance ?  parseFloat(currentBalance) > 0 : !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
-  
+  const hasABalance = currentBalance
+    ? parseFloat(currentBalance) > 0
+    : !!(selectedCurrencyBalance && parseFloat(selectedCurrencyBalance.toSignificant(6)) > 1 / 10e18)
+
   // hack to fix AWAX
-  let altCurrency = currency
+  const altCurrency = currency
   if (altCurrency?.symbol.includes('AWAX')) {
     altCurrency.symbol = altCurrency.symbol.replace('AWAX', 'AVAX')
   }
@@ -268,7 +271,7 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <InputWrap>
                 <StyledNumericalInput
-                  onBlur={(event) => blurInput ? blurInput(event) : () => null}
+                  onBlur={event => (blurInput ? blurInput(event) : () => null)}
                   className="token-amount-input"
                   value={value}
                   fontSize="32px"
@@ -284,6 +287,7 @@ export default function CurrencyInputPanel({
             )}
             {!hideCurrencySelect && (
               <CurrencySelect
+                widget={location.search === '?widget' ? true : false}
                 style={{ opacity: `${isCrossChain && label === 'To' && !altCurrency?.symbol ? '0' : '1'}` }}
                 selected={!!altCurrency}
                 className={`open-currency-select-button ${hideInput ? 'centered' : ''}`}
@@ -310,14 +314,14 @@ export default function CurrencyInputPanel({
                     {isCrossChain && label === 'To'
                       ? `${currentTargetToken?.symbol ? currentTargetToken?.symbol : '-'}`
                       : (altCurrency && altCurrency.symbol && altCurrency.symbol.length > 20
-                        ? altCurrency.symbol.slice(0, 4) +
-                        '...' +
-                        altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
-                        : altCurrency?.symbol) || (
-                        <StyledTokenNameDeafult>
-                          {!disableCurrencySelect ? 'Select a token' : ''}
-                        </StyledTokenNameDeafult>
-                      )}
+                          ? altCurrency.symbol.slice(0, 4) +
+                            '...' +
+                            altCurrency.symbol.slice(altCurrency.symbol.length - 5, altCurrency.symbol.length)
+                          : altCurrency?.symbol) || (
+                          <StyledTokenNameDeafult>
+                            {!disableCurrencySelect ? 'Select a token' : ''}
+                          </StyledTokenNameDeafult>
+                        )}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && !disableBlockchainSelect && <SmallStyledDropDown selected={!!altCurrency} />}

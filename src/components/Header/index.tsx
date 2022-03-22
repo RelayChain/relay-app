@@ -9,7 +9,7 @@ import Web3Status from '../Web3Status'
 import styled from 'styled-components'
 import { MobileResponsiveProps } from 'components/Interfaces/interface'
 
-const HeaderFrame = styled.div`
+const HeaderFrame = styled.div<MobileResponsiveProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,9 +17,13 @@ const HeaderFrame = styled.div`
   width: 100%;
   position: relative;
   z-index: 2;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 20px 15px;
-  `};
+
+  @media screen and (max-width: 640px) {
+    padding: ${props => (props.widget ? '0px 15px' : '20px 15px')};
+  }
+  // ${({ theme }) => theme.mediaWidth.upToMedium`
+  // padding: 20px 15px;
+  // `};
 `
 const HideMedium = styled.span`
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -32,7 +36,7 @@ const LogoContainer = styled.div`
 `
 
 const MenuBar = styled.div<MobileResponsiveProps>`
-  display : ${(props) => (props.widget ? "none" : "flex")}
+  display: ${props => (props.widget ? 'none' : 'flex')};
   justify-content: flex-end;
   align-items: center;
   margin-right: 4rem;
@@ -47,7 +51,6 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: #ffffff;
   padding: 0 15px;
-  
 `
 const LogoNavLink = styled(NavLink)`
   display: flex;
@@ -70,20 +73,20 @@ const Header = () => {
   }
 
   return (
-    <HeaderFrame>
+    <HeaderFrame widget={location.search === '?widget' ? 'true' : ''}>
       <ClaimModal />
       <HideMedium>
-      <LogoContainer>
-        <LogoNavLink
-          to={location.search ? location.pathname + location.search : '/cross-chain-bridge-transfer'}
-          onClick={() =>
-            setPathname(location.search ? location.pathname + location.search : '/cross-chain-bridge-transfer')
-          }
-        >
-          <div className="relay-logo" style={{ cursor: 'pointer' }}></div>
-          <div className="relay-name" style={{ cursor: 'pointer' }}></div>
-        </LogoNavLink>
-      </LogoContainer>
+        <LogoContainer>
+          <LogoNavLink
+            to={location.search ? location.pathname + location.search : '/cross-chain-bridge-transfer'}
+            onClick={() =>
+              setPathname(location.search ? location.pathname + location.search : '/cross-chain-bridge-transfer')
+            }
+          >
+            <div className="relay-logo" style={{ cursor: 'pointer' }}></div>
+            <div className="relay-name" style={{ cursor: 'pointer' }}></div>
+          </LogoNavLink>
+        </LogoContainer>
       </HideMedium>
       <MenuBar widget={location.search === '?widget' ? 'true' : ''}>
         <StyledNavLink

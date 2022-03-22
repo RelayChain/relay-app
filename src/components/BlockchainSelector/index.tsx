@@ -7,7 +7,8 @@ import { CrosschainChain } from '../../state/crosschain/actions'
 import React from 'react'
 import { ReactComponent as SmallDropDown } from '../../assets/images/small-dropdown-white-select.svg'
 import styled from 'styled-components'
-
+import { useLocation } from 'react-router-dom'
+import { MobileResponsiveProps } from 'components/Interfaces/interface'
 const Container = styled.div`
   h5 {
     margin-left: 0.3rem;
@@ -130,10 +131,10 @@ const TextBlockSelect = styled.span`
   margin-left: 5px;
   font-size: 1rem;
 `
-const StyledSelect = styled.div`
+const StyledSelect = styled.div<MobileResponsiveProps>`
   padding: 7px;
   width: 220px;
-  height: 60px;
+  height: ${props => (props.widget ? '40px' : '60px')};
   background: linear-gradient(180deg, rgba(173, 0, 255, 0.25) 0%, rgba(97, 0, 143, 0.25) 100%);
   border-radius: 30px;
   display: flex;
@@ -155,6 +156,7 @@ const BlockchainSelector = ({
   onShowCrossChainModal: () => void
   onShowTransferChainModal: () => void
 }) => {
+  const location = useLocation()
   const openChangeChainInfo = () => {
     onShowCrossChainModal()
   }
@@ -210,10 +212,10 @@ const BlockchainSelector = ({
           {/* <CrossChainWrap> */}
           {/* <SubTitle>Destination Chain</SubTitle> */}
 
-          <StyledSelect onClick={openTransferModal}>
+          <StyledSelect onClick={openTransferModal} widget={location.search === '?widget' ? 'true' : ''}>
             {transferTo && transferTo.name.length > 0 && (
               <BlockchainLogo
-                size="40px"
+                size={location.search === '?widget' ? '30px' : '40px'}
                 blockchain={typeof transferTo !== 'string' ? transferTo.name : ''}
                 style={{ marginRight: '0px' }}
               />

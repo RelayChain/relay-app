@@ -1,8 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
+import { useLocation } from 'react-router-dom'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; transferPage?: boolean }>`
+const StyledInput = styled.input<{
+  error?: boolean
+  fontSize?: string
+  align?: string
+  transferPage?: boolean
+  widget?: boolean
+}>`
   color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   width: 0;
   position: relative;
@@ -14,7 +21,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   min-width:100px;
   max-width:240px;
   width:100%;
-  height: 60px;
+  height: ${({ widget }) => (widget ? '40px' : '60px')};
   background: rgba(70, 70, 70, 0.25);
   padding: 0px 15px;
   border-radius: 48px;
@@ -71,7 +78,7 @@ export const Input = React.memo(function InnerInput({
       onUserInput(nextUserInput)
     }
   }
-
+  const location = useLocation()
   return (
     <StyledInput
       {...rest}
@@ -92,6 +99,7 @@ export const Input = React.memo(function InnerInput({
       minLength={1}
       maxLength={79}
       spellCheck="false"
+      widget={location.search === '?widget' ? true : false}
     />
   )
 })

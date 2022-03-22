@@ -81,20 +81,20 @@ const StyledTitle = styled.h1<MobileResponsiveProps>`
   font-family: Montserrat;
   font-style: normal;
   font-weight: bold;
-  font-size: 60px;
+  font-size: ${props => (props.widget ? '30px' : '60px')};
   color: #7f46f0;
-  margin-top: 50px;
-  margin-bottom: 40px;
+  margin-top: ${props => (props.widget ? '0px' : '50px')};
+  margin-bottom: ${props => (props.widget ? '10px' : '40px')};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin: 20px auto;
+  margin: 10px auto;
   display: flex;
   text-align: center;
   justify-content: center;
   align-items: center;
 `};
 `
-const Heading = styled.div`
+const Heading = styled.div<MobileResponsiveProps>`
   display: flex;
   text-align: center;
   font-size: 32px;
@@ -121,13 +121,13 @@ const ChainBlock = styled.div`
   display: flex;
   align-items: center;
 `
-const Description = styled.p`
+const Description = styled.p<MobileResponsiveProps>`
   text-align: center;
   font-family: Montserrat;
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
-  line-height: 29px;
+  line-height: ${props => (props.widget ? '10px' : '29px')};
   color: #ffffff;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   font-size: 20px;
@@ -174,12 +174,12 @@ const SideCardHolder = styled.div<MobileResponsiveProps>`
     width: 100%;
   `};
 `
-const TransferBodyWrapper = styled.div`
+const TransferBodyWrapper = styled.div<MobileResponsiveProps>`
   border-radius: 30px;
   background: rgb(18, 26, 56);
   width: 100%;
   max-width: 585px;
-  min-height: 316px;
+  min-height: auto;
   padding: 2rem;
   position: relative;
   border: 2px solid transparent;
@@ -205,10 +205,13 @@ const TransferBodyWrapper = styled.div`
   &.highlight {
     border: 2px solid #b368fc;
   }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 1.5rem;
+  // ${({ theme }) => theme.mediaWidth.upToMedium`
+  // padding: 1.5rem;
 
-  `}
+  // `}
+  @media screen and (max-width: 768px) {
+    padding: ${props => (props.widget ? '0.5rem' : '1.5rem')};
+  }
 `
 const ChartLiquidityWrapper = styled.div`
   position: relative;
@@ -299,12 +302,12 @@ const TextBottom = styled.div`
   text-align: center;
   `};
 `
-const FrameBlock = styled.img`
-  width: 90px;
-  height: 90px;
-  margin 10px;
+const FrameBlock = styled.img<MobileResponsiveProps>`
+  width: ${props => (props.widget ? '40px' : '90px')};
+  height: ${props => (props.widget ? '40px' : '90px')};
+  margin: 10px;
   &.disabled {
-    opacity: .25;
+    opacity: 0.25;
   }
 `
 const ButtonTranfserLight = styled(ButtonPink)`
@@ -732,7 +735,7 @@ export default function Transfer() {
   return (
     <PageContainer>
       <RowBetweenSidecard>
-        <StyledTitle>Bridge</StyledTitle>
+        <StyledTitle widget={location.search === '?widget' ? 'true' : ''}>Bridge</StyledTitle>
         <SideCardHolder widget={location.search === '?widget' ? 'true' : ''}>
           <SideCard>
             <span className="white">${numeral(totalTvl).format('0,0')}</span>
@@ -780,26 +783,27 @@ export default function Transfer() {
           <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>
         )}
         <TransferBodyWrapper
+          widget={location.search === '?widget' ? 'true' : ''}
           className={!bridgeEnabled || !account ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}
         >
-          <Heading>
-            <Description>Sending From: </Description>
+          <Heading widget={location.search === '?widget' ? 'true' : ''}>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Sending From: </Description>
             <ChainBlock>
               <BlockchainLogo
-                size="60px"
+                size={location.search === '?widget' ? '30px' : '60px'}
                 blockchain={CHAIN_LABELS[chainId ?? 1]}
                 style={{ marginLeft: '0px', marginRight: '1rem' }}
               />
-              <Description>{currentChain.name}</Description>
+              <Description widget={location.search === '?widget' ? 'true' : ''}>{currentChain.name}</Description>
             </ChainBlock>
           </Heading>
 
-          <RowFixed style={{ margin: '2rem auto 2rem auto' }}>
+          <RowFixed style={location.search === '?widget' ? { margin: '0rem auto' } : { margin: '2rem auto' }}>
             <ArrowDown size="30" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
           </RowFixed>
 
           <Heading>
-            <Description>Sending To: </Description>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Sending To: </Description>
             <BlockchainSelector
               isCrossChain={isCrossChain}
               supportedChains={SUPPORTED_CHAINS}
@@ -810,9 +814,14 @@ export default function Transfer() {
             />
           </Heading>
         </TransferBodyWrapper>
-        <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} className={!account ? 'disabled' : ''} />
+        <FrameBlock
+          widget={location.search === '?widget' ? 'true' : ''}
+          src={require('../../assets/images/new-design/Frame.svg')}
+          className={!account ? 'disabled' : ''}
+        />
         {/* // second form */}
         <TransferBodyWrapper
+          widget={location.search === '?widget' ? 'true' : ''}
           className={
             !bridgeEnabled || targetChain?.chainID?.length === 0
               ? 'offline'
@@ -824,10 +833,10 @@ export default function Transfer() {
           <BubbleBase />
           {/* <Heading>Cross-Chain Bridge*/}
           <Heading>
-            <Description>Enter token and amount:</Description>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Enter token and amount:</Description>
           </Heading>
 
-          <FlexBlock style={{}}>
+          <FlexBlock>
             <CurrencyInputPanel
               blurInput={event => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
@@ -842,14 +851,16 @@ export default function Transfer() {
               isCrossChain={isCrossChain}
               transferPage
               id="swap-currency-input"
-              style={{ padding: '25px 0', width: '100%' }}
+              style={location.search === '?widget' ? { padding: '0px 0px' } : { padding: '25px 0', width: '100%' }}
               currentBalance={currentBalance}
             />
           </FlexBlock>
           <MessageBlock>
             <HandlerBlock>
               {isTransferToHandler && +balanceOnHandler > 0 && (
-                <HandlerMessageBlock style={{ color: 'green' }}>
+                <HandlerMessageBlock
+                  style={location.search === '?widget' ? { color: 'green', fontSize: '12px' } : { color: 'green' }}
+                >
                   {`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
                 </HandlerMessageBlock>
               )}
@@ -857,7 +868,9 @@ export default function Transfer() {
             <BelowInfo>
               {targetTokenAddress && (
                 <StyledCopy toCopy={targetTokenAddress}>
-                  <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
+                  <span
+                    style={location.search === '?widget' ? { fontSize: '12px' } : { marginLeft: '4px' }}
+                  >{`Copy the token address`}</span>
                 </StyledCopy>
               )}
               <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
@@ -903,7 +916,13 @@ export default function Transfer() {
           <br />
           <br />+ 0.05% of the balance being transferred
         </BelowForm>
-        <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable() || (isMintToken ? false:parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))}>
+        <ButtonTranfserLight
+          onClick={showConfirmTransferModal}
+          disabled={
+            !isNotBridgeable() ||
+            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler))
+          }
+        >
           Transfer
         </ButtonTranfserLight>
       </CenteredInfo>
