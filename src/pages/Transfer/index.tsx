@@ -704,12 +704,10 @@ export default function Transfer() {
   
   useEffect(() => {
     const checkSufficientAmount = async () => {
-      console.log(crosschainState.currentChain)
       if (crosschainState.currentChain) {
         const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
         if (currentGasPrice) {
           const gasPriceDecimal = WithDecimals(currentGasPrice)
-          console.log('current', +crosschainState.userBalance, +gasPriceDecimal + +crosschainState.crosschainFee)
           const isIsuffientAmt = +crosschainState.userBalance <= +gasPriceDecimal + +crosschainState.crosschainFee
           setIsInsufficient(isIsuffientAmt)
         }
