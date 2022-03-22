@@ -34,6 +34,7 @@ import Identicon from '../Identicon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import { useLocation } from 'react-router-dom'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -378,6 +379,7 @@ function Web3StatusInner() {
   const hideCrossChainModal = () => {
     setShowCrossChainModal(false)
   }
+  const location = useLocation()
 
   const [chainIdError] = useState({} as UnsupportedChainIdError)
   const chainIdErrorPrev = useRef({} as UnsupportedChainIdError)
@@ -467,7 +469,12 @@ function Web3StatusInner() {
     return <ChainSwitcherContent />
   } else {
     return (
-      <ButtonGradient id="connect-wallet" onClick={toggleWalletModal} style={{ maxWidth: '300px', margin: '0 auto' }}>
+      <ButtonGradient
+        widget={location.search === '?widget' ? 'true' : ''}
+        id="connect-wallet"
+        onClick={toggleWalletModal}
+        style={{ maxWidth: '300px', margin: '0 auto' }}
+      >
         {t('Connect Wallet')}
       </ButtonGradient>
     )
