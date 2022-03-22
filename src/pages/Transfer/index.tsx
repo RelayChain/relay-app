@@ -701,12 +701,10 @@ export default function Transfer() {
   
   useEffect(() => {
     const checkSufficientAmount = async () => {
-      console.log(crosschainState.currentChain)
       if (crosschainState.currentChain) {
         const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
         if (currentGasPrice) {
           const gasPriceDecimal = WithDecimals(currentGasPrice)
-          console.log('current', +crosschainState.userBalance, +gasPriceDecimal + +crosschainState.crosschainFee)
           const isIsuffientAmt = +crosschainState.userBalance <= +gasPriceDecimal + +crosschainState.crosschainFee
           setIsInsufficient(isIsuffientAmt)
         }
@@ -925,7 +923,6 @@ export default function Transfer() {
         <BelowForm
           className={!account ? 'disabled' : ''}
         >{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-        {console.log(Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT]))}
         <ButtonTranfserLight
           onClick={showConfirmTransferModal}
           disabled={
