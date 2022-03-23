@@ -66,6 +66,7 @@ import { useLocation } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { GetChainbridgeConfigByID } from '../../state/crosschain/hooks'
 import getGasPrice from 'hooks/getGasPrice'
+import provider from '@mycrypto/eth-scan/typings/src/providers/eip-1193'
 
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
@@ -668,18 +669,20 @@ export default function Transfer() {
           const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
           const targetToken = chaindata?.tokens.filter(token => token.resourceId === currentToken.resourceId)
           if (targetToken) {
-            const tokenContract = new ethers.Contract(targetToken && targetToken[0]?.address, TokenABI, provider)
+            const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
             const addrContainingTokens 
               = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
               ? targetConfig.bridgeAddress
               : targetConfig.erc20HandlerAddress;
 
-            const amountHandler = await tokenContract.balanceOf(addrContainingTokens).then(String);
-            if (amountHandler === '0') {
-              setHandlerZeroBalance(true)
-            }
+            const amountHandler 
+              = targetToken.address == ethers.constants.AddressZero
+              ? await provider.getBalance(addrContainingTokens).then(String)
+              : await tokenContract.balanceOf(addrContainingTokens).then(String);
+            
+            setHandlerZeroBalance(amountHandler === '0')
             setIsMintToken(Boolean(res.shouldBurn));
-            const amount = WithDecimals(amountHandler, targetToken && targetToken[0]?.decimals)
+            const amount = WithDecimals(amountHandler, targetToken.decimals)
             setBalanceOnHandler(amount)
             setIsTransferToHandler(!!amount)
             setIsLiquidityChecker(false)
