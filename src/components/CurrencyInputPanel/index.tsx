@@ -134,7 +134,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `};
 `
 const StyledTokenNameDeafult = styled(StyledTokenName)`
-  font-size: 32px;
+  font-size: 1rem;
   margin: 0 0.25rem 0 0.25rem;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   margin: 0;

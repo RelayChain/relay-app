@@ -80,7 +80,7 @@ export function getLogoByName(tokenName: string) {
 }
 export const getCurrencyLogoImage = (symbol: string | undefined) => {
   if (!symbol) return ''
-  let logoName = symbol
+  let logoName = ''
   for (const [key, names] of Object.entries(logosNames)) {
     if (names.includes(symbol)) {
       logoName = key
