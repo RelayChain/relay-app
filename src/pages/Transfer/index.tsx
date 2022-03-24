@@ -429,12 +429,14 @@ export default function Transfer() {
   const crosschainState = getCrosschainState()
 
   useEffect(() => {
-    const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetChain?.name)
-    chaindata?.tokens.map(token => {
-      if (token.resourceId === currentToken.resourceId) {
-        setTargetTokenAddress(token.address)
-      }
-    })
+    if (allCrosschainData && allCrosschainData?.chains?.length) {
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetChain?.name)
+      chaindata?.tokens.map(token => {
+        if (token.resourceId === currentToken.resourceId) {
+          setTargetTokenAddress(token.address)
+        }
+      })
+    }
   }, [currentToken, targetChain])
 
   const trade = v2Trade
@@ -659,7 +661,7 @@ export default function Transfer() {
           const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
           //@ts-ignore
           const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
-          const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetConfig.name)
+          const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
           const targetToken = chaindata?.tokens.filter(token => token.resourceId === currentToken.resourceId)
           if (targetToken) {
             const tokenContract = new ethers.Contract(targetToken && targetToken[0]?.address, TokenABI, provider)
@@ -698,10 +700,10 @@ export default function Transfer() {
       addToast('not enough gas', { appearance: 'info' })
     } else if (Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT])) {
       addToast('not enough funds', { appearance: 'info' })
-    } 
+    }
   }, [inputAmountToTrack])
 
-  
+
   useEffect(() => {
     const checkSufficientAmount = async () => {
       if (crosschainState.currentChain) {
