@@ -138,7 +138,7 @@ export default function CrossChainModal({
       if (chainsConfig) {
         const hexChainId = '0x' + Number(chainsConfig.networkId).toString(16)
         const data =
-          chain.chainID === '1'
+          chainsConfig.networkId == 1
             ? [{ chainId: '0x1' }, account]
             : [
               {
@@ -154,7 +154,7 @@ export default function CrossChainModal({
               }
             ]
         /* eslint-disable */
-        const ethMethod = chain.chainID === '1' ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
+        const ethMethod = chainsConfig.networkId === 1 ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
         const tx = ethereum && ethereum.request ? ethereum['request']({ method: ethMethod, params: data }).catch() : ''
 
         if (tx !== '') {

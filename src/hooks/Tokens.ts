@@ -68,65 +68,10 @@ export function useToken(tokenAddress?: string, nameToken?: string): Token | und
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
   const tokenByName = useAllCrossChainTokens().find(token => token.name === nameToken)
-  const address = useMemo(() => {
-    return isAddress(tokenAddress)
-  }, [tokenAddress])
-
-  const tokenContract = useTokenContract(address ? address : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
-  const token: Token | undefined = tokenByName ? tokenByName : address ? tokens[address] : undefined
-  const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
-  const tokenNameBytes32 = useSingleCallResult(
-    token ? undefined : tokenContractBytes32,
-    'name',
-    undefined,
-    NEVER_RELOAD
-  )
-  const symbol = useSingleCallResult(token ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
-  const symbolBytes32 = useSingleCallResult(token ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
-  const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
-
-  return useMemo(() => {
-    if (token) return token
-    if (!chainId || !address) return undefined
-    if (decimals.loading || symbol.loading || tokenName.loading) return null
-    if (decimals.result) {
-      return new Token(
-        chainId,
-        address,
-        decimals.result[0],
-        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
-        tokenByName ? tokenByName.resourceId : ''
-      )
-    }
-    return undefined
-  }, [
-    address,
-    chainId,
-    decimals.loading,
-    decimals.result,
-    symbol.loading,
-    symbol.result,
-    symbolBytes32.result,
-    token,
-    tokenName.loading,
-    tokenName.result,
-    tokenNameBytes32.result,
-    tokenByName
-  ])
+  return tokenByName;
 }
 
 export function useCurrency(currencyId: string | undefined, tokenName?: string): Currency | null | undefined {
-  const isNativeCurrency = ETHER_NAMES_CURRENCIES.includes(String(currencyId?.toUpperCase()))
-  const token = useToken(isNativeCurrency ? undefined : currencyId, tokenName)
-  if (tokenName) {
-    if (isNativeCurrency) {
-      return ETHER_CURRENCIES.find((curr: Currency) => curr.symbol === String(currencyId?.toUpperCase()))
-    } else {
-      return token
-    }
-  } else {
-    return undefined
-  }
+  const isNativeCurrency = ETHER_NAMES_CURRENCIES.includes(String(tokenName?.toUpperCase()))
+  return useToken(isNativeCurrency ? undefined : currencyId, tokenName)
 }
