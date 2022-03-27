@@ -51,6 +51,13 @@ export async function getCurrentTvl() {
   return get(url)
 }
 
+export async function getTokenPriceByResourceId(resourceId: string) {
+  const url = `${RELAY_API_URL}/api/tokenInfo?resourceId=${resourceId}`
+  const res = await get(url)
+  if (res.error) throw new Error(`Error getTokenPriceByResourceId: ${res.error}`);
+  return res.result.current_price;
+}
+
 export async function getFundsOnHandler(chainId: string, resourceId: string, amount: string) {
   const url = `${RELAY_API_URL}/api/enoughFundsOnHandler?resourceId=${resourceId}&chainId=${chainId}&amount=${amount}`
   return get(url)
