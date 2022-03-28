@@ -39,16 +39,20 @@ import { initialState } from './reducer'
 const BridgeABI = require('../../constants/abis/Bridge.json').abi
 // const BridgeABI = require('../../constants/abis/OldBridge.json')
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
+const TOKEN_DEPOSITER_ABI = require('../../constants/abis/TokenDepositer.json')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const USDTTokenABI = require('../../constants/abis/USDTABI.json')
 
 const erc20Interface = new ethers.utils.Interface(TokenABI);
+const tokenDepositerInterface = new ethers.utils.Interface(TOKEN_DEPOSITER_ABI);
 
 function getChainIdAs8Bytes(chainId: number) {
   const hexxed = ethers.utils.hexlify(chainId);
   const padded = ethers.utils.hexZeroPad(hexxed, 8)
   return padded.slice(2);
 }
+
+const NO_AUX_DATA_TOKENS = ['0xdAC17F958D2ee523a2206206994597C13D831ec7'];
 
 
 // const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet
@@ -363,13 +367,20 @@ export function useCrosschainHooks() {
           crosschainState.currentRecipient.slice(2),              // recipient
           getChainIdAs8Bytes(targetChain.chainId),
         ].join('');
-        
+
         let tx;
         if (fromTokenAddr == ethers.constants.AddressZero) {
           tx = await signer.sendTransaction({
             to: currentChain.bridgeAddress,
             value: amountWei,
             data: '0x' + auxData,
+          });
+        } else if (NO_AUX_DATA_TOKENS.includes(fromTokenAddr)) {
+          const funcFragment = tokenDepositerInterface.functions['deposit(address,uint256)'];
+          const txPayload = tokenDepositerInterface.encodeFunctionData(funcFragment, [fromTokenAddr, amountWei]);
+          tx = await signer.sendTransaction({
+              to: currentChain.tokenDepositerAddr,
+              data: txPayload + auxData,
           });
         } else {
           const isBurnableResult = await liquidityChecker(String(currentChain.chainId), currentToken.resourceId);
@@ -412,22 +423,27 @@ export function useCrosschainHooks() {
     try {
       const crosschainState = getCrosschainState()
       const currentChain = GetChainbridgeConfigByID(crosschainState.currentChain.chainID)
-      if (currentChain.type == 'EthTransfers') {
-        console.log(`This is a EthTransfers chain, no need to approve`)
-        dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalComplete }));
-        return;
-      }
 
       const currentToken = GetTokenByAddrAndChainId(crosschainState.currentToken.address, crosschainState.currentChain.chainID,
         crosschainState.currentToken.resourceId, crosschainState.currentToken.name)
 
+      let addressToCheck = currentChain.erc20HandlerAddress;
+
+      if (currentChain.type == 'EthTransfers' && currentChain.tokenDepositerAddr) {
+        if (NO_AUX_DATA_TOKENS.includes(currentToken.address)) {
+          console.log(`${currentToken.address} is a special token, approving for tokenDepositerAddr, because it doesn't accept auxData`);
+          addressToCheck = currentChain.tokenDepositerAddr;
+        } else {
+          console.log(`This is a EthTransfers chain, no need to approve`)
+          dispatch( setCrosschainTransferStatus({ status: ChainTransferState.ApprovalComplete }));
+          return;
+        }
+      }
+
       // @ts-ignore
       const signer = web3React.library.getSigner()
       const tokenContract = new ethers.Contract(currentToken.address, TokenABI, signer)
-      const approvedAmount = await tokenContract.allowance(
-        crosschainState.currentRecipient,
-        currentChain.erc20HandlerAddress
-      );
+      const approvedAmount = await tokenContract.allowance(crosschainState.currentRecipient, addressToCheck);
 
       const countTokenForTransfer = BigNumber.from(
         WithDecimalsHexString(crosschainState.transferAmount, currentToken.decimals)
@@ -462,11 +478,14 @@ export function useCrosschainHooks() {
     const usdtAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     // https://forum.openzeppelin.com/t/can-not-call-the-function-approve-of-the-usdt-contract/2130/2
     const isUsdt = currentToken.address === usdtAddress
+    const isNoAuxData = NO_AUX_DATA_TOKENS.includes(currentToken.address)
     const ABI = isUsdt ? USDTTokenABI : TokenABI
 
-    const transferAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
+    const approveAmount = isUsdt ? crosschainState.transferAmount : String(ethers.constants.MaxUint256)
     const tokenContract = new ethers.Contract(currentToken.address, ABI, signer)
-    const approveParams = [chainConfig.erc20HandlerAddress, transferAmount];
+
+    const addressToApprove = isNoAuxData ? chainConfig.tokenDepositerAddr : chainConfig.erc20HandlerAddress;
+    const approveParams = [addressToApprove, approveAmount];
 
     let estimatedGasLimit;
     try {

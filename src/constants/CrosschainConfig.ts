@@ -20,6 +20,7 @@ export type BridgeConfig = {
   name: string
   bridgeAddress: string
   erc20HandlerAddress: string | `N/A, it's a eth-transfers chain`
+  tokenDepositerAddr?: string
   rpcUrl: string
   gasLimit?: number
   type: 'Ethereum' | 'Substrate' | 'EthTransfers'

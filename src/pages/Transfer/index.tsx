@@ -724,7 +724,10 @@ export default function Transfer() {
       // This is only for 'EthTransfers' chain, where we pay fee in token we send.
       // On normal chains we pay in gas token.
       const currentChainConfig = GetChainbridgeConfigByID(currChainId);
-      if (currentChainConfig?.type != 'EthTransfers') return;
+      if (currentChainConfig?.type != 'EthTransfers') {
+        setFeeInToken(0);
+        return;
+      }
 
       if (!currentToken?.resourceId) return;
 
