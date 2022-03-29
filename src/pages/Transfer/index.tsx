@@ -11,10 +11,13 @@ import {
 } from '../../state/crosschain/actions'
 import { CurrencyAmount, Token } from '@zeroexchange/sdk'
 import {
+  getCrosschainState,
   GetTokenByAddrAndChainId,
   useCrossChain,
   useCrosschainHooks,
-  useCrosschainState
+  useCrosschainState,
+  WithDecimals,
+  WithDecimalsHexString
 } from '../../state/crosschain/hooks'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -55,11 +58,17 @@ import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
-import { getBalanceOnHandler, getFundsOnHandler } from 'api'
+import { getBalanceOnHandler, getFundsOnHandler, getTokenPriceByResourceId, liquidityChecker } from 'api'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { MobileResponsiveProps } from 'components/Interfaces/interface'
 import { useLocation } from 'react-router-dom'
+import { useToasts } from 'react-toast-notifications'
+import { GetChainbridgeConfigByID } from '../../state/crosschain/hooks'
+import getGasPrice from 'hooks/getGasPrice'
+import provider from '@mycrypto/eth-scan/typings/src/providers/eip-1193'
+
+const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
 const numeral = require('numeral')
 
@@ -71,26 +80,25 @@ const BelowInfo = styled.div`
   line-height: 17px;
   color: #ffffff;
 `
-const StyledCopy = styled(Copy)` 
-`
+const StyledCopy = styled(Copy)``
 const StyledTitle = styled.h1<MobileResponsiveProps>`
   font-family: Montserrat;
   font-style: normal;
   font-weight: bold;
-  font-size: 60px;
+  font-size: ${props => (props.widget ? '30px' : '60px')};
   color: #7f46f0;
-  margin-top: 50px;
-  margin-bottom: 40px;
+  margin-top: ${props => (props.widget ? '0px' : '50px')};
+  margin-bottom: ${props => (props.widget ? '10px' : '40px')};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin: 20px auto;
+  margin: 10px auto;
   display: flex;
   text-align: center;
   justify-content: center;
   align-items: center;
 `};
 `
-const Heading = styled.div`
+const Heading = styled.div<MobileResponsiveProps>`
   display: flex;
   text-align: center;
   font-size: 32px;
@@ -117,13 +125,13 @@ const ChainBlock = styled.div`
   display: flex;
   align-items: center;
 `
-const Description = styled.p`
+const Description = styled.p<MobileResponsiveProps>`
   text-align: center;
   font-family: Montserrat;
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
-  line-height: 29px;
+  line-height: ${props => (props.widget ? '10px' : '29px')};
   color: #ffffff;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   font-size: 20px;
@@ -139,7 +147,7 @@ const SideCard = styled.div`
   span {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #B368FC;
+    color: #b368fc;
     &.white {
       color: #fff;
       margin-right: 6px;
@@ -156,12 +164,12 @@ const RowBetweenSidecard = styled(RowBetween)`
 
 const SideCardHolder = styled.div<MobileResponsiveProps>`
   margin-left: auto;
-  display: ${(props) => (props.widget ? "none" : "flex")};
+  display: ${props => (props.widget ? 'none' : 'flex')};
   flex-direction: row;
-  background: rgb(18,26,56);
+  background: rgb(18, 26, 56);
   border-radius: 24px;
   padding: 1rem 1.5rem;
-  border: 2px solid #B368FC;
+  border: 2px solid #b368fc;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: auto;
     margin-right: auto;
@@ -169,14 +177,13 @@ const SideCardHolder = styled.div<MobileResponsiveProps>`
     flex-direction: column;
     width: 100%;
   `};
-
 `
-const TransferBodyWrapper = styled.div`
+const TransferBodyWrapper = styled.div<MobileResponsiveProps>`
   border-radius: 30px;
   background: rgb(18, 26, 56);
   width: 100%;
   max-width: 585px;
-  min-height: 316px;
+  min-height: auto;
   padding: 2rem;
   position: relative;
   border: 2px solid transparent;
@@ -200,12 +207,15 @@ const TransferBodyWrapper = styled.div`
     }
   }
   &.highlight {
-    border: 2px solid #B368FC;
+    border: 2px solid #b368fc;
   }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 1.5rem;
+  // ${({ theme }) => theme.mediaWidth.upToMedium`
+  // padding: 1.5rem;
 
-  `}
+  // `}
+  @media screen and (max-width: 768px) {
+    padding: ${props => (props.widget ? '0.5rem' : '1.5rem')};
+  }
 `
 const ChartLiquidityWrapper = styled.div`
   position: relative;
@@ -257,17 +267,17 @@ const BelowForm = styled.div`
   line-height: 17px;
   color: #ffffff;
   padding-top: 25px;
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   &.disabled {
-    opacity: .25;
+    opacity: 0.25;
   }
 `
 
 const FlexContainer = styled.div<MobileResponsiveProps>`
   margin: 0 auto;
   display: flex;
-  flex-direction: ${(props) => props.widget ? "column" : 'row'};
+  flex-direction: ${props => (props.widget ? 'column' : 'row')};
   justify-content: space-between;
   align-items: center;
   ${({ theme }) =>
@@ -284,26 +294,24 @@ const CenteredInfo = styled.div`
   align-items: center;
 `
 const MessageBlock = styled.div`
-display: flex;
+  display: flex;
 `
 const HandlerBlock = styled.div`
-width: 50%;
+  width: 50%;
 `
-const HandlerMessageBlock = styled.div`
-
-`
+const HandlerMessageBlock = styled.div``
 const TextBottom = styled.div`
   max-width: 260px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   text-align: center;
   `};
 `
-const FrameBlock = styled.img`
-  width: 90px;
-  height: 90px;
-  margin 10px;
+const FrameBlock = styled.img<MobileResponsiveProps>`
+  width: ${props => (props.widget ? '40px' : '90px')};
+  height: ${props => (props.widget ? '40px' : '90px')};
+  margin: 10px;
   &.disabled {
-    opacity: .25;
+    opacity: 0.25;
   }
 `
 const ButtonTranfserLight = styled(ButtonPink)`
@@ -372,7 +380,6 @@ export default function Transfer() {
   const [handlerHasZeroBalance, setHandlerZeroBalance] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
-
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
 
     [loadedInputCurrency, loadedOutputCurrency]
@@ -382,9 +389,10 @@ export default function Transfer() {
   }, [])
 
   const { account, chainId } = useActiveWeb3React()
+  const { addToast } = useToasts()
 
   const availableChains = useMemo(() => {
-    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum') && i.name !== 'Moonbeam')
   }, [allChains, chainId])
 
   // toggle wallet when disconnected
@@ -415,16 +423,21 @@ export default function Transfer() {
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [updateHandlerBalance, setUpdateHandBal] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
-  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
+  const [feeInToken, setFeeInToken] = useState(0);
+  const [isMintToken, setIsMintToken] = useState(true)
+  const [isLiquidityChecker, setIsLiquidityChecker] = useState(true)
 
+  const crosschainState = getCrosschainState()
 
   useEffect(() => {
-    const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetChain?.name)
-    chaindata?.tokens.map(token => {
-      if (token.resourceId === currentToken.resourceId) {
-        setTargetTokenAddress(token.address)
-      }
-    })
+    if (allCrosschainData && allCrosschainData?.chains?.length) {
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetChain?.name)
+      chaindata?.tokens.map(token => {
+        if (token.resourceId === currentToken.resourceId) {
+          setTargetTokenAddress(token.address)
+        }
+      })
+    }
   }, [currentToken, targetChain])
 
   const trade = v2Trade
@@ -483,9 +496,7 @@ export default function Transfer() {
   )
   const cutAfterCommma = (value: string) => {
     const splitValue = value.split('.')
-    return splitValue.length < 2 || splitValue[1].length < 6 ?
-      value :
-      `${splitValue[0]}.${splitValue[1].slice(0, 6)}`
+    return splitValue.length < 2 || splitValue[1].length < 6 ? value : `${splitValue[0]}.${splitValue[1].slice(0, 6)}`
   }
   const formattedAmounts = {
     [independentField]: cutAfterCommma(typedValue)
@@ -520,7 +531,12 @@ export default function Transfer() {
     inputCurrency => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       if (inputCurrency?.address) {
-        const newToken = GetTokenByAddrAndChainId(inputCurrency.address, currentChain.chainID, inputCurrency.resourceId, inputCurrency.name)
+        const newToken = GetTokenByAddrAndChainId(
+          inputCurrency.address,
+          currentChain.chainID,
+          inputCurrency.resourceId,
+          inputCurrency.name
+        )
         dispatch(
           setCurrentToken({
             token: {
@@ -541,9 +557,7 @@ export default function Transfer() {
   )
 
   const compareAmountWithBalanceHandler = (amount: string) => {
-    return (tokenForHandlerTransfer.includes(currentToken.name) && +balanceOnHandler > 0) ?
-      `${Math.min(+amount, +balanceOnHandler)}` :
-      amount
+    return +balanceOnHandler > 0 ? `${Math.min(+amount, +balanceOnHandler)}` : amount
   }
 
   const handleMaxInput = useCallback(() => {
@@ -635,28 +649,109 @@ export default function Transfer() {
     return ''
   }
   const onBlurInput = (event: any) => {
-    setUpdateHandBal(true)
+    // setUpdateHandBal(true)
   }
 
-  const fetchHandlerBalance = () => {
-    if (targetChain.chainID && currentToken.resourceId && tokenForHandlerTransfer.includes(currentToken.name)) {
-      getBalanceOnHandler(targetChain.chainID, currentToken.resourceId)
-        .then(res => {
-          const amountHandler = !!res?.result ? res?.result : '0'
-          if (amountHandler === '0') {
-            setHandlerZeroBalance(true)
-          }
-          setBalanceOnHandler(amountHandler)
-          setIsTransferToHandler(!!amountHandler)
-        })
-        .catch(err => console.log('err :>> ', err))
-        .finally(() => {
-          setUpdateHandBal(false)
-        })
-    } else {
-      setHandlerZeroBalance(false)
+  const fetchHandlerBalance = async () => {
+    setBalanceOnHandler('0')
+    setIsTransferToHandler(false)
+    setIsLiquidityChecker(true)
+    if (!targetChain.chainID || !currentToken.resourceId) {
+      setHandlerZeroBalance(false);
+      return;
+    }
+
+    try {
+      const res = await liquidityChecker(targetChain.chainID, currentToken.resourceId)
+      if (res.error) {
+        throw new Error(`Error fetching handler balance: ${res.error}`);
+      }
+
+      const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
+      //@ts-ignore
+      const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
+      const targetToken = chaindata?.tokens.find(token => token.resourceId === currentToken.resourceId)
+      if (targetToken) {
+        const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
+        const addrContainingTokens 
+          = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
+          ? targetConfig.bridgeAddress
+          : targetConfig.erc20HandlerAddress;
+
+        const amountHandler 
+          = targetToken.address == ethers.constants.AddressZero
+          ? await provider.getBalance(addrContainingTokens).then(String)
+          : await tokenContract.balanceOf(addrContainingTokens).then(String);
+        
+        setHandlerZeroBalance(amountHandler === '0')
+        setIsMintToken(Boolean(res.shouldBurn));
+        const amount = WithDecimals(amountHandler, targetToken.decimals)
+        setBalanceOnHandler(amount)
+        setIsTransferToHandler(!!amount)
+        setIsLiquidityChecker(false)
+      }
+    } catch (err) {
+      console.log('fetchHandlerBalance err', err);
+    } finally {
+      setUpdateHandBal(false)
     }
   }
+
+  useEffect(() => {
+    if (
+      parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler) &&
+      !isLiquidityChecker &&
+      !isMintToken
+    ) {
+      addToast('not enough liquidity in bridge', { appearance: 'info' })
+    } else if (isInsufficient) {
+      addToast('not enough gas', { appearance: 'info' })
+    } else if (Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT])) {
+      addToast('not enough funds', { appearance: 'info' })
+    }
+  }, [inputAmountToTrack])
+
+
+  useEffect(() => {
+    // Find price of token, check if the amount is enough to cover the fee (in token)
+    const getFeeInToken = async () => {
+      const DOLLAR_FEE_TOKEN = 20; // that's hardcoded both here and in relayer
+
+      const currChainId = crosschainState?.currentChain?.chainID;
+      if (currChainId == undefined) return;
+
+      // This is only for 'EthTransfers' chain, where we pay fee in token we send.
+      // On normal chains we pay in gas token.
+      const currentChainConfig = GetChainbridgeConfigByID(currChainId);
+      if (currentChainConfig?.type != 'EthTransfers') {
+        setFeeInToken(0);
+        return;
+      }
+
+      if (!currentToken?.resourceId) return;
+
+      const tokenPrice = await getTokenPriceByResourceId(currentToken.resourceId);
+      setFeeInToken(DOLLAR_FEE_TOKEN / tokenPrice || 0);
+    }
+
+    getFeeInToken();
+  }, [currentToken, inputAmountToTrack]);
+
+  useEffect(() => {
+    const checkSufficientAmount = async () => {
+      if (crosschainState.currentChain) {
+        const currentGasPrice = await getGasPrice(+crosschainState.currentChain.chainID)
+        if (currentGasPrice) {
+          const gasPriceDecimal = WithDecimals(currentGasPrice)
+          const isIsuffientAmt = +crosschainState.userBalance <= +gasPriceDecimal + +crosschainState.crosschainFee
+          setIsInsufficient(isIsuffientAmt)
+        }
+      }
+    }
+    checkSufficientAmount()
+  }, [crosschainState, inputAmountToTrack])
+
   useEffect(() => {
     fetchHandlerBalance()
   }, [currentToken, targetChain])
@@ -682,8 +777,9 @@ export default function Transfer() {
 
   // quick enable or disable of bridge
   const bridgeEnabled = true
-  const isNotBridgeable = () => {
+  const isBridgeable = () => {
     return (
+      bridgeEnabled &&
       isCrossChain &&
       !!transferAmount.length &&
       transferAmount !== '0' &&
@@ -691,14 +787,15 @@ export default function Transfer() {
       isTransferToken &&
       targetChain.chainID !== '' &&
       targetChain.name.length > 0 &&
-      !!currencies[Field.INPUT]
+      !!currencies[Field.INPUT] &&
+      feeInToken <= Number(transferAmount)
     )
   }
 
   return (
     <PageContainer>
       <RowBetweenSidecard>
-        <StyledTitle>Bridge</StyledTitle>
+        <StyledTitle widget={location.search === '?widget' ? 'true' : ''}>Bridge</StyledTitle>
         <SideCardHolder widget={location.search === '?widget' ? 'true' : ''}>
           <SideCard>
             <span className="white">${numeral(totalTvl).format('0,0')}</span>
@@ -745,25 +842,28 @@ export default function Transfer() {
         {!bridgeEnabled && (
           <h3 style={{ display: 'block', textAlign: 'center', marginBottom: '2rem' }}>Bridge is currently offline</h3>
         )}
-        <TransferBodyWrapper className={!bridgeEnabled || !account ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}>
-          <Heading>
-            <Description>Sending From: </Description>
+        <TransferBodyWrapper
+          widget={location.search === '?widget' ? 'true' : ''}
+          className={!bridgeEnabled || !account ? 'offline' : targetChain?.chainID?.length === 0 ? 'highlight' : ''}
+        >
+          <Heading widget={location.search === '?widget' ? 'true' : ''}>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Sending From: </Description>
             <ChainBlock>
               <BlockchainLogo
-                size="60px"
+                size={location.search === '?widget' ? '30px' : '60px'}
                 blockchain={CHAIN_LABELS[chainId ?? 1]}
                 style={{ marginLeft: '0px', marginRight: '1rem' }}
               />
-              <Description>{currentChain.name}</Description>
+              <Description widget={location.search === '?widget' ? 'true' : ''}>{currentChain.name}</Description>
             </ChainBlock>
           </Heading>
 
-          <RowFixed style={{ margin: '2rem auto 2rem auto' }}>
+          <RowFixed style={location.search === '?widget' ? { margin: '0rem auto' } : { margin: '2rem auto' }}>
             <ArrowDown size="30" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
           </RowFixed>
 
           <Heading>
-            <Description>Sending To: </Description>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Sending To: </Description>
             <BlockchainSelector
               isCrossChain={isCrossChain}
               supportedChains={SUPPORTED_CHAINS}
@@ -773,20 +873,32 @@ export default function Transfer() {
               onShowTransferChainModal={showTransferChainModal}
             />
           </Heading>
-
         </TransferBodyWrapper>
-        <FrameBlock src={require('../../assets/images/new-design/Frame.svg')} className={!account ? 'disabled' : ''} />
+        <FrameBlock
+          widget={location.search === '?widget' ? 'true' : ''}
+          src={require('../../assets/images/new-design/Frame.svg')}
+          className={!account ? 'disabled' : ''}
+        />
         {/* // second form */}
-        <TransferBodyWrapper className={!bridgeEnabled || targetChain?.chainID?.length === 0 ? 'offline' : currentToken?.name?.length === 0 ? 'highlight' : ''}>
+        <TransferBodyWrapper
+          widget={location.search === '?widget' ? 'true' : ''}
+          className={
+            !bridgeEnabled || targetChain?.chainID?.length === 0
+              ? 'offline'
+              : currentToken?.name?.length === 0
+              ? 'highlight'
+              : ''
+          }
+        >
           <BubbleBase />
           {/* <Heading>Cross-Chain Bridge*/}
           <Heading>
-            <Description>Enter token and amount:</Description>
+            <Description widget={location.search === '?widget' ? 'true' : ''}>Enter token and amount:</Description>
           </Heading>
 
-          <FlexBlock style={{}}>
+          <FlexBlock>
             <CurrencyInputPanel
-              blurInput={(event) => onBlurInput(event)}
+              blurInput={event => onBlurInput(event)}
               blockchain={isCrossChain ? currentChain.name : getChainName()}
               label={''}
               value={formattedAmounts[Field.INPUT]}
@@ -799,29 +911,34 @@ export default function Transfer() {
               isCrossChain={isCrossChain}
               transferPage
               id="swap-currency-input"
-              style={{ padding: '25px 0', width: '100%' }}
+              style={location.search === '?widget' ? { padding: '0px 0px' } : { padding: '25px 0', width: '100%' }}
               currentBalance={currentBalance}
             />
           </FlexBlock>
           <MessageBlock>
             <HandlerBlock>
-              {isTransferToHandler && +balanceOnHandler > 0 &&
-                tokenForHandlerTransfer.includes(currentToken.name) &&
-                <HandlerMessageBlock style={{ color: 'green' }}>{`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
+              {isTransferToHandler && +balanceOnHandler > 0 && (
+                <HandlerMessageBlock
+                  style={location.search === '?widget' ? { color: 'green', fontSize: '12px' } : { color: 'green' }}
+                >
+                  {`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
                 </HandlerMessageBlock>
-              }
+              )}
             </HandlerBlock>
             <BelowInfo>
-              {targetTokenAddress && <StyledCopy toCopy={targetTokenAddress} >
-                <span style={{ marginLeft: '4px' }}>{`Copy the token address`}</span>
-              </StyledCopy>}
+              {targetTokenAddress && (
+                <StyledCopy toCopy={targetTokenAddress}>
+                  <span
+                    style={location.search === '?widget' ? { fontSize: '12px' } : { marginLeft: '4px' }}
+                  >{`Copy the token address`}</span>
+                </StyledCopy>
+              )}
               <BelowForm style={{ marginTop: '10px', marginBottom: '0', paddingTop: '0', paddingLeft: '10px' }}>
                 {`Available Balance ${Number(currentBalance).toFixed(4)}
-                ${currentToken.symbol}`}</BelowForm>
+                ${currentToken.symbol}`}
+              </BelowForm>
             </BelowInfo>
           </MessageBlock>
-
-
         </TransferBodyWrapper>
 
         {(chainId === undefined || account === undefined) && (
@@ -843,7 +960,7 @@ export default function Transfer() {
       </FlexContainer>
       <CenteredInfo>
         {' '}
-        {isInsufficient && (
+        {/* {isInsufficient && (
           <InsufficientBlock>
             <img
               src={require('../../assets/images/new-design/warning.svg')}
@@ -851,17 +968,29 @@ export default function Transfer() {
             />
             <div>Insufficient balance!</div>
           </InsufficientBlock>
-        )}
+        )} */}
         <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
-
         {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
-        <BelowForm className={!account ? 'disabled' : ''}>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</BelowForm>
-        <ButtonTranfserLight onClick={showConfirmTransferModal} disabled={!isNotBridgeable()}>
+        <BelowForm className={!account ? 'disabled' : ''}>
+          <p>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</p>
+          <p>+ {feeInToken} {currentToken.symbol}</p>
+          <p>+ 0.05% of the balance being transferred</p>
+        </BelowForm>
+        <ButtonTranfserLight
+          onClick={showConfirmTransferModal}
+          disabled={
+            !isBridgeable() ||
+            (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler)) ||
+            Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT]) ||
+            isInsufficient ||
+            isLiquidityChecker
+          }
+        >
           Transfer
         </ButtonTranfserLight>
+        <p>{feeInToken > Number(transferAmount) ? `Can't transfer less than the fee, ${feeInToken}` : ''}</p>
       </CenteredInfo>
-      <RowFixed style={{ margin: '1rem' }}>
-      </RowFixed>
+      <RowFixed style={{ margin: '1rem' }}></RowFixed>
     </PageContainer>
   )
 }

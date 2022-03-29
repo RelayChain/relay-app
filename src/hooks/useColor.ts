@@ -17,7 +17,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     path = `../../assets/images/0-icon.png`
   } else {
     const { allCrosschainData } = getCrosschainState()
-    const chosenTokenChainName = allCrosschainData.chains.find(chain => chain.tokens.find(t => t.address === token.address))?.name
+    const chosenTokenChainName = allCrosschainData?.chains?.find(chain => chain.tokens.find(t => t.address === token.address))?.name
     console.log("🚀 ~ file: useColor.ts ~ line 21 ~ getColorFromToken ~ chosenTokenChainName", chosenTokenChainName)
 
     const chainName = !chosenTokenChainName ? 'ethereum' : (chosenTokenChainName === 'Smart Chain') ? 'binance' : (chosenTokenChainName === 'Metis Network') ? 'metis' : chosenTokenChainName.toLowerCase()

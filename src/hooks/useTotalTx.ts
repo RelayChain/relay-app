@@ -15,7 +15,7 @@ const useTotalData = (path: string) => {
                         }
                     });
                 })
-                .catch(err => console.log('err :>> ', err))
+                .catch(err => console.log('useTotalData err', err))
         }
     }, [])
 

@@ -10,6 +10,7 @@ import { useMemo } from 'react'
 import { useMulticallContract } from '../../hooks/useContract'
 import { useTotalUniEarned } from '../stake/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
+import { ethers } from 'ethers'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -173,7 +174,11 @@ export function useCurrencyBalances(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
-        if (currency instanceof Token) return tokenBalances[currency.address]
+        if (currency instanceof Token) {
+          return currency.address == ethers.constants.AddressZero
+           ? ethBalance[account]
+           : tokenBalances[currency.address];
+        }
         if (ETHER_CURRENCIES.includes(currency)) return ethBalance[account]
         return undefined
       }) ?? [],

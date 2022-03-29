@@ -40,7 +40,7 @@ export function Footer() {
     { name: 'github', url: 'https://github.com/RelayChain' },
     { name: 'youtube', url: 'https://www.youtube.com/channel/UC8q_XLKQtI-x5PUa4Rg3RrQ' },
     { name: 'twitter', url: 'https://twitter.com/relay_chain' },
-    { name: 'discord', url: 'https://discord.gg/6suspDEh5w' }
+    { name: 'discord', url: 'https://discord.gg/relaychain-botb' }
   ]
   const fillFooter = () =>
     itemsFooter.map(item => {

@@ -68,8 +68,8 @@ export default function ConfirmTransferModal({
 
   useEffect(() => {
     if (allCrosschainData && allCrosschainData?.chains?.length) {
-      const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === transferTo?.name)
-      chaindata?.tokens.map(token => {
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === transferTo?.name)
+      chaindata?.tokens?.map(token => {
         if (token.resourceId === currentToken.resourceId) {
           setTargetTokenAddress(token.address)
         }

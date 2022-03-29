@@ -13,7 +13,7 @@ const useStatInArray = (path: string) => {
                     }
                 });
             })
-            .catch(err => console.log('err :>> ', err))
+            .catch(err => console.log('useStatInArray err', err))
     }, [])
     return txData
 }

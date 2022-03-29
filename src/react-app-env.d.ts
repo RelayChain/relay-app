@@ -5,7 +5,7 @@ declare module 'jazzicon' {
 }
 
 declare module 'fortmatic'
-
+declare module 'react-toast-notifications'
 interface Window {
   ethereum?: {
     isMetaMask?: true

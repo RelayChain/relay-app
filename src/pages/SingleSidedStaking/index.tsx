@@ -147,7 +147,7 @@ export const SingleSidedStaking = () => {
       await earnedAmount?.wait()
       setRewardSuccessHash(earnedAmount?.hash)
     } catch (err) {
-      console.log('err :>> ', err)
+      console.log('harvest err', err)
     } finally {
       setIsPending(false)
     }

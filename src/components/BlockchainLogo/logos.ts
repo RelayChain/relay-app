@@ -15,6 +15,9 @@ import MTVLogo from '../../assets/images/crosschain/MTV.png'
 import METISLogo from '../../assets/images/crosschain/METIS.png'
 import MoonBeamLogo from '../../assets/images/crosschain/GLMR.png'
 import ESWLogo from '../../assets/images/crosschain/ESW.svg'
+import HTZLogo from '../../assets/images/crosschain/HTZ.png'
+import TUSDLogo from '../../assets/images/crosschain/TUSD.png'
+import XCADLogo from '../../assets/images/crosschain/XCAD.png'
 export const logoByName = {
     FTM: FantomLogo,
     AVAX: AvaxLogo,
@@ -33,4 +36,7 @@ export const logoByName = {
     METIS: METISLogo,
     GLMR: MoonBeamLogo,
     EMISWAP: ESWLogo,
+    HTZ: HTZLogo,
+    TUSD: TUSDLogo,
+    XCAD: XCADLogo,
 };
