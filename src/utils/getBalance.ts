@@ -1,6 +1,7 @@
 import { formatEther, formatUnits } from '@ethersproject/units'
 import { ChainId } from '@zeroexchange/sdk'
 import { TokenConfig } from 'constants/CrosschainConfig';
+import { ethers } from 'ethers';
 import * as _ from 'lodash';
 
 const myCrypto = require('./eth-scan/index');
@@ -46,7 +47,7 @@ export const getNativeTokenBalance = async (account: string) => {
   try {
     const { ethereum } = window as any
     const balance = await ethereum.request({ method: 'eth_getBalance', params: [account, "latest"] })
-    return parseFloat(formatEther(balance))
+    return String(balance);
   } catch (err) {
     console.log('getNativeTokenBalance error', err)
     return Promise.reject(err)
@@ -67,11 +68,13 @@ export const getAllTokenBalances = async (
 
     let balances: { [key: string]: { balance: any } | any } = {}
     try {
-      const tokenAddresses = _.uniq(tokens?.map(t => t.address));
+      const tokenAddresses = _.uniq(tokens?.map(t => t.address).filter(a => a != ethers.constants.AddressZero));
       balances = await getTokensBalance(provider, account, tokenAddresses, { contractAddress })
     } catch (err) {
       console.log('getTokensBalance error', err)
     }
+
+    balances[ethers.constants.AddressZero] = await getNativeTokenBalance(account);
 
     const arr = [];
     for (let token of tokens) {

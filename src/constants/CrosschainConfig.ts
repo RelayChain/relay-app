@@ -19,10 +19,11 @@ export type BridgeConfig = {
   networkId: number
   name: string
   bridgeAddress: string
-  erc20HandlerAddress: string
+  erc20HandlerAddress: string | `N/A, it's a eth-transfers chain`
+  tokenDepositerAddr?: string
   rpcUrl: string
   gasLimit?: number
-  type: 'Ethereum' | 'Substrate'
+  type: 'Ethereum' | 'Substrate' | 'EthTransfers'
   tokens: TokenConfig[]
   nativeTokenSymbol: string
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx

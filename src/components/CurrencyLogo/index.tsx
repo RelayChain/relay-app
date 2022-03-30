@@ -76,11 +76,20 @@ const logosNames = {
 }
 
 export function getLogoByName(tokenName: string) {
-  return require(`../../assets/images/crosschain/${tokenName}.png`)
+  try {
+    const logo = require(`../../assets/images/crosschain/${tokenName}.png`);
+    if (logo) {
+      return logo
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
 }
+
 export const getCurrencyLogoImage = (symbol: string | undefined) => {
   if (!symbol) return ''
-  let logoName = ''
+  let logoName = symbol
   for (const [key, names] of Object.entries(logosNames)) {
     if (names.includes(symbol)) {
       logoName = key
@@ -138,7 +147,7 @@ export default function CurrencyLogo({
     return <StyledLogoURI src={currency?.logoURI} alt={`${currency?.symbol ?? 'token'} logo`} />
   }
 
-  if (logoName !== '') {
+  if (logoName !== '' && getLogoByName(logoName)) {
     return <StyledEthereumLogo src={getLogoByName(logoName)} size={size} style={style} />
   } else {
     return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

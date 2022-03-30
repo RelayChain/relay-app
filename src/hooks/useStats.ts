@@ -9,7 +9,7 @@ const useStats = (chainId: number) => {
     useEffect(() => {
         getCurrentStats().then((data) => {
           setStateData(data ?? {})
-        }).catch(err => console.log('err :>> ', err))
+        }).catch(err => console.log('getCurrentStats err', err))
     }, [])
     return stateData
 }

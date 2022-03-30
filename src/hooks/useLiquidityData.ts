@@ -11,7 +11,7 @@ const useLiquidityData = () => {
                     setLiquidity(data)
                 });
             })
-            .catch(err => console.log('err :>> ', err))
+            .catch(err => console.log('useLiquidityData err', err))
     }, [])
     return liquidity
 }

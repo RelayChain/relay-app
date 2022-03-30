@@ -19,6 +19,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { getCrosschainState } from 'state/crosschain/hooks'
+import { ethers } from 'ethers'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -157,7 +158,7 @@ export function useDerivedSwapInfo(): {
     recipient
   } = useSwapState()
   const crossChainState = getCrosschainState()
-  const inputCurrency = useCurrency(inputCurrencyId, crossChainState?.currentToken?.name)
+  const inputCurrency = useCurrency(inputCurrencyId, crossChainState?.currentToken?.name);
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null

@@ -58,7 +58,7 @@ import useStats from 'hooks/useStats'
 import useTvl from 'hooks/useTvl'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import Copy from '../../components/AccountDetails/Copy'
-import { getBalanceOnHandler, getFundsOnHandler, liquidityChecker } from 'api'
+import { getBalanceOnHandler, getFundsOnHandler, getTokenPriceByResourceId, liquidityChecker } from 'api'
 import PlainPopup from 'components/Popups/PlainPopup'
 import { PopupContent } from 'state/application/actions'
 import { MobileResponsiveProps } from 'components/Interfaces/interface'
@@ -66,6 +66,7 @@ import { useLocation } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { GetChainbridgeConfigByID } from '../../state/crosschain/hooks'
 import getGasPrice from 'hooks/getGasPrice'
+import provider from '@mycrypto/eth-scan/typings/src/providers/eip-1193'
 
 const TokenABI = require('../../constants/abis/ERC20PresetMinterPauser.json').abi
 
@@ -422,19 +423,21 @@ export default function Transfer() {
   const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [updateHandlerBalance, setUpdateHandBal] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
-  const [tokenForHandlerTransfer, setTokenForHandlerTransfer] = useState(['USDC', 'WETH'])
+  const [feeInToken, setFeeInToken] = useState(0);
   const [isMintToken, setIsMintToken] = useState(true)
   const [isLiquidityChecker, setIsLiquidityChecker] = useState(true)
 
   const crosschainState = getCrosschainState()
 
   useEffect(() => {
-    const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetChain?.name)
-    chaindata?.tokens.map(token => {
-      if (token.resourceId === currentToken.resourceId) {
-        setTargetTokenAddress(token.address)
-      }
-    })
+    if (allCrosschainData && allCrosschainData?.chains?.length) {
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetChain?.name)
+      chaindata?.tokens.map(token => {
+        if (token.resourceId === currentToken.resourceId) {
+          setTargetTokenAddress(token.address)
+        }
+      })
+    }
   }, [currentToken, targetChain])
 
   const trade = v2Trade
@@ -649,41 +652,49 @@ export default function Transfer() {
     // setUpdateHandBal(true)
   }
 
-  const fetchHandlerBalance = () => {
+  const fetchHandlerBalance = async () => {
     setBalanceOnHandler('0')
     setIsTransferToHandler(false)
     setIsLiquidityChecker(true)
-    if (targetChain.chainID && currentToken.resourceId) {
-      liquidityChecker(targetChain.chainID, currentToken.resourceId)
-        .then(async res => {
-          const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
-          //@ts-ignore
-          const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
-          const chaindata = allCrosschainData.chains.find(chaindata => chaindata.name === targetConfig.name)
-          const targetToken = chaindata?.tokens.filter(token => token.resourceId === currentToken.resourceId)
-          if (targetToken) {
-            const tokenContract = new ethers.Contract(targetToken && targetToken[0]?.address, TokenABI, provider)
-            const amountHandler = (await tokenContract.balanceOf(targetConfig.erc20HandlerAddress)).toString()
-            if (amountHandler === '0') {
-              setHandlerZeroBalance(true)
-            }
-            if (!res.shouldBurn) {
-              setIsMintToken(false)
-            } else {
-              setIsMintToken(true)
-            }
-            const amount = WithDecimals(amountHandler, targetToken && targetToken[0]?.decimals)
-            setBalanceOnHandler(amount)
-            setIsTransferToHandler(!!amount)
-            setIsLiquidityChecker(false)
-          }
-        })
-        .catch(err => console.log('err :>> ', err))
-        .finally(() => {
-          setUpdateHandBal(false)
-        })
-    } else {
-      setHandlerZeroBalance(false)
+    if (!targetChain.chainID || !currentToken.resourceId) {
+      setHandlerZeroBalance(false);
+      return;
+    }
+
+    try {
+      const res = await liquidityChecker(targetChain.chainID, currentToken.resourceId)
+      if (res.error) {
+        throw new Error(`Error fetching handler balance: ${res.error}`);
+      }
+
+      const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
+      //@ts-ignore
+      const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
+      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
+      const targetToken = chaindata?.tokens.find(token => token.resourceId === currentToken.resourceId)
+      if (targetToken) {
+        const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
+        const addrContainingTokens 
+          = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
+          ? targetConfig.bridgeAddress
+          : targetConfig.erc20HandlerAddress;
+
+        const amountHandler 
+          = targetToken.address == ethers.constants.AddressZero
+          ? await provider.getBalance(addrContainingTokens).then(String)
+          : await tokenContract.balanceOf(addrContainingTokens).then(String);
+        
+        setHandlerZeroBalance(amountHandler === '0')
+        setIsMintToken(Boolean(res.shouldBurn));
+        const amount = WithDecimals(amountHandler, targetToken.decimals)
+        setBalanceOnHandler(amount)
+        setIsTransferToHandler(!!amount)
+        setIsLiquidityChecker(false)
+      }
+    } catch (err) {
+      console.log('fetchHandlerBalance err', err);
+    } finally {
+      setUpdateHandBal(false)
     }
   }
 
@@ -698,10 +709,35 @@ export default function Transfer() {
       addToast('not enough gas', { appearance: 'info' })
     } else if (Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT])) {
       addToast('not enough funds', { appearance: 'info' })
-    } 
+    }
   }, [inputAmountToTrack])
 
-  
+
+  useEffect(() => {
+    // Find price of token, check if the amount is enough to cover the fee (in token)
+    const getFeeInToken = async () => {
+      const DOLLAR_FEE_TOKEN = 20; // that's hardcoded both here and in relayer
+
+      const currChainId = crosschainState?.currentChain?.chainID;
+      if (currChainId == undefined) return;
+
+      // This is only for 'EthTransfers' chain, where we pay fee in token we send.
+      // On normal chains we pay in gas token.
+      const currentChainConfig = GetChainbridgeConfigByID(currChainId);
+      if (currentChainConfig?.type != 'EthTransfers') {
+        setFeeInToken(0);
+        return;
+      }
+
+      if (!currentToken?.resourceId) return;
+
+      const tokenPrice = await getTokenPriceByResourceId(currentToken.resourceId);
+      setFeeInToken(DOLLAR_FEE_TOKEN / tokenPrice || 0);
+    }
+
+    getFeeInToken();
+  }, [currentToken, inputAmountToTrack]);
+
   useEffect(() => {
     const checkSufficientAmount = async () => {
       if (crosschainState.currentChain) {
@@ -741,8 +777,9 @@ export default function Transfer() {
 
   // quick enable or disable of bridge
   const bridgeEnabled = true
-  const isNotBridgeable = () => {
+  const isBridgeable = () => {
     return (
+      bridgeEnabled &&
       isCrossChain &&
       !!transferAmount.length &&
       transferAmount !== '0' &&
@@ -750,7 +787,8 @@ export default function Transfer() {
       isTransferToken &&
       targetChain.chainID !== '' &&
       targetChain.name.length > 0 &&
-      !!currencies[Field.INPUT]
+      !!currencies[Field.INPUT] &&
+      feeInToken <= Number(transferAmount)
     )
   }
 
@@ -934,14 +972,14 @@ export default function Transfer() {
         <PlainPopup isOpen={crossPopupOpen} onDismiss={hidePopupModal} content={popupContent} removeAfterMs={2000} />
         {/* {(tokenForHandlerTransfer.includes(currentToken.name) && isMaxAmount) || handlerHasZeroBalance && <BelowForm style={{ color: 'red' }}>{`WARNING: this transfer can take up to 48 hours to process.`}</BelowForm>} */}
         <BelowForm className={!account ? 'disabled' : ''}>
-          {`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}
-          <br />
-          <br />+ 0.05% of the balance being transferred
+          <p>{`Estimated Transfer Fee: ${crosschainFee} ${currentChain?.symbol}`}</p>
+          <p>+ {feeInToken} {currentToken.symbol}</p>
+          <p>+ 0.05% of the balance being transferred</p>
         </BelowForm>
         <ButtonTranfserLight
           onClick={showConfirmTransferModal}
           disabled={
-            !isNotBridgeable() ||
+            !isBridgeable() ||
             (isMintToken ? false : parseFloat(formattedAmounts[Field.INPUT]) > parseFloat(balanceOnHandler)) ||
             Number(currentBalance) < parseFloat(formattedAmounts[Field.INPUT]) ||
             isInsufficient ||
@@ -950,6 +988,7 @@ export default function Transfer() {
         >
           Transfer
         </ButtonTranfserLight>
+        <p>{feeInToken > Number(transferAmount) ? `Can't transfer less than the fee, ${feeInToken}` : ''}</p>
       </CenteredInfo>
       <RowFixed style={{ margin: '1rem' }}></RowFixed>
     </PageContainer>

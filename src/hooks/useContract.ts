@@ -42,7 +42,7 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
     try {
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
-      console.error('Failed to get contract', error)
+      console.error(`Failed to get contract ${address}`, error)
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
