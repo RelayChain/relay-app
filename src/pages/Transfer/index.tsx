@@ -883,7 +883,7 @@ export default function Transfer() {
                 <HandlerMessageBlock
                   style={location.search === '?widget' ? { color: 'green', fontSize: '12px' } : { color: 'green' }}
                 >
-                  {`Maximum available to Bridge ${balanceOnHandler} ${currentToken.name}`}
+                  {`Maximum available to Bridge ${parseFloat(balanceOnHandler).toFixed(8)} ${currentToken.name}`}
                 </HandlerMessageBlock>
               )}
             </HandlerBlock>
