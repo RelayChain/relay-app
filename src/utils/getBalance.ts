@@ -32,7 +32,7 @@ export function getBalanceContract(chainId: ChainId) {
     case ChainId.OKEX:
       return '0xa0CFaB1600d51F5191cBe4F7cceD89D770858B6C'
     case ChainId.MULTIVAC:
-      return '0x613ea203744568f025de7e5b39289af5b2fb7f42'
+      return '0xDb5d4709dA9E4854F3e4787a581A04f0549512Db'
     case ChainId.METIS_NETWORK:
       return '0xD35E40776edB5652219CdEc5354fA6c50Fe35e15'
     case ChainId.MOONBEAM:
