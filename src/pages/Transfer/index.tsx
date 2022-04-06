@@ -670,8 +670,7 @@ export default function Transfer() {
       const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
       //@ts-ignore
       const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
-      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
-      const targetToken = chaindata?.tokens.find(token => token.resourceId === currentToken.resourceId)
+      const targetToken = targetConfig.tokens.find(token => token.resourceId === currentToken.resourceId)
       if (targetToken) {
         const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
         const addrContainingTokens 
