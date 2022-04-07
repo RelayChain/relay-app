@@ -775,7 +775,7 @@ export default function Transfer() {
   }, [targetChain, currentToken])
 
   // quick enable or disable of bridge
-  const bridgeEnabled = false
+  const bridgeEnabled = true
   const isBridgeable = () => {
     return (
       bridgeEnabled &&
