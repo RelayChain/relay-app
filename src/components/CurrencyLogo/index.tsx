@@ -78,10 +78,7 @@ const logosNames = {
 export function getLogoByName(tokenName: string) {
   try {
     const logo = require(`../../assets/images/crosschain/${tokenName}.png`);
-    if (logo) {
-      return logo
-    }
-    return null;
+    return logo || null;
   } catch (err) {
     return null;
   }
