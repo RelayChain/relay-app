@@ -407,8 +407,12 @@ export default function Transfer() {
   useEffect(() => {
     const keys = Object.keys(stats)
     if (keys.length > 0) {
-      setTotalFee(Number(stats['fee_usd'].toFixed(2)))
-      setTotalTx(stats['n_txs'])
+      if (stats['fee_usd']) {
+        setTotalFee(Number(stats['fee_usd'].toFixed(2)))
+      }
+      if (stats['n_txs']) {
+        setTotalTx(stats['n_txs'])
+      }
     }
   }, [stats])
 
@@ -665,12 +669,12 @@ export default function Transfer() {
       const targetToken = targetConfig.tokens.find(token => token.resourceId === currentToken.resourceId)
       if (targetToken) {
         const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
-        const addrContainingTokens 
+        const addrContainingTokens
           = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
           ? targetConfig.bridgeAddress
           : targetConfig.erc20HandlerAddress;
 
-        const amountHandler 
+        const amountHandler
           = targetToken.address == ethers.constants.AddressZero
           ? await provider.getBalance(addrContainingTokens).then(String)
           : await tokenContract.balanceOf(addrContainingTokens).then(String);
