@@ -377,7 +377,6 @@ export default function Transfer() {
   ]
   const [isInsufficient, setIsInsufficient] = useState(false)
   const [isTransferToken, setIsTransferToken] = useState(false)
-  const [handlerHasZeroBalance, setHandlerZeroBalance] = useState(false)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -408,8 +407,12 @@ export default function Transfer() {
   useEffect(() => {
     const keys = Object.keys(stats)
     if (keys.length > 0) {
-      setTotalFee(Number(stats['fee_usd'].toFixed(2)))
-      setTotalTx(stats['n_txs'])
+      if (stats['fee_usd']) {
+        setTotalFee(Number(stats['fee_usd'].toFixed(2)))
+      }
+      if (stats['n_txs']) {
+        setTotalTx(stats['n_txs'])
+      }
     }
   }, [stats])
 
@@ -420,7 +423,6 @@ export default function Transfer() {
   const { v2Trade, currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo()
   const [targetTokenAddress, setTargetTokenAddress] = useState('')
   const [isMaxAmount, setIsMaxAmount] = useState(false)
-  const [isTransferToHandler, setIsTransferToHandler] = useState(false)
   const [updateHandlerBalance, setUpdateHandBal] = useState(false)
   const [balanceOnHandler, setBalanceOnHandler] = useState('0')
   const [feeInToken, setFeeInToken] = useState(0);
@@ -654,13 +656,7 @@ export default function Transfer() {
 
   const fetchHandlerBalance = async () => {
     setBalanceOnHandler('0')
-    setIsTransferToHandler(false)
     setIsLiquidityChecker(true)
-    if (!targetChain.chainID || !currentToken.resourceId) {
-      setHandlerZeroBalance(false);
-      return;
-    }
-
     try {
       const res = await liquidityChecker(targetChain.chainID, currentToken.resourceId)
       if (res.error) {
@@ -670,25 +666,22 @@ export default function Transfer() {
       const targetConfig = GetChainbridgeConfigByID(targetChain.chainID)
       //@ts-ignore
       const provider = new ethers.providers.JsonRpcProvider(targetConfig.rpcUrl)
-      const chaindata = allCrosschainData?.chains?.find(chaindata => chaindata.name === targetConfig.name)
-      const targetToken = chaindata?.tokens.find(token => token.resourceId === currentToken.resourceId)
+      const targetToken = targetConfig.tokens.find(token => token.resourceId === currentToken.resourceId)
       if (targetToken) {
         const tokenContract = new ethers.Contract(targetToken.address, TokenABI, provider)
-        const addrContainingTokens 
+        const addrContainingTokens
           = targetConfig.erc20HandlerAddress == `N/A, it's a eth-transfers chain`
           ? targetConfig.bridgeAddress
           : targetConfig.erc20HandlerAddress;
 
-        const amountHandler 
+        const amountHandler
           = targetToken.address == ethers.constants.AddressZero
           ? await provider.getBalance(addrContainingTokens).then(String)
           : await tokenContract.balanceOf(addrContainingTokens).then(String);
-        
-        setHandlerZeroBalance(amountHandler === '0')
+
         setIsMintToken(Boolean(res.shouldBurn));
         const amount = WithDecimals(amountHandler, targetToken.decimals)
         setBalanceOnHandler(amount)
-        setIsTransferToHandler(!!amount)
         setIsLiquidityChecker(false)
       }
     } catch (err) {
@@ -917,7 +910,7 @@ export default function Transfer() {
           </FlexBlock>
           <MessageBlock>
             <HandlerBlock>
-              {isTransferToHandler && +balanceOnHandler > 0 && (
+              {!isMintToken && +balanceOnHandler > 0 && (
                 <HandlerMessageBlock
                   style={location.search === '?widget' ? { color: 'green', fontSize: '12px' } : { color: 'green' }}
                 >
