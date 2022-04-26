@@ -115,6 +115,14 @@ const Header = () => {
         >
           Stats
         </StyledNavLink>
+        <StyledNavLink
+          id={`liquidity-staking-nav-link`}
+          to={'/liquidity-staking'}
+          onClick={() => setPathname('/liquidity-staking')}
+          style={pathname === '/liquidity-staking' ? { fontWeight: 700 } : { fontWeight: 400 }}
+        >
+          LiquidityStaking
+        </StyledNavLink>
         <MenuBurgerStyled open={open} setOpen={toggleOpen} showLogo={false} />
       </MenuBar>
       <Web3Status />

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { ChevronDown } from 'react-feather'
 import Row from 'components/Row'
 import BubbleBase from './../BubbleBase'
-import ZeroLogo from '../../assets/images/0-icon.png'
 import MetaMaskIcon from '../../assets/images/metamask-icon.svg'
 import OutsideLink from '../../assets/images/outside-link.svg'
 import { ButtonOutlined } from './../Button'
@@ -153,7 +152,7 @@ const StakingCard = () => {
             <Description>Stake RELAY</Description>
           </div>
           <LogoWrapper>
-            <img src={ZeroLogo} alt="logo" />
+            <img src={MetaMaskIcon} alt="logo" />
           </LogoWrapper>
         </Flex>
       </Header>

@@ -36,6 +36,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import SideMenu from '../components/SideMenu'
 import { SingleSidedStaking } from './SingleSidedStaking'
+import { LiquidityStaking } from './LiquidityStaking'
 import Transfer from './Transfer'
 import URLWarning from '../components/Header/URLWarning'
 import Web3ReactManager from '../components/Web3ReactManager'
@@ -101,6 +102,7 @@ export default function App() {
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/guides" component={Guides} />
                 <Route exact strict path="/stats" component={Stats} />
+                <Route exact strict path="/liquidity-staking" component={LiquidityStaking} />
                 {/* <Route exact strict path="/create" component={RedirectToAddLiquidity} />*/}
                 {/* <Route exact path="/add" component={AddLiquidity} />*/}
                 {/* <Route exact path="/add/:currencyIdA" component={AddLiquidity} />*/}
