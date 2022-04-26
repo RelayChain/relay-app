@@ -205,7 +205,10 @@ export function GetAvailableTokens(chainName: string, targetChainId?: number): A
                 token.address === '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70') ||
               (chain.chainId === 2 &&
                 targetChainId === 10 &&
-                token.address === '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7')
+                token.address === '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7') ||
+              (chain.chainId === 13 &&
+                targetChainId === 3 &&
+                token.address === '0x338A6997011c4eee53822837c4F95bBbA3a0a7f5')
             ) {
             } else {
               const t = {
