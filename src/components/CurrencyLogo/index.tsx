@@ -72,7 +72,8 @@ const logosNames = {
   'MTV': ['MTV', 'MULTIVAC', 'MultiVAC'],
   'METIS': ['WMETIS', 'METIS', 'METIS_NETWORK', 'MetisNetwork', 'Metis Network', 'Metis'],
   'GLMR': ['GLMR', 'MOONBEAM', 'Moonbeam'],
-  'ESW': ['ESW']
+  'ESW': ['ESW'],
+  'CRYSTL': ['CRYSTL', 'CrystalToken']
 }
 
 export function getLogoByName(tokenName: string) {
