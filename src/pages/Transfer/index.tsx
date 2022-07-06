@@ -789,7 +789,7 @@ export default function Transfer() {
     <PageContainer>
       <RowBetweenSidecard>
         <StyledTitle widget={location.search === '?widget' ? 'true' : ''}>Bridge</StyledTitle>
-        <SideCardHolder widget={location.search === '?widget' ? 'true' : ''}>
+        {/*<SideCardHolder widget={location.search === '?widget' ? 'true' : ''}>
           <SideCard>
             <span className="white">${numeral(totalTvl).format('0,0')}</span>
             <span> TVL</span>
@@ -802,7 +802,7 @@ export default function Transfer() {
             <span className="white">${numeral(totalFee).format('0,0')} </span>
             <span> Fees</span>
           </SideCard>
-        </SideCardHolder>
+        </SideCardHolder>*/}
       </RowBetweenSidecard>
       <FlexContainer widget={location.search === '?widget' ? 'true' : ''}>
         <TokenWarningModal
