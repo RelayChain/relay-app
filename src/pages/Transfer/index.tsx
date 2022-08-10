@@ -391,7 +391,7 @@ export default function Transfer() {
   const { addToast } = useToasts()
 
   const availableChains = useMemo(() => {
-    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum') && i.name !== 'Moonbeam')
+    return allChains.filter(i => i.name !== (chainId ? CHAIN_LABELS[chainId] : 'Ethereum'))
   }, [allChains, chainId])
 
   // toggle wallet when disconnected

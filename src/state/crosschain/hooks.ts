@@ -50,7 +50,7 @@ function getChainIdAs8Bytes(chainId: number) {
 }
 
 // Before there was USDT
-const NO_AUX_DATA_TOKENS: string[] = []; 
+const NO_AUX_DATA_TOKENS: string[] = [];
 
 
 // const crosschainConfig = process.env.REACT_APP_TESTNET ? crosschainConfigTestnet : crosschainConfigMainnet

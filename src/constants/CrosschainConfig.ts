@@ -40,11 +40,11 @@ export type ChainbridgeConfig = {
   chains: BridgeConfig[]
 }
 
-export const csConfig = (): Promise<ChainbridgeConfig> => { 
+export const csConfig = (): Promise<ChainbridgeConfig> => {
   const crossChainConfigData = {} as ChainbridgeConfig
   return getCrossChainData<BridgeConfig[]>()
   .then((configs: BridgeConfig[]) => {
     crossChainConfigData.chains = configs
     return  crossChainConfigData
-}) 
-} 
+})
+}
