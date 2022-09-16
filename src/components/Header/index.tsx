@@ -89,6 +89,11 @@ const Header = () => {
         </LogoContainer>
       </HideMedium>
       <MenuBar widget={location.search === '?widget' ? 'true' : ''}>
+        <p style={{ fontWeight: 'bold', fontSize: '18px', marginRight: '20px', cursor: 'pointer', color: 'rgb(173, 0, 255)' }}
+          onClick={() => window.location.href='https://bridge.relaychain.com'}
+        >
+          Bridge V2
+        </p>
         <StyledNavLink
           id={`bridge-nav-link`}
           to={'/cross-chain-bridge-transfer'}
