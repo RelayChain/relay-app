@@ -73,6 +73,10 @@ function TopLevelModals() {
 }
 
 export default function App() {
+
+  //@ts-ignore
+  window.location.replace("https://bridge.relaychain.com");
+
   return (
     <Suspense fallback={null}>
       <GraphQLProvider>
